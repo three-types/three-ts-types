@@ -14275,7 +14275,7 @@ index 384311dd4..8d39e8acc 100644
      });
  }
 diff --git a/examples-testing/examples/webgpu_backdrop_water.ts b/examples-testing/examples/webgpu_backdrop_water.ts
-index d9be7f59d..c44ca56cf 100644
+index e9f17b575..893b69084 100644
 --- a/examples-testing/examples/webgpu_backdrop_water.ts
 +++ b/examples-testing/examples/webgpu_backdrop_water.ts
 @@ -24,11 +24,13 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -14306,19 +14306,19 @@ index d9be7f59d..c44ca56cf 100644
                  child.castShadow = true;
                  child.receiveShadow = true;
              }
-@@ -171,7 +173,10 @@ function init() {
-     const causticFade = normalWorld.y.mix(positionWorld.y.distance(0).oneMinus().saturate(), 0);
+@@ -173,7 +175,10 @@ function init() {
+     const causticNoise = voronoi3d(positionWorld.mul(6), t);
  
      //material.colorNode = colorNode;
--    floor.material.colorNode = causticFade.mix(material.colorNode, material.colorNode.add(waterLayer0));
+-    floor.material.colorNode = causticFade.mix(material.colorNode, material.colorNode.add(causticNoise));
 +    floor.material.colorNode = causticFade.mix(
 +        material.colorNode as THREE.Node<'vec4'>,
-+        (material.colorNode as THREE.Node<'vec4'>).add(waterLayer0),
++        (material.colorNode as THREE.Node<'vec4'>).add(causticNoise),
 +    );
  
      // renderer
  
-@@ -194,7 +199,7 @@ function init() {
+@@ -196,7 +201,7 @@ function init() {
  
      // gui
  
