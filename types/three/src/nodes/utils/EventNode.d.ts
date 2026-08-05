@@ -12,6 +12,7 @@ declare class EventNode extends Node {
     static OBJECT: "object";
     static MATERIAL: "material";
     static FRAME: "frame";
+    static AFTER_OBJECT: "afterObject";
     static BEFORE_OBJECT: "beforeObject";
     static BEFORE_MATERIAL: "beforeMaterial";
     static BEFORE_FRAME: "beforeFrame";
@@ -26,6 +27,8 @@ export const OnObjectUpdate: (callback: (frame: NodeFrame) => void) => Node;
 export const OnMaterialUpdate: (callback: (frame: NodeFrame) => void) => Node;
 
 export const OnFrameUpdate: (callback: (frame: NodeFrame) => void) => Node;
+
+export const OnAfterObjectUpdate: (callback: (frame: NodeFrame) => void) => Node;
 
 export const OnBeforeObjectUpdate: (callback: (frame: NodeFrame) => void) => Node;
 
