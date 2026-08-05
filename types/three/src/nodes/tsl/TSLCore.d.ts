@@ -19,7 +19,7 @@ export function addMethodChaining(name: string, nodeElement: unknown): void;
 
 declare module "../core/Node.js" {
     interface NodeElements {
-        assign: (sourceNode: Node | number) => this;
+        assign: (sourceNode: Node | number | boolean) => this;
         get: (value: string) => Node;
     }
 }
