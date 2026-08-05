@@ -178,9 +178,9 @@ declare class XRManager<TEventMap extends XRManagerEventMap = XRManagerEventMap>
      * Browser-side `XRWebGLBinding.foveateBoundTexture()` failures are treated as
      * non-fatal so they do not interrupt rendering.
      *
-     * @param {RenderTarget} renderTarget - The internal render target.
+     * @param {?RenderTarget} renderTarget - The internal render target.
      */
-    foveateBoundTexture(renderTarget: RenderTarget): void;
+    foveateBoundTexture(renderTarget: RenderTarget | null): void;
     /**
      * Returns the current XR WebGPU binding.
      *
