@@ -14975,7 +14975,7 @@ index 70218d55a..21a89871b 100644
 +
 +export default ReadbackBuffer;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/Renderer.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/Renderer.d.ts
-index 6e4c1327a..897640bfc 100644
+index 13d17da32..897640bfc 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/Renderer.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/common/Renderer.d.ts
 @@ -1,8 +1,76 @@
@@ -15879,7 +15879,7 @@ index 6e4c1327a..897640bfc 100644
      /**
       * Reads pixel data from the given render target.
       *
-@@ -1340,66 +1008,6 @@ declare class Renderer {
+@@ -1340,67 +1008,6 @@ declare class Renderer {
       * @return {Promise<TypedArray>} A Promise that resolves when the read has been finished. The resolve provides the read data as a typed array.
       */
      readRenderTargetPixelsAsync(renderTarget: RenderTarget, x: number, y: number, width: number, height: number, textureIndex?: number, faceIndex?: number): Promise<TypedArray>;
@@ -15940,13 +15940,14 @@ index 6e4c1327a..897640bfc 100644
 -     *
 -     * @private
 -     * @param {Camera} camera - The camera to update.
+-     * @param {boolean} useXRCamera - Whether the XR camera should be used when presenting.
 -     * @return {Camera} The returned camera might be different depending on whether XR is used or not.
 -     */
 -    private _updateCamera;
      /**
       * This method represents the default render object function that manages the render lifecycle
       * of the object.
-@@ -1414,7 +1022,7 @@ declare class Renderer {
+@@ -1415,7 +1022,7 @@ declare class Renderer {
       * @param {?ClippingContext} clippingContext - The clipping context.
       * @param {?string} [passId=null] - An optional ID for identifying the pass.
       */
@@ -15955,7 +15956,7 @@ index 6e4c1327a..897640bfc 100644
      /**
       * Checks if the given compatibility is supported by the selected backend.
       *
-@@ -1422,36 +1030,6 @@ declare class Renderer {
+@@ -1423,36 +1030,6 @@ declare class Renderer {
       * @return {boolean} Whether the compatibility is supported or not.
       */
      hasCompatibility(name: string): boolean;
@@ -15992,7 +15993,7 @@ index 6e4c1327a..897640bfc 100644
      /**
       * Alias for `compileAsync()`.
       *
-@@ -1461,16 +1039,7 @@ declare class Renderer {
+@@ -1462,16 +1039,7 @@ declare class Renderer {
       * @param {Scene} targetScene - If the first argument is a 3D object, this parameter must represent the scene the 3D object is going to be added.
       * @return {function(Object3D, Camera, ?Scene): Promise|undefined} A Promise that resolves when the compile has been finished.
       */
@@ -16072,7 +16073,7 @@ index f18cad9f8..22d8868ac 100644
 +
 +export default TimestampQueryPool;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/XRManager.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/XRManager.d.ts
-index 8581c09f6..fd0d845ee 100644
+index a278f6c30..90c1511ac 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/XRManager.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/common/XRManager.d.ts
 @@ -1,11 +1,37 @@
