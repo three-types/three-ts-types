@@ -13948,7 +13948,7 @@ index 7045732d6..3a6145920 100644
  
              const transform = new THREE.Object3D();
 diff --git a/examples-testing/examples/webgl_volume_perlin.ts b/examples-testing/examples/webgl_volume_perlin.ts
-index afc589830..c4129161f 100644
+index cd66fc7e6..6642b93af 100644
 --- a/examples-testing/examples/webgl_volume_perlin.ts
 +++ b/examples-testing/examples/webgl_volume_perlin.ts
 @@ -4,8 +4,8 @@ import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js';
@@ -13962,7 +13962,7 @@ index afc589830..c4129161f 100644
  
  init();
  
-@@ -236,7 +236,7 @@ function onWindowResize() {
+@@ -229,7 +229,7 @@ function onWindowResize() {
  }
  
  function animate() {
@@ -23871,7 +23871,7 @@ index c5cc55e71..7ae7f3702 100644
      gui.add(params, 'animated');
      gui.add(params, 'traa').name('TRAA').onChange(updatePostProcessing);
 diff --git a/examples-testing/examples/webgpu_volume_perlin.ts b/examples-testing/examples/webgpu_volume_perlin.ts
-index 123e7718b..d95832280 100644
+index eed45c392..43e80abca 100644
 --- a/examples-testing/examples/webgpu_volume_perlin.ts
 +++ b/examples-testing/examples/webgpu_volume_perlin.ts
 @@ -10,8 +10,8 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -23885,38 +23885,12 @@ index 123e7718b..d95832280 100644
  
  init();
  
-@@ -60,53 +60,65 @@ function init() {
+@@ -60,52 +60,64 @@ function init() {
  
      // Shader
  
 -    const opaqueRaymarchingTexture = Fn(({ texture, steps, threshold, refine }) => {
 -        const finalColor = vec4(0).toVar();
--
--        const positionPrev = vec3(0).toVar();
--        const hasPrev = bool(false).toVar();
--
--        RaymarchingBox(steps, ({ positionRay }) => {
--            const mapValue = texture.sample(positionRay.add(0.5)).r.toVar();
--
--            If(mapValue.greaterThan(threshold), () => {
--                const surfacePos = positionRay.toVar();
--
--                If(refine.and(hasPrev), () => {
--                    // The surface lies between the previous sample (below the threshold)
--                    // and the current one (above it). Bisect that interval to localize
--                    // the crossing precisely.
--
--                    const p0 = positionPrev.toVar();
--                    const p1 = positionRay.toVar();
--
--                    Loop(REFINEMENT_STEPS, () => {
--                        const pm = p0.add(p1).mul(0.5).toConst();
--                        const dm = texture.sample(pm.add(0.5)).r.toConst();
--
--                        If(dm.greaterThan(threshold), () => {
--                            p1.assign(pm);
--                        }).Else(() => {
--                            p0.assign(pm);
 +    const opaqueRaymarchingTexture = Fn(
 +        ({
 +            texture,
@@ -23930,34 +23904,51 @@ index 123e7718b..d95832280 100644
 +            refine: THREE.Node<'bool'>;
 +        }) => {
 +            const finalColor = vec4(0).toVar();
-+
+ 
+-        const positionPrev = vec3(0).toVar();
+-        const hasPrev = bool(false).toVar();
 +            const positionPrev = vec3(0).toVar();
 +            const hasPrev = bool(false).toVar();
-+
+ 
+-        RaymarchingBox(steps, ({ positionRay }) => {
+-            const mapValue = texture.sample(positionRay.add(0.5)).r.toVar();
 +            RaymarchingBox(steps, ({ positionRay }) => {
 +                const mapValue = texture.sample(positionRay.add(0.5)).r.toVar();
-+
+ 
+-            If(mapValue.greaterThan(threshold), () => {
+-                const surfacePos = positionRay.toVar();
 +                If(mapValue.greaterThan(threshold), () => {
 +                    const surfacePos = positionRay.toVar();
-+
+ 
+-                If(refine.and(hasPrev), () => {
+-                    // The surface lies between the previous sample (below the threshold)
+-                    // and the current one (above it). Bisect that interval to localize
+-                    // the crossing precisely.
 +                    If(refine.and(hasPrev), () => {
 +                        // The surface lies between the previous sample (below the threshold)
 +                        // and the current one (above it). Bisect that interval to localize
 +                        // the crossing precisely.
-+
+ 
+-                    const p0 = positionPrev.toVar();
+-                    const p1 = positionRay.toVar();
 +                        const p0 = positionPrev.toVar();
 +                        const p1 = positionRay.toVar();
-+
+ 
+-                    Loop(REFINEMENT_STEPS, () => {
+-                        const pm = p0.add(p1).mul(0.5).toConst();
+-                        const dm = texture.sample(pm.add(0.5)).r.toConst();
 +                        Loop(REFINEMENT_STEPS, () => {
 +                            const pm = p0.add(p1).mul(0.5).toConst();
 +                            const dm = texture.sample(pm.add(0.5)).r.toConst();
-+
-+                            If(dm.greaterThan(threshold), () => {
-+                                p1.assign(pm);
-+                            }).Else(() => {
-+                                p0.assign(pm);
-+                            });
-                         });
+ 
+-                        const isGreater = dm.greaterThan(threshold);
++                            const isGreater = dm.greaterThan(threshold);
+ 
+-                        p1.assign(select(isGreater, pm, p1).uniformFlow());
+-                        p0.assign(select(isGreater, p0, pm).uniformFlow());
++                            p1.assign(select(isGreater, pm, p1).uniformFlow());
++                            p0.assign(select(isGreater, p0, pm).uniformFlow());
++                        });
 +
 +                        surfacePos.assign(p1);
                      });
@@ -23991,7 +23982,7 @@ index 123e7718b..d95832280 100644
  
      //
  
-@@ -129,7 +141,7 @@ function init() {
+@@ -128,7 +140,7 @@ function init() {
  
      //
  

@@ -410,6 +410,7 @@ export const objectRadius: typeof TSL.objectRadius;
 export const objectScale: typeof TSL.objectScale;
 export const objectViewPosition: typeof TSL.objectViewPosition;
 export const objectWorldMatrix: typeof TSL.objectWorldMatrix;
+export const OnAfterObjectUpdate: typeof TSL.OnAfterObjectUpdate;
 export const OnBeforeObjectUpdate: typeof TSL.OnBeforeObjectUpdate;
 export const OnBeforeMaterialUpdate: typeof TSL.OnBeforeMaterialUpdate;
 export const OnBeforeRenderPipeline: typeof TSL.OnBeforeRenderPipeline;
