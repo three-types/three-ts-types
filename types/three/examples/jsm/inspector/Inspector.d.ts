@@ -17,7 +17,13 @@ declare class Inspector extends RendererInspector<InspectorEventMap> {
     hide(): void;
     show(): void;
 
+    setVisible(value: boolean): this;
+    getVisible(): boolean;
+
     getSize(): { width: number; height: number };
+
+    setHorizontalAlign(value: "left" | "right"): this;
+    setVerticalAlign(value: "top" | "bottom"): this;
 
     setActiveTab(tab: Tab): this;
     addTab(tab: Tab): this;
