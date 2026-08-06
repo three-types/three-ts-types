@@ -44,6 +44,8 @@ interface TextureNodeInterface {
 
     gather(gatherNode?: Node<"int"> | number): this;
 
+    isPlainGather(): boolean;
+
     depth(depthNode: Node): this;
 
     offset(offsetNode: Node<"ivec2">): this;
