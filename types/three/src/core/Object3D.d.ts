@@ -84,6 +84,11 @@ export interface Object3DEventMap {
      * Fires when a new child object has been removed.
      */
     childremoved: { child: Object3D };
+
+    /**
+     * Fires when the 3D object has been disposed of.
+     */
+    dispose: {};
 }
 
 /**
@@ -710,4 +715,11 @@ export class Object3D<TEventMap extends Object3DEventMap = Object3DEventMap> ext
      * `false`, descendants are left unchanged. Default is `true`.
      */
     copy(object: Object3D, recursive?: boolean): this;
+
+    /**
+     * Frees the GPU-related resources allocated by this instance.
+     * @remarks Call this method whenever this instance is no longer used in your app.
+     * Geometries, materials and textures are potentially shared with other 3D objects and must be disposed of separately.
+     */
+    dispose(): void;
 }
