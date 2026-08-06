@@ -1,0 +1,2 @@
+declare const _default: "\n#if defined( RE_IndirectDiffuse )\n\n\t#if defined( LAMBERT ) || defined( PHONG )\n\n\t\tirradiance += iblIrradiance;\n\n\t#endif\n\n\tRE_IndirectDiffuse( irradiance, geometryPosition, geometryNormal, geometryViewDir, geometryClearcoatNormal, material, reflectedLight );\n\n#endif\n\n#if defined( RE_IndirectSpecular )\n\n\tRE_IndirectSpecular( radiance, iblIrradiance, clearcoatRadiance, geometryPosition, geometryNormal, geometryViewDir, geometryClearcoatNormal, material, reflectedLight );\n\n#endif\n";
+export default _default;
