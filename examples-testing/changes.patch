@@ -24477,10 +24477,10 @@ index ae129e57e..900131094 100644
  //
  
 diff --git a/examples-testing/examples/webgpu_xr_shadows.ts b/examples-testing/examples/webgpu_xr_shadows.ts
-index 3b84d81d7..3e893c997 100644
+index c3d948e33..afebc6a5a 100644
 --- a/examples-testing/examples/webgpu_xr_shadows.ts
 +++ b/examples-testing/examples/webgpu_xr_shadows.ts
-@@ -3,12 +3,20 @@ import * as THREE from 'three/webgpu';
+@@ -3,12 +3,21 @@ import * as THREE from 'three/webgpu';
  import { VRButton } from 'three/addons/webxr/VRButton.js';
  import { setupWebGLXRFallback } from 'three/addons/webxr/WebGLXRFallback.js';
  
@@ -24494,17 +24494,18 @@ index 3b84d81d7..3e893c997 100644
  timer.connect(document);
  
 -let camera, cameraRig, scene, renderer;
--let directionalLight, torusKnot, box, icosahedron, cone;
+-let directionalLight, torusKnot, box, icosahedron, cone, glass;
 +let camera: THREE.PerspectiveCamera, cameraRig: THREE.Group, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
 +let directionalLight: THREE.DirectionalLight,
 +    torusKnot: THREE.Mesh,
 +    box: THREE.Mesh,
 +    icosahedron: THREE.Mesh,
-+    cone: THREE.Mesh;
++    cone: THREE.Mesh,
++    glass: THREE.Mesh;
  
  init();
  
-@@ -113,7 +121,7 @@ function init() {
+@@ -135,7 +144,7 @@ function init() {
  }
  
  function createRenderer(forceWebGL = false) {
@@ -24513,7 +24514,7 @@ index 3b84d81d7..3e893c997 100644
  
      if (forceWebGL === true) parameters.forceWebGL = true;
  
-@@ -130,7 +138,7 @@ function createRenderer(forceWebGL = false) {
+@@ -152,7 +161,7 @@ function createRenderer(forceWebGL = false) {
      return renderer;
  }
  
