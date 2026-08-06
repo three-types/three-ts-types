@@ -76,6 +76,7 @@ export const backgroundBlurriness: typeof TSL.backgroundBlurriness;
 export const backgroundIntensity: typeof TSL.backgroundIntensity;
 export const backgroundRotation: typeof TSL.backgroundRotation;
 export const batch: typeof TSL.batch;
+export const batchIndirectIndex: typeof TSL.batchIndirectIndex;
 export const bentNormalView: typeof TSL.bentNormalView;
 export const billboarding: typeof TSL.billboarding;
 export const bitAnd: typeof TSL.bitAnd;
