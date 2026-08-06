@@ -4261,7 +4261,7 @@ index 04032cbd6..56d13c92a 100644
 -import { Vector2 } from '../../math/Vector2.js';
 -import { Shape } from './Shape.js';
 diff --git a/jsdoc-testing/jsdoc/src/helpers/ArrowHelper.d.ts b/jsdoc-testing/jsdoc/src/helpers/ArrowHelper.d.ts
-index 302ccad5a..16f49b398 100644
+index c4ee0cb4f..d14d62040 100644
 --- a/jsdoc-testing/jsdoc/src/helpers/ArrowHelper.d.ts
 +++ b/jsdoc-testing/jsdoc/src/helpers/ArrowHelper.d.ts
 @@ -1,3 +1,9 @@
@@ -4319,7 +4319,7 @@ index 302ccad5a..16f49b398 100644
       */
      setLength(length: number, headLength?: number, headWidth?: number): void;
      /**
-@@ -61,15 +60,11 @@ export class ArrowHelper extends Object3D {
+@@ -61,10 +60,6 @@ export class ArrowHelper extends Object3D {
       *
       * @param {number|Color|string} color - The color to set.
       */
@@ -4327,18 +4327,13 @@ index 302ccad5a..16f49b398 100644
 -    copy(source: any): this;
 +    setColor(color: ColorRepresentation): void;
 +    copy(source: ArrowHelper): this;
-     /**
-      * Frees the GPU-related resources allocated by this instance. Call this
-      * method whenever this instance is no longer used in your app.
-      */
-     dispose(): void;
  }
 -import { Object3D } from '../core/Object3D.js';
 -import { Line } from '../objects/Line.js';
 -import { Mesh } from '../objects/Mesh.js';
 -import { Vector3 } from '../math/Vector3.js';
 diff --git a/jsdoc-testing/jsdoc/src/helpers/AxesHelper.d.ts b/jsdoc-testing/jsdoc/src/helpers/AxesHelper.d.ts
-index cc7858bfe..887dc91a9 100644
+index 3669564fc..a54b63e73 100644
 --- a/jsdoc-testing/jsdoc/src/helpers/AxesHelper.d.ts
 +++ b/jsdoc-testing/jsdoc/src/helpers/AxesHelper.d.ts
 @@ -1,3 +1,6 @@
@@ -4357,22 +4352,17 @@ index cc7858bfe..887dc91a9 100644
   */
  export class AxesHelper extends LineSegments {
      /**
-@@ -24,12 +25,10 @@ export class AxesHelper extends LineSegments {
+@@ -24,7 +25,5 @@ export class AxesHelper extends LineSegments {
       * @param {number|Color|string} zAxisColor - The color for the z axis.
       * @return {AxesHelper} A reference to this axes helper.
       */
 -    setColors(xAxisColor: number | Color | string, yAxisColor: number | Color | string, zAxisColor: number | Color | string): AxesHelper;
 +    setColors(xAxisColor: ColorRepresentation, yAxisColor: ColorRepresentation, zAxisColor: ColorRepresentation): AxesHelper;
-     /**
-      * Frees the GPU-related resources allocated by this instance. Call this
-      * method whenever this instance is no longer used in your app.
-      */
-     dispose(): void;
  }
 -import { LineSegments } from '../objects/LineSegments.js';
 -import { Color } from '../math/Color.js';
 diff --git a/jsdoc-testing/jsdoc/src/helpers/Box3Helper.d.ts b/jsdoc-testing/jsdoc/src/helpers/Box3Helper.d.ts
-index 982072dbb..a2d253878 100644
+index 77ea2a19f..c7bc2d3b9 100644
 --- a/jsdoc-testing/jsdoc/src/helpers/Box3Helper.d.ts
 +++ b/jsdoc-testing/jsdoc/src/helpers/Box3Helper.d.ts
 @@ -1,3 +1,7 @@
@@ -4392,7 +4382,7 @@ index 982072dbb..a2d253878 100644
   */
  export class Box3Helper extends LineSegments {
      /**
-@@ -18,18 +20,14 @@ export class Box3Helper extends LineSegments {
+@@ -18,13 +20,9 @@ export class Box3Helper extends LineSegments {
       * @param {Box3} box - The box to visualize.
       * @param {number|Color|string} [color=0xffff00] - The box's color.
       */
@@ -4405,15 +4395,10 @@ index 982072dbb..a2d253878 100644
       */
      box: Box3;
 -    updateMatrixWorld(force: any): void;
-     /**
-      * Frees the GPU-related resources allocated by this instance. Call this
-      * method whenever this instance is no longer used in your app.
-      */
-     dispose(): void;
  }
 -import { LineSegments } from '../objects/LineSegments.js';
 diff --git a/jsdoc-testing/jsdoc/src/helpers/BoxHelper.d.ts b/jsdoc-testing/jsdoc/src/helpers/BoxHelper.d.ts
-index 0b864050e..bb8a012e2 100644
+index 02a4fa37c..b118ca461 100644
 --- a/jsdoc-testing/jsdoc/src/helpers/BoxHelper.d.ts
 +++ b/jsdoc-testing/jsdoc/src/helpers/BoxHelper.d.ts
 @@ -1,3 +1,10 @@
@@ -4450,21 +4435,16 @@ index 0b864050e..bb8a012e2 100644
       */
      object: Object3D;
      /**
-@@ -34,11 +44,10 @@ export class BoxHelper extends LineSegments {
+@@ -34,6 +44,5 @@ export class BoxHelper extends LineSegments {
       * @return {BoxHelper} A reference to this instance.
       */
      setFromObject(object: Object3D): BoxHelper;
 -    copy(source: any, recursive: any): this;
 +    copy(source: BoxHelper, recursive?: boolean): this;
-     /**
-      * Frees the GPU-related resources allocated by this instance. Call this
-      * method whenever this instance is no longer used in your app.
-      */
-     dispose(): void;
  }
 -import { LineSegments } from '../objects/LineSegments.js';
 diff --git a/jsdoc-testing/jsdoc/src/helpers/CameraHelper.d.ts b/jsdoc-testing/jsdoc/src/helpers/CameraHelper.d.ts
-index 69f517585..8e2884a49 100644
+index 7aa2e0e29..707d11242 100644
 --- a/jsdoc-testing/jsdoc/src/helpers/CameraHelper.d.ts
 +++ b/jsdoc-testing/jsdoc/src/helpers/CameraHelper.d.ts
 @@ -1,3 +1,7 @@
@@ -4499,15 +4479,15 @@ index 69f517585..8e2884a49 100644
       */
      pointMap: {
          [x: string]: number[];
-@@ -59,6 +57,3 @@ export class CameraHelper extends LineSegments {
+@@ -54,6 +52,3 @@ export class CameraHelper extends LineSegments {
       */
-     dispose(): void;
+     update(): void;
  }
 -import { LineSegments } from '../objects/LineSegments.js';
 -import { Camera } from '../cameras/Camera.js';
 -import { Color } from '../math/Color.js';
 diff --git a/jsdoc-testing/jsdoc/src/helpers/DirectionalLightHelper.d.ts b/jsdoc-testing/jsdoc/src/helpers/DirectionalLightHelper.d.ts
-index edd4fa7ff..61a7acf0f 100644
+index 6931d5275..1b285b7db 100644
 --- a/jsdoc-testing/jsdoc/src/helpers/DirectionalLightHelper.d.ts
 +++ b/jsdoc-testing/jsdoc/src/helpers/DirectionalLightHelper.d.ts
 @@ -1,3 +1,9 @@
@@ -4564,14 +4544,14 @@ index edd4fa7ff..61a7acf0f 100644
       */
      targetLine: Line;
      /**
-@@ -64,5 +58,3 @@ export class DirectionalLightHelper extends Object3D {
+@@ -59,5 +53,3 @@ export class DirectionalLightHelper extends Object3D {
       */
      update(): void;
  }
 -import { Object3D } from '../core/Object3D.js';
 -import { Line } from '../objects/Line.js';
 diff --git a/jsdoc-testing/jsdoc/src/helpers/GridHelper.d.ts b/jsdoc-testing/jsdoc/src/helpers/GridHelper.d.ts
-index c0df154aa..4e8a76a88 100644
+index 7efd650b5..41329b43c 100644
 --- a/jsdoc-testing/jsdoc/src/helpers/GridHelper.d.ts
 +++ b/jsdoc-testing/jsdoc/src/helpers/GridHelper.d.ts
 @@ -1,3 +1,8 @@
@@ -4595,22 +4575,17 @@ index c0df154aa..4e8a76a88 100644
      /**
       * Constructs a new grid helper.
       *
-@@ -21,12 +24,10 @@ export class GridHelper extends LineSegments {
+@@ -21,7 +24,5 @@ export class GridHelper extends LineSegments {
       * @param {number|Color|string} [color1=0x444444] - The color of the center line.
       * @param {number|Color|string} [color2=0x888888] - The color of the lines of the grid.
       */
 -    constructor(size?: number, divisions?: number, color1?: number | Color | string, color2?: number | Color | string);
 +    constructor(size?: number, divisions?: number, color1?: ColorRepresentation, color2?: ColorRepresentation);
-     /**
-      * Frees the GPU-related resources allocated by this instance. Call this
-      * method whenever this instance is no longer used in your app.
-      */
-     dispose(): void;
  }
 -import { LineSegments } from '../objects/LineSegments.js';
 -import { Color } from '../math/Color.js';
 diff --git a/jsdoc-testing/jsdoc/src/helpers/HemisphereLightHelper.d.ts b/jsdoc-testing/jsdoc/src/helpers/HemisphereLightHelper.d.ts
-index 5920f3014..8595d3987 100644
+index d3dc6b8da..e340046c5 100644
 --- a/jsdoc-testing/jsdoc/src/helpers/HemisphereLightHelper.d.ts
 +++ b/jsdoc-testing/jsdoc/src/helpers/HemisphereLightHelper.d.ts
 @@ -1,3 +1,8 @@
@@ -4655,8 +4630,8 @@ index 5920f3014..8595d3987 100644
 +    color: ColorRepresentation | undefined;
      material: MeshBasicMaterial;
      /**
-      * Frees the GPU-related resources allocated by this instance. Call this
-@@ -50,6 +47,3 @@ export class HemisphereLightHelper extends Object3D {
+      * Updates the helper to match the position and direction of the
+@@ -45,6 +42,3 @@ export class HemisphereLightHelper extends Object3D {
       */
      update(): void;
  }
@@ -4664,7 +4639,7 @@ index 5920f3014..8595d3987 100644
 -import { Color } from '../math/Color.js';
 -import { MeshBasicMaterial } from '../materials/MeshBasicMaterial.js';
 diff --git a/jsdoc-testing/jsdoc/src/helpers/PlaneHelper.d.ts b/jsdoc-testing/jsdoc/src/helpers/PlaneHelper.d.ts
-index be6163223..99b526a42 100644
+index b2015d607..df412a197 100644
 --- a/jsdoc-testing/jsdoc/src/helpers/PlaneHelper.d.ts
 +++ b/jsdoc-testing/jsdoc/src/helpers/PlaneHelper.d.ts
 @@ -1,3 +1,7 @@
@@ -4684,7 +4659,7 @@ index be6163223..99b526a42 100644
   */
  export class PlaneHelper extends Line {
      /**
-@@ -17,25 +19,20 @@ export class PlaneHelper extends Line {
+@@ -17,20 +19,15 @@ export class PlaneHelper extends Line {
       * @param {number} [size=1] - The side length of plane helper.
       * @param {number|Color|string} [hex=0xffff00] - The helper's color.
       */
@@ -4704,15 +4679,10 @@ index be6163223..99b526a42 100644
       */
      size: number;
 -    updateMatrixWorld(force: any): void;
-     /**
-      * Updates the helper to match the position and direction of the
-      * light being visualized.
-      */
-     dispose(): void;
  }
 -import { Line } from '../objects/Line.js';
 diff --git a/jsdoc-testing/jsdoc/src/helpers/PointLightHelper.d.ts b/jsdoc-testing/jsdoc/src/helpers/PointLightHelper.d.ts
-index f2f51e312..abe0a2b16 100644
+index ef2ecb228..908ed53b0 100644
 --- a/jsdoc-testing/jsdoc/src/helpers/PointLightHelper.d.ts
 +++ b/jsdoc-testing/jsdoc/src/helpers/PointLightHelper.d.ts
 @@ -1,3 +1,7 @@
@@ -4732,7 +4702,7 @@ index f2f51e312..abe0a2b16 100644
   */
  export class PointLightHelper extends Mesh {
      /**
-@@ -23,21 +25,16 @@ export class PointLightHelper extends Mesh {
+@@ -23,25 +25,19 @@ export class PointLightHelper extends Mesh {
       * @param {number|Color|string} [color] - The helper's color. If not set, the helper will take
       * the color of the light.
       */
@@ -4754,15 +4724,14 @@ index f2f51e312..abe0a2b16 100644
 -    matrix: any;
 +    color: ColorRepresentation | undefined;
      /**
-      * Frees the GPU-related resources allocated by this instance. Call this
-      * method whenever this instance is no longer used in your app.
-@@ -49,4 +46,3 @@ export class PointLightHelper extends Mesh {
+      * Updates the helper to match the position of the
+      * light being visualized.
       */
      update(): void;
  }
 -import { Mesh } from '../objects/Mesh.js';
 diff --git a/jsdoc-testing/jsdoc/src/helpers/PolarGridHelper.d.ts b/jsdoc-testing/jsdoc/src/helpers/PolarGridHelper.d.ts
-index 9d4caa9c7..7701b0f04 100644
+index edaecda65..a9feb8722 100644
 --- a/jsdoc-testing/jsdoc/src/helpers/PolarGridHelper.d.ts
 +++ b/jsdoc-testing/jsdoc/src/helpers/PolarGridHelper.d.ts
 @@ -1,3 +1,6 @@
@@ -4781,22 +4750,17 @@ index 9d4caa9c7..7701b0f04 100644
   */
  export class PolarGridHelper extends LineSegments {
      /**
-@@ -25,12 +26,10 @@ export class PolarGridHelper extends LineSegments {
+@@ -25,7 +26,5 @@ export class PolarGridHelper extends LineSegments {
       * @param {number|Color|string} [color1=0x444444] - The first color used for grid elements.
       * @param {number|Color|string} [color2=0x888888] -  The second color used for grid elements.
       */
 -    constructor(radius?: number, sectors?: number, rings?: number, divisions?: number, color1?: number | Color | string, color2?: number | Color | string);
 +    constructor(radius?: number, sectors?: number, rings?: number, divisions?: number, color1?: ColorRepresentation, color2?: ColorRepresentation);
-     /**
-      * Frees the GPU-related resources allocated by this instance. Call this
-      * method whenever this instance is no longer used in your app.
-      */
-     dispose(): void;
  }
 -import { LineSegments } from '../objects/LineSegments.js';
 -import { Color } from '../math/Color.js';
 diff --git a/jsdoc-testing/jsdoc/src/helpers/SkeletonHelper.d.ts b/jsdoc-testing/jsdoc/src/helpers/SkeletonHelper.d.ts
-index a129e99ab..b682bef58 100644
+index 4b864c4eb..e0b586f7f 100644
 --- a/jsdoc-testing/jsdoc/src/helpers/SkeletonHelper.d.ts
 +++ b/jsdoc-testing/jsdoc/src/helpers/SkeletonHelper.d.ts
 @@ -1,3 +1,8 @@
@@ -4844,14 +4808,14 @@ index a129e99ab..b682bef58 100644
      /**
       * Defines the colors of the helper.
       *
-@@ -52,5 +47,3 @@ export class SkeletonHelper extends LineSegments {
+@@ -47,5 +42,3 @@ export class SkeletonHelper extends LineSegments {
       */
-     dispose(): void;
+     setColors(color1: Color, color2: Color): SkeletonHelper;
  }
 -import { LineSegments } from '../objects/LineSegments.js';
 -import { Color } from '../math/Color.js';
 diff --git a/jsdoc-testing/jsdoc/src/helpers/SpotLightHelper.d.ts b/jsdoc-testing/jsdoc/src/helpers/SpotLightHelper.d.ts
-index 7e73edcef..d74e50583 100644
+index 84337bbb2..771b582c3 100644
 --- a/jsdoc-testing/jsdoc/src/helpers/SpotLightHelper.d.ts
 +++ b/jsdoc-testing/jsdoc/src/helpers/SpotLightHelper.d.ts
 @@ -1,3 +1,8 @@
@@ -4895,8 +4859,8 @@ index 7e73edcef..d74e50583 100644
 +    color: ColorRepresentation | undefined;
      cone: LineSegments;
      /**
-      * Frees the GPU-related resources allocated by this instance. Call this
-@@ -50,5 +48,3 @@ export class SpotLightHelper extends Object3D {
+      * Updates the helper to match the position and direction of the
+@@ -45,5 +43,3 @@ export class SpotLightHelper extends Object3D {
       */
      update(): void;
  }
@@ -5082,20 +5046,16 @@ index 9bffa0d03..29ee9a37e 100644
 -import { Light } from './Light.js';
 -import { Color } from '../math/Color.js';
 diff --git a/jsdoc-testing/jsdoc/src/lights/Light.d.ts b/jsdoc-testing/jsdoc/src/lights/Light.d.ts
-index 15a77b361..05027d9af 100644
+index 53b1d77ab..dda91793d 100644
 --- a/jsdoc-testing/jsdoc/src/lights/Light.d.ts
 +++ b/jsdoc-testing/jsdoc/src/lights/Light.d.ts
-@@ -1,37 +1,40 @@
-+import { JSONMeta, Object3D, Object3DEventMap, Object3DJSON } from "../core/Object3D.js";
+@@ -1,42 +1,39 @@
++import { JSONMeta, Object3D, Object3DJSON } from "../core/Object3D.js";
 +import { Color, ColorRepresentation } from '../math/Color.js';
 +
 +export interface LightJSON extends Object3DJSON {
 +    color: number;
 +    intensity: number;
-+}
-+
-+export interface LightEventMap extends Object3DEventMap {
-+    dispose: {};
 +}
 +
  /**
@@ -5106,7 +5066,7 @@ index 15a77b361..05027d9af 100644
 - * @augments Object3D
   */
 -export class Light extends Object3D {
-+export abstract class Light extends Object3D<LightEventMap> {
++export abstract class Light extends Object3D {
      /**
       * Constructs a new light.
       *
@@ -5137,10 +5097,6 @@ index 15a77b361..05027d9af 100644
       * @default 1
       */
      intensity: number;
-@@ -40,8 +43,6 @@ export class Light extends Object3D {
-      * method whenever this instance is no longer used in your app.
-      */
-     dispose(): void;
 -    copy(source: any, recursive: any): this;
 -    toJSON(meta: any): Object;
 +    copy(source: Light, recursive?: boolean): this;
