@@ -16102,10 +16102,10 @@ index f18cad9f8..22d8868ac 100644
 +
 +export default TimestampQueryPool;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/XRManager.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/XRManager.d.ts
-index a278f6c30..90c1511ac 100644
+index b87e3fef7..19fdc42c8 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/XRManager.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/common/XRManager.d.ts
-@@ -1,11 +1,37 @@
+@@ -1,11 +1,38 @@
 -export default XRManager;
 +import { EventDispatcher } from '../../core/EventDispatcher.js';
 +import { ArrayCamera } from '../../cameras/ArrayCamera.js';
@@ -16130,6 +16130,7 @@ index a278f6c30..90c1511ac 100644
 +
 +export interface LayerAttributes {
 +    stencil?: boolean | undefined;
++    samples?: number | undefined;
 +}
 +
 +interface XRGPUBinding {}
@@ -16145,7 +16146,7 @@ index a278f6c30..90c1511ac 100644
      /**
       * Constructs a new XR manager.
       *
-@@ -35,308 +61,6 @@ declare class XRManager extends EventDispatcher {
+@@ -35,308 +62,6 @@ declare class XRManager extends EventDispatcher {
       * @default true
       */
      cameraAutoUpdate: boolean;
@@ -16454,7 +16455,7 @@ index a278f6c30..90c1511ac 100644
      /**
       * Returns an instance of `THREE.Group` that represents the transformation
       * of a XR controller in target ray space. The requested controller is defined
-@@ -345,7 +69,7 @@ declare class XRManager extends EventDispatcher {
+@@ -345,7 +70,7 @@ declare class XRManager extends EventDispatcher {
       * @param {number} index - The index of the XR controller.
       * @return {Group} A group that represents the controller's transformation.
       */
@@ -16463,7 +16464,7 @@ index a278f6c30..90c1511ac 100644
      /**
       * Returns an instance of `THREE.Group` that represents the transformation
       * of a XR controller in grip space. The requested controller is defined
-@@ -354,7 +78,7 @@ declare class XRManager extends EventDispatcher {
+@@ -354,7 +79,7 @@ declare class XRManager extends EventDispatcher {
       * @param {number} index - The index of the XR controller.
       * @return {Group} A group that represents the controller's transformation.
       */
@@ -16472,7 +16473,7 @@ index a278f6c30..90c1511ac 100644
      /**
       * Returns an instance of `THREE.Group` that represents the transformation
       * of a XR controller in hand space. The requested controller is defined
-@@ -363,7 +87,7 @@ declare class XRManager extends EventDispatcher {
+@@ -363,7 +88,7 @@ declare class XRManager extends EventDispatcher {
       * @param {number} index - The index of the XR controller.
       * @return {Group} A group that represents the controller's transformation.
       */
@@ -16481,7 +16482,7 @@ index a278f6c30..90c1511ac 100644
      /**
       * Returns the foveation value.
       *
-@@ -428,7 +152,7 @@ declare class XRManager extends EventDispatcher {
+@@ -428,7 +153,7 @@ declare class XRManager extends EventDispatcher {
       *
       * @return {'opaque'|'additive'|'alpha-blend'|undefined} The environment blend mode. Returns `undefined` when used outside of a XR session.
       */
@@ -16490,7 +16491,7 @@ index a278f6c30..90c1511ac 100644
      /**
       * Returns the current base layer.
       *
-@@ -466,42 +190,6 @@ declare class XRManager extends EventDispatcher {
+@@ -466,42 +191,6 @@ declare class XRManager extends EventDispatcher {
       * @return {?XRGPUBinding} The XR WebGPU binding. Returns `null` if one cannot be created.
       */
      getWebGPUBinding(): XRGPUBinding | null;
@@ -16533,25 +16534,29 @@ index a278f6c30..90c1511ac 100644
      /**
       * Returns the current XR frame.
       *
-@@ -529,7 +217,7 @@ declare class XRManager extends EventDispatcher {
-      * @param {Object} [attributes={}] - Allows to configure the layer's render target.
+@@ -530,9 +219,7 @@ declare class XRManager extends EventDispatcher {
+      * @param {number} [attributes.samples] - The scene MSAA sample count. Defaults to the renderer's sample count.
       * @return {Mesh} A mesh representing the quadratic XR layer. This mesh should be added to the XR scene.
       */
--    createQuadLayer(width: number, height: number, translation: Vector3, quaternion: Quaternion, pixelwidth: number, pixelheight: number, rendercall: Function, attributes?: Object): Mesh;
+-    createQuadLayer(width: number, height: number, translation: Vector3, quaternion: Quaternion, pixelwidth: number, pixelheight: number, rendercall: Function, attributes?: {
+-        samples?: number | undefined;
+-    }): Mesh;
 +    createQuadLayer(width: number, height: number, translation: Vector3, quaternion: Quaternion, pixelwidth: number, pixelheight: number, rendercall: () => void, attributes?: LayerAttributes): Mesh<PlaneGeometry, MeshBasicMaterial>;
      /**
       * This method can be used in XR applications to create a cylindrical layer that presents a separate
       * rendered scene.
-@@ -546,7 +234,7 @@ declare class XRManager extends EventDispatcher {
-      * @param {Object} [attributes={}] - Allows to configure the layer's render target.
+@@ -550,9 +237,7 @@ declare class XRManager extends EventDispatcher {
+      * @param {number} [attributes.samples] - The scene MSAA sample count. Defaults to the renderer's sample count.
       * @return {Mesh} A mesh representing the cylindrical XR layer. This mesh should be added to the XR scene.
       */
--    createCylinderLayer(radius: number, centralAngle: number, aspectratio: number, translation: Vector3, quaternion: Quaternion, pixelwidth: number, pixelheight: number, rendercall: Function, attributes?: Object): Mesh;
+-    createCylinderLayer(radius: number, centralAngle: number, aspectratio: number, translation: Vector3, quaternion: Quaternion, pixelwidth: number, pixelheight: number, rendercall: Function, attributes?: {
+-        samples?: number | undefined;
+-    }): Mesh;
 +    createCylinderLayer(radius: number, centralAngle: number, aspectratio: number, translation: Vector3, quaternion: Quaternion, pixelwidth: number, pixelheight: number, rendercall: () => void, attributes?: LayerAttributes): Mesh<CylinderGeometry, MeshBasicMaterial>;
      /**
       * Renders the XR layers that have been previously added to the scene.
       *
-@@ -569,7 +257,7 @@ declare class XRManager extends EventDispatcher {
+@@ -575,7 +260,7 @@ declare class XRManager extends EventDispatcher {
       * @param {XRSession} session - The XR session to set.
       * @return {Promise} A Promise that resolves when the session has been set.
       */
@@ -16560,7 +16565,7 @@ index a278f6c30..90c1511ac 100644
      /**
       * This method is called by the renderer per frame and updates the XR camera
       * and it sub cameras based on the given camera. The given camera is the "user"
-@@ -578,19 +266,6 @@ declare class XRManager extends EventDispatcher {
+@@ -584,19 +269,6 @@ declare class XRManager extends EventDispatcher {
       * @param {PerspectiveCamera} camera - The camera.
       */
      updateCamera(camera: PerspectiveCamera): void;
