@@ -24476,6 +24476,52 @@ index ae129e57e..900131094 100644
  
  //
  
+diff --git a/examples-testing/examples/webgpu_xr_shadows.ts b/examples-testing/examples/webgpu_xr_shadows.ts
+index 3b84d81d7..3e893c997 100644
+--- a/examples-testing/examples/webgpu_xr_shadows.ts
++++ b/examples-testing/examples/webgpu_xr_shadows.ts
+@@ -3,12 +3,20 @@ import * as THREE from 'three/webgpu';
+ import { VRButton } from 'three/addons/webxr/VRButton.js';
+ import { setupWebGLXRFallback } from 'three/addons/webxr/WebGLXRFallback.js';
+ 
+-const rendererParameters = { antialias: true, outputBufferType: THREE.UnsignedByteType, multiview: false };
++const rendererParameters: THREE.WebGPURendererParameters = {
++    antialias: true,
++    outputBufferType: THREE.UnsignedByteType,
++    multiview: false,
++};
+ const timer = new THREE.Timer();
+ timer.connect(document);
+ 
+-let camera, cameraRig, scene, renderer;
+-let directionalLight, torusKnot, box, icosahedron, cone;
++let camera: THREE.PerspectiveCamera, cameraRig: THREE.Group, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
++let directionalLight: THREE.DirectionalLight,
++    torusKnot: THREE.Mesh,
++    box: THREE.Mesh,
++    icosahedron: THREE.Mesh,
++    cone: THREE.Mesh;
+ 
+ init();
+ 
+@@ -113,7 +121,7 @@ function init() {
+ }
+ 
+ function createRenderer(forceWebGL = false) {
+-    const parameters = { ...rendererParameters };
++    const parameters: THREE.WebGPURendererParameters = { ...rendererParameters };
+ 
+     if (forceWebGL === true) parameters.forceWebGL = true;
+ 
+@@ -130,7 +138,7 @@ function createRenderer(forceWebGL = false) {
+     return renderer;
+ }
+ 
+-function setRenderer(newRenderer, oldRenderer = null) {
++function setRenderer(newRenderer: THREE.WebGPURenderer, oldRenderer: THREE.WebGPURenderer | null = null) {
+     if (oldRenderer === null) {
+         document.body.appendChild(newRenderer.domElement);
+     } else {
 diff --git a/examples-testing/examples/webxr_ar_cones.ts b/examples-testing/examples/webxr_ar_cones.ts
 index 95eb34393..0e641cdb3 100644
 --- a/examples-testing/examples/webxr_ar_cones.ts
