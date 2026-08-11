@@ -7289,14 +7289,14 @@ index 4d41740e6..fa810d6bc 100644
  // Configure and create Draco decoder.
  const dracoLoader = new DRACOLoader();
 diff --git a/examples-testing/examples/webgl_loader_fbx.ts b/examples-testing/examples/webgl_loader_fbx.ts
-index 65563556a..6378e04de 100644
+index f348ad216..373937759 100644
 --- a/examples-testing/examples/webgl_loader_fbx.ts
 +++ b/examples-testing/examples/webgl_loader_fbx.ts
-@@ -8,8 +8,14 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+@@ -8,8 +8,15 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
  const manager = new THREE.LoadingManager();
  
--let camera, scene, renderer, stats, object, loader, guiMorphsFolder;
+-let camera, scene, renderer, stats, object, loader, guiMorphsFolder, guiAnimationsFolder;
 -let mixer;
 +let camera: THREE.PerspectiveCamera,
 +    scene: THREE.Scene,
@@ -7304,17 +7304,20 @@ index 65563556a..6378e04de 100644
 +    stats: Stats,
 +    object: THREE.Group,
 +    loader: FBXLoader,
-+    guiMorphsFolder: GUI;
++    guiMorphsFolder: GUI,
++    guiAnimationsFolder: GUI;
 +let mixer: THREE.AnimationMixer | null;
  
  const timer = new THREE.Timer();
  timer.connect(document);
-@@ -110,23 +116,26 @@ function init() {
-     guiMorphsFolder = gui.addFolder('Morphs').hide();
+@@ -113,25 +120,28 @@ function init() {
+     guiAnimationsFolder = gui.addFolder('Animations').hide();
  }
  
 -function loadAsset(asset) {
 +function loadAsset(asset: string) {
+     loader.trimAnimationClips = asset === 'ball_anims_asc_2018';
+ 
      loader.load('models/fbx/' + asset + '.fbx', function (group) {
          if (object) {
              object.traverse(function (child) {
@@ -7343,7 +7346,20 @@ index 65563556a..6378e04de 100644
              });
  
              scene.remove(object);
-@@ -152,15 +161,21 @@ function loadAsset(asset) {
+@@ -164,10 +174,10 @@ function loadAsset(asset) {
+                     clips.map(clip => clip.name),
+                 )
+                 .onChange(function (name) {
+-                    mixer.stopAllAction();
++                    mixer!.stopAllAction();
+ 
+                     const clip = THREE.AnimationClip.findByName(clips, name);
+-                    mixer.clipAction(clip).play();
++                    mixer!.clipAction(clip!).play();
+                 });
+         } else {
+             mixer = null;
+@@ -177,15 +187,21 @@ function loadAsset(asset) {
          guiMorphsFolder.hide();
  
          object.traverse(function (child) {
