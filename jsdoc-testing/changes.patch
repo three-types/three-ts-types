@@ -14464,10 +14464,10 @@ index db3046a90..9a5928cef 100644
 +
 +export default ClippingContext;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/Constants.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/Constants.d.ts
-index cf3261af0..0ded1192b 100644
+index 0561bfadb..93988f36e 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/Constants.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/common/Constants.d.ts
-@@ -1,9 +1,12 @@
+@@ -1,7 +1,9 @@
 -export namespace AttributeType {
 -    let VERTEX: number;
 -    let INDEX: number;
@@ -14483,9 +14483,6 @@ index cf3261af0..0ded1192b 100644
 +export type AttributeType = (typeof AttributeType)[keyof typeof AttributeType];
 +
  export const GPU_CHUNK_BYTES: 16;
-+
- export const BlendColorFactor: 211;
- export const OneMinusBlendColorFactor: 212;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/CubeRenderTarget.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/CubeRenderTarget.d.ts
 index e6cad71cf..a475ea915 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/CubeRenderTarget.d.ts
@@ -16058,7 +16055,7 @@ index f18cad9f8..22d8868ac 100644
 +
 +export default TimestampQueryPool;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/XRManager.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/XRManager.d.ts
-index b87e3fef7..19fdc42c8 100644
+index 5246e5ebd..19fdc42c8 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/XRManager.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/common/XRManager.d.ts
 @@ -1,11 +1,38 @@
@@ -16102,7 +16099,7 @@ index b87e3fef7..19fdc42c8 100644
      /**
       * Constructs a new XR manager.
       *
-@@ -35,308 +62,6 @@ declare class XRManager extends EventDispatcher {
+@@ -35,300 +62,6 @@ declare class XRManager extends EventDispatcher {
       * @default true
       */
      cameraAutoUpdate: boolean;
@@ -16245,14 +16242,6 @@ index b87e3fef7..19fdc42c8 100644
 -     * @default null
 -     */
 -    private _currentPixelRatio;
--    /**
--     * The renderer's sample count before XR temporarily overrides it.
--     *
--     * @private
--     * @type {?number}
--     * @default null
--     */
--    private _currentSamples;
 -    /**
 -     * The current size of the renderer's canvas
 -     * in logical pixel unit.
@@ -16411,7 +16400,7 @@ index b87e3fef7..19fdc42c8 100644
      /**
       * Returns an instance of `THREE.Group` that represents the transformation
       * of a XR controller in target ray space. The requested controller is defined
-@@ -345,7 +70,7 @@ declare class XRManager extends EventDispatcher {
+@@ -337,7 +70,7 @@ declare class XRManager extends EventDispatcher {
       * @param {number} index - The index of the XR controller.
       * @return {Group} A group that represents the controller's transformation.
       */
@@ -16420,7 +16409,7 @@ index b87e3fef7..19fdc42c8 100644
      /**
       * Returns an instance of `THREE.Group` that represents the transformation
       * of a XR controller in grip space. The requested controller is defined
-@@ -354,7 +79,7 @@ declare class XRManager extends EventDispatcher {
+@@ -346,7 +79,7 @@ declare class XRManager extends EventDispatcher {
       * @param {number} index - The index of the XR controller.
       * @return {Group} A group that represents the controller's transformation.
       */
@@ -16429,7 +16418,7 @@ index b87e3fef7..19fdc42c8 100644
      /**
       * Returns an instance of `THREE.Group` that represents the transformation
       * of a XR controller in hand space. The requested controller is defined
-@@ -363,7 +88,7 @@ declare class XRManager extends EventDispatcher {
+@@ -355,7 +88,7 @@ declare class XRManager extends EventDispatcher {
       * @param {number} index - The index of the XR controller.
       * @return {Group} A group that represents the controller's transformation.
       */
@@ -16438,7 +16427,7 @@ index b87e3fef7..19fdc42c8 100644
      /**
       * Returns the foveation value.
       *
-@@ -428,7 +153,7 @@ declare class XRManager extends EventDispatcher {
+@@ -420,7 +153,7 @@ declare class XRManager extends EventDispatcher {
       *
       * @return {'opaque'|'additive'|'alpha-blend'|undefined} The environment blend mode. Returns `undefined` when used outside of a XR session.
       */
@@ -16447,7 +16436,7 @@ index b87e3fef7..19fdc42c8 100644
      /**
       * Returns the current base layer.
       *
-@@ -466,42 +191,6 @@ declare class XRManager extends EventDispatcher {
+@@ -458,42 +191,6 @@ declare class XRManager extends EventDispatcher {
       * @return {?XRGPUBinding} The XR WebGPU binding. Returns `null` if one cannot be created.
       */
      getWebGPUBinding(): XRGPUBinding | null;
@@ -16490,7 +16479,7 @@ index b87e3fef7..19fdc42c8 100644
      /**
       * Returns the current XR frame.
       *
-@@ -530,9 +219,7 @@ declare class XRManager extends EventDispatcher {
+@@ -522,9 +219,7 @@ declare class XRManager extends EventDispatcher {
       * @param {number} [attributes.samples] - The scene MSAA sample count. Defaults to the renderer's sample count.
       * @return {Mesh} A mesh representing the quadratic XR layer. This mesh should be added to the XR scene.
       */
@@ -16501,7 +16490,7 @@ index b87e3fef7..19fdc42c8 100644
      /**
       * This method can be used in XR applications to create a cylindrical layer that presents a separate
       * rendered scene.
-@@ -550,9 +237,7 @@ declare class XRManager extends EventDispatcher {
+@@ -542,9 +237,7 @@ declare class XRManager extends EventDispatcher {
       * @param {number} [attributes.samples] - The scene MSAA sample count. Defaults to the renderer's sample count.
       * @return {Mesh} A mesh representing the cylindrical XR layer. This mesh should be added to the XR scene.
       */
@@ -16512,7 +16501,7 @@ index b87e3fef7..19fdc42c8 100644
      /**
       * Renders the XR layers that have been previously added to the scene.
       *
-@@ -575,7 +260,7 @@ declare class XRManager extends EventDispatcher {
+@@ -567,7 +260,7 @@ declare class XRManager extends EventDispatcher {
       * @param {XRSession} session - The XR session to set.
       * @return {Promise} A Promise that resolves when the session has been set.
       */
@@ -16521,7 +16510,7 @@ index b87e3fef7..19fdc42c8 100644
      /**
       * This method is called by the renderer per frame and updates the XR camera
       * and it sub cameras based on the given camera. The given camera is the "user"
-@@ -584,19 +269,6 @@ declare class XRManager extends EventDispatcher {
+@@ -576,19 +269,6 @@ declare class XRManager extends EventDispatcher {
       * @param {PerspectiveCamera} camera - The camera.
       */
      updateCamera(camera: PerspectiveCamera): void;
