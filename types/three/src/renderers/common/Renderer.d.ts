@@ -816,6 +816,8 @@ declare class Renderer {
     /**
      * Returns `true` if a framebuffer target is needed to perform tone mapping or color space conversion.
      * If this is the case, the renderer allocates an internal render target for that purpose.
+     *
+     * @type {boolean}
      */
     get needsFrameBufferTarget(): boolean;
     /**
