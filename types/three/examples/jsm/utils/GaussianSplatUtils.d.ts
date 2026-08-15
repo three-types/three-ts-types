@@ -9,8 +9,6 @@ export const GAUSSIAN_SPLAT_PLY_PROPERTY_MAPPING: {
 
 export const SH_C0: number;
 
-export function clampByte(value: number): number;
-
 export function sigmoid(value: number): number;
 
 export function sh0ToLinear(coefficient: number): number;
@@ -18,7 +16,7 @@ export function sh0ToLinear(coefficient: number): number;
 export function linearToSH0(color: number): number;
 
 export function writeColorBytes(
-    target: Uint8Array,
+    target: Uint8ClampedArray,
     offset: number,
     r: number,
     g: number,
@@ -27,7 +25,7 @@ export function writeColorBytes(
 ): void;
 
 export function writeColorBytesFromSH0(
-    target: Uint8Array,
+    target: Uint8ClampedArray,
     offset: number,
     r: number,
     g: number,
@@ -50,7 +48,7 @@ export function writeCovariance(
 export function createGaussianSplatGeometry(
     centers: Float32Array,
     covariances: Float32Array,
-    colors: Uint8Array,
+    colors: Uint8ClampedArray,
 ): BufferGeometry;
 
 export interface CreateGaussianSplatGeometryFromPLYGeometryOptions {
