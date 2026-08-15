@@ -44,7 +44,7 @@ interface TextureNodeInterface {
 
     gather(gatherNode?: Node<"int"> | number): this;
 
-    isPlainGather(): boolean;
+    isSampleCompare(): boolean;
 
     depth(depthNode: Node): this;
 
