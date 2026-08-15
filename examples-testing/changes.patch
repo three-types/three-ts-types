@@ -15947,6 +15947,99 @@ index 4afa5d2d0..715c323a2 100644
              });
  
              render();
+diff --git a/examples-testing/examples/webgpu_gaussian_splatting.ts b/examples-testing/examples/webgpu_gaussian_splatting.ts
+index bbec0885a..fd19ba19d 100644
+--- a/examples-testing/examples/webgpu_gaussian_splatting.ts
++++ b/examples-testing/examples/webgpu_gaussian_splatting.ts
+@@ -7,12 +7,35 @@ import { SPLATLoader } from 'three/addons/loaders/SPLATLoader.js';
+ import { SPZLoader } from 'three/addons/loaders/SPZLoader.js';
+ import { GaussianSplatMesh } from 'three/addons/objects/GaussianSplatMesh.js';
+ 
+-let camera, scene, renderer, controls, splats, splatRoot;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGPURenderer,
++    controls: OrbitControls,
++    splats: GaussianSplatMesh | undefined,
++    splatRoot: GaussianSplatMesh | undefined;
+ THREE.ColorManagement.workingColorSpace = THREE.SRGBColorSpace;
+ 
+ const zeroVector = new THREE.Vector3();
+ 
+-const sources = {
++interface SplatSource {
++    name: string;
++    url: string;
++    loader: new () => THREE.Loader<THREE.BufferGeometry>;
++    rotation?: THREE.Euler;
++    cameraPosition: THREE.Vector3;
++    cameraTarget?: THREE.Vector3;
++    minDistance?: number;
++    maxDistance?: number;
++    credit?: {
++        author: string;
++        authorUrl: string;
++        source: string;
++        license: string;
++        licenseUrl: string;
++    };
++}
++
++const sources: Record<string, SplatSource> = {
+     millipede: {
+         name: 'Millipede (SPLAT)',
+         url: './models/splat/millipede.splat',
+@@ -103,7 +126,7 @@ async function init() {
+     window.addEventListener('resize', onWindowResize);
+ }
+ 
+-async function loadSplatSource(sourceKey) {
++async function loadSplatSource(sourceKey: string) {
+     const source = sources[sourceKey];
+     const splatData = await new source.loader().loadAsync(source.url);
+ 
+@@ -121,8 +144,8 @@ async function loadSplatSource(sourceKey) {
+     updateLicenseInfo(source);
+ }
+ 
+-function updateLicenseInfo(source) {
+-    const license = document.getElementById('license');
++function updateLicenseInfo(source: SplatSource) {
++    const license = document.getElementById('license')!;
+     const credit = source.credit;
+ 
+     if (credit === undefined) {
+@@ -146,24 +169,24 @@ function updateLicenseInfo(source) {
+         '</a>.';
+ }
+ 
+-function getSourceKeyByName(sourceName) {
+-    return Object.keys(sources).find(key => sources[key].name === sourceName);
++function getSourceKeyByName(sourceName: string) {
++    return Object.keys(sources).find(key => sources[key].name === sourceName)!;
+ }
+ 
+ function disposeCurrentSplats() {
+     if (splatRoot === undefined) return;
+ 
+     scene.remove(splatRoot);
+-    splats.geometry.dispose();
+-    splats.material.dispose();
++    splats!.geometry.dispose();
++    splats!.material.dispose();
+     splats = undefined;
+     splatRoot = undefined;
+ }
+ 
+-function fitCameraToSplats(mesh, source) {
++function fitCameraToSplats(mesh: GaussianSplatMesh, source: SplatSource) {
+     mesh.updateWorldMatrix(true, false);
+ 
+-    const sphere = mesh.splatGeometry.boundingSphere.clone().applyMatrix4(mesh.matrixWorld);
++    const sphere = mesh.splatGeometry.boundingSphere!.clone().applyMatrix4(mesh.matrixWorld);
+     const radius = Math.max(sphere.radius, 0.01);
+     const distance = radius / Math.sin(THREE.MathUtils.degToRad(camera.fov) * 0.5);
+ 
 diff --git a/examples-testing/examples/webgpu_generator_building.ts b/examples-testing/examples/webgpu_generator_building.ts
 index ec0088e0e..6335c36db 100644
 --- a/examples-testing/examples/webgpu_generator_building.ts
