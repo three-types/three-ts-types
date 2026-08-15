@@ -11574,7 +11574,7 @@ index 8b5885c3c..6175b46ab 100644
 +
 +export default VolumeNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/manager/NodeMaterialObserver.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/manager/NodeMaterialObserver.d.ts
-index 32650a6de..962926ab4 100644
+index f354b0014..962926ab4 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/manager/NodeMaterialObserver.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/manager/NodeMaterialObserver.d.ts
 @@ -1,4 +1,6 @@
@@ -11608,7 +11608,7 @@ index 32650a6de..962926ab4 100644
      /**
       * Holds the current render ID from the node frame.
       *
-@@ -43,13 +38,6 @@ declare class NodeMaterialObserver {
+@@ -43,21 +38,6 @@ declare class NodeMaterialObserver {
       * @default 0
       */
      renderId: number;
@@ -11619,10 +11619,18 @@ index 32650a6de..962926ab4 100644
 -     * @return {boolean} Whether the given render object is verified for the first time of this observer.
 -     */
 -    firstInitialization(renderObject: RenderObject): boolean;
+-    /**
+-     * Returns `true` if the given 3D object uses instance buffers with dynamic draw usage.
+-     * Such buffers must be uploaded once per render so the render object requires a full refresh.
+-     *
+-     * @param {Object3D} object - The 3D object.
+-     * @return {boolean} Whether the given 3D object uses instance buffers with dynamic draw usage or not.
+-     */
+-    hasDynamicInstancing(object: Object3D): boolean;
      /**
       * Returns `true` if the current rendering produces motion vectors.
       *
-@@ -57,21 +45,6 @@ declare class NodeMaterialObserver {
+@@ -65,21 +45,6 @@ declare class NodeMaterialObserver {
       * @return {boolean} Whether the current rendering produces motion vectors or not.
       */
      needsVelocity(renderer: Renderer): boolean;
@@ -11644,7 +11652,7 @@ index 32650a6de..962926ab4 100644
      /**
       * Returns `true` if the node builder's material uses
       * node properties.
-@@ -80,52 +53,6 @@ declare class NodeMaterialObserver {
+@@ -88,52 +53,6 @@ declare class NodeMaterialObserver {
       * @return {boolean} Whether the node builder's material uses node properties or not.
       */
      containsNode(builder: NodeBuilder): boolean;
@@ -11693,9 +11701,9 @@ index 32650a6de..962926ab4 100644
 -     *
 -     * @param {RenderObject} renderObject - The render object.
 -     * @param {NodeFrame} nodeFrame - The current node frame.
--     * @return {boolean} Whether the given render object requires a refresh or not.
+-     * @return {number} The refresh type, see {@link RenderObjectRefreshType}.
 -     */
--    needsRefresh(renderObject: RenderObject, nodeFrame: NodeFrame): boolean;
+-    needsRefresh(renderObject: RenderObject, nodeFrame: NodeFrame): number;
  }
 +
 +export default NodeMaterialObserver;
@@ -16741,7 +16749,7 @@ index 0121dd34b..f5741f970 100644
 +
 +export default NodeLibrary;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeManager.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeManager.d.ts
-index e436069ef..835f0f914 100644
+index 64db1c627..287bb2296 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeManager.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeManager.d.ts
 @@ -1,4 +1,28 @@
@@ -16850,7 +16858,7 @@ index e436069ef..835f0f914 100644
       * for all nodes of the given render object.
 @@ -291,6 +315,5 @@ declare class NodeManager extends DataMap {
       */
-     needsRefresh(renderObject: RenderObject): boolean;
+     needsRefresh(renderObject: RenderObject): number;
  }
 -import DataMap from '../DataMap.js';
 -import NodeBuilderState from './NodeBuilderState.js';
