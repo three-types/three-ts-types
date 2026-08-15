@@ -15948,12 +15948,12 @@ index 4afa5d2d0..715c323a2 100644
  
              render();
 diff --git a/examples-testing/examples/webgpu_gaussian_splatting.ts b/examples-testing/examples/webgpu_gaussian_splatting.ts
-index bbec0885a..fd19ba19d 100644
+index 0b2d62a18..f1a2179e6 100644
 --- a/examples-testing/examples/webgpu_gaussian_splatting.ts
 +++ b/examples-testing/examples/webgpu_gaussian_splatting.ts
-@@ -7,12 +7,35 @@ import { SPLATLoader } from 'three/addons/loaders/SPLATLoader.js';
- import { SPZLoader } from 'three/addons/loaders/SPZLoader.js';
+@@ -6,12 +6,35 @@ import { SPZLoader } from 'three/addons/loaders/SPZLoader.js';
  import { GaussianSplatMesh } from 'three/addons/objects/GaussianSplatMesh.js';
+ import { Inspector } from 'three/addons/inspector/Inspector.js';
  
 -let camera, scene, renderer, controls, splats, splatRoot;
 +let camera: THREE.PerspectiveCamera,
@@ -15989,7 +15989,16 @@ index bbec0885a..fd19ba19d 100644
      millipede: {
          name: 'Millipede (SPLAT)',
          url: './models/splat/millipede.splat',
-@@ -103,7 +126,7 @@ async function init() {
+@@ -71,7 +94,7 @@ async function init() {
+     controls.target.set(0, 0, 0);
+     controls.update();
+ 
+-    const gui = renderer.inspector.createParameters('Building');
++    const gui = (renderer.inspector as Inspector).createParameters('Building');
+     gui.add(params, 'source', sourceNames)
+         .name('Splat')
+         .onChange(async value => {
+@@ -83,7 +106,7 @@ async function init() {
      window.addEventListener('resize', onWindowResize);
  }
  
@@ -15998,7 +16007,7 @@ index bbec0885a..fd19ba19d 100644
      const source = sources[sourceKey];
      const splatData = await new source.loader().loadAsync(source.url);
  
-@@ -121,8 +144,8 @@ async function loadSplatSource(sourceKey) {
+@@ -101,8 +124,8 @@ async function loadSplatSource(sourceKey) {
      updateLicenseInfo(source);
  }
  
@@ -16009,7 +16018,7 @@ index bbec0885a..fd19ba19d 100644
      const credit = source.credit;
  
      if (credit === undefined) {
-@@ -146,24 +169,24 @@ function updateLicenseInfo(source) {
+@@ -126,24 +149,24 @@ function updateLicenseInfo(source) {
          '</a>.';
  }
  
