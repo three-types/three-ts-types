@@ -839,6 +839,16 @@ export const Compatibility: {
 };
 export type Compatibility = typeof Compatibility.TEXTURE_COMPARE;
 
+export const RenderObjectRefreshType: {
+    NONE: 0;
+    SHARED: 1;
+    FULL: 2;
+};
+export type RenderObjectRefreshType =
+    | typeof RenderObjectRefreshType.NONE
+    | typeof RenderObjectRefreshType.SHARED
+    | typeof RenderObjectRefreshType.FULL;
+
 ///////////////////////////////////////////////////////////////////////////////
 // Texture - Internal Pixel Formats
 
