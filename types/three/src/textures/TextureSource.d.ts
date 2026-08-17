@@ -15,17 +15,17 @@ export class SourceJSON {
 }
 
 /**
- * Represents the data {@link Source} of a texture.
- * @see {@link https://threejs.org/docs/index.html#api/en/textures/Source | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/textures/Source.js | Source}
+ * Represents the data {@link TextureSource} of a texture.
+ * @see {@link https://threejs.org/docs/index.html#api/en/textures/TextureSource | Official Documentation}
+ * @see {@link https://github.com/mrdoob/three.js/blob/master/src/textures/TextureSource.js | TextureSource}
  */
-export class Source<TData> {
+export class TextureSource<TData> {
     /**
-     * Flag to check if a given object is of type {@link Source}.
+     * Flag to check if a given object is of type {@link TextureSource}.
      * @remarks This is a _constant_ value
      * @defaultValue `true`
      */
-    readonly isSource: true;
+    readonly isTextureSource: true;
 
     readonly id: number;
 
@@ -58,7 +58,7 @@ export class Source<TData> {
     version: number;
 
     /**
-     * Create a new instance of {@link Source}
+     * Create a new instance of {@link TextureSource}
      * @param data The data definition of a texture. Default `null`
      */
     constructor(data: TData);
@@ -72,8 +72,28 @@ export class Source<TData> {
     set needsUpdate(value: boolean);
 
     /**
-     * Convert the data {@link Source} to three.js {@link https://github.com/mrdoob/three.js/wiki/JSON-Object-Scene-format-4 | JSON Object/Scene format}.
+     * Convert the data {@link TextureSource} to three.js {@link https://github.com/mrdoob/three.js/wiki/JSON-Object-Scene-format-4 | JSON Object/Scene format}.
      * @param meta Optional object containing metadata.
      */
     toJSON(meta?: string | {}): SourceJSON;
+}
+
+/**
+ * @deprecated since r186. Use {@link TextureSource} instead. `Source` has been renamed to `TextureSource`.
+ */
+export class Source<TData> extends TextureSource<TData> {
+    /**
+     * Create a new instance of {@link Source}
+     * @param data The data definition of a texture. Default `null`
+     * @deprecated since r186. Use {@link TextureSource} instead.
+     */
+    constructor(data: TData);
+
+    /**
+     * Flag to check if a given object is of type {@link Source}.
+     * @remarks This is a _constant_ value
+     * @deprecated since r186. Use {@link TextureSource.isTextureSource} instead.
+     * @defaultValue `true`
+     */
+    readonly isSource: true;
 }

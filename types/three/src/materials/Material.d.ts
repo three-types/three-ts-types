@@ -23,8 +23,8 @@ import { Group } from "../objects/Group.js";
 import { WebGLProgramParametersWithUniforms } from "../renderers/webgl/WebGLPrograms.js";
 import { WebGLRenderer } from "../renderers/WebGLRenderer.js";
 import { Scene } from "../scenes/Scene.js";
-import { SourceJSON } from "../textures/Source.js";
 import { Texture, TextureJSON } from "../textures/Texture.js";
+import { SourceJSON } from "../textures/TextureSource.js";
 
 export interface MaterialProperties {
     /**
