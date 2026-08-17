@@ -25,6 +25,7 @@ declare class LoopNode extends Node<"void"> {
 export default LoopNode;
 
 interface Loop {
+    (func: () => void): LoopNode;
     (i: number, func: (inputs: { readonly i: Node<"int"> }) => void): LoopNode;
     <TNodeType extends LoopNodeType>(
         i: LoopNodeObjectParameter<TNodeType>,
