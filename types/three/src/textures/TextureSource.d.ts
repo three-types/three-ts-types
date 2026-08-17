@@ -9,15 +9,10 @@ export type SerializedImage =
         type: string;
     };
 
-export class TextureSourceJSON {
+export interface TextureSourceJSON {
     uuid: string;
     url: SerializedImage | SerializedImage[];
 }
-
-/**
- * @deprecated since r186. Use {@link TextureSourceJSON} instead.
- */
-export type SourceJSON = TextureSourceJSON;
 
 /**
  * Represents the data {@link TextureSource} of a texture.
