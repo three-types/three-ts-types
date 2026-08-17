@@ -24,7 +24,7 @@ import { WebGLProgramParametersWithUniforms } from "../renderers/webgl/WebGLProg
 import { WebGLRenderer } from "../renderers/WebGLRenderer.js";
 import { Scene } from "../scenes/Scene.js";
 import { Texture, TextureJSON } from "../textures/Texture.js";
-import { SourceJSON } from "../textures/TextureSource.js";
+import { TextureSourceJSON } from "../textures/TextureSource.js";
 
 export interface MaterialProperties {
     /**
@@ -525,7 +525,7 @@ export interface MaterialJSON {
     userData?: Record<string, unknown>;
 
     textures?: Array<Omit<TextureJSON, "metadata">>;
-    images?: SourceJSON[];
+    images?: TextureSourceJSON[];
 }
 
 export interface MaterialEventMap {
