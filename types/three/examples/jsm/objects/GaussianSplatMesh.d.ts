@@ -12,6 +12,8 @@ declare class GaussianSplatMesh extends Mesh<InstancedBufferGeometry, NodeMateri
     splatGeometry: BufferGeometry;
     autoSort: boolean;
 
+    updateSphericalHarmonics(renderer: Renderer, camera: Camera): boolean;
+
     updateSort(renderer: Renderer, camera: Camera): boolean;
 }
 
