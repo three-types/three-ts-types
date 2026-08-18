@@ -13,8 +13,8 @@ import { Group } from "../objects/Group.js";
 import { SkeletonJSON } from "../objects/Skeleton.js";
 import { WebGLRenderer } from "../renderers/WebGLRenderer.js";
 import { Scene } from "../scenes/Scene.js";
-import { SourceJSON } from "../textures/Source.js";
 import { TextureJSON } from "../textures/Texture.js";
+import { TextureSourceJSON } from "../textures/TextureSource.js";
 import { BufferGeometry, BufferGeometryJSON } from "./BufferGeometry.js";
 import { EventDispatcher } from "./EventDispatcher.js";
 import { Layers } from "./Layers.js";
@@ -57,7 +57,7 @@ export interface JSONMeta {
     geometries: Record<string, BufferGeometryJSON>;
     materials: Record<string, MaterialJSON>;
     textures: Record<string, TextureJSON>;
-    images: Record<string, SourceJSON>;
+    images: Record<string, TextureSourceJSON>;
     shapes: Record<string, ShapeJSON>;
     skeletons: Record<string, SkeletonJSON>;
     animations: Record<string, AnimationClipJSON>;
