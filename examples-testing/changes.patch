@@ -17841,31 +17841,53 @@ index 264abcd99..f4131ef3c 100644
      gui.add(params, 'alpha', 0, 1).onChange(onMaterialUpdate);
      gui.add(params, 'alphaHash').onChange(onMaterialUpdate);
 diff --git a/examples-testing/examples/webgpu_materials_arrays.ts b/examples-testing/examples/webgpu_materials_arrays.ts
-index e6d15853e..154e3803c 100644
+index 92b7a9c24..d85fd1d67 100644
 --- a/examples-testing/examples/webgpu_materials_arrays.ts
 +++ b/examples-testing/examples/webgpu_materials_arrays.ts
-@@ -4,9 +4,9 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
- 
+@@ -3,8 +3,8 @@ import * as THREE from 'three/webgpu';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { Inspector } from 'three/addons/inspector/Inspector.js';
  
 -let renderer, scene, camera, controls;
--let planeMesh, boxMesh, boxMeshWireframe, planeMeshWireframe;
 -let materials;
 +let renderer: THREE.WebGPURenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera, controls: OrbitControls;
-+let planeMesh: THREE.Mesh, boxMesh: THREE.Mesh, boxMeshWireframe: THREE.Mesh, planeMeshWireframe: THREE.Mesh;
-+let materials: THREE.MeshBasicMaterial[];
++let materials: THREE.MeshStandardMaterial[];
  
- const api = {
-     webgpu: true,
-@@ -114,7 +114,7 @@ function animate() {
+ const _a = new THREE.Vector3(),
+     _b = new THREE.Vector3();
+@@ -112,19 +112,19 @@ function init() {
  
- // gui
+ // rebuilds a polyhedron with a hole cut into each polygon face, like an open paper model
  
--const gui = renderer.inspector.createParameters('Parameters');
-+const gui = (renderer!.inspector as Inspector).createParameters('Parameters');
+-function makeHoleyGeometry(geometry, verticesPerFace, holeScale = 0.6) {
++function makeHoleyGeometry(geometry: THREE.BufferGeometry, verticesPerFace: number, holeScale = 0.6) {
+     if (geometry.index !== null) geometry = geometry.toNonIndexed();
  
- gui.add(api, 'webgpu').onChange(() => {
-     init(!api.webgpu);
+     const position = geometry.getAttribute('position');
+ 
+-    const positions = [];
++    const positions: number[] = [];
+     const holey = new THREE.BufferGeometry();
+ 
+     for (let face = 0; face < position.count / verticesPerFace; face++) {
+         // collect the unique corner vertices of the face
+ 
+-        const corners = [];
+-        const keys = new Set();
++        const corners: THREE.Vector3[] = [];
++        const keys = new Set<string>();
+ 
+         for (let i = 0; i < verticesPerFace; i++) {
+             const v = new THREE.Vector3().fromBufferAttribute(position, face * verticesPerFace + i);
+@@ -146,7 +146,7 @@ function makeHoleyGeometry(geometry, verticesPerFace, holeScale = 0.6) {
+         const tangent = new THREE.Vector3().subVectors(corners[0], centroid).normalize();
+         const bitangent = new THREE.Vector3().crossVectors(normal, tangent);
+ 
+-        const angleOf = v => Math.atan2(_b.subVectors(v, centroid).dot(bitangent), _b.dot(tangent));
++        const angleOf = (v: THREE.Vector3) => Math.atan2(_b.subVectors(v, centroid).dot(bitangent), _b.dot(tangent));
+         corners.sort((p, q) => angleOf(p) - angleOf(q));
+ 
+         // bridge each outer edge with its scaled-down inner edge
 diff --git a/examples-testing/examples/webgpu_materials_basic.ts b/examples-testing/examples/webgpu_materials_basic.ts
 index 6aca76c97..fe08f13b4 100644
 --- a/examples-testing/examples/webgpu_materials_basic.ts
