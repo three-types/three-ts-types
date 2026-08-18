@@ -370,7 +370,6 @@ declare class NodeMaterial extends Material {
      * Setups the computation of the material's diffuse color.
      *
      * @param {NodeBuilder} builder - The current node builder.
-     * @param {BufferGeometry} geometry - The geometry.
      */
     setupDiffuseColor(builder: NodeBuilder): void;
     /**
