@@ -9,6 +9,12 @@ export const GAUSSIAN_SPLAT_PLY_PROPERTY_MAPPING: {
 
 export const SH_C0: number;
 
+export const SH_DEGREE_TO_COMPONENTS: number[];
+
+export const SH_BAND_COMPONENTS: number[];
+
+export const SH_BAND_WORDS: number[];
+
 export function sigmoid(value: number): number;
 
 export function sh0ToLinear(coefficient: number): number;
@@ -45,16 +51,48 @@ export function writeCovariance(
     qw: number,
 ): void;
 
+export interface GaussianSplatPLYPropertyMapping {
+    scale: string[];
+    rotation: string[];
+    f_dc: string[];
+    opacity: string[];
+    f_rest?: string[] | undefined;
+}
+
+export function getGaussianSplatPLYPropertyMapping(
+    sphericalHarmonicsDegree?: number,
+): GaussianSplatPLYPropertyMapping;
+
+export interface PackedSphericalHarmonicsBand {
+    packed: Uint32Array;
+    bytes: Uint8ClampedArray;
+}
+
+export function createPackedSphericalHarmonicsBand(count: number, degree: number): PackedSphericalHarmonicsBand;
+
+export function getSphericalHarmonicsDegree(geometry?: BufferGeometry): number;
+
+export interface GaussianSplatSphericalHarmonics {
+    sh1?: Uint32Array | undefined;
+    sh2?: Uint32Array | undefined;
+    sh3?: Uint32Array | undefined;
+    sphericalHarmonics1?: Uint32Array | undefined;
+    sphericalHarmonics2?: Uint32Array | undefined;
+    sphericalHarmonics3?: Uint32Array | undefined;
+}
+
 export function createGaussianSplatGeometry(
     centers: Float32Array,
     covariances: Float32Array,
-    colors: Uint8ClampedArray,
+    colors: Uint8Array | Uint8ClampedArray,
+    sphericalHarmonics?: GaussianSplatSphericalHarmonics,
 ): BufferGeometry;
 
 export interface CreateGaussianSplatGeometryFromPLYGeometryOptions {
     scaleAttribute?: string | undefined;
     rotationAttribute?: string | undefined;
     sh0Attribute?: string | undefined;
+    shRestAttribute?: string | undefined;
     opacityAttribute?: string | undefined;
 }
 
