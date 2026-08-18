@@ -1,10 +1,18 @@
+import { ColorGrading } from "./extensions/color-grading/ColorGrading.js";
 import { TSLGraphEditor } from "./extensions/tsl-graph/TSLGraphEditor.js";
 import { RendererInspector, RendererInspectorEventMap } from "./RendererInspector.js";
 import { ParametersGroup } from "./tabs/Parameters.js";
 import { Tab } from "./ui/Tab.js";
 
+export interface InspectorLayoutEvent {
+    position: "bottom" | "right";
+    isVertical: boolean;
+}
+
 export interface InspectorEventMap extends RendererInspectorEventMap {
     resize: {};
+    orientationchange: InspectorLayoutEvent;
+    layoutchange: InspectorLayoutEvent;
 }
 
 declare class Inspector extends RendererInspector<InspectorEventMap> {
@@ -12,6 +20,7 @@ declare class Inspector extends RendererInspector<InspectorEventMap> {
 
     get domElement(): HTMLDivElement;
 
+    onExtension(name: "Color Grading", callback: (extension: ColorGrading) => void): this;
     onExtension(name: "TSL Graph", callback: (extension: TSLGraphEditor) => void): this;
 
     hide(): void;
@@ -22,6 +31,8 @@ declare class Inspector extends RendererInspector<InspectorEventMap> {
 
     getSize(): { width: number; height: number };
 
+    isVertical(): boolean;
+
     setHorizontalAlign(value: "left" | "right"): this;
     setVerticalAlign(value: "top" | "bottom"): this;
 
@@ -29,7 +40,7 @@ declare class Inspector extends RendererInspector<InspectorEventMap> {
     addTab(tab: Tab): this;
     removeTab(tab: Tab): this;
 
-    setActiveExtension(name: "TSL Graph", value: boolean): this;
+    setActiveExtension(name: "Color Grading" | "TSL Graph", value: boolean): this;
 }
 
 export { Inspector };
