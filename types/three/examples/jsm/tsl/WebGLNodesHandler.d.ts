@@ -8,7 +8,8 @@ export class WebGLNodesHandler {
     constructor();
 
     setRenderer(renderer: WebGLRenderer): void;
-    renderStart(scene: Object3D, camera: Camera): void;
+    renderStart(scene: Object3D, camera: Camera, targetScene?: Object3D): void;
     renderEnd(): void;
+    setObject(object: Object3D): void;
     build(material: Material, object: Object3D, parameters: WebGLProgramParametersWithUniforms): void;
 }
