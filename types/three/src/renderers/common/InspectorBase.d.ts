@@ -13,8 +13,6 @@ export interface InspectorBaseEventMap {
 
 /**
  * InspectorBase is the base class for all inspectors.
- *
- * @class InspectorBase
  */
 declare class InspectorBase<TEventMap extends InspectorBaseEventMap = InspectorBaseEventMap>
     extends EventDispatcher<TEventMap>
