@@ -1,15 +1,6 @@
 import { BufferGeometry } from "three";
 
-export const GAUSSIAN_SPLAT_PLY_PROPERTY_MAPPING: {
-    scale: string[];
-    rotation: string[];
-    f_dc: string[];
-    opacity: string[];
-};
-
 export const SH_C0: number;
-
-export const SH_DEGREE_TO_COMPONENTS: number[];
 
 export const SH_BAND_COMPONENTS: number[];
 
@@ -51,18 +42,6 @@ export function writeCovariance(
     qw: number,
 ): void;
 
-export interface GaussianSplatPLYPropertyMapping {
-    scale: string[];
-    rotation: string[];
-    f_dc: string[];
-    opacity: string[];
-    f_rest?: string[] | undefined;
-}
-
-export function getGaussianSplatPLYPropertyMapping(
-    sphericalHarmonicsDegree?: number,
-): GaussianSplatPLYPropertyMapping;
-
 export interface PackedSphericalHarmonicsBand {
     packed: Uint32Array;
     bytes: Uint8ClampedArray;
@@ -86,17 +65,4 @@ export function createGaussianSplatGeometry(
     covariances: Float32Array,
     colors: Uint8Array | Uint8ClampedArray,
     sphericalHarmonics?: GaussianSplatSphericalHarmonics,
-): BufferGeometry;
-
-export interface CreateGaussianSplatGeometryFromPLYGeometryOptions {
-    scaleAttribute?: string | undefined;
-    rotationAttribute?: string | undefined;
-    sh0Attribute?: string | undefined;
-    shRestAttribute?: string | undefined;
-    opacityAttribute?: string | undefined;
-}
-
-export function createGaussianSplatGeometryFromPLYGeometry(
-    geometry: BufferGeometry,
-    options?: CreateGaussianSplatGeometryFromPLYGeometryOptions,
 ): BufferGeometry;
