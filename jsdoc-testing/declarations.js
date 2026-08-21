@@ -79,6 +79,8 @@ const files = [
     'src/lights/RectAreaLight',
     'src/lights/SpotLight',
     'src/lights/SpotLightShadow',
+    'src/lights/SunLight',
+    'src/lights/SunLightShadow',
     'src/materials/nodes/manager/NodeMaterialObserver',
     'src/materials/nodes/Line2NodeMaterial',
     'src/materials/nodes/LineBasicNodeMaterial',
