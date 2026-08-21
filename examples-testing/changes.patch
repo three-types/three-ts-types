@@ -2214,7 +2214,7 @@ index 117e7032e..6efa42c15 100644
  
  const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 100);
 diff --git a/examples-testing/examples/webgl_animation_multiple.ts b/examples-testing/examples/webgl_animation_multiple.ts
-index 87355e968..4f93de7cf 100644
+index 2456cb4cf..e3820ecd4 100644
 --- a/examples-testing/examples/webgl_animation_multiple.ts
 +++ b/examples-testing/examples/webgl_animation_multiple.ts
 @@ -4,11 +4,11 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -2233,7 +2233,7 @@ index 87355e968..4f93de7cf 100644
  
  const params = {
      sharedSkeleton: false,
-@@ -61,7 +61,7 @@ function init() {
+@@ -54,7 +54,7 @@ function init() {
          animations = gltf.animations;
  
          model.traverse(function (object) {
@@ -2242,7 +2242,7 @@ index 87355e968..4f93de7cf 100644
          });
  
          setupDefaultScene();
-@@ -103,7 +103,7 @@ function clearScene() {
+@@ -96,7 +96,7 @@ function clearScene() {
          scene.remove(object);
  
          scene.traverse(function (child) {
@@ -2251,7 +2251,7 @@ index 87355e968..4f93de7cf 100644
          });
      }
  }
-@@ -139,9 +139,9 @@ function setupSharedSkeletonScene() {
+@@ -132,9 +132,9 @@ function setupSharedSkeletonScene() {
      // all models share the same animation state
  
      const sharedModel = SkeletonUtils.clone(model);
@@ -2366,15 +2366,15 @@ index 0ae68e7d7..d7e40e67a 100644
      activeAction = actions[name];
  
 diff --git a/examples-testing/examples/webgl_animation_walk.ts b/examples-testing/examples/webgl_animation_walk.ts
-index b4ab9c444..ee10390a0 100644
+index 88f4da5e8..31cdf9556 100644
 --- a/examples-testing/examples/webgl_animation_walk.ts
 +++ b/examples-testing/examples/webgl_animation_walk.ts
-@@ -6,10 +6,19 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+@@ -6,10 +6,18 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
  import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
  
 -let scene, renderer, camera, floor, orbitControls;
--let group, followGroup, model, skeleton, mixer, timer;
+-let group, model, skeleton, mixer, timer;
 -
 -let actions;
 +let scene: THREE.Scene,
@@ -2383,7 +2383,6 @@ index b4ab9c444..ee10390a0 100644
 +    floor: THREE.Mesh,
 +    orbitControls: OrbitControls;
 +let group: THREE.Group,
-+    followGroup: THREE.Group,
 +    model: THREE.Group,
 +    skeleton: THREE.SkeletonHelper,
 +    mixer: THREE.AnimationMixer,
@@ -2393,7 +2392,7 @@ index b4ab9c444..ee10390a0 100644
  
  const settings = {
      show_skeleton: false,
-@@ -19,7 +28,19 @@ const settings = {
+@@ -19,7 +27,19 @@ const settings = {
  const PI = Math.PI;
  const PI90 = Math.PI / 2;
  
@@ -2414,7 +2413,7 @@ index b4ab9c444..ee10390a0 100644
      key: [0, 0],
      ease: new THREE.Vector3(),
      position: new THREE.Vector3(),
-@@ -36,7 +57,7 @@ const controls = {
+@@ -36,7 +56,7 @@ const controls = {
  init();
  
  function init() {
@@ -2423,7 +2422,7 @@ index b4ab9c444..ee10390a0 100644
  
      camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
      camera.position.set(0, 2, -5);
-@@ -157,21 +178,32 @@ function loadModel() {
+@@ -146,21 +166,32 @@ function loadModel() {
          group.rotation.y = PI;
  
          model.traverse(function (object) {
@@ -2469,7 +2468,7 @@ index b4ab9c444..ee10390a0 100644
                  }
              }
          });
-@@ -200,9 +232,9 @@ function loadModel() {
+@@ -189,9 +220,9 @@ function loadModel() {
          };
  
          for (const m in actions) {
@@ -2482,7 +2481,7 @@ index b4ab9c444..ee10390a0 100644
          }
  
          actions.Idle.play();
-@@ -211,7 +243,7 @@ function loadModel() {
+@@ -200,7 +231,7 @@ function loadModel() {
      });
  }
  
@@ -2491,7 +2490,7 @@ index b4ab9c444..ee10390a0 100644
      const fade = controls.fadeDuration;
      const key = controls.key;
      const up = controls.up;
-@@ -284,7 +316,7 @@ function updateCharacter(delta) {
+@@ -272,7 +303,7 @@ function updateCharacter(delta) {
      orbitControls.update();
  }
  
@@ -2500,7 +2499,7 @@ index b4ab9c444..ee10390a0 100644
      return Math.atan2(Math.sin(r), Math.cos(r));
  }
  
-@@ -298,13 +330,13 @@ function createPanel() {
+@@ -286,13 +317,13 @@ function createPanel() {
      panel.add(settings, 'fixe_transition');
  }
  
@@ -2516,7 +2515,7 @@ index b4ab9c444..ee10390a0 100644
      const key = controls.key;
      switch (event.code) {
          case 'ArrowUp':
-@@ -332,7 +364,7 @@ function onKeyDown(event) {
+@@ -320,7 +351,7 @@ function onKeyDown(event) {
      }
  }
  
@@ -5405,7 +5404,7 @@ index 30444ddba..e1c40aefa 100644
  }
  
 diff --git a/examples-testing/examples/webgl_gpgpu_water.ts b/examples-testing/examples/webgl_gpgpu_water.ts
-index 615d73277..e85f56a2d 100644
+index 6474339cf..2d331ab74 100644
 --- a/examples-testing/examples/webgl_gpgpu_water.ts
 +++ b/examples-testing/examples/webgl_gpgpu_water.ts
 @@ -4,7 +4,7 @@ import Stats from 'three/addons/libs/stats.module.js';
@@ -5447,7 +5446,7 @@ index 615d73277..e85f56a2d 100644
 -let readWaterLevelShader;
 -let readWaterLevelRenderTarget;
 -let readWaterLevelImage;
-+let sun: THREE.DirectionalLight;
++let sun: THREE.SunLight;
 +let waterMesh: THREE.Mesh<THREE.PlaneGeometry, WaterMaterial>;
 +let poolBorder: THREE.Mesh<THREE.TorusGeometry, THREE.MeshStandardMaterial>;
 +let meshRay: THREE.Mesh;
@@ -5519,7 +5518,7 @@ index 615d73277..e85f56a2d 100644
      renderer.shadowMap.enabled = v;
      sun.castShadow = v;
  
-@@ -315,9 +315,9 @@ function addShadow(v) {
+@@ -306,9 +306,9 @@ function addShadow(v) {
  
  function createducks() {
      for (let i = 0; i < NUM_DUCK; i++) {
@@ -5531,7 +5530,7 @@ index 615d73277..e85f56a2d 100644
          }
  
          sphere.position.x = (Math.random() - 0.5) * BOUNDS * 0.7;
-@@ -416,7 +416,7 @@ function onPointerUp() {
+@@ -407,7 +407,7 @@ function onPointerUp() {
      controls.enabled = true;
  }
  
@@ -5540,7 +5539,7 @@ index 615d73277..e85f56a2d 100644
      const dom = renderer.domElement;
      mouseCoords.set((event.clientX / dom.clientWidth) * 2 - 1, -(event.clientY / dom.clientHeight) * 2 + 1);
  }
-@@ -471,7 +471,13 @@ function render() {
+@@ -462,7 +462,13 @@ function render() {
  //----------------------
  
  class WaterMaterial extends THREE.MeshStandardMaterial {
@@ -5555,7 +5554,7 @@ index 615d73277..e85f56a2d 100644
          super();
  
          this.defines = {
-@@ -488,7 +494,7 @@ class WaterMaterial extends THREE.MeshStandardMaterial {
+@@ -479,7 +485,7 @@ class WaterMaterial extends THREE.MeshStandardMaterial {
          this.setValues(parameters);
      }
  
@@ -5564,7 +5563,7 @@ index 615d73277..e85f56a2d 100644
          this.extra[name] = value;
          Object.defineProperty(this, name, {
              get: () => this.extra[name],
-@@ -499,7 +505,7 @@ class WaterMaterial extends THREE.MeshStandardMaterial {
+@@ -490,7 +496,7 @@ class WaterMaterial extends THREE.MeshStandardMaterial {
          });
      }
  
@@ -5647,7 +5646,7 @@ index bc4a88662..105d30e11 100644
      mesh.computeBoundingSphere();
  
 diff --git a/examples-testing/examples/webgl_instancing_morph.ts b/examples-testing/examples/webgl_instancing_morph.ts
-index 70e89199c..d6fb00fbf 100644
+index fd3e66786..72eb39adb 100644
 --- a/examples-testing/examples/webgl_instancing_morph.ts
 +++ b/examples-testing/examples/webgl_instancing_morph.ts
 @@ -4,7 +4,13 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -5665,7 +5664,7 @@ index 70e89199c..d6fb00fbf 100644
  
  const offset = 5000;
  
-@@ -64,7 +70,7 @@ function init() {
+@@ -58,7 +64,7 @@ function init() {
      const loader = new GLTFLoader();
  
      loader.load('models/gltf/Horse.glb', function (glb) {
@@ -5674,7 +5673,7 @@ index 70e89199c..d6fb00fbf 100644
  
          mesh = new THREE.InstancedMesh(dummy.geometry, dummy.material, 1024);
  
-@@ -143,7 +149,7 @@ function render() {
+@@ -136,7 +142,7 @@ function render() {
              mesh.setMorphAt(i, dummy);
          }
  
@@ -6516,7 +6515,7 @@ index e15a909c3..c3575ef2d 100644
  
          if (probesLeft) {
 diff --git a/examples-testing/examples/webgl_lightprobes_sponza.ts b/examples-testing/examples/webgl_lightprobes_sponza.ts
-index f1c3065d0..a247de056 100644
+index 6130445da..cd795dad0 100644
 --- a/examples-testing/examples/webgl_lightprobes_sponza.ts
 +++ b/examples-testing/examples/webgl_lightprobes_sponza.ts
 @@ -11,12 +11,16 @@ const MODEL_INDEX_URL =
@@ -6527,7 +6526,7 @@ index f1c3065d0..a247de056 100644
 -let probes = null,
 -    probesHelper = null;
 -let modelSize = null;
--let dirLight = null,
+-let sunLight = null,
 -    sky = null;
 +let camera: THREE.PerspectiveCamera,
 +    scene: THREE.Scene,
@@ -6537,12 +6536,12 @@ index f1c3065d0..a247de056 100644
 +let probes: LightProbeGridWebGL | null = null,
 +    probesHelper: LightProbeGridHelperWebGL | null = null;
 +let modelSize: THREE.Vector3 | null = null;
-+let dirLight: THREE.DirectionalLight | null = null,
++let sunLight: THREE.SunLight | null = null,
 +    sky: Sky | null = null;
  
- const sun = new THREE.Vector3();
- 
-@@ -58,7 +62,7 @@ async function init() {
+ const _box = new THREE.Box3();
+ const _size = new THREE.Vector3();
+@@ -56,7 +60,7 @@ async function init() {
      controls.movementSpeed = 2.0;
      controls.lookSpeed = 0.16;
  
@@ -6551,7 +6550,7 @@ index f1c3065d0..a247de056 100644
  
      const manager = new THREE.LoadingManager();
      manager.onProgress = function (url, loaded, total) {
-@@ -73,14 +77,14 @@ async function init() {
+@@ -71,14 +75,14 @@ async function init() {
      const modelURL = await getSponzaModelURL();
      const gltf = await loader.loadAsync(modelURL);
      const model = gltf.scene;
@@ -6572,48 +6571,36 @@ index f1c3065d0..a247de056 100644
          }
      });
  
-@@ -96,7 +100,7 @@ async function init() {
-     const targetY = modelCenter.y + modelSize.y * 0.2;
-     const lightBaseDistance = Math.max(modelSize.x, modelSize.z);
+@@ -91,7 +95,7 @@ async function init() {
+     _box.setFromObject(model);
+     modelSize = _box.getSize(_size).clone();
      const probeFar = Math.max(modelSize.x, modelSize.y, modelSize.z) * 2.0;
 -    let rebakeTimer = null;
 +    let rebakeTimer: number | null = null;
      let isBaking = false;
      let bakeQueued = false;
  
-@@ -141,18 +145,18 @@ async function init() {
-         const horizontal = Math.cos(elevation) * radius;
-         const vertical = Math.sin(elevation) * radius;
+@@ -125,8 +129,8 @@ async function init() {
+         const elevation = THREE.MathUtils.degToRad(params.lightElevation);
+         const azimuth = THREE.MathUtils.degToRad(params.lightAzimuth);
  
--        dirLight.position.set(
-+        dirLight!.position.set(
-             modelCenter.x + Math.cos(azimuth) * horizontal,
-             targetY + vertical,
-             modelCenter.z + Math.sin(azimuth) * horizontal,
-         );
--        dirLight.target.position.set(modelCenter.x, targetY, modelCenter.z);
--        dirLight.target.updateMatrixWorld();
-+        dirLight!.target.position.set(modelCenter.x, targetY, modelCenter.z);
-+        dirLight!.target.updateMatrixWorld();
- 
-         const phi = THREE.MathUtils.degToRad(90 - params.lightElevation);
-         const theta = THREE.MathUtils.degToRad(params.lightAzimuth);
-         sun.setFromSphericalCoords(1, phi, theta);
--        sky.material.uniforms['sunPosition'].value.copy(sun);
-+        sky!.material.uniforms['sunPosition'].value.copy(sun);
+-        sunLight.position.setFromSphericalCoords(1, Math.PI / 2 - elevation, azimuth);
+-        sky.material.uniforms['sunPosition'].value.copy(sunLight.position);
++        sunLight!.position.setFromSphericalCoords(1, Math.PI / 2 - elevation, azimuth);
++        sky!.material.uniforms['sunPosition'].value.copy(sunLight!.position);
      }
  
      function scheduleRebake() {
-@@ -238,7 +242,7 @@ async function init() {
+@@ -212,7 +216,7 @@ async function init() {
      gui.add(params, 'lightIntensity', 0, 100, 0.1)
          .name('Light Intensity')
          .onChange(value => {
--            dirLight.intensity = value;
-+            dirLight!.intensity = value;
+-            sunLight.intensity = value;
++            sunLight!.intensity = value;
              scheduleRebake();
          });
      gui.add(params, 'shadows')
-@@ -264,7 +268,7 @@ async function init() {
+@@ -238,7 +242,7 @@ async function init() {
              if (probesHelper) {
                  scene.remove(probesHelper);
                  probesHelper.dispose();
@@ -6622,7 +6609,7 @@ index f1c3065d0..a247de056 100644
                  probesHelper.visible = params.showProbes;
                  scene.add(probesHelper);
              }
-@@ -296,9 +300,17 @@ async function init() {
+@@ -270,9 +274,17 @@ async function init() {
      window.addEventListener('resize', onWindowResize);
  }
  
@@ -6641,16 +6628,16 @@ index f1c3065d0..a247de056 100644
      const sponzaInfo = models.find(model => model.name === 'Sponza');
  
      if (!sponzaInfo) {
-@@ -317,7 +329,7 @@ async function getSponzaModelURL() {
+@@ -291,7 +303,7 @@ async function getSponzaModelURL() {
      return `${SAMPLE_ASSETS_BASE_URL}${sponzaInfo.name}/${variantFolder}/${variantName}`;
  }
  
 -function setShadowsEnabled(enabled) {
 +function setShadowsEnabled(enabled: boolean) {
-     if (!renderer || !dirLight) return;
+     if (!renderer || !sunLight) return;
  
      renderer.shadowMap.enabled = enabled;
-@@ -331,7 +343,7 @@ function onWindowResize() {
+@@ -305,7 +317,7 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
  
@@ -7221,7 +7208,7 @@ index c31e32196..eecda516b 100644
  
              scene.remove(object);
 diff --git a/examples-testing/examples/webgl_loader_3mf_materials.ts b/examples-testing/examples/webgl_loader_3mf_materials.ts
-index 0dea01391..6e897da19 100644
+index b33ffc3e0..ea8a1333a 100644
 --- a/examples-testing/examples/webgl_loader_3mf_materials.ts
 +++ b/examples-testing/examples/webgl_loader_3mf_materials.ts
 @@ -3,7 +3,7 @@ import * as THREE from 'three';
@@ -7338,7 +7325,7 @@ index 4d41740e6..fa810d6bc 100644
  // Configure and create Draco decoder.
  const dracoLoader = new DRACOLoader();
 diff --git a/examples-testing/examples/webgl_loader_fbx.ts b/examples-testing/examples/webgl_loader_fbx.ts
-index f348ad216..373937759 100644
+index 2488eb705..a45b63af7 100644
 --- a/examples-testing/examples/webgl_loader_fbx.ts
 +++ b/examples-testing/examples/webgl_loader_fbx.ts
 @@ -8,8 +8,15 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -7359,7 +7346,7 @@ index f348ad216..373937759 100644
  
  const timer = new THREE.Timer();
  timer.connect(document);
-@@ -113,25 +120,28 @@ function init() {
+@@ -107,25 +114,28 @@ function init() {
      guiAnimationsFolder = gui.addFolder('Animations').hide();
  }
  
@@ -7395,7 +7382,7 @@ index f348ad216..373937759 100644
              });
  
              scene.remove(object);
-@@ -164,10 +174,10 @@ function loadAsset(asset) {
+@@ -158,10 +168,10 @@ function loadAsset(asset) {
                      clips.map(clip => clip.name),
                  )
                  .onChange(function (name) {
@@ -7408,7 +7395,7 @@ index f348ad216..373937759 100644
                  });
          } else {
              mixer = null;
-@@ -177,15 +187,21 @@ function loadAsset(asset) {
+@@ -171,15 +181,21 @@ function loadAsset(asset) {
          guiMorphsFolder.hide();
  
          object.traverse(function (child) {
@@ -7762,7 +7749,7 @@ index f93555e41..8793a3511 100644
  init();
  
 diff --git a/examples-testing/examples/webgl_loader_md2_control.ts b/examples-testing/examples/webgl_loader_md2_control.ts
-index 56b7dc3c4..fb634369d 100644
+index df1eb6b3c..c4152dd52 100644
 --- a/examples-testing/examples/webgl_loader_md2_control.ts
 +++ b/examples-testing/examples/webgl_loader_md2_control.ts
 @@ -9,10 +9,10 @@ import { Gyroscope } from 'three/addons/misc/Gyroscope.js';
@@ -7779,7 +7766,7 @@ index 56b7dc3c4..fb634369d 100644
  let nCharacters = 0;
  
  let cameraControls;
-@@ -77,10 +77,10 @@ function init() {
+@@ -64,10 +64,10 @@ function init() {
  
      const ground = new THREE.Mesh(gg, gm);
      ground.rotation.x = -Math.PI / 2;
@@ -7794,7 +7781,7 @@ index 56b7dc3c4..fb634369d 100644
      // note that because the ground does not cast a shadow, .castShadow is left false
      ground.receiveShadow = true;
  
-@@ -213,7 +213,7 @@ function onWindowResize() {
+@@ -199,7 +199,7 @@ function onWindowResize() {
      camera.updateProjectionMatrix();
  }
  
@@ -7803,7 +7790,7 @@ index 56b7dc3c4..fb634369d 100644
      switch (event.code) {
          case 'ArrowUp':
          case 'KeyW':
-@@ -242,7 +242,7 @@ function onKeyDown(event) {
+@@ -228,7 +228,7 @@ function onKeyDown(event) {
      }
  }
  
@@ -11112,7 +11099,7 @@ index a4d09866d..238c37da7 100644
  init();
  
 diff --git a/examples-testing/examples/webgl_postprocessing_outline.ts b/examples-testing/examples/webgl_postprocessing_outline.ts
-index 31ef6b9b2..4b1fa11a3 100644
+index f25d2d0d6..59c3301ea 100644
 --- a/examples-testing/examples/webgl_postprocessing_outline.ts
 +++ b/examples-testing/examples/webgl_postprocessing_outline.ts
 @@ -12,11 +12,11 @@ import { OutlinePass } from 'three/addons/postprocessing/OutlinePass.js';
@@ -11149,7 +11136,7 @@ index 31ef6b9b2..4b1fa11a3 100644
  }
  
  const conf = new Configuration();
-@@ -223,7 +228,7 @@ function init() {
+@@ -214,7 +219,7 @@ function init() {
      renderer.domElement.style.touchAction = 'none';
      renderer.domElement.addEventListener('pointermove', onPointerMove);
  
@@ -11158,7 +11145,7 @@ index 31ef6b9b2..4b1fa11a3 100644
          if (event.isPrimary === false) return;
  
          mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-@@ -232,7 +237,7 @@ function init() {
+@@ -223,7 +228,7 @@ function init() {
          checkIntersection();
      }
  
@@ -12610,10 +12597,10 @@ index de5426883..6d750ce4b 100644
              '\t\t\t\tfloat depth = texture2D( shadowMap, shadowCoord.xy ).r;',
      );
 diff --git a/examples-testing/examples/webgl_shadowmap_performance.ts b/examples-testing/examples/webgl_shadowmap_performance.ts
-index de54f335f..279e7f9f1 100644
+index 437e986a9..1319bcafc 100644
 --- a/examples-testing/examples/webgl_shadowmap_performance.ts
 +++ b/examples-testing/examples/webgl_shadowmap_performance.ts
-@@ -16,16 +16,17 @@ const FLOOR = -250;
+@@ -13,16 +13,17 @@ const FLOOR = -250;
  
  const ANIMATION_GROUPS = 25;
  
@@ -12636,7 +12623,7 @@ index de54f335f..279e7f9f1 100644
  
  const timer = new THREE.Timer();
  timer.connect(document);
-@@ -149,7 +150,7 @@ function createScene() {
+@@ -137,7 +138,7 @@ function createScene() {
          });
  
          textGeo.computeBoundingBox();
@@ -12645,7 +12632,7 @@ index de54f335f..279e7f9f1 100644
  
          const textMaterial = new THREE.MeshPhongMaterial({ color: 0xff0000, specular: 0xffffff });
  
-@@ -194,7 +195,17 @@ function createScene() {
+@@ -182,7 +183,17 @@ function createScene() {
  
      // MORPHS
  
@@ -12664,7 +12651,7 @@ index de54f335f..279e7f9f1 100644
          mesh = mesh.clone();
          mesh.material = mesh.material.clone();
  
-@@ -241,7 +252,7 @@ function createScene() {
+@@ -229,7 +240,7 @@ function createScene() {
  
      const gltfLoader = new GLTFLoader();
      gltfLoader.load('models/gltf/Horse.glb', function (gltf) {
@@ -12673,7 +12660,7 @@ index de54f335f..279e7f9f1 100644
          const clip = gltf.animations[0];
  
          for (let i = -600; i < 601; i += 2) {
-@@ -268,7 +279,7 @@ function render() {
+@@ -256,7 +267,7 @@ function render() {
      for (let i = 0; i < morphs.length; i++) {
          morph = morphs[i];
  
