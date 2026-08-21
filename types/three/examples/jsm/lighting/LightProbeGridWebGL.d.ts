@@ -136,6 +136,10 @@ export class LightProbeGridWebGL extends Object3D {
      * atlas as indirect light, so a grid added to the scene before baking
      * accumulates one bounce per extra pass.
      *
+     * Shadow-casting instances of `SunLight` are temporarily replaced with
+     * equivalent directional lights, since their view-fitted shadow cascades
+     * cannot be frozen across probe renders.
+     *
      * @param {WebGLRenderer} renderer - The renderer.
      * @param {Scene} scene - The scene to render.
      * @param {Object} [options] - Bake options.
