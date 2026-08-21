@@ -7325,18 +7325,19 @@ index 4d41740e6..fa810d6bc 100644
  // Configure and create Draco decoder.
  const dracoLoader = new DRACOLoader();
 diff --git a/examples-testing/examples/webgl_loader_fbx.ts b/examples-testing/examples/webgl_loader_fbx.ts
-index 2488eb705..a45b63af7 100644
+index 01e72722a..7942bfd35 100644
 --- a/examples-testing/examples/webgl_loader_fbx.ts
 +++ b/examples-testing/examples/webgl_loader_fbx.ts
-@@ -8,8 +8,15 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+@@ -8,8 +8,16 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
  const manager = new THREE.LoadingManager();
  
--let camera, scene, renderer, stats, object, loader, guiMorphsFolder, guiAnimationsFolder;
+-let camera, scene, renderer, controls, stats, object, loader, guiMorphsFolder, guiAnimationsFolder;
 -let mixer;
 +let camera: THREE.PerspectiveCamera,
 +    scene: THREE.Scene,
 +    renderer: THREE.WebGLRenderer,
++    controls: OrbitControls,
 +    stats: Stats,
 +    object: THREE.Group,
 +    loader: FBXLoader,
@@ -7346,7 +7347,7 @@ index 2488eb705..a45b63af7 100644
  
  const timer = new THREE.Timer();
  timer.connect(document);
-@@ -107,25 +114,28 @@ function init() {
+@@ -110,25 +118,28 @@ function init() {
      guiAnimationsFolder = gui.addFolder('Animations').hide();
  }
  
@@ -7382,7 +7383,7 @@ index 2488eb705..a45b63af7 100644
              });
  
              scene.remove(object);
-@@ -158,10 +168,10 @@ function loadAsset(asset) {
+@@ -161,10 +172,10 @@ function loadAsset(asset) {
                      clips.map(clip => clip.name),
                  )
                  .onChange(function (name) {
@@ -7395,7 +7396,7 @@ index 2488eb705..a45b63af7 100644
                  });
          } else {
              mixer = null;
-@@ -171,15 +181,21 @@ function loadAsset(asset) {
+@@ -174,15 +185,21 @@ function loadAsset(asset) {
          guiMorphsFolder.hide();
  
          object.traverse(function (child) {
