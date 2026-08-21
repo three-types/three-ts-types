@@ -24,6 +24,20 @@ declare class InspectorBase<TEventMap extends InspectorBaseEventMap = InspectorB
      */
     currentFrame: unknown;
     /**
+     * Indicates whether the inspector is running.
+     *
+     * @type {boolean}
+     * @default false
+     */
+    isRunning: boolean;
+    /**
+     * Indicates whether the inspector is enabled.
+     *
+     * @type {boolean}
+     * @default true
+     */
+    enabled: boolean;
+    /**
      * Returns the node frame for the current renderer.
      *
      * @return {Object} The node frame.
