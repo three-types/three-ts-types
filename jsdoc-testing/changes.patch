@@ -5149,7 +5149,7 @@ index 8a03aa8cf..234390948 100644
 -import { Light } from './Light.js';
 -import { SphericalHarmonics3 } from '../math/SphericalHarmonics3.js';
 diff --git a/jsdoc-testing/jsdoc/src/lights/LightShadow.d.ts b/jsdoc-testing/jsdoc/src/lights/LightShadow.d.ts
-index 24ffaf5b3..dfd06dc69 100644
+index 71e500048..7d22e7e56 100644
 --- a/jsdoc-testing/jsdoc/src/lights/LightShadow.d.ts
 +++ b/jsdoc-testing/jsdoc/src/lights/LightShadow.d.ts
 @@ -1,27 +1,44 @@
@@ -5309,7 +5309,33 @@ index 24ffaf5b3..dfd06dc69 100644
      /**
       * Used internally by the renderer to get the number of viewports that need
       * to be rendered for this shadow.
-@@ -177,22 +177,18 @@ export class LightShadow {
+@@ -147,7 +147,7 @@ export class LightShadow {
+      * @param {number} [viewportIndex=0] - The viewport index.
+      * @return {Camera} The shadow camera.
+      */
+-    getCamera(): Camera;
++    getCamera(viewportIndex?: number): TCamera;
+     /**
+      * Gets the shadow cameras frustum. Used internally by the renderer to cull objects.
+      *
+@@ -160,16 +160,6 @@ export class LightShadow {
+      * @param {Light} light - The light for which the shadow is being rendered.
+      */
+     updateMatrices(light: Light): void;
+-    /**
+-     * Updates a shadow projection matrix and its corresponding frustum.
+-     *
+-     * @private
+-     * @param {Camera} shadowCamera - The shadow camera.
+-     * @param {Matrix4} shadowMatrix - The target shadow matrix.
+-     * @param {Frustum} frustum - The target frustum.
+-     * @param {Vector4} [viewport] - The viewport within the shadow atlas.
+-     */
+-    private _updateMatrix;
+     /**
+      * Returns a viewport definition for the given viewport index.
+      *
+@@ -194,22 +184,18 @@ export class LightShadow {
       * @param {LightShadow} source - The light shadow to copy.
       * @return {LightShadow} A reference to this light shadow instance.
       */
@@ -5679,6 +5705,115 @@ index 0de4c95b0..cfa857b6c 100644
 +    toJSON(): SpotLightShadowJSON;
  }
 -import { LightShadow } from './LightShadow.js';
+diff --git a/jsdoc-testing/jsdoc/src/lights/SunLight.d.ts b/jsdoc-testing/jsdoc/src/lights/SunLight.d.ts
+index 53738e92f..32b95f004 100644
+--- a/jsdoc-testing/jsdoc/src/lights/SunLight.d.ts
++++ b/jsdoc-testing/jsdoc/src/lights/SunLight.d.ts
+@@ -1,3 +1,13 @@
++import { Light, LightJSON } from './Light.js';
++import { SunLightShadow } from './SunLightShadow.js';
++import { JSONMeta } from "../core/Object3D.js";
++import { LightShadowJSON } from "./LightShadow.js";
++import { ColorRepresentation } from "../math/Color.js";
++
++export interface SunLightJSON extends LightJSON {
++    shadow: LightShadowJSON;
++}
++
+ /**
+  * A sun-like light that gets emitted in a specific direction, with rays that
+  * are all parallel, and casts cascaded shadow maps via {@link SunLightShadow},
+@@ -17,8 +27,6 @@
+  *
+  * This light is only supported by `WebGLRenderer`. When using `WebGPURenderer`,
+  * use {@link DirectionalLight} with `CSMShadowNode` instead.
+- *
+- * @augments Light
+  */
+ export class SunLight extends Light {
+     /**
+@@ -27,22 +35,17 @@ export class SunLight extends Light {
+      * @param {(number|Color|string)} [color=0xffffff] - The light's color.
+      * @param {number} [intensity=1] - The light's strength/intensity.
+      */
+-    constructor(color?: (number | Color | string), intensity?: number);
++    constructor(color?: ColorRepresentation, intensity?: number);
+     /**
+      * This flag can be used for type testing.
+      *
+-     * @type {boolean}
+-     * @readonly
+      * @default true
+      */
+     readonly isSunLight: boolean;
+     /**
+      * The light's shadow configuration.
+-     *
+-     * @type {SunLightShadow}
+      */
+     shadow: SunLightShadow;
+-    copy(source: any): this;
++    copy(source: SunLight): this;
++    toJSON(meta?: JSONMeta): SunLightJSON;
+ }
+-import { Light } from './Light.js';
+-import { SunLightShadow } from './SunLightShadow.js';
+diff --git a/jsdoc-testing/jsdoc/src/lights/SunLightShadow.d.ts b/jsdoc-testing/jsdoc/src/lights/SunLightShadow.d.ts
+index b61d245ab..950b4bb07 100644
+--- a/jsdoc-testing/jsdoc/src/lights/SunLightShadow.d.ts
++++ b/jsdoc-testing/jsdoc/src/lights/SunLightShadow.d.ts
+@@ -1,3 +1,10 @@
++import { LightShadow } from './LightShadow.js';
++import { OrthographicCamera } from '../cameras/OrthographicCamera.js';
++import { Matrix4 } from '../math/Matrix4.js';
++import { Frustum } from '../math/Frustum.js';
++import { Camera } from "../cameras/Camera.js";
++import { Light } from "./Light.js";
++
+ /**
+  * Represents the shadow configuration of {@link SunLight}, using four
+  * cascaded shadow maps (CSM).
+@@ -8,10 +15,8 @@
+  * small depth range. `camera.left/right/top/bottom` are ignored.
+  *
+  * The default `mapSize` is `1024x1024` per cascade.
+- *
+- * @augments LightShadow
+  */
+-export class SunLightShadow extends LightShadow {
++export class SunLightShadow extends LightShadow<OrthographicCamera> {
+     /**
+      * Constructs a new sun light shadow.
+      */
+@@ -19,16 +24,9 @@ export class SunLightShadow extends LightShadow {
+     /**
+      * This flag can be used for type testing.
+      *
+-     * @type {boolean}
+-     * @readonly
+      * @default true
+      */
+     readonly isSunLightShadow: boolean;
+-    _cameras: OrthographicCamera[];
+-    _matrices: Matrix4[];
+-    _frustums: Frustum[];
+-    _cascadeSplits: any[];
+-    _cascadeData: Vector4[];
+     /**
+      * Returns the shadow camera of the given cascade.
+      *
+@@ -58,10 +56,5 @@ export class SunLightShadow extends LightShadow {
+      * @param {Light} light - The light for which the shadow is being rendered.
+      * @param {Camera} viewCamera - The camera the scene is rendered with.
+      */
+-    updateMatrices(light: Light, viewCamera: Camera): void;
++    updateMatrices(light: Light, viewCamera?: Camera): void;
+ }
+-import { LightShadow } from './LightShadow.js';
+-import { OrthographicCamera } from '../cameras/OrthographicCamera.js';
+-import { Matrix4 } from '../math/Matrix4.js';
+-import { Frustum } from '../math/Frustum.js';
+-import { Vector4 } from '../math/Vector4.js';
 diff --git a/jsdoc-testing/jsdoc/src/lights/webgpu/IESSpotLight.d.ts b/jsdoc-testing/jsdoc/src/lights/webgpu/IESSpotLight.d.ts
 index 0e372ff20..d217fb6c3 100644
 --- a/jsdoc-testing/jsdoc/src/lights/webgpu/IESSpotLight.d.ts

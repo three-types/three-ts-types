@@ -142,6 +142,13 @@ export abstract class LightShadow<TCamera extends Camera = Camera> {
      */
     getViewportCount(): number;
     /**
+     * Used internally by the renderer to get the camera that renders the given viewport.
+     *
+     * @param {number} [viewportIndex=0] - The viewport index.
+     * @return {Camera} The shadow camera.
+     */
+    getCamera(viewportIndex?: number): TCamera;
+    /**
      * Gets the shadow cameras frustum. Used internally by the renderer to cull objects.
      *
      * @return {Frustum} The shadow camera frustum.
