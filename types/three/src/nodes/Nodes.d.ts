@@ -85,7 +85,7 @@ export { default as BumpMapNode } from "./display/BumpMapNode.js";
 export { default as ColorSpaceNode } from "./display/ColorSpaceNode.js";
 export { default as FrontFacingNode } from "./display/FrontFacingNode.js";
 export { default as NormalMapNode } from "./display/NormalMapNode.js";
-export { default as PassNode, PassNodeScope } from "./display/PassNode.js";
+export { default as PassNode, PassNodeOptions, PassNodeScope } from "./display/PassNode.js";
 export { default as RenderOutputNode } from "./display/RenderOutputNode.js";
 export { default as ScreenNode, ScreenNodeScope } from "./display/ScreenNode.js";
 export { default as ToneMappingNode } from "./display/ToneMappingNode.js";
