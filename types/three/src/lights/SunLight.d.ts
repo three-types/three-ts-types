@@ -43,7 +43,7 @@ export class SunLight extends Light {
      */
     readonly isSunLight: boolean;
     /**
-     * The light's shadow configuration.
+     * This property holds the light's shadow configuration.
      */
     shadow: SunLightShadow;
     copy(source: SunLight): this;
