@@ -11,7 +11,9 @@ import { Camera, Node, PassNode, PassNodeOptions, Scene } from "three/webgpu";
  * incorrectly resolved intersecting geometry are avoided.
  *
  * Only transparent materials using `NormalBlending` and no transmission qualify
- * for OIT. All other objects are rendered as usual. MSAA is not supported.
+ * for OIT. All other objects are rendered as usual.
+ *
+ * MSAA is only supported with the WebGPU backend.
  *
  * MRT configurations assigned via `setMRT()` apply to the default pass only.
  * OIT-qualified objects contribute to the color output but not to custom
