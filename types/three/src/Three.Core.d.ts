@@ -79,6 +79,8 @@ export type { PointLightShadow } from "./lights/PointLightShadow.js";
 export * from "./lights/RectAreaLight.js";
 export * from "./lights/SpotLight.js";
 export type { SpotLightShadow, SpotLightShadowJSON } from "./lights/SpotLightShadow.js";
+export * from "./lights/SunLight.js";
+export * from "./lights/SunLightShadow.js";
 export * from "./loaders/AnimationLoader.js";
 export * from "./loaders/AudioLoader.js";
 export * from "./loaders/BufferGeometryLoader.js";

@@ -161,6 +161,7 @@ export interface WebGLProgramParameters {
     morphTargetsCount: number;
     morphTextureStride: number;
 
+    numSunLights: number;
     numDirLights: number;
     numPointLights: number;
     numSpotLights: number;
@@ -168,6 +169,7 @@ export interface WebGLProgramParameters {
     numRectAreaLights: number;
     numHemiLights: number;
 
+    numSunLightShadows: number;
     numDirLightShadows: number;
     numPointLightShadows: number;
     numSpotLightShadows: number;
