@@ -15985,11 +15985,11 @@ index 4afa5d2d0..715c323a2 100644
  
              render();
 diff --git a/examples-testing/examples/webgpu_gaussian_splat.ts b/examples-testing/examples/webgpu_gaussian_splat.ts
-index 59f413c2f..947a60694 100644
+index 555853fda..b29a09f2a 100644
 --- a/examples-testing/examples/webgpu_gaussian_splat.ts
 +++ b/examples-testing/examples/webgpu_gaussian_splat.ts
 @@ -6,12 +6,35 @@ import { SPZLoader } from 'three/addons/loaders/SPZLoader.js';
- import { GaussianSplatMesh } from 'three/addons/objects/GaussianSplatMesh.js';
+ import { GaussianSplat } from 'three/addons/objects/GaussianSplat.js';
  import { Inspector } from 'three/addons/inspector/Inspector.js';
  
 -let camera, scene, renderer, controls, splats, splatRoot;
@@ -15997,8 +15997,8 @@ index 59f413c2f..947a60694 100644
 +    scene: THREE.Scene,
 +    renderer: THREE.WebGPURenderer,
 +    controls: OrbitControls,
-+    splats: GaussianSplatMesh | undefined,
-+    splatRoot: GaussianSplatMesh | undefined;
++    splats: GaussianSplat | undefined,
++    splatRoot: GaussianSplat | undefined;
  THREE.ColorManagement.workingColorSpace = THREE.SRGBColorSpace;
  
  const zeroVector = new THREE.Vector3();
@@ -16078,7 +16078,7 @@ index 59f413c2f..947a60694 100644
  }
  
 -function fitCameraToSplats(mesh, source) {
-+function fitCameraToSplats(mesh: GaussianSplatMesh, source: SplatSource) {
++function fitCameraToSplats(mesh: GaussianSplat, source: SplatSource) {
      mesh.updateWorldMatrix(true, false);
  
 -    const sphere = mesh.splatGeometry.boundingSphere.clone().applyMatrix4(mesh.matrixWorld);
