@@ -1,7 +1,7 @@
 import { Camera, Frustum, Light, LightShadow, Matrix4, OrthographicCamera } from "three";
 
 /**
- * Represents the shadow configuration of {@link SunLight}, using four
+ * Represents the shadow configuration of {@link SunLight}, using two
  * cascaded shadow maps (CSM).
  *
  * The shadow camera projection is fitted automatically to slices of the view
