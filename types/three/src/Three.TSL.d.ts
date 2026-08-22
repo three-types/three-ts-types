@@ -208,8 +208,6 @@ export const getRoughness: typeof TSL.getRoughness;
 export const getScreenPosition: typeof TSL.getScreenPosition;
 export const getScreenPositionFromClip: typeof TSL.getScreenPositionFromClip;
 export const getShIrradianceAt: typeof TSL.getShIrradianceAt;
-export const getShadowMaterial: typeof TSL.getShadowMaterial;
-export const getShadowRenderObjectFunction: typeof TSL.getShadowRenderObjectFunction;
 export const getTextureIndex: typeof TSL.getTextureIndex;
 export const getViewPosition: typeof TSL.getViewPosition;
 export const globalId: typeof TSL.globalId;
