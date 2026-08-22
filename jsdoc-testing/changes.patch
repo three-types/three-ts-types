@@ -874,6 +874,106 @@ index d1ad9cd51..085468539 100644
 -import { Vector3 } from 'three';
 -import { Box3 } from 'three';
 -import { Scene } from 'three';
+diff --git a/jsdoc-testing/jsdoc/examples/jsm/lights/SunLight.d.ts b/jsdoc-testing/jsdoc/examples/jsm/lights/SunLight.d.ts
+index 8d3d68ff6..8ba9951ef 100644
+--- a/jsdoc-testing/jsdoc/examples/jsm/lights/SunLight.d.ts
++++ b/jsdoc-testing/jsdoc/examples/jsm/lights/SunLight.d.ts
+@@ -1,3 +1,10 @@
++import { ColorRepresentation, JSONMeta, Light, LightJSON, LightShadowJSON } from "three";
++import { SunLightShadow } from "./SunLightShadow.js";
++
++export interface SunLightJSON extends LightJSON {
++    shadow: LightShadowJSON;
++}
++
+ /**
+  * A sun-like light that gets emitted in a specific direction, with rays that
+  * are all parallel, and casts cascaded shadow maps via {@link SunLightShadow},
+@@ -18,7 +25,6 @@
+  * This light is only supported by `WebGLRenderer`. When using `WebGPURenderer`,
+  * use {@link DirectionalLight} with `CSMShadowNode` instead.
+  *
+- * @augments Light
+  * @three_import import { SunLight } from 'three/addons/lights/SunLight.js';
+  */
+ export class SunLight extends Light {
+@@ -28,22 +34,17 @@ export class SunLight extends Light {
+      * @param {(number|Color|string)} [color=0xffffff] - The light's color.
+      * @param {number} [intensity=1] - The light's strength/intensity.
+      */
+-    constructor(color?: (number | Color | string), intensity?: number);
++    constructor(color?: ColorRepresentation, intensity?: number);
+     /**
+      * This flag can be used for type testing.
+      *
+-     * @type {boolean}
+-     * @readonly
+      * @default true
+      */
+     readonly isSunLight: boolean;
+     /**
+      * This property holds the light's shadow configuration.
+-     *
+-     * @type {SunLightShadow}
+      */
+     shadow: SunLightShadow;
+-    copy(source: any): this;
++    copy(source: SunLight): this;
++    toJSON(meta?: JSONMeta): SunLightJSON;
+ }
+-import { Light } from 'three';
+-import { SunLightShadow } from './SunLightShadow.js';
+diff --git a/jsdoc-testing/jsdoc/examples/jsm/lights/SunLightShadow.d.ts b/jsdoc-testing/jsdoc/examples/jsm/lights/SunLightShadow.d.ts
+index ae4a2797c..8fb0567d1 100644
+--- a/jsdoc-testing/jsdoc/examples/jsm/lights/SunLightShadow.d.ts
++++ b/jsdoc-testing/jsdoc/examples/jsm/lights/SunLightShadow.d.ts
+@@ -1,3 +1,5 @@
++import { Camera, Frustum, Light, LightShadow, Matrix4, OrthographicCamera } from "three";
++
+ /**
+  * Represents the shadow configuration of {@link SunLight}, using four
+  * cascaded shadow maps (CSM).
+@@ -9,24 +11,19 @@
+  *
+  * The default `mapSize` is `1024x1024` per cascade.
+  *
+- * @augments LightShadow
+  * @three_import import { SunLightShadow } from 'three/addons/lights/SunLightShadow.js';
+  */
+-export class SunLightShadow {
++export class SunLightShadow extends LightShadow<OrthographicCamera> {
++    /**
++     * Constructs a new sun light shadow.
++     */
++    constructor();
+     /**
+      * This flag can be used for type testing.
+      *
+-     * @type {boolean}
+-     * @readonly
+      * @default true
+      */
+     readonly isSunLightShadow: boolean;
+-    _cameras: OrthographicCamera[];
+-    _matrices: Matrix4[];
+-    _frustums: Frustum[];
+-    _cascadeSplits: any[];
+-    _cascadeData: Vector4[];
+-    _viewportCount: number;
+     /**
+      * Returns the shadow camera of the given cascade.
+      *
+@@ -56,9 +53,5 @@ export class SunLightShadow {
+      * @param {Light} light - The light for which the shadow is being rendered.
+      * @param {Camera} viewCamera - The camera the scene is rendered with.
+      */
+-    updateMatrices(light: Light, viewCamera: Camera): void;
++    updateMatrices(light: Light, viewCamera?: Camera): void;
+ }
+-import { OrthographicCamera } from 'three';
+-import { Matrix4 } from 'three';
+-import { Frustum } from 'three';
+-import { Vector4 } from 'three';
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/misc/TileCreasedNormalsPlugin.d.ts b/jsdoc-testing/jsdoc/examples/jsm/misc/TileCreasedNormalsPlugin.d.ts
 index 3a794d7df..40bd78652 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/misc/TileCreasedNormalsPlugin.d.ts
