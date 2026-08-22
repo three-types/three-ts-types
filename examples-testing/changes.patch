@@ -14784,6 +14784,46 @@ index b2b567c9a..6c1ad5f2c 100644
      const time = (currentTime - startTime) / 1000;
  
      object.position.y = 0.8;
+diff --git a/examples-testing/examples/webgpu_clipping_stencil.ts b/examples-testing/examples/webgpu_clipping_stencil.ts
+index c117bcfa8..584957a68 100644
+--- a/examples-testing/examples/webgpu_clipping_stencil.ts
++++ b/examples-testing/examples/webgpu_clipping_stencil.ts
+@@ -4,9 +4,9 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+-let camera, scene, renderer, object;
+-let planes, planeObjects, planeHelpers;
+-let timer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, object: THREE.Group;
++let planes: THREE.Plane[], planeObjects: THREE.Mesh[], planeHelpers: THREE.PlaneHelper[];
++let timer: THREE.Timer;
+ 
+ const params = {
+     animate: true,
+@@ -29,7 +29,12 @@ const params = {
+ 
+ init();
+ 
+-function createPlaneStencilGroup(geometry, plane, stencilBit, renderOrder) {
++function createPlaneStencilGroup(
++    geometry: THREE.TorusKnotGeometry,
++    plane: THREE.Plane,
++    stencilBit: number,
++    renderOrder: number,
++) {
+     const group = new THREE.ClippingGroup();
+     group.clippingPlanes = [plane];
+ 
+@@ -184,7 +189,7 @@ function init() {
+ 
+     // GUI
+ 
+-    const gui = renderer.inspector.createParameters('Clipping settings');
++    const gui = (renderer.inspector as Inspector).createParameters('Clipping settings');
+     gui.add(params, 'animate');
+ 
+     const planeX = gui.addFolder('planeX');
 diff --git a/examples-testing/examples/webgpu_compile_async.ts b/examples-testing/examples/webgpu_compile_async.ts
 index fbcf0a7b0..b80719c41 100644
 --- a/examples-testing/examples/webgpu_compile_async.ts
