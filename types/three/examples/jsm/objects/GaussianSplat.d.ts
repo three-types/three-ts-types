@@ -9,14 +9,14 @@ import {
     Sphere,
 } from "three/webgpu";
 
-export interface GaussianSplatMeshOptions {
+export interface GaussianSplatOptions {
     autoSort?: boolean | undefined;
 }
 
-declare class GaussianSplatMesh extends Mesh<InstancedBufferGeometry, NodeMaterial> {
-    constructor(splatGeometry: BufferGeometry, options?: GaussianSplatMeshOptions);
+declare class GaussianSplat extends Mesh<InstancedBufferGeometry, NodeMaterial> {
+    constructor(splatGeometry: BufferGeometry, options?: GaussianSplatOptions);
 
-    readonly isGaussianSplatMesh: true;
+    readonly isGaussianSplat: true;
 
     splatGeometry: BufferGeometry;
     boundingBox: Box3 | null;
@@ -32,4 +32,4 @@ declare class GaussianSplatMesh extends Mesh<InstancedBufferGeometry, NodeMateri
     updateSort(renderer: Renderer, camera: Camera): boolean;
 }
 
-export { GaussianSplatMesh };
+export { GaussianSplat };
