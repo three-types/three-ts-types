@@ -111,8 +111,8 @@ declare class PassNode extends TempNode<"vec4"> {
 
     dispose(): void;
 
-    static COLOR: "color";
-    static DEPTH: "depth";
+    static get COLOR(): "color";
+    static get DEPTH(): "depth";
 }
 
 export type PassNodeScope = typeof PassNode.COLOR | typeof PassNode.DEPTH;

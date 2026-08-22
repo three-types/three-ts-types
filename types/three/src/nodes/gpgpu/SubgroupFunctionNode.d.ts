@@ -37,35 +37,35 @@ declare class SubgroupFunctionNode extends TempNode {
     constructor(method: SubgroupFunctionNodeMethod2, aNode: Node, bNode: Node);
 
     // 0 inputs
-    static SUBGROUP_ELECT: "subgroupElect";
+    static get SUBGROUP_ELECT(): "subgroupElect";
 
     // 1 input
-    static SUBGROUP_BALLOT: "subgroupBallot";
-    static SUBGROUP_ADD: "subgroupAdd";
-    static SUBGROUP_INCLUSIVE_ADD: "subgroupInclusiveAdd";
-    static SUBGROUP_EXCLUSIVE_AND: "subgroupExclusiveAdd";
-    static SUBGROUP_MUL: "subgroupMul";
-    static SUBGROUP_INCLUSIVE_MUL: "subgroupInclusiveMul";
-    static SUBGROUP_EXCLUSIVE_MUL: "subgroupExclusiveMul";
-    static SUBGROUP_AND: "subgroupAnd";
-    static SUBGROUP_OR: "subgroupOr";
-    static SUBGROUP_XOR: "subgroupXor";
-    static SUBGROUP_MIN: "subgroupMin";
-    static SUBGROUP_MAX: "subgroupMax";
-    static SUBGROUP_ALL: "subgroupAll";
-    static SUBGROUP_ANY: "subgroupAny";
-    static SUBGROUP_BROADCAST_FIRST: "subgroupBroadcastFirst";
-    static QUAD_SWAP_X: "quadSwapX";
-    static QUAD_SWAP_Y: "quadSwapY";
-    static QUAD_SWAP_DIAGONAL: "quadSwapDiagonal";
+    static get SUBGROUP_BALLOT(): "subgroupBallot";
+    static get SUBGROUP_ADD(): "subgroupAdd";
+    static get SUBGROUP_INCLUSIVE_ADD(): "subgroupInclusiveAdd";
+    static get SUBGROUP_EXCLUSIVE_AND(): "subgroupExclusiveAdd";
+    static get SUBGROUP_MUL(): "subgroupMul";
+    static get SUBGROUP_INCLUSIVE_MUL(): "subgroupInclusiveMul";
+    static get SUBGROUP_EXCLUSIVE_MUL(): "subgroupExclusiveMul";
+    static get SUBGROUP_AND(): "subgroupAnd";
+    static get SUBGROUP_OR(): "subgroupOr";
+    static get SUBGROUP_XOR(): "subgroupXor";
+    static get SUBGROUP_MIN(): "subgroupMin";
+    static get SUBGROUP_MAX(): "subgroupMax";
+    static get SUBGROUP_ALL(): "subgroupAll";
+    static get SUBGROUP_ANY(): "subgroupAny";
+    static get SUBGROUP_BROADCAST_FIRST(): "subgroupBroadcastFirst";
+    static get QUAD_SWAP_X(): "quadSwapX";
+    static get QUAD_SWAP_Y(): "quadSwapY";
+    static get QUAD_SWAP_DIAGONAL(): "quadSwapDiagonal";
 
     // 2 inputs
-    static SUBGROUP_BROADCAST: "subgroupBroadcast";
-    static SUBGROUP_SHUFFLE: "subgroupShuffle";
-    static SUBGROUP_SHUFFLE_XOR: "subgroupShuffleXor";
-    static SUBGROUP_SHUFFLE_UP: "subgroupShuffleUp";
-    static SUBGROUP_SHUFFLE_DOWN: "subgroupShuffleDown";
-    static QUAD_BROADCAST: "quadBroadcast";
+    static get SUBGROUP_BROADCAST(): "subgroupBroadcast";
+    static get SUBGROUP_SHUFFLE(): "subgroupShuffle";
+    static get SUBGROUP_SHUFFLE_XOR(): "subgroupShuffleXor";
+    static get SUBGROUP_SHUFFLE_UP(): "subgroupShuffleUp";
+    static get SUBGROUP_SHUFFLE_DOWN(): "subgroupShuffleDown";
+    static get QUAD_BROADCAST(): "quadBroadcast";
 }
 
 export default SubgroupFunctionNode;
