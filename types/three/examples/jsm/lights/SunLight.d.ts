@@ -1,7 +1,4 @@
-import { JSONMeta } from "../core/Object3D.js";
-import { ColorRepresentation } from "../math/Color.js";
-import { Light, LightJSON } from "./Light.js";
-import { LightShadowJSON } from "./LightShadow.js";
+import { ColorRepresentation, JSONMeta, Light, LightJSON, LightShadowJSON } from "three";
 import { SunLightShadow } from "./SunLightShadow.js";
 
 export interface SunLightJSON extends LightJSON {
@@ -27,6 +24,8 @@ export interface SunLightJSON extends LightJSON {
  *
  * This light is only supported by `WebGLRenderer`. When using `WebGPURenderer`,
  * use {@link DirectionalLight} with `CSMShadowNode` instead.
+ *
+ * @three_import import { SunLight } from 'three/addons/lights/SunLight.js';
  */
 export class SunLight extends Light {
     /**
