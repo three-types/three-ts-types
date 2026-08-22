@@ -1,9 +1,4 @@
-import { Camera } from "../cameras/Camera.js";
-import { OrthographicCamera } from "../cameras/OrthographicCamera.js";
-import { Frustum } from "../math/Frustum.js";
-import { Matrix4 } from "../math/Matrix4.js";
-import { Light } from "./Light.js";
-import { LightShadow } from "./LightShadow.js";
+import { Camera, Frustum, Light, LightShadow, Matrix4, OrthographicCamera } from "three";
 
 /**
  * Represents the shadow configuration of {@link SunLight}, using four
@@ -15,6 +10,8 @@ import { LightShadow } from "./LightShadow.js";
  * small depth range. `camera.left/right/top/bottom` are ignored.
  *
  * The default `mapSize` is `1024x1024` per cascade.
+ *
+ * @three_import import { SunLightShadow } from 'three/addons/lights/SunLightShadow.js';
  */
 export class SunLightShadow extends LightShadow<OrthographicCamera> {
     /**
