@@ -20489,6 +20489,212 @@ index 8be1a3276..1d5a66dbe 100644
      pointerCoords.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1);
  
      raycaster.setFromCamera(pointerCoords, camera);
+diff --git a/examples-testing/examples/webgpu_postprocessing_fog.ts b/examples-testing/examples/webgpu_postprocessing_fog.ts
+index 6167ac4e6..4af3c47c6 100644
+--- a/examples-testing/examples/webgpu_postprocessing_fog.ts
++++ b/examples-testing/examples/webgpu_postprocessing_fog.ts
+@@ -28,8 +28,15 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { PLYLoader } from 'three/addons/loaders/PLYLoader.js';
+ import { Inspector } from 'three/addons/inspector/Inspector.js';
+ 
+-let camera, scene, renderer, renderPipeline, controls, timer;
+-let lucyMesh, cloudSpeed, cloudTimeUniform;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGPURenderer,
++    renderPipeline: THREE.RenderPipeline,
++    controls: OrbitControls,
++    timer: THREE.Timer;
++let lucyMesh: THREE.Mesh,
++    cloudSpeed: THREE.UniformNode<'float', number>,
++    cloudTimeUniform: THREE.UniformNode<'float', number>;
+ 
+ init();
+ 
+@@ -65,7 +72,7 @@ function init() {
+         const tileColor = checker.greaterThan(0.5).select(color(0x3b3e46), color(0x33363d));
+ 
+         // Anti-aliased grid coverage helper using screen-space derivatives (fwidth)
+-        const getGridCoverage = (coord, lineWidthInPixels) => {
++        const getGridCoverage = (coord: THREE.Node<'vec2'>, lineWidthInPixels: number) => {
+             const deriv = fwidth(coord).max(0.0001);
+             const distFromEdge = float(0.5).sub(coord.fract().sub(0.5).abs());
+             const pixelDist = distFromEdge.div(deriv);
+@@ -159,11 +166,11 @@ function init() {
+         const data = new Uint8Array(size * size * size);
+         let idx = 0;
+ 
+-        const tri = x => Math.abs((((x % 1.0) + 1.0) % 1.0) - 0.5);
++        const tri = (x: number) => Math.abs((((x % 1.0) + 1.0) % 1.0) - 0.5);
+ 
+-        const tri3 = (x, y, z) => [tri(z + tri(y)), tri(z + tri(x)), tri(y + tri(x))];
++        const tri3 = (x: number, y: number, z: number) => [tri(z + tri(y)), tri(z + tri(x)), tri(y + tri(x))];
+ 
+-        const triNoise = (x, y, z) => {
++        const triNoise = (x: number, y: number, z: number) => {
+             let px = x,
+                 py = y,
+                 pz = z;
+@@ -267,7 +274,7 @@ function init() {
+ 
+     // 3D Procedural Volumetric Cloud Fog Density function (Optimized hardware-accelerated 3D texture sampling)
+ 
+-    const sampleCloudDensity = Fn(([pos]) => {
++    const sampleCloudDensity = Fn(([pos]: [THREE.Node<'vec3'>]) => {
+         const t = cloudTimeUniform;
+         const p = vec3(pos.mul(cloudScale)).toVar();
+ 
+@@ -352,58 +359,65 @@ function init() {
+     // Reconstructs full-resolution fog from a low-resolution buffer using high-resolution scene depth as a guide
+     // https://johanneskopf.de/publications/jbu/
+ 
+-    const jointBilateralUpsampling = Fn(([lowResTexture, depthTexture, spatialSig, depthSens]) => {
+-        const centerCoord = screenUV;
+-
+-        // High-resolution guide: Full-resolution linear scene depth at the output pixel
+-        const centerDepth = getViewPosition(
+-            centerCoord,
+-            depthTexture.sample(centerCoord).r,
+-            cameraProjectionMatrixInverseUniform,
+-        )
+-            .z.negate()
+-            .max(0.001);
+-
+-        // Low-resolution texel footprint based on resolutionScale
+-        const lowResTexel = fwidth(centerCoord).div(resolutionScale);
+-
+-        // Precomputed Gaussian factors
+-        const spatialSigmaFactor = float(-0.5).div(spatialSig.mul(spatialSig).max(0.01));
+-        const depthSigmaFactor = depthSens.mul(depthSens).mul(-0.5);
+-
+-        const sumColor = float(0.0).toVar();
+-        const sumWeight = float(0.0).toVar();
+-
+-        // 5x5 spatial support over the low-resolution grid
+-        for (let y = -2; y <= 2; y++) {
+-            for (let x = -2; x <= 2; x++) {
+-                const offset = vec2(float(x), float(y));
+-                const spatialDistSq = offset.x.mul(offset.x).add(offset.y.mul(offset.y));
+-                const spatialWeight = exp(spatialDistSq.mul(spatialSigmaFactor));
+-
+-                const sampleUV = centerCoord.add(offset.mul(lowResTexel));
+-                const sampleFog = lowResTexture.sample(sampleUV);
+-                const sampleDepth = getViewPosition(
+-                    sampleUV,
+-                    depthTexture.sample(sampleUV).r,
+-                    cameraProjectionMatrixInverseUniform,
+-                )
+-                    .z.negate()
+-                    .max(0.001);
+-
+-                // Range weight based on high-resolution depth similarity (preserves geometric edges)
+-                const depthDiff = sampleDepth.sub(centerDepth).div(centerDepth.max(0.1));
+-                const rangeWeight = exp(depthDiff.mul(depthDiff).mul(depthSigmaFactor));
+-
+-                const totalWeight = spatialWeight.mul(rangeWeight);
+-
+-                sumColor.addAssign(sampleFog.mul(totalWeight));
+-                sumWeight.addAssign(totalWeight);
++    const jointBilateralUpsampling = Fn(
++        ([lowResTexture, depthTexture, spatialSig, depthSens]: [
++            THREE.TextureNode,
++            THREE.TextureNode,
++            THREE.Node<'float'>,
++            THREE.Node<'float'>,
++        ]) => {
++            const centerCoord = screenUV;
++
++            // High-resolution guide: Full-resolution linear scene depth at the output pixel
++            const centerDepth = getViewPosition(
++                centerCoord,
++                depthTexture.sample(centerCoord).r,
++                cameraProjectionMatrixInverseUniform,
++            )
++                .z.negate()
++                .max(0.001);
++
++            // Low-resolution texel footprint based on resolutionScale
++            const lowResTexel = fwidth(centerCoord).div(resolutionScale);
++
++            // Precomputed Gaussian factors
++            const spatialSigmaFactor = float(-0.5).div(spatialSig.mul(spatialSig).max(0.01));
++            const depthSigmaFactor = depthSens.mul(depthSens).mul(-0.5);
++
++            const sumColor = float(0.0).toVar();
++            const sumWeight = float(0.0).toVar();
++
++            // 5x5 spatial support over the low-resolution grid
++            for (let y = -2; y <= 2; y++) {
++                for (let x = -2; x <= 2; x++) {
++                    const offset = vec2(float(x), float(y));
++                    const spatialDistSq = offset.x.mul(offset.x).add(offset.y.mul(offset.y));
++                    const spatialWeight = exp(spatialDistSq.mul(spatialSigmaFactor));
++
++                    const sampleUV = centerCoord.add(offset.mul(lowResTexel));
++                    const sampleFog = lowResTexture.sample(sampleUV);
++                    const sampleDepth = getViewPosition(
++                        sampleUV,
++                        depthTexture.sample(sampleUV).r,
++                        cameraProjectionMatrixInverseUniform,
++                    )
++                        .z.negate()
++                        .max(0.001);
++
++                    // Range weight based on high-resolution depth similarity (preserves geometric edges)
++                    const depthDiff = sampleDepth.sub(centerDepth).div(centerDepth.max(0.1));
++                    const rangeWeight = exp(depthDiff.mul(depthDiff).mul(depthSigmaFactor));
++
++                    const totalWeight = spatialWeight.mul(rangeWeight);
++
++                    sumColor.addAssign(sampleFog.mul(totalWeight));
++                    sumWeight.addAssign(totalWeight);
++                }
+             }
+-        }
+ 
+-        return sumColor.div(sumWeight.max(0.0001));
+-    });
++            return sumColor.div(sumWeight.max(0.0001));
++        },
++    );
+ 
+     // Low-Resolution Volumetric Fog Pass RTT
+ 
+@@ -418,15 +432,15 @@ function init() {
+     // Denoising Options: JBU, Gaussian Blur, Disabled (Raw)
+ 
+     const jbuFog = jointBilateralUpsampling(lowResFogPass, sceneDepth, spatialSigma, depthSensitivity);
+-    const gaussianFog = gaussianBlur(lowResFogPass, blurRadius);
+-    const rawFog = lowResFogPass.sample(screenUV);
++    const gaussianFog = gaussianBlur(lowResFogPass, blurRadius) as unknown as THREE.Node<'float'>;
++    const rawFog = lowResFogPass.sample(screenUV) as unknown as THREE.Node<'float'>;
+ 
+     const filterParams = {
+         mode: 'JBU',
+     };
+ 
+     function updateFilterMode() {
+-        let selectedFog;
++        let selectedFog: THREE.Node<'float'>;
+ 
+         if (filterParams.mode === 'JBU') {
+             selectedFog = jbuFog;
+@@ -477,13 +491,13 @@ function init() {
+ 
+     // GUI
+ 
+-    const gui = renderer.inspector.createParameters('Volumetric Fog');
++    const gui = (renderer.inspector as Inspector).createParameters('Volumetric Fog');
+     gui.add(filterParams, 'mode', ['JBU', 'Gaussian Blur', 'Disabled'])
+         .name('denoiser')
+         .onChange(() => updateFilterMode());
+     gui.add(resolutionScale, 'value', 0.25, 0.75, 0.05)
+         .name('resolution scale')
+-        .onChange(value => lowResFogPass.setResolutionScale(value));
++        .onChange((value: number) => lowResFogPass.setResolutionScale(value));
+     gui.add(steps, 'value', 4, 32, 1).name('steps');
+     gui.add(cloudThreshold, 'value', 0.0, 0.8, 0.02).name('cloud threshold');
+     gui.add(cloudScale, 'value', 0.001, 0.15, 0.001).name('cloud scale');
 diff --git a/examples-testing/examples/webgpu_postprocessing_fxaa.ts b/examples-testing/examples/webgpu_postprocessing_fxaa.ts
 index 24c01a950..b820da439 100644
 --- a/examples-testing/examples/webgpu_postprocessing_fxaa.ts
