@@ -16715,7 +16715,7 @@ index 944b5fc7c..2759ac0fa 100644
          .name('GI')
          .onChange(value => {
 diff --git a/examples-testing/examples/webgpu_lightprobes_sponza.ts b/examples-testing/examples/webgpu_lightprobes_sponza.ts
-index a73fd1e5b..17625cc2e 100644
+index 9e4b280ce..0529b7fcc 100644
 --- a/examples-testing/examples/webgpu_lightprobes_sponza.ts
 +++ b/examples-testing/examples/webgpu_lightprobes_sponza.ts
 @@ -11,12 +11,16 @@ const MODEL_INDEX_URL =
@@ -16780,30 +16780,23 @@ index a73fd1e5b..17625cc2e 100644
      let isBaking = false;
      let bakeQueued = false;
  
-@@ -142,18 +146,18 @@ async function init() {
-         const horizontal = Math.cos(elevation) * radius;
-         const vertical = Math.sin(elevation) * radius;
+@@ -140,11 +144,11 @@ async function init() {
+         const azimuth = THREE.MathUtils.degToRad(params.lightAzimuth);
  
--        dirLight.position.set(
-+        dirLight!.position.set(
-             modelCenter.x + Math.cos(azimuth) * horizontal,
-             targetY + vertical,
-             modelCenter.z + Math.sin(azimuth) * horizontal,
-         );
--        dirLight.target.position.set(modelCenter.x, targetY, modelCenter.z);
--        dirLight.target.updateMatrixWorld();
-+        dirLight!.target.position.set(modelCenter.x, targetY, modelCenter.z);
-+        dirLight!.target.updateMatrixWorld();
- 
-         const phi = THREE.MathUtils.degToRad(90 - params.lightElevation);
-         const theta = THREE.MathUtils.degToRad(params.lightAzimuth);
-         sun.setFromSphericalCoords(1, phi, theta);
+         sun.setFromSphericalCoords(1, Math.PI / 2 - elevation, azimuth);
 -        sky.sunPosition.value.copy(sun);
 +        sky!.sunPosition.value.copy(sun);
+ 
+-        dirLight.target.position.set(modelCenter.x, targetY, modelCenter.z);
+-        dirLight.position.copy(dirLight.target.position).addScaledVector(sun, lightBaseDistance);
+-        dirLight.target.updateMatrixWorld();
++        dirLight!.target.position.set(modelCenter.x, targetY, modelCenter.z);
++        dirLight!.position.copy(dirLight!.target.position).addScaledVector(sun, lightBaseDistance);
++        dirLight!.target.updateMatrixWorld();
      }
  
      function scheduleRebake() {
-@@ -217,7 +221,7 @@ async function init() {
+@@ -208,7 +212,7 @@ async function init() {
  
      updateLightPosition();
  
@@ -16812,7 +16805,7 @@ index a73fd1e5b..17625cc2e 100644
      gui.add(params, 'enabled')
          .name('GI')
          .onChange(value => {
-@@ -239,7 +243,7 @@ async function init() {
+@@ -230,7 +234,7 @@ async function init() {
      gui.add(params, 'lightIntensity', 0, 100, 0.1)
          .name('Light Intensity')
          .onChange(value => {
@@ -16821,7 +16814,7 @@ index a73fd1e5b..17625cc2e 100644
              scheduleRebake();
          });
      gui.add(params, 'shadows')
-@@ -265,7 +269,7 @@ async function init() {
+@@ -256,7 +260,7 @@ async function init() {
              if (probesHelper) {
                  scene.remove(probesHelper);
                  probesHelper.dispose();
@@ -16830,7 +16823,7 @@ index a73fd1e5b..17625cc2e 100644
                  probesHelper.visible = params.showProbes;
                  scene.add(probesHelper);
              }
-@@ -297,9 +301,17 @@ async function init() {
+@@ -288,9 +292,17 @@ async function init() {
      window.addEventListener('resize', onWindowResize);
  }
  
@@ -16849,7 +16842,7 @@ index a73fd1e5b..17625cc2e 100644
      const sponzaInfo = models.find(model => model.name === 'Sponza');
  
      if (!sponzaInfo) {
-@@ -318,7 +330,7 @@ async function getSponzaModelURL() {
+@@ -309,7 +321,7 @@ async function getSponzaModelURL() {
      return `${SAMPLE_ASSETS_BASE_URL}${sponzaInfo.name}/${variantFolder}/${variantName}`;
  }
  
@@ -16858,7 +16851,7 @@ index a73fd1e5b..17625cc2e 100644
      if (!renderer || !dirLight) return;
  
      renderer.shadowMap.enabled = enabled;
-@@ -332,7 +344,7 @@ function onWindowResize() {
+@@ -323,7 +335,7 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
  
