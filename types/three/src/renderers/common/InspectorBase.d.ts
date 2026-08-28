@@ -9,6 +9,7 @@ import { Texture } from "../../textures/Texture.js";
 import Renderer from "./Renderer.js";
 
 export interface InspectorBaseEventMap {
+    dispose: {};
 }
 
 /**
@@ -56,10 +57,6 @@ declare class InspectorBase<TEventMap extends InspectorBaseEventMap = InspectorB
      * @return {WebGLRenderer} The associated renderer.
      */
     getRenderer(): Renderer;
-    /**
-     * Initializes the inspector.
-     */
-    init(): void;
     /**
      * Called when a frame begins.
      */
@@ -123,6 +120,10 @@ declare class InspectorBase<TEventMap extends InspectorBaseEventMap = InspectorB
      * @param {Texture} framebufferTexture - The texture associated with the framebuffer.
      */
     copyFramebufferToTexture(framebufferTexture: Texture): void;
+    /**
+     * Frees all internal resources of the inspector.
+     */
+    dispose(): void;
 }
 
 export default InspectorBase;
