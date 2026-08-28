@@ -861,7 +861,7 @@ declare class Renderer {
      * Frees all internal resources of the renderer. Call this method if the renderer
      * is no longer in use by your app.
      */
-    dispose(): void;
+    dispose(): Promise<void>;
     /**
      * Sets the given render target. Calling this method means the renderer does not
      * target the default framebuffer (meaning the canvas) anymore but a custom framebuffer.
