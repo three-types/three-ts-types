@@ -14891,10 +14891,10 @@ index 8155740ab..bc7ea9656 100644
 +
 +export default Info;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/InspectorBase.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/InspectorBase.d.ts
-index c35ecfabf..38a67a598 100644
+index 58e08658c..f488aa3ae 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/InspectorBase.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/common/InspectorBase.d.ts
-@@ -1,23 +1,27 @@
+@@ -1,23 +1,28 @@
 -export default InspectorBase;
 +import NodeFrame from '../../nodes/core/NodeFrame.js';
 +import Renderer from './Renderer.js';
@@ -14907,6 +14907,7 @@ index c35ecfabf..38a67a598 100644
 +import { EventDispatcher } from '../../core/EventDispatcher.js';
 +
 +export interface InspectorBaseEventMap {
++    dispose: {};
 +}
 +
  /**
@@ -14934,7 +14935,7 @@ index c35ecfabf..38a67a598 100644
      /**
       * Indicates whether the inspector is running.
       *
-@@ -37,20 +41,20 @@ declare class InspectorBase extends EventDispatcher {
+@@ -37,20 +42,20 @@ declare class InspectorBase extends EventDispatcher {
       *
       * @return {Object} The node frame.
       */
@@ -14956,9 +14957,9 @@ index c35ecfabf..38a67a598 100644
 -    getRenderer(): WebGLRenderer;
 +    getRenderer(): Renderer;
      /**
-      * Initializes the inspector.
+      * Called when a frame begins.
       */
-@@ -68,28 +72,28 @@ declare class InspectorBase extends EventDispatcher {
+@@ -64,28 +69,28 @@ declare class InspectorBase extends EventDispatcher {
       *
       * @param {Node} node - The node to inspect.
       */
@@ -14991,7 +14992,7 @@ index c35ecfabf..38a67a598 100644
      /**
       * Called when a render operation begins.
       *
-@@ -98,25 +102,26 @@ declare class InspectorBase extends EventDispatcher {
+@@ -94,29 +99,30 @@ declare class InspectorBase extends EventDispatcher {
       * @param {Camera} camera - The camera being used for rendering.
       * @param {?WebGLRenderTarget} renderTarget - The render target, if any.
       */
@@ -15019,6 +15020,10 @@ index c35ecfabf..38a67a598 100644
       */
 -    copyFramebufferToTexture(): void;
 +    copyFramebufferToTexture(framebufferTexture: Texture): void;
+     /**
+      * Frees all internal resources of the inspector.
+      */
+     dispose(): void;
  }
 -import { EventDispatcher } from '../../core/EventDispatcher.js';
 +
