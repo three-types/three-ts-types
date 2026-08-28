@@ -21411,7 +21411,7 @@ index a5db67638..4d689dc1d 100644
          });
      });
 diff --git a/examples-testing/examples/webgpu_postprocessing_ssr_denoise.ts b/examples-testing/examples/webgpu_postprocessing_ssr_denoise.ts
-index 978c8ed67..231cb147e 100644
+index 1ffbf8a6e..3cf79cbfe 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ssr_denoise.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ssr_denoise.ts
 @@ -23,10 +23,10 @@ import {
@@ -21506,7 +21506,7 @@ index 978c8ed67..231cb147e 100644
          });
  
          model = gltf.scene;
-@@ -299,7 +311,7 @@ async function init() {
+@@ -297,7 +309,7 @@ async function init() {
          'Accumulation Speed (Alpha)': 6,
      };
  
@@ -21515,7 +21515,7 @@ index 978c8ed67..231cb147e 100644
      ssrGui.add(params, 'output', outputTypes).onChange(updateOutputNode);
      ssrGui.add(params.ssr, 'quality', 0, 1).name('quality').onChange(applyParams);
      ssrGui.add(params.ssr, 'mirrorBias', 0, 1).name('mirror bias').onChange(applyParams);
-@@ -311,11 +323,12 @@ async function init() {
+@@ -309,11 +321,12 @@ async function init() {
      ssrGui.add(params.ssr, 'environmentIntensity', 0, 10).name('env intensity').onChange(applyParams);
      ssrGui.add(params, 'roughness', 0, 1).onChange(value => {
          scene.traverse(object => {
@@ -21530,7 +21530,7 @@ index 978c8ed67..231cb147e 100644
      denoiseGui.add(params.denoise, 'enabled').name('enabled').onChange(applyParams);
      denoiseGui.add(params.denoise, 'lumaPhi', 0, 3).name('luma phi').onChange(applyParams);
      denoiseGui.add(params.denoise, 'depthPhi', 0, 50).name('depth phi').onChange(applyParams);
-@@ -334,7 +347,7 @@ async function init() {
+@@ -332,7 +345,7 @@ async function init() {
      // denoiseGui.add( params.denoise, 'flickerSuppression', 0, 1 ).name( 'flicker suppression' ).onChange( applyParams );
      // denoiseGui.add( params.denoise, 'adaptiveTrust', 0, 1 ).name( 'adaptive trust' ).onChange( applyParams );
  
@@ -21539,7 +21539,7 @@ index 978c8ed67..231cb147e 100644
      temporalReprojectGui.add(params.temporalReproject, 'maxFrames', 1, 128, 1).name('max frames').onChange(applyParams);
      temporalReprojectGui
          .add(params.temporalReproject, 'clampIntensity', 0, 1)
-@@ -351,8 +364,8 @@ async function init() {
+@@ -349,8 +362,8 @@ async function init() {
      temporalReprojectGui.close();
  
      // Concise UI for Directional Light controls
@@ -21550,7 +21550,7 @@ index 978c8ed67..231cb147e 100644
          lightGui
              .add(directionalLight.position, axis, -30, 30)
              .name(axis.toUpperCase())
-@@ -404,7 +417,7 @@ function applyParams() {
+@@ -402,7 +415,7 @@ function applyParams() {
      }
  }
  
@@ -21559,7 +21559,7 @@ index 978c8ed67..231cb147e 100644
      let rgb = source.rgb;
  
      rgb = renderOutput(vec4(rgb, 1), THREE.AgXToneMapping, THREE.SRGBColorSpace).rgb;
-@@ -415,7 +428,7 @@ function applyGrading(source) {
+@@ -413,7 +426,7 @@ function applyGrading(source) {
      return vec4(rgb, 1);
  }
  
@@ -21568,7 +21568,7 @@ index 978c8ed67..231cb147e 100644
      return sharpen(traa(applyGrading(source), scenePassDepth, scenePassVelocity, camera), 0);
  }
  
-@@ -432,7 +445,7 @@ function applyPost() {
+@@ -430,7 +443,7 @@ function applyPost() {
  function updateOutputNode() {
      if (!postProcessing) return;
  
@@ -21577,7 +21577,7 @@ index 978c8ed67..231cb147e 100644
  
      switch (params.output) {
          case 0:
-@@ -472,7 +485,7 @@ function updateOutputNode() {
+@@ -470,7 +483,7 @@ function updateOutputNode() {
      updateCompareHint(params.output);
  
      postProcessing.outputColorTransform = !GRADED_OUTPUTS.has(params.output);
@@ -21586,7 +21586,7 @@ index 978c8ed67..231cb147e 100644
      postProcessing.needsUpdate = true;
  }
  
-@@ -484,7 +497,7 @@ function onWindowResize() {
+@@ -482,7 +495,7 @@ function onWindowResize() {
      compareResolution.value.set(window.innerWidth, window.innerHeight);
  }
  
