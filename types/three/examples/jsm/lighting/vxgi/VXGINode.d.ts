@@ -21,7 +21,7 @@ import { VXGIVolume } from "./VXGIVolume.js";
  * @augments TempNode
  * @three_import import { vxgi } from 'three/addons/lighting/vxgi/VXGINode.js';
  */
-declare class VXGINode extends TempNode<"vec4"> {
+declare class VXGINodeInterface {
     depthNode: TextureNode;
     normalNode: TextureNode | null;
     scene: Scene;
@@ -69,14 +69,6 @@ declare class VXGINode extends TempNode<"vec4"> {
      */
     lightingNeedsUpdate: boolean;
 
-    constructor(
-        depthNode: TextureNode,
-        normalNode: TextureNode | null,
-        scene: Scene,
-        camera: Camera,
-        resolution?: number,
-    );
-
     getAONode(): TextureNode<"float">;
     getGINode(): TextureNode<"vec4">;
 
@@ -84,6 +76,18 @@ declare class VXGINode extends TempNode<"vec4"> {
 
     dispose(): void;
 }
+
+declare const VXGINode: {
+    new(
+        depthNode: TextureNode,
+        normalNode: TextureNode | null,
+        scene: Scene,
+        camera: Camera,
+        resolution?: number,
+    ): VXGINode;
+};
+
+type VXGINode = VXGINodeInterface & TempNode<"vec4">;
 
 export default VXGINode;
 
