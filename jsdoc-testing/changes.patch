@@ -2728,18 +2728,19 @@ index 040c4af5c..21a787d59 100644
 -    unsubscribe_(path: any): void;
  }
 diff --git a/jsdoc-testing/jsdoc/src/animation/AnimationUtils.d.ts b/jsdoc-testing/jsdoc/src/animation/AnimationUtils.d.ts
-index 7355fe037..9745bd9f4 100644
+index 1b75c1c28..a4f7e4a81 100644
 --- a/jsdoc-testing/jsdoc/src/animation/AnimationUtils.d.ts
 +++ b/jsdoc-testing/jsdoc/src/animation/AnimationUtils.d.ts
-@@ -1,3 +1,7 @@
+@@ -1,3 +1,8 @@
 +import { AnimationClip } from "./AnimationClip.js";
 +import { TypedArray, TypedArrayConstructor } from '../core/BufferAttribute.js';
 +import { isTypedArray } from '../utils.js';
++import { KeyframeTrackSettings } from './KeyframeTrack.js';
 +
  /**
   * Converts an array to a specific type.
   *
-@@ -5,8 +9,7 @@
+@@ -5,15 +10,14 @@
   * @param {TypedArray.constructor} type - The constructor of a typed array that defines the new type.
   * @return {TypedArray} The converted array.
   */
@@ -2747,9 +2748,17 @@ index 7355fe037..9745bd9f4 100644
 -import { isTypedArray } from '../utils.js';
 +export function convertArray(array: TypedArray | number[], type: TypedArrayConstructor): TypedArray;
  /**
+  * Returns `true` if the given keyframe track settings hold Bezier tangent data.
+  *
+  * @param {?Object} settings - The settings of a keyframe track.
+  * @return {boolean} Whether both tangent arrays are defined or not.
+  */
+-export function hasTangents(settings: Object | null): boolean;
++export function hasTangents(settings?: Partial<KeyframeTrackSettings> | null): boolean;
+ /**
   * Returns an array by which times and values can be sorted.
   *
-@@ -67,7 +70,7 @@ export class AnimationUtils {
+@@ -74,7 +78,7 @@ export class AnimationUtils {
       * @param {TypedArray.constructor} type - The constructor of a type array.
       * @return {TypedArray} The converted array
       */
@@ -2758,20 +2767,29 @@ index 7355fe037..9745bd9f4 100644
      /**
       * Returns `true` if the given object is a typed array.
       *
-@@ -75,7 +78,7 @@ export class AnimationUtils {
+@@ -82,7 +86,7 @@ export class AnimationUtils {
       * @param {any} object - The object to check.
       * @return {boolean} Whether the given object is a typed array.
       */
 -    static isTypedArray(object: any): boolean;
 +    static isTypedArray(object: unknown): boolean;
      /**
+      * Returns `true` if the given keyframe track settings hold Bezier tangent data.
+      *
+@@ -90,7 +94,7 @@ export class AnimationUtils {
+      * @param {?Object} settings - The settings of a keyframe track.
+      * @return {boolean} Whether both tangent arrays are defined or not.
+      */
+-    static hasTangents(settings: Object | null): boolean;
++    static hasTangents(settings?: Partial<KeyframeTrackSettings> | null): boolean;
+     /**
       * Returns an array by which times and values can be sorted.
       *
 diff --git a/jsdoc-testing/jsdoc/src/animation/KeyframeTrack.d.ts b/jsdoc-testing/jsdoc/src/animation/KeyframeTrack.d.ts
-index 72239e7a2..29c3d30ca 100644
+index 72239e7a2..c7f508053 100644
 --- a/jsdoc-testing/jsdoc/src/animation/KeyframeTrack.d.ts
 +++ b/jsdoc-testing/jsdoc/src/animation/KeyframeTrack.d.ts
-@@ -1,3 +1,18 @@
+@@ -1,3 +1,27 @@
 +import { DiscreteInterpolant } from '../math/interpolants/DiscreteInterpolant.js';
 +import { LinearInterpolant } from '../math/interpolants/LinearInterpolant.js';
 +import { CubicInterpolant } from '../math/interpolants/CubicInterpolant.js';
@@ -2779,18 +2797,27 @@ index 72239e7a2..29c3d30ca 100644
 +import { InterpolationModes } from "../constants.js";
 +import { TypedArray, TypedArrayConstructor } from '../core/BufferAttribute.js';
 +
++export interface KeyframeTrackSettings {
++    inTangents: TypedArray | number[];
++    outTangents: TypedArray | number[];
++}
++
 +export interface KeyframeTrackJSON {
 +    name: string;
 +    times: number[];
 +    values: number[];
 +    interpolation?: InterpolationModes;
 +    type: string;
++    settings?: {
++        inTangents: number[];
++        outTangents: number[];
++    };
 +}
 +
  /**
   * Represents a timed sequence of keyframes, which are composed of lists of
   * times and related values, and which are used to animate a specific property
-@@ -11,7 +26,7 @@ export class KeyframeTrack {
+@@ -11,7 +35,7 @@ export class KeyframeTrack {
       * @param {KeyframeTrack} track - The keyframe track to serialize.
       * @return {Object} The serialized keyframe track as JSON.
       */
@@ -2799,7 +2826,7 @@ index 72239e7a2..29c3d30ca 100644
      /**
       * Constructs a new keyframe track.
       *
-@@ -20,25 +35,19 @@ export class KeyframeTrack {
+@@ -20,27 +44,26 @@ export class KeyframeTrack {
       * @param {Array<number|string|boolean>} values - A list of keyframe values.
       * @param {(InterpolateLinear|InterpolateDiscrete|InterpolateSmooth|InterpolateBezier)} [interpolation] - The interpolation type.
       */
@@ -2825,8 +2852,15 @@ index 72239e7a2..29c3d30ca 100644
 -     * @type {Float32Array}
       */
      values: Float32Array;
++    /**
++     * The interpolation settings. Holds the Bezier tangent data which is
++     * required when using `InterpolateBezier` as the interpolation type.
++     */
++    settings?: KeyframeTrackSettings;
      /**
-@@ -84,14 +93,13 @@ export class KeyframeTrack {
+      * Factory method for creating a new discrete interpolant.
+      *
+@@ -84,14 +107,13 @@ export class KeyframeTrack {
       * @param {(InterpolateLinear|InterpolateDiscrete|InterpolateSmooth|InterpolateBezier)} interpolation - The interpolation type.
       * @return {KeyframeTrack} A reference to this keyframe track.
       */
@@ -2843,7 +2877,7 @@ index 72239e7a2..29c3d30ca 100644
      /**
       * Returns the value size.
       *
-@@ -136,43 +144,35 @@ export class KeyframeTrack {
+@@ -136,43 +158,35 @@ export class KeyframeTrack {
       *
       * @return {KeyframeTrack} A reference to this keyframe track.
       */
