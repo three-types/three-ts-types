@@ -116,6 +116,7 @@ export const buffer: typeof TSL.buffer;
 export const bufferAttribute: typeof TSL.bufferAttribute;
 export const builtin: typeof TSL.builtin;
 export const builtinAOContext: typeof TSL.builtinAOContext;
+export const builtinGIContext: typeof TSL.builtinGIContext;
 export const builtinShadowContext: typeof TSL.builtinShadowContext;
 export const bumpMap: typeof TSL.bumpMap;
 export const bvec2: typeof TSL.bvec2;
