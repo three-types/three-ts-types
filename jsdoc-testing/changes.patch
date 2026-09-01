@@ -13033,7 +13033,7 @@ index ca4dd3dff..a65e1ccc8 100644
 -export const computeSkinning: () => void;
 +export const computeSkinning: (skinnedMesh: SkinnedMesh, toPosition?: Node<'vec3'> | Vector3 | null) => void;
 diff --git a/jsdoc-testing/jsdoc/src/nodes/core/Node.d.ts b/jsdoc-testing/jsdoc/src/nodes/core/Node.d.ts
-index ffffd5676..4ba0960de 100644
+index f18a242fb..571af7261 100644
 --- a/jsdoc-testing/jsdoc/src/nodes/core/Node.d.ts
 +++ b/jsdoc-testing/jsdoc/src/nodes/core/Node.d.ts
 @@ -1,10 +1,85 @@
@@ -13304,7 +13304,7 @@ index ffffd5676..4ba0960de 100644
      /**
       * Returns the hash of the node which is used to identify the node. By default it's
       * the {@link Node#uuid} however derived node classes might have to overwrite this method
-@@ -265,40 +301,25 @@ declare class Node extends EventDispatcher {
+@@ -265,43 +301,28 @@ declare class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {string} The hash.
       */
@@ -13313,6 +13313,7 @@ index ffffd5676..4ba0960de 100644
      /**
       * Returns the update type of {@link Node#update}.
       *
+      * @param {NodeFrame} [frame] - The current node frame.
       * @return {NodeUpdateType} The update type.
       */
 -    getUpdateType(): {
@@ -13325,6 +13326,7 @@ index ffffd5676..4ba0960de 100644
      /**
       * Returns the update type of {@link Node#updateBefore}.
       *
+      * @param {NodeFrame} [frame] - The current node frame.
       * @return {NodeUpdateType} The update type.
       */
 -    getUpdateBeforeType(): {
@@ -13337,6 +13339,7 @@ index ffffd5676..4ba0960de 100644
      /**
       * Returns the update type of {@link Node#updateAfter}.
       *
+      * @param {NodeFrame} [frame] - The current node frame.
       * @return {NodeUpdateType} The update type.
       */
 -    getUpdateAfterType(): {
@@ -13349,7 +13352,7 @@ index ffffd5676..4ba0960de 100644
      /**
       * Certain types are composed of multiple elements. For example a `vec3`
       * is composed of three `float` values. This method returns the type of
-@@ -315,7 +336,7 @@ declare class Node extends EventDispatcher {
+@@ -318,7 +339,7 @@ declare class Node extends EventDispatcher {
       * @param {string} name - The name of the member.
       * @return {string} The type of the node.
       */
@@ -13358,7 +13361,7 @@ index ffffd5676..4ba0960de 100644
      /**
       * Returns the node's type.
       *
-@@ -349,7 +370,7 @@ declare class Node extends EventDispatcher {
+@@ -352,7 +373,7 @@ declare class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {?number} The number of elements in the node array.
       */
@@ -13367,7 +13370,7 @@ index ffffd5676..4ba0960de 100644
      /**
       * Represents the setup stage which is the first step of the build process, see {@link Node#build} method.
       * This method is often overwritten in derived modules to prepare the node which is used as a node's output/result.
-@@ -358,7 +379,7 @@ declare class Node extends EventDispatcher {
+@@ -361,7 +382,7 @@ declare class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {?Node} The output node.
       */
@@ -13376,7 +13379,7 @@ index ffffd5676..4ba0960de 100644
      /**
       * Represents the analyze stage which is the second step of the build process, see {@link Node#build} method.
       * This stage analyzes the node hierarchy and ensures descendent nodes are built.
-@@ -375,7 +396,7 @@ declare class Node extends EventDispatcher {
+@@ -378,7 +399,7 @@ declare class Node extends EventDispatcher {
       * @param {?string} [output] - Can be used to define the output type.
       * @return {?string} The generated shader string.
       */
@@ -13385,7 +13388,7 @@ index ffffd5676..4ba0960de 100644
      /**
       * The method can be implemented to update the node's internal state before it is used to render an object.
       * The {@link Node#updateBeforeType} property defines how often the update is executed.
-@@ -384,7 +405,7 @@ declare class Node extends EventDispatcher {
+@@ -387,7 +408,7 @@ declare class Node extends EventDispatcher {
       * @param {NodeFrame} frame - A reference to the current node frame.
       * @return {?boolean} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
       */
@@ -13394,7 +13397,7 @@ index ffffd5676..4ba0960de 100644
      /**
       * The method can be implemented to update the node's internal state after it was used to render an object.
       * The {@link Node#updateAfterType} property defines how often the update is executed.
-@@ -393,8 +414,8 @@ declare class Node extends EventDispatcher {
+@@ -396,8 +417,8 @@ declare class Node extends EventDispatcher {
       * @param {NodeFrame} frame - A reference to the current node frame.
       * @return {?boolean} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
       */
@@ -13405,7 +13408,7 @@ index ffffd5676..4ba0960de 100644
      /**
       * This method performs the build of a node. The behavior and return value depend on the current build stage:
       * - **setup**: Prepares the node and its children for the build process. This process can also create new nodes. Returns the node itself or a variant.
-@@ -411,28 +432,188 @@ declare class Node extends EventDispatcher {
+@@ -414,28 +435,188 @@ declare class Node extends EventDispatcher {
       *
       * @return {Generator<Object>} An iterable list of serialized child objects as JSON.
       */
@@ -17002,7 +17005,7 @@ index 0121dd34b..f5741f970 100644
 +
 +export default NodeLibrary;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeManager.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeManager.d.ts
-index 64db1c627..287bb2296 100644
+index 61e9f8452..015a340eb 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeManager.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeManager.d.ts
 @@ -1,4 +1,28 @@
@@ -17089,18 +17092,41 @@ index 64db1c627..287bb2296 100644
      /**
       * If a scene fog is configured, this method makes sure to
       * represent the fog with a corresponding node-based implementation.
-@@ -232,8 +256,8 @@ declare class NodeManager extends DataMap {
-      * @param {Scene} scene - The scene.
+@@ -243,7 +267,7 @@ declare class NodeManager extends DataMap {
+      * @param {?Node} [compute=null] - The compute node.
+      * @return {NodeFrame} The node frame.
       */
-     updateEnvironment(scene: Scene): void;
--    getNodeFrame(renderer?: Renderer, scene?: null, object?: null, camera?: null, material?: null): Renderer;
--    getNodeFrameForRender(renderObject: any): Renderer;
-+    getNodeFrame(renderer?: Renderer, scene?: Scene | null, object?: Object3D | null, camera?: Camera | null, material?: Material | null): NodeFrame;
-+    getNodeFrameForRender(renderObject: RenderObject): NodeFrame;
+-    getNodeFrame(renderer?: Renderer, scene?: Scene | null, object?: Object3D | null, camera?: Camera | null, material?: Material | null, compute?: Node | null): NodeFrame;
++    getNodeFrame(renderer?: Renderer, scene?: Scene | null, object?: Object3D | null, camera?: Camera | null, material?: Material | null, compute?: ComputeNode | null): NodeFrame;
+     /**
+      * Returns a node frame configured for the given render object.
+      *
+@@ -257,7 +281,7 @@ declare class NodeManager extends DataMap {
+      * @param {Node} computeNode - The compute node.
+      * @return {NodeFrame} The node frame.
+      */
+-    getNodeFrameForCompute(computeNode: Node): NodeFrame;
++    getNodeFrameForCompute(computeNode: ComputeNode): NodeFrame;
      /**
       * Returns the current output cache key.
       *
-@@ -275,7 +299,7 @@ declare class NodeManager extends DataMap {
+@@ -299,21 +323,21 @@ declare class NodeManager extends DataMap {
+      *
+      * @param {Node} computeNode - The compute node.
+      */
+-    updateBeforeForCompute(computeNode: Node): void;
++    updateBeforeForCompute(computeNode: ComputeNode): void;
+     /**
+      * Triggers the call of `updateAfter()` methods
+      * for all nodes of the given compute node.
+      *
+      * @param {Node} computeNode - The compute node.
+      */
+-    updateAfterForCompute(computeNode: Node): void;
++    updateAfterForCompute(computeNode: ComputeNode): void;
+     /**
+      * Triggers the call of `update()` methods
+      * for all nodes of the given compute node.
       *
       * @param {Node} computeNode - The compute node.
       */
@@ -17109,13 +17135,14 @@ index 64db1c627..287bb2296 100644
      /**
       * Triggers the call of `update()` methods
       * for all nodes of the given render object.
-@@ -291,6 +315,5 @@ declare class NodeManager extends DataMap {
+@@ -329,7 +353,5 @@ declare class NodeManager extends DataMap {
       */
      needsRefresh(renderObject: RenderObject): number;
  }
 -import DataMap from '../DataMap.js';
 -import NodeBuilderState from './NodeBuilderState.js';
 -import ChainMap from '../ChainMap.js';
+-import { NodeFrame } from '../../../nodes/Nodes.js';
 +
 +export default NodeManager;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeUniform.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeUniform.d.ts
