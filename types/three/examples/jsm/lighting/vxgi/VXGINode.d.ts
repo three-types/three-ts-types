@@ -1,4 +1,4 @@
-import { Camera, Scene, TempNode, TextureNode, UniformNode } from "three/webgpu";
+import { Camera, SampleNode, Scene, TempNode, TextureNode, UniformNode } from "three/webgpu";
 import { VXGIVolume } from "./VXGIVolume.js";
 
 /**
@@ -23,7 +23,7 @@ import { VXGIVolume } from "./VXGIVolume.js";
  */
 declare class VXGINodeInterface {
     depthNode: TextureNode;
-    normalNode: TextureNode | null;
+    normalNode: TextureNode | SampleNode<"vec3"> | null;
     scene: Scene;
     camera: Camera;
 
@@ -80,7 +80,7 @@ declare class VXGINodeInterface {
 declare const VXGINode: {
     new(
         depthNode: TextureNode,
-        normalNode: TextureNode | null,
+        normalNode: TextureNode | SampleNode<"vec3"> | null,
         scene: Scene,
         camera: Camera,
         resolution?: number,
@@ -93,7 +93,7 @@ export default VXGINode;
 
 export const vxgi: (
     depthNode: TextureNode,
-    normalNode: TextureNode | null,
+    normalNode: TextureNode | SampleNode<"vec3"> | null,
     scene: Scene,
     camera: Camera,
     resolution?: number,
