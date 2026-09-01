@@ -14,6 +14,7 @@ const files = [
     'examples/jsm/lighting/ClusteredLighting',
     'examples/jsm/lighting/LightProbeGrid',
     'examples/jsm/lighting/LightProbeGridWebGL',
+    'examples/jsm/lighting/vxgi/VXGIVolume',
     'examples/jsm/lights/SunLight',
     'examples/jsm/lights/SunLightShadow',
     'examples/jsm/misc/TileCreasedNormalsPlugin',
