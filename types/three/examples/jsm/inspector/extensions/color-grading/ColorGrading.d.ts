@@ -6,14 +6,17 @@ export interface ColorGradingJSON {
     version: number;
     lutSize: number;
     selectedToneMapping: ToneMapping;
-    sceneGradingEnabled: boolean;
     pipelineOrder: string[];
     modules: { [id: string]: unknown };
     params: { [name: string]: unknown };
 }
 
+export interface ColorGradingOptions {
+    nonce?: string | null | undefined;
+}
+
 export class ColorGrading extends Extension {
-    constructor();
+    constructor(options?: ColorGradingOptions);
 
     lutSize: number;
     lutTexture: Data3DTexture | null;
