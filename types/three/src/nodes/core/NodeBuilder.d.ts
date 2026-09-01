@@ -3,11 +3,18 @@ import { Object3D } from "../../core/Object3D.js";
 import { Material } from "../../materials/Material.js";
 import Renderer from "../../renderers/common/Renderer.js";
 import RenderPipeline from "../../renderers/common/RenderPipeline.js";
+import ComputeNode from "../gpgpu/ComputeNode.js";
 
 export default abstract class NodeBuilder {
     object: Object3D;
     material: Material;
     geometry: BufferGeometry;
+
+    /**
+     * The compute node, if building for compute.
+     */
+    compute: ComputeNode | null;
+
     renderer: Renderer;
     context: unknown;
 
