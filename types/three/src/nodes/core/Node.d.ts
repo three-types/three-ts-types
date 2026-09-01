@@ -305,18 +305,21 @@ declare class NodeClass<TEventMap extends NodeClassEventMap = NodeClassEventMap>
     /**
      * Returns the update type of {@link Node#update}.
      *
+     * @param {NodeFrame} [frame] - The current node frame.
      * @return {NodeUpdateType} The update type.
      */
     getUpdateType(): NodeUpdateType;
     /**
      * Returns the update type of {@link Node#updateBefore}.
      *
+     * @param {NodeFrame} [frame] - The current node frame.
      * @return {NodeUpdateType} The update type.
      */
     getUpdateBeforeType(): NodeUpdateType;
     /**
      * Returns the update type of {@link Node#updateAfter}.
      *
+     * @param {NodeFrame} [frame] - The current node frame.
      * @return {NodeUpdateType} The update type.
      */
     getUpdateAfterType(): NodeUpdateType;
