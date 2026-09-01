@@ -15,7 +15,15 @@ export interface InspectorEventMap extends RendererInspectorEventMap {
     layoutchange: InspectorLayoutEvent;
 }
 
+export interface InspectorOptions {
+    nonce?: string | null | undefined;
+}
+
 declare class Inspector extends RendererInspector<InspectorEventMap> {
+    constructor(options?: InspectorOptions);
+
+    nonce: string | null;
+
     createParameters(name: string): ParametersGroup;
 
     get domElement(): HTMLDivElement;
