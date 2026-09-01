@@ -16025,23 +16025,27 @@ index 4afa5d2d0..715c323a2 100644
  
              render();
 diff --git a/examples-testing/examples/webgpu_gaussian_splat.ts b/examples-testing/examples/webgpu_gaussian_splat.ts
-index 555853fda..b29a09f2a 100644
+index c92321eed..20e9478a5 100644
 --- a/examples-testing/examples/webgpu_gaussian_splat.ts
 +++ b/examples-testing/examples/webgpu_gaussian_splat.ts
-@@ -6,12 +6,35 @@ import { SPZLoader } from 'three/addons/loaders/SPZLoader.js';
+@@ -6,7 +6,13 @@ import { SPZLoader } from 'three/addons/loaders/SPZLoader.js';
  import { GaussianSplat } from 'three/addons/objects/GaussianSplat.js';
  import { Inspector } from 'three/addons/inspector/Inspector.js';
  
--let camera, scene, renderer, controls, splats, splatRoot;
+-let camera, scene, renderer, controls, splats, splatRoot, hitMarker;
 +let camera: THREE.PerspectiveCamera,
 +    scene: THREE.Scene,
 +    renderer: THREE.WebGPURenderer,
 +    controls: OrbitControls,
 +    splats: GaussianSplat | undefined,
-+    splatRoot: GaussianSplat | undefined;
++    splatRoot: GaussianSplat | undefined,
++    hitMarker: THREE.Mesh<THREE.SphereGeometry, THREE.MeshBasicMaterial>;
  THREE.ColorManagement.workingColorSpace = THREE.SRGBColorSpace;
  
  const zeroVector = new THREE.Vector3();
+@@ -19,7 +25,25 @@ const HIT_MARKER_SIZE_RATIO = 1 / 50;
+ let pointerDownX = 0;
+ let pointerDownY = 0;
  
 -const sources = {
 +interface SplatSource {
@@ -16066,7 +16070,7 @@ index 555853fda..b29a09f2a 100644
      millipede: {
          name: 'Millipede (SPLAT)',
          url: './models/splat/millipede.splat',
-@@ -84,7 +107,7 @@ async function init() {
+@@ -92,7 +116,7 @@ async function init() {
      controls.target.set(0, 0, 0);
      controls.update();
  
@@ -16075,8 +16079,32 @@ index 555853fda..b29a09f2a 100644
      gui.add(params, 'source', sourceNames)
          .name('Splat')
          .onChange(async value => {
-@@ -96,7 +119,7 @@ async function init() {
-     window.addEventListener('resize', onWindowResize);
+@@ -113,12 +137,12 @@ async function init() {
+     renderer.domElement.addEventListener('click', onClick);
+ }
+ 
+-function onPointerDown(event) {
++function onPointerDown(event: PointerEvent) {
+     pointerDownX = event.clientX;
+     pointerDownY = event.clientY;
+ }
+ 
+-function onClick(event) {
++function onClick(event: MouseEvent) {
+     // check drag distance
+     const dx = event.clientX - pointerDownX;
+     const dy = event.clientY - pointerDownY;
+@@ -131,7 +155,7 @@ function onClick(event) {
+ 
+     raycaster.setFromCamera(pointer, camera);
+ 
+-    const hit = raycaster.intersectObject(splatRoot, true)[0];
++    const hit = raycaster.intersectObject(splatRoot!, true)[0];
+     if (hit) {
+         hitMarker.position.copy(hit.point);
+         hitMarker.visible = true;
+@@ -140,7 +164,7 @@ function onClick(event) {
+     }
  }
  
 -async function loadSplatSource(sourceKey) {
@@ -16084,8 +16112,22 @@ index 555853fda..b29a09f2a 100644
      const source = sources[sourceKey];
      const splatData = await new source.loader().loadAsync(source.url);
  
-@@ -114,8 +137,8 @@ async function loadSplatSource(sourceKey) {
+@@ -159,19 +183,19 @@ async function loadSplatSource(sourceKey) {
      updateLicenseInfo(source);
+ }
+ 
+-function getWorldBoundingSphere(mesh) {
++function getWorldBoundingSphere(mesh: GaussianSplat) {
+     mesh.updateWorldMatrix(true, false);
+ 
+-    return mesh.splatGeometry.boundingSphere.clone().applyMatrix4(mesh.matrixWorld);
++    return mesh.splatGeometry.boundingSphere!.clone().applyMatrix4(mesh.matrixWorld);
+ }
+ 
+-function updateHitMarkerSize(mesh) {
++function updateHitMarkerSize(mesh: GaussianSplat) {
+     const sphere = getWorldBoundingSphere(mesh);
+     hitMarker.scale.setScalar(Math.max(sphere.radius * HIT_MARKER_SIZE_RATIO, 0.0001));
  }
  
 -function updateLicenseInfo(source) {
@@ -16095,7 +16137,7 @@ index 555853fda..b29a09f2a 100644
      const credit = source.credit;
  
      if (credit === undefined) {
-@@ -139,24 +162,24 @@ function updateLicenseInfo(source) {
+@@ -195,21 +219,21 @@ function updateLicenseInfo(source) {
          '</a>.';
  }
  
@@ -16119,13 +16161,9 @@ index 555853fda..b29a09f2a 100644
  
 -function fitCameraToSplats(mesh, source) {
 +function fitCameraToSplats(mesh: GaussianSplat, source: SplatSource) {
-     mesh.updateWorldMatrix(true, false);
- 
--    const sphere = mesh.splatGeometry.boundingSphere.clone().applyMatrix4(mesh.matrixWorld);
-+    const sphere = mesh.splatGeometry.boundingSphere!.clone().applyMatrix4(mesh.matrixWorld);
+     const sphere = getWorldBoundingSphere(mesh);
      const radius = Math.max(sphere.radius, 0.01);
      const distance = radius / Math.sin(THREE.MathUtils.degToRad(camera.fov) * 0.5);
- 
 diff --git a/examples-testing/examples/webgpu_generator_building.ts b/examples-testing/examples/webgpu_generator_building.ts
 index ec0088e0e..6335c36db 100644
 --- a/examples-testing/examples/webgpu_generator_building.ts
