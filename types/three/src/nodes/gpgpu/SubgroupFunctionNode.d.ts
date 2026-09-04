@@ -7,7 +7,7 @@ export type SubgroupFunctionNodeMethod1 =
     | typeof SubgroupFunctionNode.SUBGROUP_BALLOT
     | typeof SubgroupFunctionNode.SUBGROUP_ADD
     | typeof SubgroupFunctionNode.SUBGROUP_INCLUSIVE_ADD
-    | typeof SubgroupFunctionNode.SUBGROUP_EXCLUSIVE_AND
+    | typeof SubgroupFunctionNode.SUBGROUP_EXCLUSIVE_ADD
     | typeof SubgroupFunctionNode.SUBGROUP_MUL
     | typeof SubgroupFunctionNode.SUBGROUP_INCLUSIVE_MUL
     | typeof SubgroupFunctionNode.SUBGROUP_EXCLUSIVE_MUL
@@ -43,7 +43,7 @@ declare class SubgroupFunctionNode extends TempNode {
     static get SUBGROUP_BALLOT(): "subgroupBallot";
     static get SUBGROUP_ADD(): "subgroupAdd";
     static get SUBGROUP_INCLUSIVE_ADD(): "subgroupInclusiveAdd";
-    static get SUBGROUP_EXCLUSIVE_AND(): "subgroupExclusiveAdd";
+    static get SUBGROUP_EXCLUSIVE_ADD(): "subgroupExclusiveAdd";
     static get SUBGROUP_MUL(): "subgroupMul";
     static get SUBGROUP_INCLUSIVE_MUL(): "subgroupInclusiveMul";
     static get SUBGROUP_EXCLUSIVE_MUL(): "subgroupExclusiveMul";
