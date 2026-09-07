@@ -1184,10 +1184,10 @@ index 66ac1de37..196e0702d 100644
 -import { Lighting } from 'three/webgpu';
 -import ClusteredLightsNode from '../tsl/lighting/ClusteredLightsNode.js';
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/lighting/LightProbeGrid.d.ts b/jsdoc-testing/jsdoc/examples/jsm/lighting/LightProbeGrid.d.ts
-index b4dd1eaec..91cc6b590 100644
+index a2e760ad5..cdd481b34 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/lighting/LightProbeGrid.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/lighting/LightProbeGrid.d.ts
-@@ -1,3 +1,28 @@
+@@ -1,3 +1,41 @@
 +import { Box3, Data3DTexture, Light, Scene, Vector3, WebGPURenderer } from 'three/webgpu';
 +
 +export interface LightProbeGridBakeOptions {
@@ -1204,19 +1204,32 @@ index b4dd1eaec..91cc6b590 100644
 +     */
 +    far?: number | undefined;
 +    /**
-+     * Additional bounce passes after the initial direct pass.
++     * Additional bounce passes. Only available when baking the whole grid.
 +     */
 +    bounces?: number | undefined;
 +    /**
 +     * Directions integrated when projecting each cubemap to SH.
 +     */
 +    sampleCount?: number | undefined;
++    /**
++     * Index of the first probe to bake.
++     */
++    start?: number | undefined;
++    /**
++     * Number of probes to bake. Defaults to the remaining probes.
++     */
++    count?: number | undefined;
++    /**
++     * Starting pass. Zero captures direct light; later passes sample the previous pass. Ranged calls require
++     * `bounces: 0`.
++     */
++    pass?: number | undefined;
 +}
 +
  /**
   * A 3D grid of L2 Spherical Harmonic irradiance probes that provides
   * position-dependent diffuse global illumination.
-@@ -86,14 +111,6 @@ export class LightProbeGrid extends Light {
+@@ -86,16 +124,6 @@ export class LightProbeGrid extends Light {
       * @default null
       */
      texture: Data3DTexture | null;
@@ -1228,12 +1241,14 @@ index b4dd1eaec..91cc6b590 100644
 -     * @default null
 -     */
 -    private _renderTarget;
+-    _bounceGrid: LightProbeGrid | null;
+-    _bouncePass: number;
      /**
       * Returns the world-space position of the probe at grid indices (ix, iy, iz).
       *
-@@ -124,20 +141,5 @@ export class LightProbeGrid extends Light {
-      * @param {number} [options.bounces=0] - Additional bounce passes after the initial direct pass.
-      * @param {number} [options.sampleCount=512] - Directions integrated when projecting each cubemap to SH.
+@@ -134,53 +162,5 @@ export class LightProbeGrid extends Light {
+      * @param {number} [options.count] - Number of probes to bake. Defaults to the remaining probes.
+      * @param {number} [options.pass=0] - Starting pass. Zero captures direct light; later passes sample the previous pass. Ranged calls require `bounces: 0`.
       */
 -    bake(renderer: WebGPURenderer, scene: Scene, options?: {
 -        cubemapSize?: number | undefined;
@@ -1241,7 +1256,40 @@ index b4dd1eaec..91cc6b590 100644
 -        far?: number | undefined;
 -        bounces?: number | undefined;
 -        sampleCount?: number | undefined;
+-        start?: number | undefined;
+-        count?: number | undefined;
+-        pass?: number | undefined;
 -    }): void;
+-    /**
+-     * Snapshots each indirect pass before its first range overwrites the live atlas.
+-     * A separate light keeps the capture and main-view texture bindings stable.
+-     *
+-     * @private
+-     * @param {WebGPURenderer} renderer - The renderer.
+-     * @param {Scene} scene - The scene to capture.
+-     * @param {number} pass - The bounce pass.
+-     * @param {number} start - The first probe index.
+-     */
+-    private _updateBounceGrid;
+-    /**
+-     * Captures cubemaps and projects their SH coefficients into the batch target.
+-     *
+-     * @private
+-     * @param {WebGPURenderer} renderer - The renderer.
+-     * @param {Scene} scene - The scene to capture.
+-     * @param {number} start - The first probe index.
+-     * @param {number} end - The exclusive end probe index.
+-     */
+-    private _captureProbes;
+-    /**
+-     * Packs a probe range into the live atlas, including its boundary padding.
+-     *
+-     * @private
+-     * @param {WebGPURenderer} renderer - The renderer.
+-     * @param {number} start - The first probe index.
+-     * @param {number} end - The exclusive end probe index.
+-     */
+-    private _repackProbes;
 -    /**
 -     * Ensures the atlas 3D texture exists with the correct dimensions.
 -     *
@@ -1254,10 +1302,10 @@ index b4dd1eaec..91cc6b590 100644
 -import { Vector3 } from 'three/webgpu';
 -import { Box3 } from 'three/webgpu';
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/lighting/LightProbeGridWebGL.d.ts b/jsdoc-testing/jsdoc/examples/jsm/lighting/LightProbeGridWebGL.d.ts
-index d1ad9cd51..085468539 100644
+index 58b588590..8875d77a9 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/lighting/LightProbeGridWebGL.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/lighting/LightProbeGridWebGL.d.ts
-@@ -1,3 +1,24 @@
+@@ -1,3 +1,37 @@
 +import { Box3, Data3DTexture, Object3D, Scene, Vector3, WebGLRenderer } from 'three';
 +
 +export interface LightProbeGridWebGLBakeOptions {
@@ -1274,15 +1322,28 @@ index d1ad9cd51..085468539 100644
 +     */
 +    far?: number | undefined;
 +    /**
-+     * Additional bounce passes after the initial direct pass.
++     * Additional bounce passes. Only available when baking the whole grid.
 +     */
 +    bounces?: number | undefined;
++    /**
++     * Index of the first probe to bake.
++     */
++    start?: number | undefined;
++    /**
++     * Number of probes to bake. Defaults to the remaining probes.
++     */
++    count?: number | undefined;
++    /**
++     * Starting pass. Zero captures direct light; later passes sample the previous pass. Ranged calls require
++     * `bounces: 0`.
++     */
++    pass?: number | undefined;
 +}
 +
  /**
   * A 3D grid of L2 Spherical Harmonic irradiance probes that provides
   * position-dependent diffuse global illumination.
-@@ -87,14 +108,6 @@ export class LightProbeGridWebGL extends Object3D {
+@@ -87,16 +121,6 @@ export class LightProbeGridWebGL extends Object3D {
       * @default null
       */
      texture: Data3DTexture | null;
@@ -1294,21 +1355,55 @@ index d1ad9cd51..085468539 100644
 -     * @default null
 -     */
 -    private _renderTarget;
+-    _bounceTarget: import("three").RenderTarget | null;
+-    _bouncePass: number;
      /**
       * Returns the world-space position of the probe at grid indices (ix, iy, iz).
       *
-@@ -128,20 +141,9 @@ export class LightProbeGridWebGL extends Object3D {
-      * @param {number} [options.far=100] - Far plane for the cube camera.
-      * @param {number} [options.bounces=0] - Additional bounce passes after the initial direct pass.
+@@ -139,53 +163,9 @@ export class LightProbeGridWebGL extends Object3D {
+      * @param {number} [options.count] - Number of probes to bake. Defaults to the remaining probes.
+      * @param {number} [options.pass=0] - Starting pass. Zero captures direct light; later passes sample the previous pass. Ranged calls require `bounces: 0`.
       */
 -    bake(renderer: WebGLRenderer, scene: Scene, options?: {
 -        cubemapSize?: number | undefined;
 -        near?: number | undefined;
 -        far?: number | undefined;
 -        bounces?: number | undefined;
+-        start?: number | undefined;
+-        count?: number | undefined;
+-        pass?: number | undefined;
 -    }): void;
+-    /**
+-     * Selects the atlas to sample during capture, snapshotting each indirect pass
+-     * before its first range overwrites the live atlas.
+-     *
+-     * @private
+-     * @param {WebGLRenderer} renderer - The renderer.
+-     * @param {number} pass - The bounce pass.
+-     * @param {number} start - The first probe index.
+-     */
+-    private _updateBakeTexture;
 +    bake(renderer: WebGLRenderer, scene: Scene, options?: LightProbeGridWebGLBakeOptions): void;
      /**
+-     * Captures cubemaps and projects their SH coefficients into the batch target.
+-     *
+-     * @private
+-     * @param {WebGLRenderer} renderer - The renderer.
+-     * @param {Scene} scene - The scene to capture.
+-     * @param {number} start - The first probe index.
+-     * @param {number} end - The exclusive end probe index.
+-     */
+-    private _captureProbes;
+-    /**
+-     * Packs a probe range into the live atlas, including its boundary padding.
+-     *
+-     * @private
+-     * @param {WebGLRenderer} renderer - The renderer.
+-     * @param {number} start - The first probe index.
+-     * @param {number} end - The exclusive end probe index.
+-     */
+-    private _repackProbes;
+-    /**
 -     * Ensures the atlas 3D render target exists with the correct dimensions.
 -     *
 -     * @private
@@ -1320,6 +1415,7 @@ index d1ad9cd51..085468539 100644
 -import { Object3D } from 'three';
 -import { Vector3 } from 'three';
 -import { Box3 } from 'three';
+-import { Data3DTexture } from 'three';
 -import { Scene } from 'three';
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/lighting/vxgi/VXGIVolume.d.ts b/jsdoc-testing/jsdoc/examples/jsm/lighting/vxgi/VXGIVolume.d.ts
 index 48ad2dee3..4f168b6ac 100644
