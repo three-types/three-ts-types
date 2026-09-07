@@ -14,13 +14,26 @@ export interface LightProbeGridBakeOptions {
      */
     far?: number | undefined;
     /**
-     * Additional bounce passes after the initial direct pass.
+     * Additional bounce passes. Only available when baking the whole grid.
      */
     bounces?: number | undefined;
     /**
      * Directions integrated when projecting each cubemap to SH.
      */
     sampleCount?: number | undefined;
+    /**
+     * Index of the first probe to bake.
+     */
+    start?: number | undefined;
+    /**
+     * Number of probes to bake. Defaults to the remaining probes.
+     */
+    count?: number | undefined;
+    /**
+     * Starting pass. Zero captures direct light; later passes sample the previous pass. Ranged calls require
+     * `bounces: 0`.
+     */
+    pass?: number | undefined;
 }
 
 /**
@@ -133,11 +146,16 @@ export class LightProbeGrid extends Light {
      */
     updateBoundingBox(): void;
     /**
-     * Bakes all probes by rendering cubemaps at each probe position and
+     * Bakes probes by rendering cubemaps at each probe position and
      * projecting to L2 SH. Optionally iterates additional passes to capture
      * indirect bounces: each extra pass samples the previous pass's data as
-     * indirect light, so a grid added to the scene before baking accumulates
-     * one bounce per extra pass.
+     * indirect light, accumulating one bounce per extra pass.
+     *
+     * Use `start` and `count` to bake a range and publish its cells immediately.
+     * Indices advance along X, then Z, then Y, filling horizontal layers from bottom
+     * to top. For incremental indirect bounces, finish the whole grid for `pass: 0`,
+     * then repeat with `pass: 1`, etc. Start each pass at index 0 to snapshot the
+     * previous pass before updating its cells.
      *
      * @param {WebGPURenderer} renderer - The renderer.
      * @param {Scene} scene - The scene to render.
@@ -145,8 +163,11 @@ export class LightProbeGrid extends Light {
      * @param {number} [options.cubemapSize=8] - Resolution of each cubemap face.
      * @param {number} [options.near=0.1] - Near plane for the cube camera.
      * @param {number} [options.far=100] - Far plane for the cube camera.
-     * @param {number} [options.bounces=0] - Additional bounce passes after the initial direct pass.
+     * @param {number} [options.bounces=0] - Additional bounce passes. Only available when baking the whole grid.
      * @param {number} [options.sampleCount=512] - Directions integrated when projecting each cubemap to SH.
+     * @param {number} [options.start=0] - Index of the first probe to bake.
+     * @param {number} [options.count] - Number of probes to bake. Defaults to the remaining probes.
+     * @param {number} [options.pass=0] - Starting pass. Zero captures direct light; later passes sample the previous pass. Ranged calls require `bounces: 0`.
      */
     bake(renderer: WebGPURenderer, scene: Scene, options?: LightProbeGridBakeOptions): void;
 }
