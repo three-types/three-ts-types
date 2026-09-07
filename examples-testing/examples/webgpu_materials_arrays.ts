@@ -1,0 +1,185 @@
+import * as THREE from 'three/webgpu';
+
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { Inspector } from 'three/addons/inspector/Inspector.js';
+
+let renderer, scene, camera, controls;
+let materials;
+
+const _a = new THREE.Vector3(),
+    _b = new THREE.Vector3();
+
+init();
+
+function init() {
+    // renderer
+
+    renderer = new THREE.WebGPURenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.shadowMap.enabled = true;
+    renderer.setAnimationLoop(animate);
+    renderer.inspector = new Inspector();
+    document.body.appendChild(renderer.domElement);
+
+    // scene
+
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x222222);
+
+    // camera
+
+    camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 100);
+    camera.position.set(-6, 7, 14);
+
+    // controls
+
+    controls = new OrbitControls(camera, renderer.domElement);
+    controls.target.set(0, 0.5, 0);
+    controls.minDistance = 5;
+    controls.maxDistance = 50;
+    controls.enableDamping = true;
+    controls.update();
+
+    // environment
+
+    const hemiLight = new THREE.HemisphereLight(0xffffff, 0x0e696c);
+    scene.add(hemiLight);
+
+    // lights
+
+    const dirLight = new THREE.DirectionalLight(0xffffff, 6);
+    dirLight.position.set(5, 10, 6);
+    dirLight.castShadow = true;
+    dirLight.shadow.camera.left = -10;
+    dirLight.shadow.camera.right = 10;
+    dirLight.shadow.camera.top = 10;
+    dirLight.shadow.camera.bottom = -10;
+    dirLight.shadow.camera.far = 20;
+    dirLight.shadow.mapSize.set(2048, 2048);
+    dirLight.shadow.radius = 10;
+    scene.add(dirLight);
+
+    // scene.add( new THREE.CameraHelper( dirLight.shadow.camera ) );
+
+    // materials, one per paper color, shared across all solids
+
+    const palette = [0xe4002b, 0xff7f11, 0xffd100, 0x00a651, 0x0072ce, 0x8a2be2];
+
+    materials = palette.map(color => new THREE.MeshStandardMaterial({ color, roughness: 0.8, side: THREE.DoubleSide }));
+
+    const geometries = [
+        makeHoleyGeometry(new THREE.TetrahedronGeometry(1.2), 3), // 4 faces, 1 triangle each
+        makeHoleyGeometry(new THREE.BoxGeometry(1.5, 1.5, 1.5), 6), // 6 faces, 2 triangles each (indexed)
+        makeHoleyGeometry(new THREE.OctahedronGeometry(1.2), 3), // 8 faces, 1 triangle each
+        makeHoleyGeometry(new THREE.DodecahedronGeometry(1.1), 9), // 12 faces, 3 triangles each
+        makeHoleyGeometry(new THREE.IcosahedronGeometry(1.1), 3), // 20 faces, 1 triangle each
+    ];
+
+    // table
+
+    const table = new THREE.Mesh(
+        new THREE.BoxGeometry(17, 0.5, 17),
+        new THREE.MeshStandardMaterial({ color: 0x0e696c, roughness: 0.5 }),
+    );
+    table.position.y = -0.25;
+    table.receiveShadow = true;
+    scene.add(table);
+
+    // grid
+
+    const order = [0, 1, 2, 3, 3, 4, 0, 1, 1, 2, 3, 4, 4, 0, 1, 2];
+
+    for (let i = 0; i < 16; i++) {
+        const row = Math.floor(i / 4);
+        const col = i % 4;
+
+        const mesh = new THREE.Mesh(geometries[order[i]], materials);
+        mesh.castShadow = true;
+
+        mesh.scale.setScalar(0.5 + row * 0.25);
+        mesh.position.set((col - 1.5) * 3.5, 0, (1.5 - row) * 3.5);
+
+        mesh.position.y = -new THREE.Box3().setFromObject(mesh, true).min.y - 0.01;
+
+        scene.add(mesh);
+    }
+
+    // listeners
+
+    window.addEventListener('resize', onWindowResize);
+}
+
+// rebuilds a polyhedron with a hole cut into each polygon face, like an open paper model
+
+function makeHoleyGeometry(geometry, verticesPerFace, holeScale = 0.6) {
+    if (geometry.index !== null) geometry = geometry.toNonIndexed();
+
+    const position = geometry.getAttribute('position');
+
+    const positions = [];
+    const holey = new THREE.BufferGeometry();
+
+    for (let face = 0; face < position.count / verticesPerFace; face++) {
+        // collect the unique corner vertices of the face
+
+        const corners = [];
+        const keys = new Set();
+
+        for (let i = 0; i < verticesPerFace; i++) {
+            const v = new THREE.Vector3().fromBufferAttribute(position, face * verticesPerFace + i);
+            const key = v.toArray().join(',');
+
+            if (keys.has(key) === false) {
+                keys.add(key);
+                corners.push(v);
+            }
+        }
+
+        // sort the corners counterclockwise around the face centroid
+
+        const centroid = corners.reduce((c, v) => c.add(v), new THREE.Vector3()).divideScalar(corners.length);
+
+        const normal = new THREE.Vector3()
+            .crossVectors(_a.subVectors(corners[1], corners[0]), _b.subVectors(corners[2], corners[0]))
+            .normalize();
+        const tangent = new THREE.Vector3().subVectors(corners[0], centroid).normalize();
+        const bitangent = new THREE.Vector3().crossVectors(normal, tangent);
+
+        const angleOf = v => Math.atan2(_b.subVectors(v, centroid).dot(bitangent), _b.dot(tangent));
+        corners.sort((p, q) => angleOf(p) - angleOf(q));
+
+        // bridge each outer edge with its scaled-down inner edge
+
+        const inner = corners.map(v => new THREE.Vector3().lerpVectors(centroid, v, holeScale));
+
+        holey.addGroup(positions.length / 3, corners.length * 6, face % materials.length);
+
+        for (let i = 0; i < corners.length; i++) {
+            const j = (i + 1) % corners.length;
+
+            positions.push(...corners[i], ...corners[j], ...inner[j], ...corners[i], ...inner[j], ...inner[i]);
+        }
+    }
+
+    holey.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+    holey.computeVertexNormals();
+
+    return holey;
+}
+
+function onWindowResize() {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
+
+    renderer.setSize(width, height);
+}
+
+function animate() {
+    controls.update();
+
+    renderer.render(scene, camera);
+}
