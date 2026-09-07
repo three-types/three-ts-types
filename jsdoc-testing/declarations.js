@@ -17,6 +17,7 @@ const files = [
     'examples/jsm/lighting/vxgi/VXGIVolume',
     'examples/jsm/lights/SunLight',
     'examples/jsm/lights/SunLightShadow',
+    'examples/jsm/misc/Sculptor',
     'examples/jsm/misc/TileCreasedNormalsPlugin',
     'examples/jsm/tsl/display/ImportanceSampledEnvironment',
     'examples/jsm/tsl/display/OITPassNode',
