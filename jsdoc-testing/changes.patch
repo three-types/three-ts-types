@@ -263,7 +263,7 @@ index 99057b57e..cacc17fcc 100644
 -import { MeshStandardNodeMaterial } from 'three/webgpu';
 +export function createRoadMaterial(layout: CityGeneratorLayout): MeshStandardNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/generators/ForestGenerator.d.ts b/jsdoc-testing/jsdoc/examples/jsm/generators/ForestGenerator.d.ts
-index 4b2772243..d481a3379 100644
+index 263e94da9..8bbd37808 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/generators/ForestGenerator.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/generators/ForestGenerator.d.ts
 @@ -1,3 +1,25 @@
@@ -290,9 +290,9 @@ index 4b2772243..d481a3379 100644
 +}
 +
  /**
-  * Carpets a {@link TerrainGenerator} ( or anything exposing `sampleHeight`,
-  * `sampleSlope`, `minY`, `maxY` and `parameters.size` ) with a forest of hundreds
-@@ -18,55 +40,24 @@
+  * Carpets a {@link TerrainGenerator} with trees in a single instanced draw call.
+  * Each tree is a distorted icosphere with a baked crown gradient. Altitude, slope
+@@ -12,55 +34,24 @@
   * ```
   */
  export class ForestGenerator {
@@ -361,7 +361,7 @@ index 4b2772243..d481a3379 100644
  /**
   * The single material shared by every tree in a {@link ForestGenerator}. A plain
   * MeshStandardNodeMaterial lit by the scene — only the surface is authored: deep
-@@ -81,7 +72,4 @@ export namespace ForestGenerator {
+@@ -75,7 +66,4 @@ export namespace ForestGenerator {
   * @param {Node} to - distance past which no tree is drawn.
   * @return {MeshStandardNodeMaterial}
   */
@@ -371,7 +371,7 @@ index 4b2772243..d481a3379 100644
 -import { Group } from 'three';
 +export function createForestMaterial(from: Node<'float'>, to: Node<'float'>, camPos: Node<'vec3'>): MeshStandardNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/generators/TerrainGenerator.d.ts b/jsdoc-testing/jsdoc/examples/jsm/generators/TerrainGenerator.d.ts
-index a5b279bf6..7ca0512e6 100644
+index 30220f6b4..fe1802017 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/generators/TerrainGenerator.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/generators/TerrainGenerator.d.ts
 @@ -1,3 +1,22 @@
@@ -395,9 +395,9 @@ index a5b279bf6..7ca0512e6 100644
 +}
 +
  /**
-  * Bakes a procedural mountain range into a single {@link THREE.BufferGeometry} and
-  * returns a `THREE.Group` ready to add to a scene.
-@@ -22,55 +41,27 @@
+  * Bakes a procedural mountain range into a single mesh, returned in a `THREE.Group`.
+  * Domain-warped, derivative-damped noise shapes the ridges; thermal erosion relaxes
+@@ -12,55 +31,27 @@
   * ```
   */
  export class TerrainGenerator {
