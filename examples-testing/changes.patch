@@ -6831,7 +6831,7 @@ index be8dfd69d..c2b109f2f 100644
          .to(
              {
 diff --git a/examples-testing/examples/webgl_lights_sunlight.ts b/examples-testing/examples/webgl_lights_sunlight.ts
-index 81476043f..d0729d968 100644
+index 2056816a4..bc4ca0f12 100644
 --- a/examples-testing/examples/webgl_lights_sunlight.ts
 +++ b/examples-testing/examples/webgl_lights_sunlight.ts
 @@ -5,7 +5,16 @@ import { FirstPersonControls } from 'three/addons/controls/FirstPersonControls.j
@@ -6861,7 +6861,7 @@ index 81476043f..d0729d968 100644
      shader.fragmentShader = shader.fragmentShader.replace(
          '#include <opaque_fragment>',
          /* glsl */ `
-@@ -55,7 +64,7 @@ function updateSun() {
+@@ -61,7 +70,7 @@ function updateSun() {
      sunLight.color.lerpColors(_sunDusk, _sunDay, daylight);
      sunLight.intensity = 3 + daylight * 2;
  
@@ -6870,7 +6870,7 @@ index 81476043f..d0729d968 100644
  
      sky.material.uniforms.sunPosition.value.copy(sunLight.position);
  
-@@ -187,7 +196,7 @@ function init() {
+@@ -193,7 +202,7 @@ function init() {
          .onChange(function (value) {
              for (const material of materials) {
                  if (value) material.onBeforeCompile = tintCascades;
@@ -17400,6 +17400,59 @@ index e01b9823f..f39e53cb1 100644
  
      renderer.render(scene, camera);
  }
+diff --git a/examples-testing/examples/webgpu_lights_sunlight.ts b/examples-testing/examples/webgpu_lights_sunlight.ts
+index 4e8b36eb7..023df9efb 100644
+--- a/examples-testing/examples/webgpu_lights_sunlight.ts
++++ b/examples-testing/examples/webgpu_lights_sunlight.ts
+@@ -7,7 +7,16 @@ import { SkyMesh } from 'three/addons/objects/SkyMesh.js';
+ import { SunLight } from 'three/addons/lights/SunLight.js';
+ import { SunLightNode } from 'three/addons/lights/SunLightNode.js';
+ 
+-let renderer, scene, camera, controls, timer, sunLight, sky, sceneEnv, pmremGenerator, renderTarget;
++let renderer: THREE.WebGPURenderer,
++    scene: THREE.Scene,
++    camera: THREE.PerspectiveCamera,
++    controls: FirstPersonControls,
++    timer: THREE.Timer,
++    sunLight: SunLight,
++    sky: SkyMesh,
++    sceneEnv: THREE.Scene,
++    pmremGenerator: THREE.PMREMGenerator,
++    renderTarget: THREE.RenderTarget;
+ 
+ const params = {
+     showCascades: false,
+@@ -25,10 +34,10 @@ const _fogDay = new THREE.Color(0xd8e2ea),
+ // tints each fragment by its cascade, using the data of the built-in sun shadow node
+ 
+ function tintCascades() {
+-    const cascadeData = reference('_cascadeData', 'vec4', sunLight.shadow);
++    const cascadeData = reference('_cascadeData', 'vec4', sunLight.shadow) as unknown as THREE.ArrayNode<'vec4'>;
+     const viewDepth = positionView.z.negate();
+ 
+-    let cascade = float(0);
++    let cascade: THREE.Node<'float'> = float(0);
+ 
+     for (let i = 0; i < sunLight.shadow.getViewportCount(); i++) {
+         cascade = cascade.add(step(cascadeData.element(i).y, viewDepth));
+@@ -62,7 +71,7 @@ function updateSun() {
+     sunLight.color.lerpColors(_sunDusk, _sunDay, daylight);
+     sunLight.intensity = 3 + daylight * 2;
+ 
+-    scene.fog.color.lerpColors(_fogDusk, _fogDay, daylight);
++    scene.fog!.color.lerpColors(_fogDusk, _fogDay, daylight);
+ 
+     sky.sunPosition.value.copy(sunLight.position);
+ 
+@@ -188,7 +197,7 @@ function init() {
+ 
+     // gui
+ 
+-    const gui = renderer.inspector.createParameters('Sun Light');
++    const gui = (renderer.inspector as Inspector).createParameters('Sun Light');
+ 
+     gui.add(params, 'showCascades')
+         .name('show cascades')
 diff --git a/examples-testing/examples/webgpu_lines_fat.ts b/examples-testing/examples/webgpu_lines_fat.ts
 index 96b8d414a..f817bdae4 100644
 --- a/examples-testing/examples/webgpu_lines_fat.ts
