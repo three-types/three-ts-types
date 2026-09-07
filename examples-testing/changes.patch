@@ -16259,22 +16259,26 @@ index ec0088e0e..6335c36db 100644
      gui.add(parameters, 'height', 60, 200, 1).onChange(generate);
      gui.add(parameters, 'width', 18, 60, 1).onChange(generate);
 diff --git a/examples-testing/examples/webgpu_generator_city.ts b/examples-testing/examples/webgpu_generator_city.ts
-index 739569814..04e1a31e6 100644
+index d1bf897ba..e49e9dfec 100644
 --- a/examples-testing/examples/webgpu_generator_city.ts
 +++ b/examples-testing/examples/webgpu_generator_city.ts
-@@ -7,9 +7,20 @@ import { SkyMesh } from 'three/addons/objects/SkyMesh.js';
- import { bloom } from 'three/addons/tsl/display/BloomNode.js';
- import { CityGenerator, createBuildingMaterial, createRoadMaterial } from 'three/addons/generators/CityGenerator.js';
+@@ -9,12 +9,26 @@ import { CityGenerator, createBuildingMaterial, createRoadMaterial } from 'three
+ import { LightProbeGrid } from 'three/addons/lighting/LightProbeGrid.js';
+ import { LightProbeGridHelper } from 'three/addons/helpers/LightProbeGridHelper.js';
  
 -let camera, scene, renderer, controls, timer;
--let cityGroup, materials, city, renderPipeline;
--let sky, sun, sunLight, pmremGenerator, envScene;
+-let cityGroup, cityProxy, materials, city, renderPipeline;
+-let sky, sun, sunLight, pmremGenerator, envScene, envRenderTarget, cityBounds;
+-let probes,
+-    probesHelper,
+-    rebakeTimer = null;
 +let camera: THREE.PerspectiveCamera,
 +    scene: THREE.Scene,
 +    renderer: THREE.WebGPURenderer,
 +    controls: FirstPersonControls,
 +    timer: THREE.Timer;
 +let cityGroup: THREE.Group,
++    cityProxy: THREE.InstancedMesh,
 +    materials: { building: THREE.MeshStandardNodeMaterial },
 +    city: CityGenerator,
 +    renderPipeline: THREE.RenderPipeline;
@@ -16282,19 +16286,42 @@ index 739569814..04e1a31e6 100644
 +    sun: THREE.Vector3,
 +    sunLight: THREE.DirectionalLight,
 +    pmremGenerator: THREE.PMREMGenerator,
-+    envScene: THREE.Scene;
++    envScene: THREE.Scene,
++    envRenderTarget: THREE.RenderTarget,
++    cityBounds: THREE.Box3;
++let probes: LightProbeGrid,
++    probesHelper: LightProbeGridHelper,
++    rebakeTimer: ReturnType<typeof setTimeout> | null = null;
  
- const parameters = {
-     seed: 94,
-@@ -106,7 +117,7 @@ async function init() {
+ // the irradiance grid spans the whole footprint plus the streets, rising to
+ // the mid-rise rooftops. diffuse GI is low frequency, so a coarse grid still
+@@ -135,7 +149,7 @@ async function init() {
  
      // parameters
  
 -    const gui = renderer.inspector.createParameters('City');
 +    const gui = (renderer.inspector as Inspector).createParameters('City');
-     gui.add(parameters, 'seed', 0, 100, 1).onChange(generateCity);
-     gui.add(parameters, 'timeOfDay', 6, 18, 0.1).name('time of day').onChange(updateSun);
-     gui.add(renderer, 'toneMappingExposure', 0.01, 1).name('exposure');
+     gui.add(parameters, 'seed', 0, 100, 1)
+         .debounce(300)
+         .onChange(() => {
+@@ -231,7 +245,7 @@ function generateCity() {
+     if (cityProxy) {
+         scene.remove(cityProxy);
+         cityProxy.geometry.dispose();
+-        cityProxy.material.dispose();
++        (cityProxy.material as THREE.Material).dispose();
+         cityProxy.dispose();
+     }
+ 
+@@ -286,7 +300,7 @@ function scheduleRebake() {
+     }, 300);
+ }
+ 
+-function toggleProbesHelper(value) {
++function toggleProbesHelper(value: boolean) {
+     if (probesHelper === undefined) {
+         probesHelper = new LightProbeGridHelper(probes, 3);
+         scene.add(probesHelper);
 diff --git a/examples-testing/examples/webgpu_geometry_loft.ts b/examples-testing/examples/webgpu_geometry_loft.ts
 index f378f3384..d1562c106 100644
 --- a/examples-testing/examples/webgpu_geometry_loft.ts
