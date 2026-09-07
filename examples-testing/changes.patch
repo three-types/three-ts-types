@@ -15778,16 +15778,16 @@ index 6fbdb55ae..fd5ec5705 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_custom_fog.ts b/examples-testing/examples/webgpu_custom_fog.ts
-index f94daae6a..5baba5594 100644
+index 840dce252..32711a295 100644
 --- a/examples-testing/examples/webgpu_custom_fog.ts
 +++ b/examples-testing/examples/webgpu_custom_fog.ts
-@@ -7,9 +7,17 @@ import { SkyMesh } from 'three/addons/objects/SkyMesh.js';
+@@ -7,9 +7,18 @@ import { SkyMesh } from 'three/addons/objects/SkyMesh.js';
  import { TerrainGenerator } from 'three/addons/generators/TerrainGenerator.js';
  import { ForestGenerator } from 'three/addons/generators/ForestGenerator.js';
  
 -let camera, scene, renderer, controls, timer;
 -let terrain, forest, terrainGroup, forestGroup;
--let sky, sun, sunLight, pmremGenerator, envScene;
+-let sky, sun, sunLight, pmremGenerator, envScene, envRenderTarget;
 +let camera: THREE.PerspectiveCamera,
 +    scene: THREE.Scene,
 +    renderer: THREE.WebGPURenderer,
@@ -15798,11 +15798,12 @@ index f94daae6a..5baba5594 100644
 +    sun: THREE.Vector3,
 +    sunLight: THREE.DirectionalLight,
 +    pmremGenerator: THREE.PMREMGenerator,
-+    envScene: THREE.Scene;
++    envScene: THREE.Scene,
++    envRenderTarget: THREE.RenderTarget;
  
  const parameters = {
      elevation: 11, // sun height above the horizon, in degrees ( low = golden hour )
-@@ -125,7 +133,7 @@ async function init() {
+@@ -127,7 +136,7 @@ async function init() {
  
      // gui
  
