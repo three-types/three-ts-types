@@ -4,8 +4,17 @@ import { argv } from 'node:process';
 
 const files = [
     'examples/jsm/csm/CSMFrustum',
+    'examples/jsm/generators/city/BenchGenerator',
+    'examples/jsm/generators/city/CarGenerator',
+    'examples/jsm/generators/city/HydrantGenerator',
+    'examples/jsm/generators/city/InstancedMeshGenerator',
+    'examples/jsm/generators/city/PersonGenerator',
     'examples/jsm/generators/city/SidewalkGenerator',
     'examples/jsm/generators/city/SkyscraperGenerator',
+    'examples/jsm/generators/city/StreetlightGenerator',
+    'examples/jsm/generators/city/StreetTreeGenerator',
+    'examples/jsm/generators/city/TrafficlightGenerator',
+    'examples/jsm/generators/city/TrashcanGenerator',
     'examples/jsm/generators/CityGenerator',
     'examples/jsm/generators/ForestGenerator',
     'examples/jsm/generators/TerrainGenerator',

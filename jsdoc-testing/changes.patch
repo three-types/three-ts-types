@@ -57,13 +57,21 @@ index d3c23f934..214d0cf95 100644
       * Splits the CSM frustum by the given array. The new CSM frustum are pushed into the given
       * target array.
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/generators/CityGenerator.d.ts b/jsdoc-testing/jsdoc/examples/jsm/generators/CityGenerator.d.ts
-index baf210642..ddf63e336 100644
+index 99057b57e..cacc17fcc 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/generators/CityGenerator.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/generators/CityGenerator.d.ts
-@@ -1,3 +1,36 @@
-+import { Group, Material, MeshStandardNodeMaterial } from 'three/webgpu';
+@@ -1,3 +1,68 @@
++import { Group, InstancedMesh, Material, MeshStandardNodeMaterial, Node, UniformNode } from 'three/webgpu';
++import { BenchGenerator } from './city/BenchGenerator.js';
++import { CarGenerator } from './city/CarGenerator.js';
++import { HydrantGenerator } from './city/HydrantGenerator.js';
++import { PersonGenerator } from './city/PersonGenerator.js';
 +import { SidewalkGenerator } from './city/SidewalkGenerator.js';
 +import { SkyscraperGenerator } from './city/SkyscraperGenerator.js';
++import { StreetlightGenerator } from './city/StreetlightGenerator.js';
++import { StreetTreeGenerator } from './city/StreetTreeGenerator.js';
++import { TrafficlightGenerator } from './city/TrafficlightGenerator.js';
++import { TrashcanGenerator } from './city/TrashcanGenerator.js';
 +
 +export interface CityGeneratorParameters {
 +    seed: number;
@@ -75,6 +83,7 @@ index baf210642..ddf63e336 100644
 +    blocksZ: number;
 +    curbHeight: number;
 +    curbRadius: number;
++    sidewalkWidth: number;
 +}
 +
 +export interface CityGeneratorLayout {
@@ -86,6 +95,9 @@ index baf210642..ddf63e336 100644
 +    blocksZ: number;
 +    blockW: number;
 +    blockD: number;
++    sidewalkWidth: number;
++    innerLotX: number;
++    innerLotZ: number;
 +    cityW: number;
 +    cityD: number;
 +}
@@ -94,10 +106,30 @@ index baf210642..ddf63e336 100644
 +    building?: Material | undefined;
 +}
 +
++export interface CityGeneratorFurniture {
++    streetlight: StreetlightGenerator;
++    trafficlight: TrafficlightGenerator;
++    trashcan: TrashcanGenerator;
++    bench: BenchGenerator;
++    hydrant: HydrantGenerator;
++    tree: StreetTreeGenerator;
++    car: CarGenerator;
++    person: PersonGenerator;
++}
++
++export interface CityGeneratorTower {
++    x: number;
++    y: number;
++    z: number;
++    w: number;
++    h: number;
++    d: number;
++}
++
  /**
   * Lays out a grid of city blocks and fills each lot with a {@link SkyscraperGenerator}
   * tower of its own seed, height and footprint, optionally on raised sidewalk
-@@ -14,59 +47,29 @@
+@@ -14,56 +79,25 @@
   * ```
   */
  export class CityGenerator {
@@ -112,6 +144,7 @@ index baf210642..ddf63e336 100644
 -        blocksZ: number;
 -        curbHeight: number;
 -        curbRadius: number;
+-        sidewalkWidth: number;
 -    };
 -    layout: {
 -        street: any;
@@ -122,21 +155,62 @@ index baf210642..ddf63e336 100644
 -        blocksZ: any;
 -        blockW: number;
 -        blockD: number;
+-        sidewalkWidth: any;
+-        innerLotX: number;
+-        innerLotZ: number;
 -        cityW: number;
 -        cityD: number;
 -    };
--    generators: any[];
 +    constructor(parameters?: Partial<CityGeneratorParameters>);
 +
 +    parameters: CityGeneratorParameters;
 +    layout: CityGeneratorLayout;
 +
+     /**
+      * The city seed shared by building and proxy materials. Pass this to
+      * {@link createBuildingMaterial} to update the palette when rebuilding.
+-     *
+-     * @type {UniformNode<uint>}
+      */
+-    seedNode: UniformNode<any>;
+-    generators: any[];
+-    towers: any[];
++    seedNode: UniformNode<'uint', number>;
++
 +    generators: SkyscraperGenerator[];
++    towers: CityGeneratorTower[];
      sidewalk: SidewalkGenerator;
+-    furniture: {
+-        streetlight: StreetlightGenerator;
+-        trafficlight: TrafficlightGenerator;
+-        trashcan: TrashcanGenerator;
+-        bench: BenchGenerator;
+-        hydrant: HydrantGenerator;
+-        tree: StreetTreeGenerator;
+-        car: CarGenerator;
+-        person: PersonGenerator;
+-    };
++    furniture: CityGeneratorFurniture;
      group: Group | null;
 -    build(materials?: {}): Group;
 +
 +    build(materials?: CityGeneratorMaterials): Group;
++
+     /**
+      * Builds a lightweight stand-in for the city: one instanced box per tower,
+      * sized to match, in a single draw call. Intended for cheap global-illumination
+@@ -71,50 +105,27 @@ export class CityGenerator {
+      * boxes still cast the same street shadows and bounce the same warm fill.
+      *
+      * Call after {@link CityGenerator#build}, which records the tower boxes.
+-     *
+-     * @return {InstancedMesh} The proxy mesh.
+      */
+     buildProxy(): InstancedMesh;
+-    buildFurniture(random: any): Group;
++
++    buildFurniture(random: () => number): Group;
++
      dispose(): void;
 +
 +    static defaults: CityGeneratorParameters;
@@ -152,15 +226,23 @@ index baf210642..ddf63e336 100644
 -        let blocksZ: number;
 -        let curbHeight: number;
 -        let curbRadius: number;
+-        let sidewalkWidth: number;
 -    }
 -}
 +
  /**
-  * The shared material every tower in a {@link CityGenerator} is dressed with: one flat
-  * masonry colour per lot, picked from a palette by hashing the lot's grid cell.
+  * The shared material every tower in a {@link CityGenerator} is dressed with: the per-lot
+  * {@link buildingColorNode} resolved once per vertex on a skyscraper material.
+- *
+- * @param {Object} layout - The city layout.
+- * @param {number|Node<uint>} [seed=0] - A fixed seed, or {@link CityGenerator#seedNode} for a changing city.
+- * @return {MeshStandardNodeMaterial} The building material.
   */
--export function createBuildingMaterial(layout: any, seed?: number): MeshStandardNodeMaterial;
-+export function createBuildingMaterial(layout: CityGeneratorLayout, seed?: number): MeshStandardNodeMaterial;
+-export function createBuildingMaterial(layout: Object, seed?: number | Node<any>): MeshStandardNodeMaterial;
++export function createBuildingMaterial(
++    layout: CityGeneratorLayout,
++    seed?: number | Node<'uint'>,
++): MeshStandardNodeMaterial;
 +
  /**
   * The road surface: wet asphalt with lane lines and crosswalks aligned to a
@@ -168,7 +250,16 @@ index baf210642..ddf63e336 100644
   */
 -export function createRoadMaterial(layout: any): MeshStandardNodeMaterial;
 -import { SidewalkGenerator } from './city/SidewalkGenerator.js';
+-import { StreetlightGenerator } from './city/StreetlightGenerator.js';
+-import { TrafficlightGenerator } from './city/TrafficlightGenerator.js';
+-import { TrashcanGenerator } from './city/TrashcanGenerator.js';
+-import { BenchGenerator } from './city/BenchGenerator.js';
+-import { HydrantGenerator } from './city/HydrantGenerator.js';
+-import { StreetTreeGenerator } from './city/StreetTreeGenerator.js';
+-import { CarGenerator } from './city/CarGenerator.js';
+-import { PersonGenerator } from './city/PersonGenerator.js';
 -import { Group } from 'three';
+-import { InstancedMesh } from 'three';
 -import { MeshStandardNodeMaterial } from 'three/webgpu';
 +export function createRoadMaterial(layout: CityGeneratorLayout): MeshStandardNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/generators/ForestGenerator.d.ts b/jsdoc-testing/jsdoc/examples/jsm/generators/ForestGenerator.d.ts
@@ -495,8 +586,220 @@ index 48708c301..ef710a6eb 100644
 -import { Mesh } from 'three';
 -import { MeshStandardNodeMaterial } from 'three/webgpu';
 +export function createTreeMaterial(parameters?: TreeMaterialParameters): MeshStandardNodeMaterial;
+diff --git a/jsdoc-testing/jsdoc/examples/jsm/generators/city/BenchGenerator.d.ts b/jsdoc-testing/jsdoc/examples/jsm/generators/city/BenchGenerator.d.ts
+index 40bfca8d8..66e8375fa 100644
+--- a/jsdoc-testing/jsdoc/examples/jsm/generators/city/BenchGenerator.d.ts
++++ b/jsdoc-testing/jsdoc/examples/jsm/generators/city/BenchGenerator.d.ts
+@@ -1,3 +1,12 @@
++import { InstancedMeshGenerator } from './InstancedMeshGenerator.js';
++
++export interface BenchGeneratorParameters {
++    length: number;
++    depth: number;
++    seatHeight: number;
++    backHeight: number;
++}
++
+ /**
+  * A public street bench: timber slats carried on two cast-iron end frames that
+  * curl into armrests, with a reclined slatted backrest. Built once and instanced
+@@ -13,15 +22,8 @@
+  * scene.add( benches.build( placements ) ); // placements: Matrix4[]
+  * ```
+  */
+-export class BenchGenerator extends InstancedMeshGenerator {
+-    constructor(parameters?: {});
++export class BenchGenerator extends InstancedMeshGenerator<BenchGeneratorParameters> {
++    constructor(parameters?: Partial<BenchGeneratorParameters>);
++
++    static defaults: BenchGeneratorParameters;
+ }
+-export namespace BenchGenerator {
+-    namespace defaults {
+-        let length: number;
+-        let depth: number;
+-        let seatHeight: number;
+-        let backHeight: number;
+-    }
+-}
+-import { InstancedMeshGenerator } from './InstancedMeshGenerator.js';
+diff --git a/jsdoc-testing/jsdoc/examples/jsm/generators/city/CarGenerator.d.ts b/jsdoc-testing/jsdoc/examples/jsm/generators/city/CarGenerator.d.ts
+index 312534af6..e4498a71f 100644
+--- a/jsdoc-testing/jsdoc/examples/jsm/generators/city/CarGenerator.d.ts
++++ b/jsdoc-testing/jsdoc/examples/jsm/generators/city/CarGenerator.d.ts
+@@ -1,3 +1,10 @@
++import { BufferGeometry, ColorRepresentation, Group, Matrix4, MeshStandardNodeMaterial } from 'three/webgpu';
++
++export interface CarGeneratorPlacement {
++    matrix: Matrix4;
++    color: ColorRepresentation;
++}
++
+ /**
+  * A low-poly car fleet with lofted bodies, circular wheel arches, curved
+  * windscreens and recessed alloy wheels. Separate cabin panels define the
+@@ -20,15 +27,17 @@
+  */
+ export class CarGenerator {
+     constructor(parameters?: {});
++
+     parameters: {};
+-    geometries: Map<any, any>;
+-    materials: Map<any, any>;
++
++    geometries: Map<string, BufferGeometry>;
++    materials: Map<string, MeshStandardNodeMaterial>;
+     mesh: Group | null;
+-    build(cars: any): Group;
++
++    build(cars: CarGeneratorPlacement[]): Group;
+     dispose(): void;
++
++    static defaults: {};
++
++    static taxiColor: number;
+ }
+-export namespace CarGenerator {
+-    let defaults: {};
+-    let taxiColor: number;
+-}
+-import { Group } from 'three';
+diff --git a/jsdoc-testing/jsdoc/examples/jsm/generators/city/HydrantGenerator.d.ts b/jsdoc-testing/jsdoc/examples/jsm/generators/city/HydrantGenerator.d.ts
+index 13ae56179..d556d08ae 100644
+--- a/jsdoc-testing/jsdoc/examples/jsm/generators/city/HydrantGenerator.d.ts
++++ b/jsdoc-testing/jsdoc/examples/jsm/generators/city/HydrantGenerator.d.ts
+@@ -1,3 +1,10 @@
++import { InstancedMeshGenerator } from './InstancedMeshGenerator.js';
++
++export interface HydrantGeneratorParameters {
++    radius: number;
++    height: number;
++}
++
+ /**
+  * A classic cast-iron fire hydrant: a stout barrel on a flared footing, capped by a
+  * domed bonnet and a hex operating nut, with two side outlet nozzles and a larger
+@@ -13,13 +20,8 @@
+  * scene.add( hydrants.build( placements ) ); // placements: Matrix4[]
+  * ```
+  */
+-export class HydrantGenerator extends InstancedMeshGenerator {
+-    constructor(parameters?: {});
++export class HydrantGenerator extends InstancedMeshGenerator<HydrantGeneratorParameters> {
++    constructor(parameters?: Partial<HydrantGeneratorParameters>);
++
++    static defaults: HydrantGeneratorParameters;
+ }
+-export namespace HydrantGenerator {
+-    namespace defaults {
+-        let radius: number;
+-        let height: number;
+-    }
+-}
+-import { InstancedMeshGenerator } from './InstancedMeshGenerator.js';
+diff --git a/jsdoc-testing/jsdoc/examples/jsm/generators/city/InstancedMeshGenerator.d.ts b/jsdoc-testing/jsdoc/examples/jsm/generators/city/InstancedMeshGenerator.d.ts
+index 196f317f3..447eb8ee5 100644
+--- a/jsdoc-testing/jsdoc/examples/jsm/generators/city/InstancedMeshGenerator.d.ts
++++ b/jsdoc-testing/jsdoc/examples/jsm/generators/city/InstancedMeshGenerator.d.ts
+@@ -1,17 +1,29 @@
+-export class InstancedMeshGenerator {
+-    constructor(parameters: any, createGeometry: any, createMaterial: any, name: any, receiveShadow?: boolean);
+-    parameters: any;
+-    geometry: any;
+-    material: any;
++import { BufferGeometry, InstancedMesh, Material, Matrix4 } from 'three';
++
++export class InstancedMeshGenerator<TParameters = unknown> {
++    constructor(
++        parameters: Partial<TParameters>,
++        createGeometry: (parameters: TParameters) => BufferGeometry,
++        createMaterial: () => Material,
++        name: string,
++        receiveShadow?: boolean,
++    );
++
++    parameters: TParameters;
++
++    geometry: BufferGeometry | null;
++    material: Material | null;
+     mesh: InstancedMesh | null;
+-    _createGeometry: any;
+-    _createMaterial: any;
+-    _name: any;
+-    _receiveShadow: boolean;
+-    _parametersKey: any;
+-    build(placements: any): InstancedMesh;
++
++    build(placements: Matrix4[]): InstancedMesh;
+     dispose(): void;
+ }
+-export function createInstances(geometry: any, material: any, count: any, name: any): InstancedMesh;
+-export function updateInstances(mesh: any, placements: any): void;
+-import { InstancedMesh } from 'three';
++
++export function createInstances(
++    geometry: BufferGeometry,
++    material: Material,
++    count: number,
++    name: string,
++): InstancedMesh;
++
++export function updateInstances(mesh: InstancedMesh, placements: Matrix4[]): void;
+diff --git a/jsdoc-testing/jsdoc/examples/jsm/generators/city/PersonGenerator.d.ts b/jsdoc-testing/jsdoc/examples/jsm/generators/city/PersonGenerator.d.ts
+index e3d8250e3..5d7c8f040 100644
+--- a/jsdoc-testing/jsdoc/examples/jsm/generators/city/PersonGenerator.d.ts
++++ b/jsdoc-testing/jsdoc/examples/jsm/generators/city/PersonGenerator.d.ts
+@@ -1,3 +1,14 @@
++import { BufferGeometry, Group, Matrix4, MeshStandardNodeMaterial } from 'three/webgpu';
++
++export interface PersonGeneratorParameters {
++    height: number;
++}
++
++export interface PersonGeneratorGeometries {
++    walk: BufferGeometry;
++    stand: BufferGeometry;
++}
++
+ /**
+  * A low-poly pedestrian crowd with shaped heads, jackets and lofted limbs.
+  * Two shared poses stand or walk, with sleeves and trousers swept through
+@@ -18,24 +29,16 @@
+  * ```
+  */
+ export class PersonGenerator {
+-    constructor(parameters?: {});
+-    parameters: {
+-        height: number;
+-    };
++    constructor(parameters?: Partial<PersonGeneratorParameters>);
++
++    parameters: PersonGeneratorParameters;
++
+     material: MeshStandardNodeMaterial | null;
+-    geometries: {
+-        walk: import("three").BufferGeometry | null;
+-        stand: import("three").BufferGeometry | null;
+-    } | null;
++    geometries: PersonGeneratorGeometries | null;
+     mesh: Group | null;
+-    _parametersKey: any;
+-    build(placements: any): Group;
++
++    build(placements: Matrix4[]): Group;
+     dispose(): void;
++
++    static defaults: PersonGeneratorParameters;
+ }
+-export namespace PersonGenerator {
+-    namespace defaults {
+-        let height: number;
+-    }
+-}
+-import { MeshStandardNodeMaterial } from 'three/webgpu';
+-import { Group } from 'three';
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/generators/city/SidewalkGenerator.d.ts b/jsdoc-testing/jsdoc/examples/jsm/generators/city/SidewalkGenerator.d.ts
-index 81c1a0ec9..d560e432c 100644
+index 9b314524c..d560e432c 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/generators/city/SidewalkGenerator.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/generators/city/SidewalkGenerator.d.ts
 @@ -1,3 +1,14 @@
@@ -514,7 +817,7 @@ index 81c1a0ec9..d560e432c 100644
  /**
   * Generates the raised sidewalk for a city's blocks: per block, a rounded-corner concrete
   * slab rimmed by a distinct granite kerbstone that stands proud of the walking surface and
-@@ -14,30 +25,16 @@
+@@ -14,31 +25,16 @@
   * ```
   */
  export class SidewalkGenerator {
@@ -534,6 +837,7 @@ index 81c1a0ec9..d560e432c 100644
      material: MeshStandardNodeMaterial | null;
      curbMaterial: MeshStandardNodeMaterial | null;
      mesh: Group | null;
+-    _parametersKey: any;
 -    build(placements: any): Group;
 +
 +    build(placements: Matrix4[]): Group;
@@ -646,6 +950,142 @@ index cfca639f0..75965dd21 100644
 -import { Mesh } from 'three';
 -import { MeshStandardNodeMaterial } from 'three/webgpu';
 +export function pickBuildingColor(seed: number): number;
+diff --git a/jsdoc-testing/jsdoc/examples/jsm/generators/city/StreetTreeGenerator.d.ts b/jsdoc-testing/jsdoc/examples/jsm/generators/city/StreetTreeGenerator.d.ts
+index c5c9e01a3..32406e48d 100644
+--- a/jsdoc-testing/jsdoc/examples/jsm/generators/city/StreetTreeGenerator.d.ts
++++ b/jsdoc-testing/jsdoc/examples/jsm/generators/city/StreetTreeGenerator.d.ts
+@@ -1,3 +1,10 @@
++import { InstancedMeshGenerator } from './InstancedMeshGenerator.js';
++
++export interface StreetTreeGeneratorParameters {
++    trunkHeight: number;
++    trunkRadius: number;
++}
++
+ /**
+  * A young street tree set in a curbside pit: a flared bark trunk rising through a
+  * cast-iron pit grate, branching into a canopy of vertex-jittered leaf clumps. The
+@@ -16,13 +23,8 @@
+  * scene.add( trees.build( placements ) ); // placements: Matrix4[]
+  * ```
+  */
+-export class StreetTreeGenerator extends InstancedMeshGenerator {
+-    constructor(parameters?: {});
++export class StreetTreeGenerator extends InstancedMeshGenerator<StreetTreeGeneratorParameters> {
++    constructor(parameters?: Partial<StreetTreeGeneratorParameters>);
++
++    static defaults: StreetTreeGeneratorParameters;
+ }
+-export namespace StreetTreeGenerator {
+-    namespace defaults {
+-        let trunkHeight: number;
+-        let trunkRadius: number;
+-    }
+-}
+-import { InstancedMeshGenerator } from './InstancedMeshGenerator.js';
+diff --git a/jsdoc-testing/jsdoc/examples/jsm/generators/city/StreetlightGenerator.d.ts b/jsdoc-testing/jsdoc/examples/jsm/generators/city/StreetlightGenerator.d.ts
+index d367d728d..b9a76f133 100644
+--- a/jsdoc-testing/jsdoc/examples/jsm/generators/city/StreetlightGenerator.d.ts
++++ b/jsdoc-testing/jsdoc/examples/jsm/generators/city/StreetlightGenerator.d.ts
+@@ -1,3 +1,11 @@
++import { InstancedMeshGenerator } from './InstancedMeshGenerator.js';
++
++export interface StreetlightGeneratorParameters {
++    height: number;
++    reach: number;
++    radius: number;
++}
++
+ /**
+  * A NYC cobra-head streetlight: a tall tapered mast standing at the curb with a
+  * curved arm reaching out over the roadway to a drop luminaire. Built once and
+@@ -13,14 +21,8 @@
+  * scene.add( lights.build( placements ) ); // placements: Matrix4[]
+  * ```
+  */
+-export class StreetlightGenerator extends InstancedMeshGenerator {
+-    constructor(parameters?: {});
++export class StreetlightGenerator extends InstancedMeshGenerator<StreetlightGeneratorParameters> {
++    constructor(parameters?: Partial<StreetlightGeneratorParameters>);
++
++    static defaults: StreetlightGeneratorParameters;
+ }
+-export namespace StreetlightGenerator {
+-    namespace defaults {
+-        let height: number;
+-        let reach: number;
+-        let radius: number;
+-    }
+-}
+-import { InstancedMeshGenerator } from './InstancedMeshGenerator.js';
+diff --git a/jsdoc-testing/jsdoc/examples/jsm/generators/city/TrafficlightGenerator.d.ts b/jsdoc-testing/jsdoc/examples/jsm/generators/city/TrafficlightGenerator.d.ts
+index adb192306..2054dc989 100644
+--- a/jsdoc-testing/jsdoc/examples/jsm/generators/city/TrafficlightGenerator.d.ts
++++ b/jsdoc-testing/jsdoc/examples/jsm/generators/city/TrafficlightGenerator.d.ts
+@@ -1,3 +1,11 @@
++import { InstancedMeshGenerator } from './InstancedMeshGenerator.js';
++
++export interface TrafficlightGeneratorParameters {
++    height: number;
++    reach: number;
++    radius: number;
++}
++
+ /**
+  * A NYC traffic signal: a round pole at the curb with a horizontal mast arm
+  * reaching out over the roadway to a vertical three-section signal head, plus a
+@@ -14,14 +22,8 @@
+  * scene.add( lights.build( placements ) ); // placements: Matrix4[]
+  * ```
+  */
+-export class TrafficlightGenerator extends InstancedMeshGenerator {
+-    constructor(parameters?: {});
++export class TrafficlightGenerator extends InstancedMeshGenerator<TrafficlightGeneratorParameters> {
++    constructor(parameters?: Partial<TrafficlightGeneratorParameters>);
++
++    static defaults: TrafficlightGeneratorParameters;
+ }
+-export namespace TrafficlightGenerator {
+-    namespace defaults {
+-        let height: number;
+-        let reach: number;
+-        let radius: number;
+-    }
+-}
+-import { InstancedMeshGenerator } from './InstancedMeshGenerator.js';
+diff --git a/jsdoc-testing/jsdoc/examples/jsm/generators/city/TrashcanGenerator.d.ts b/jsdoc-testing/jsdoc/examples/jsm/generators/city/TrashcanGenerator.d.ts
+index 1516218bc..91673d13f 100644
+--- a/jsdoc-testing/jsdoc/examples/jsm/generators/city/TrashcanGenerator.d.ts
++++ b/jsdoc-testing/jsdoc/examples/jsm/generators/city/TrashcanGenerator.d.ts
+@@ -1,3 +1,10 @@
++import { InstancedMeshGenerator } from './InstancedMeshGenerator.js';
++
++export interface TrashcanGeneratorParameters {
++    radius: number;
++    height: number;
++}
++
+ /**
+  * The NYC green wire-mesh litter basket: a slightly tapered drum with a heavy top
+  * rim, a foot ring and a dark bag of trash inside. Built once and instanced across
+@@ -10,13 +17,8 @@
+  * scene.add( cans.build( placements ) ); // placements: Matrix4[]
+  * ```
+  */
+-export class TrashcanGenerator extends InstancedMeshGenerator {
+-    constructor(parameters?: {});
++export class TrashcanGenerator extends InstancedMeshGenerator<TrashcanGeneratorParameters> {
++    constructor(parameters?: Partial<TrashcanGeneratorParameters>);
++
++    static defaults: TrashcanGeneratorParameters;
+ }
+-export namespace TrashcanGenerator {
+-    namespace defaults {
+-        let radius: number;
+-        let height: number;
+-    }
+-}
+-import { InstancedMeshGenerator } from './InstancedMeshGenerator.js';
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/geometries/LoftGeometry.d.ts b/jsdoc-testing/jsdoc/examples/jsm/geometries/LoftGeometry.d.ts
 index 1e007e460..a2de0b896 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/geometries/LoftGeometry.d.ts
