@@ -472,11 +472,11 @@ index a5b279bf6..7ca0512e6 100644
 -import { BufferGeometry } from 'three';
 -import { Group } from 'three';
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/generators/TreeGenerator.d.ts b/jsdoc-testing/jsdoc/examples/jsm/generators/TreeGenerator.d.ts
-index 48708c301..ef710a6eb 100644
+index 5191aaed3..bccb29777 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/generators/TreeGenerator.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/generators/TreeGenerator.d.ts
-@@ -1,3 +1,30 @@
-+import { Color, Material, Mesh, MeshStandardNodeMaterial, Node } from 'three/webgpu';
+@@ -1,3 +1,32 @@
++import { Color, Material, Mesh, MeshStandardNodeMaterial, Node, Vector3 } from 'three/webgpu';
 +
 +export interface TreeGeneratorParameters {
 +    seed: number;
@@ -485,6 +485,8 @@ index 48708c301..ef710a6eb 100644
 +    branchAngle: number[];
 +    angleVariance: number;
 +    lengthRatio: number;
++    lengthVariance: number;
++    branchLengthFalloff: number;
 +    trunkLength: number;
 +    trunkRadius: number;
 +    taper: number;
@@ -505,8 +507,8 @@ index 48708c301..ef710a6eb 100644
 +
  /**
   * Grows a procedural tree skeleton — trunk, branches and twigs, each swept as a tapered
-  * tube — and bakes it into one non-indexed {@link BufferGeometry} (position and normal
-@@ -23,37 +50,43 @@
+  * tube — and bakes it into one indexed {@link BufferGeometry} (position and normal
+@@ -23,39 +52,46 @@
   * ```
   */
  export class TreeGenerator {
@@ -528,6 +530,8 @@ index 48708c301..ef710a6eb 100644
 +    setBranchAngle: (branchAngle: number[]) => this;
 +    setAngleVariance: (angleVariance: number) => this;
 +    setLengthRatio: (lengthRatio: number) => this;
++    setLengthVariance: (lengthVariance: number) => this;
++    setBranchLengthFalloff: (branchLengthFalloff: number) => this;
 +    setTrunkLength: (trunkLength: number) => this;
 +    setTrunkRadius: (trunkRadius: number) => this;
 +    setTaper: (taper: number) => this;
@@ -553,6 +557,8 @@ index 48708c301..ef710a6eb 100644
 -        let branchAngle: number[];
 -        let angleVariance: number;
 -        let lengthRatio: number;
+-        let lengthVariance: number;
+-        let branchLengthFalloff: number;
 -        let trunkLength: number;
 -        let trunkRadius: number;
 -        let taper: number;
@@ -573,13 +579,14 @@ index 48708c301..ef710a6eb 100644
 +
 +export interface TreeMaterialParameters {
 +    barkColor?: Color | number | Node<'color'> | undefined;
++    barkScale?: Vector3 | undefined;
  }
 +
  /**
   * A simple bark material for a {@link TreeGenerator} mesh: a low-saturation brown with a
   * faint, vertically-stretched grain, so trunks read near-black against bright fog.
-@@ -61,6 +94,4 @@ export namespace TreeGenerator {
-  * @param {Object} [parameters] - `barkColor` ( a hex, THREE.Color or TSL node ).
+@@ -63,6 +99,4 @@ export namespace TreeGenerator {
+  * @param {Object} [parameters] - `barkColor` ( a hex, THREE.Color or TSL node ) and `barkScale` ( a THREE.Vector3 ).
   * @return {MeshStandardNodeMaterial}
   */
 -export function createTreeMaterial(parameters?: Object): MeshStandardNodeMaterial;
