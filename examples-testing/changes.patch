@@ -6515,19 +6515,17 @@ index e15a909c3..c3575ef2d 100644
  
          if (probesLeft) {
 diff --git a/examples-testing/examples/webgl_lightprobes_sponza.ts b/examples-testing/examples/webgl_lightprobes_sponza.ts
-index daaf3a133..d68973331 100644
+index 069e4eea1..b8da699dc 100644
 --- a/examples-testing/examples/webgl_lightprobes_sponza.ts
 +++ b/examples-testing/examples/webgl_lightprobes_sponza.ts
-@@ -12,12 +12,16 @@ const MODEL_INDEX_URL =
+@@ -12,15 +12,19 @@ const MODEL_INDEX_URL =
      'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/model-index.json';
  const SAMPLE_ASSETS_BASE_URL = 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/';
  
 -let camera, scene, renderer, controls, timer;
 -let probes = null,
 -    probesHelper = null;
--let modelSize = null;
--let sunLight = null,
--    sky = null;
+-let probeFar,
 +let camera: THREE.PerspectiveCamera,
 +    scene: THREE.Scene,
 +    renderer: THREE.WebGLRenderer,
@@ -6535,13 +6533,19 @@ index daaf3a133..d68973331 100644
 +    timer: THREE.Timer;
 +let probes: LightProbeGridWebGL | null = null,
 +    probesHelper: LightProbeGridHelperWebGL | null = null;
++let probeFar: number,
+     bakeIndex = 0,
+     bakePass = 0;
+-let modelSize = null;
+-let sunLight = null,
+-    sky = null;
 +let modelSize: THREE.Vector3 | null = null;
 +let sunLight: SunLight | null = null,
 +    sky: Sky | null = null;
  
  const _box = new THREE.Box3();
  const _size = new THREE.Vector3();
-@@ -57,7 +61,7 @@ async function init() {
+@@ -80,7 +84,7 @@ async function init() {
      controls.movementSpeed = 2.0;
      controls.lookSpeed = 0.2;
  
@@ -6550,7 +6554,7 @@ index daaf3a133..d68973331 100644
  
      const manager = new THREE.LoadingManager();
      manager.onProgress = function (url, loaded, total) {
-@@ -72,14 +76,14 @@ async function init() {
+@@ -95,14 +99,14 @@ async function init() {
      const modelURL = await getSponzaModelURL();
      const gltf = await loader.loadAsync(modelURL);
      const model = gltf.scene;
@@ -6571,15 +6575,6 @@ index daaf3a133..d68973331 100644
          }
      });
  
-@@ -92,7 +96,7 @@ async function init() {
-     _box.setFromObject(model);
-     modelSize = _box.getSize(_size).clone();
-     const probeFar = Math.max(modelSize.x, modelSize.y, modelSize.z) * 2.0;
--    let rebakeTimer = null;
-+    let rebakeTimer: number | null = null;
-     let isBaking = false;
-     let bakeQueued = false;
- 
 @@ -126,8 +130,8 @@ async function init() {
          const elevation = THREE.MathUtils.degToRad(params.lightElevation);
          const azimuth = THREE.MathUtils.degToRad(params.lightAzimuth);
@@ -6590,17 +6585,17 @@ index daaf3a133..d68973331 100644
 +        sky!.material.uniforms['sunPosition'].value.copy(sunLight!.position);
      }
  
-     function scheduleRebake() {
-@@ -213,7 +217,7 @@ async function init() {
+     updateLightPosition();
+@@ -154,7 +158,7 @@ async function init() {
      gui.add(params, 'lightIntensity', 0, 100, 0.1)
          .name('Light Intensity')
          .onChange(value => {
 -            sunLight.intensity = value;
 +            sunLight!.intensity = value;
-             scheduleRebake();
+             resetProbeBake();
          });
      gui.add(params, 'shadows')
-@@ -239,7 +243,7 @@ async function init() {
+@@ -180,7 +184,7 @@ async function init() {
              if (probesHelper) {
                  scene.remove(probesHelper);
                  probesHelper.dispose();
@@ -6609,8 +6604,8 @@ index daaf3a133..d68973331 100644
                  probesHelper.visible = params.showProbes;
                  scene.add(probesHelper);
              }
-@@ -271,9 +275,17 @@ async function init() {
-     window.addEventListener('resize', onWindowResize);
+@@ -282,9 +286,17 @@ function updateProbes() {
+     }
  }
  
 +interface Model {
@@ -6628,7 +6623,7 @@ index daaf3a133..d68973331 100644
      const sponzaInfo = models.find(model => model.name === 'Sponza');
  
      if (!sponzaInfo) {
-@@ -292,7 +304,7 @@ async function getSponzaModelURL() {
+@@ -303,7 +315,7 @@ async function getSponzaModelURL() {
      return `${SAMPLE_ASSETS_BASE_URL}${sponzaInfo.name}/${variantFolder}/${variantName}`;
  }
  
@@ -6637,7 +6632,7 @@ index daaf3a133..d68973331 100644
      if (!renderer || !sunLight) return;
  
      renderer.shadowMap.enabled = enabled;
-@@ -306,7 +318,7 @@ function onWindowResize() {
+@@ -317,7 +329,7 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
  
@@ -6645,7 +6640,7 @@ index daaf3a133..d68973331 100644
 +function animate(timestamp: number) {
      timer.update(timestamp);
      controls.update(timer.getDelta());
-     renderer.render(scene, camera);
+     updateProbes();
 diff --git a/examples-testing/examples/webgl_lights_hemisphere.ts b/examples-testing/examples/webgl_lights_hemisphere.ts
 index 2910b15de..32daa5e5d 100644
 --- a/examples-testing/examples/webgl_lights_hemisphere.ts
@@ -16277,19 +16272,17 @@ index ec0088e0e..6335c36db 100644
      gui.add(parameters, 'height', 60, 200, 1).onChange(generate);
      gui.add(parameters, 'width', 18, 60, 1).onChange(generate);
 diff --git a/examples-testing/examples/webgpu_generator_city.ts b/examples-testing/examples/webgpu_generator_city.ts
-index a0226ba9a..f4fa7cb7c 100644
+index 198b036d2..49f553700 100644
 --- a/examples-testing/examples/webgpu_generator_city.ts
 +++ b/examples-testing/examples/webgpu_generator_city.ts
-@@ -9,12 +9,26 @@ import { CityGenerator, createBuildingMaterial, createRoadMaterial } from 'three
+@@ -9,10 +9,24 @@ import { CityGenerator, createBuildingMaterial, createRoadMaterial } from 'three
  import { LightProbeGrid } from 'three/addons/lighting/LightProbeGrid.js';
  import { LightProbeGridHelper } from 'three/addons/helpers/LightProbeGridHelper.js';
  
 -let camera, scene, renderer, controls, timer;
 -let cityGroup, cityProxy, materials, city, renderPipeline;
 -let sky, sun, sunLight, pmremGenerator, envScene, envRenderTarget, cityBounds;
--let probes,
--    probesHelper,
--    rebakeTimer = null;
+-let probes, probesHelper;
 +let camera: THREE.PerspectiveCamera,
 +    scene: THREE.Scene,
 +    renderer: THREE.WebGPURenderer,
@@ -16307,13 +16300,11 @@ index a0226ba9a..f4fa7cb7c 100644
 +    envScene: THREE.Scene,
 +    envRenderTarget: THREE.RenderTarget,
 +    cityBounds: THREE.Box3;
-+let probes: LightProbeGrid,
-+    probesHelper: LightProbeGridHelper,
-+    rebakeTimer: ReturnType<typeof setTimeout> | null = null;
++let probes: LightProbeGrid, probesHelper: LightProbeGridHelper;
+ let bakeIndex = 0,
+     bakePass = 0;
  
- // the irradiance grid spans the whole footprint plus the streets, rising to
- // the mid-rise rooftops. diffuse GI is low frequency, so a coarse grid still
-@@ -135,7 +149,7 @@ async function init() {
+@@ -137,7 +151,7 @@ async function init() {
  
      // parameters
  
@@ -16322,7 +16313,7 @@ index a0226ba9a..f4fa7cb7c 100644
      gui.add(parameters, 'seed', 0, 100, 1)
          .debounce(300)
          .onChange(() => {
-@@ -231,7 +245,7 @@ function generateCity() {
+@@ -233,7 +247,7 @@ function generateCity() {
      if (cityProxy) {
          scene.remove(cityProxy);
          cityProxy.geometry.dispose();
@@ -16331,8 +16322,8 @@ index a0226ba9a..f4fa7cb7c 100644
          cityProxy.dispose();
      }
  
-@@ -286,7 +300,7 @@ function scheduleRebake() {
-     }, 300);
+@@ -289,7 +303,7 @@ function updateProbes() {
+     }
  }
  
 -function toggleProbesHelper(value) {
@@ -16862,19 +16853,17 @@ index 944b5fc7c..2759ac0fa 100644
          .name('GI')
          .onChange(value => {
 diff --git a/examples-testing/examples/webgpu_lightprobes_sponza.ts b/examples-testing/examples/webgpu_lightprobes_sponza.ts
-index 681122b1e..f8f5b4bc0 100644
+index 4e7c0bfdd..07b6f24b3 100644
 --- a/examples-testing/examples/webgpu_lightprobes_sponza.ts
 +++ b/examples-testing/examples/webgpu_lightprobes_sponza.ts
-@@ -11,12 +11,16 @@ const MODEL_INDEX_URL =
+@@ -13,15 +13,19 @@ const MODEL_INDEX_URL =
      'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/model-index.json';
  const SAMPLE_ASSETS_BASE_URL = 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/';
  
 -let camera, scene, renderer, controls, timer;
 -let probes = null,
 -    probesHelper = null;
--let modelSize = null;
--let dirLight = null,
--    sky = null;
+-let probeFar,
 +let camera: THREE.PerspectiveCamera,
 +    scene: THREE.Scene,
 +    renderer: THREE.WebGPURenderer,
@@ -16882,13 +16871,19 @@ index 681122b1e..f8f5b4bc0 100644
 +    timer: THREE.Timer;
 +let probes: LightProbeGrid | null = null,
 +    probesHelper: LightProbeGridHelper | null = null;
++let probeFar: number,
+     bakeIndex = 0,
+     bakePass = 0;
+-let modelSize = null;
+-let sunLight = null,
+-    sky = null;
 +let modelSize: THREE.Vector3 | null = null;
-+let dirLight: THREE.DirectionalLight | null = null,
++let sunLight: SunLight | null = null,
 +    sky: SkyMesh | null = null;
  
- const sun = new THREE.Vector3();
- 
-@@ -59,7 +63,7 @@ async function init() {
+ const _box = new THREE.Box3();
+ const _size = new THREE.Vector3();
+@@ -84,7 +88,7 @@ async function init() {
      controls.movementSpeed = 2.0;
      controls.lookSpeed = 0.2;
  
@@ -16897,7 +16892,7 @@ index 681122b1e..f8f5b4bc0 100644
  
      const manager = new THREE.LoadingManager();
      manager.onProgress = function (url, loaded, total) {
-@@ -74,14 +78,14 @@ async function init() {
+@@ -99,14 +103,14 @@ async function init() {
      const modelURL = await getSponzaModelURL();
      const gltf = await loader.loadAsync(modelURL);
      const model = gltf.scene;
@@ -16918,32 +16913,15 @@ index 681122b1e..f8f5b4bc0 100644
          }
      });
  
-@@ -97,7 +101,7 @@ async function init() {
-     const targetY = modelCenter.y + modelSize.y * 0.2;
-     const lightBaseDistance = Math.max(modelSize.x, modelSize.z);
-     const probeFar = Math.max(modelSize.x, modelSize.y, modelSize.z) * 2.0;
--    let rebakeTimer = null;
-+    let rebakeTimer: number | null = null;
-     let isBaking = false;
-     let bakeQueued = false;
- 
-@@ -140,11 +144,11 @@ async function init() {
+@@ -130,13 +134,13 @@ async function init() {
+         const elevation = THREE.MathUtils.degToRad(params.lightElevation);
          const azimuth = THREE.MathUtils.degToRad(params.lightAzimuth);
  
-         sun.setFromSphericalCoords(1, Math.PI / 2 - elevation, azimuth);
--        sky.sunPosition.value.copy(sun);
-+        sky!.sunPosition.value.copy(sun);
- 
--        dirLight.target.position.set(modelCenter.x, targetY, modelCenter.z);
--        dirLight.position.copy(dirLight.target.position).addScaledVector(sun, lightBaseDistance);
--        dirLight.target.updateMatrixWorld();
-+        dirLight!.target.position.set(modelCenter.x, targetY, modelCenter.z);
-+        dirLight!.position.copy(dirLight!.target.position).addScaledVector(sun, lightBaseDistance);
-+        dirLight!.target.updateMatrixWorld();
+-        sunLight.position.setFromSphericalCoords(1, Math.PI / 2 - elevation, azimuth);
+-        sky.sunPosition.value.copy(sunLight.position);
++        sunLight!.position.setFromSphericalCoords(1, Math.PI / 2 - elevation, azimuth);
++        sky!.sunPosition.value.copy(sunLight!.position);
      }
- 
-     function scheduleRebake() {
-@@ -208,7 +212,7 @@ async function init() {
  
      updateLightPosition();
  
@@ -16952,16 +16930,16 @@ index 681122b1e..f8f5b4bc0 100644
      gui.add(params, 'enabled')
          .name('GI')
          .onChange(value => {
-@@ -230,7 +234,7 @@ async function init() {
+@@ -158,7 +162,7 @@ async function init() {
      gui.add(params, 'lightIntensity', 0, 100, 0.1)
          .name('Light Intensity')
          .onChange(value => {
--            dirLight.intensity = value;
-+            dirLight!.intensity = value;
-             scheduleRebake();
+-            sunLight.intensity = value;
++            sunLight!.intensity = value;
+             resetProbeBake();
          });
      gui.add(params, 'shadows')
-@@ -256,7 +260,7 @@ async function init() {
+@@ -184,7 +188,7 @@ async function init() {
              if (probesHelper) {
                  scene.remove(probesHelper);
                  probesHelper.dispose();
@@ -16970,8 +16948,8 @@ index 681122b1e..f8f5b4bc0 100644
                  probesHelper.visible = params.showProbes;
                  scene.add(probesHelper);
              }
-@@ -288,9 +292,17 @@ async function init() {
-     window.addEventListener('resize', onWindowResize);
+@@ -279,9 +283,17 @@ function updateProbes() {
+     }
  }
  
 +interface Model {
@@ -16989,16 +16967,16 @@ index 681122b1e..f8f5b4bc0 100644
      const sponzaInfo = models.find(model => model.name === 'Sponza');
  
      if (!sponzaInfo) {
-@@ -309,7 +321,7 @@ async function getSponzaModelURL() {
+@@ -300,7 +312,7 @@ async function getSponzaModelURL() {
      return `${SAMPLE_ASSETS_BASE_URL}${sponzaInfo.name}/${variantFolder}/${variantName}`;
  }
  
 -function setShadowsEnabled(enabled) {
 +function setShadowsEnabled(enabled: boolean) {
-     if (!renderer || !dirLight) return;
+     if (!renderer || !sunLight) return;
  
      renderer.shadowMap.enabled = enabled;
-@@ -323,7 +335,7 @@ function onWindowResize() {
+@@ -314,7 +326,7 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
  
@@ -17006,7 +16984,7 @@ index 681122b1e..f8f5b4bc0 100644
 +function animate(timestamp: number) {
      timer.update(timestamp);
      controls.update(timer.getDelta());
-     renderer.render(scene, camera);
+     updateProbes();
 diff --git a/examples-testing/examples/webgpu_lights_clustered.ts b/examples-testing/examples/webgpu_lights_clustered.ts
 index cf86514ba..58a5e3656 100644
 --- a/examples-testing/examples/webgpu_lights_clustered.ts
