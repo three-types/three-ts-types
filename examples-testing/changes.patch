@@ -12225,6 +12225,70 @@ index b80e78ed3..47e8e8b3b 100644
      mouseX = event.clientX - windowHalfX;
      mouseY = event.clientY - windowHalfY;
  }
+diff --git a/examples-testing/examples/webgl_sculpt.ts b/examples-testing/examples/webgl_sculpt.ts
+index 18288bf28..2a9b80ad9 100644
+--- a/examples-testing/examples/webgl_sculpt.ts
++++ b/examples-testing/examples/webgl_sculpt.ts
+@@ -4,9 +4,14 @@ import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js';
+ import { Sculptor } from 'three/addons/misc/Sculptor.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let renderer, scene, camera, controls, sculptor, mesh;
+-let cursorGroup, cursorRing, cursorDot, cursorMaterial;
+-let releasedPointerId = null;
++let renderer: THREE.WebGLRenderer,
++    scene: THREE.Scene,
++    camera: THREE.PerspectiveCamera,
++    controls: OrbitControls,
++    sculptor: Sculptor,
++    mesh: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>;
++let cursorGroup: THREE.Group, cursorRing: THREE.Mesh, cursorDot: THREE.Mesh, cursorMaterial: THREE.MeshBasicMaterial;
++let releasedPointerId: number | null = null;
+ 
+ const _normal = new THREE.Vector3();
+ const _normalMatrix = new THREE.Matrix3();
+@@ -28,7 +33,7 @@ function exportGLTF() {
+     exporter.parse(
+         snapshot,
+         function (buffer) {
+-            const blob = new Blob([buffer], { type: 'application/octet-stream' });
++            const blob = new Blob([buffer as ArrayBuffer], { type: 'application/octet-stream' });
+             const objectURL = URL.createObjectURL(blob);
+             link.href = objectURL;
+             link.download = 'sculpt.glb';
+@@ -104,7 +109,7 @@ function init() {
+         controls.enabled = true;
+     });
+ 
+-    function handlePointerUp(event) {
++    function handlePointerUp(event: PointerEvent) {
+         // Ignore releases from other pointers during a stroke.
+         if (sculptor.isSculpting()) return;
+ 
+@@ -117,7 +122,7 @@ function init() {
+         cursorGroup.visible = false;
+     }
+ 
+-    function handleLostPointerCapture(event) {
++    function handleLostPointerCapture(event: PointerEvent) {
+         // Keep the pointerup cursor; capture-loss coordinates are unreliable.
+         if (event.pointerId === releasedPointerId) {
+             releasedPointerId = null;
+@@ -234,12 +239,12 @@ function init() {
+         if (cursorGroup.visible && sculptor.isSculpting() === false) updateCursorPosition();
+     });
+ 
+-    function updateCursorScale(worldRadius) {
++    function updateCursorScale(worldRadius: number) {
+         cursorGroup.scale.setScalar(worldRadius);
+         cursorDot.scale.setScalar(cursorDotRadius / sculptor.getSize());
+     }
+ 
+-    function updateCursor(event) {
++    function updateCursor(event: PointerEvent) {
+         _pointer.set(event.clientX, event.clientY);
+ 
+         // Hide the cursor while orbiting.
 diff --git a/examples-testing/examples/webgl_shader.ts b/examples-testing/examples/webgl_shader.ts
 index 47a6c7ece..7ac1257b6 100644
 --- a/examples-testing/examples/webgl_shader.ts
@@ -22131,6 +22195,91 @@ index fa7577ea8..b4c7a8c39 100644
      mouse.x = e.offsetX / window.innerWidth;
      mouse.y = e.offsetY / window.innerHeight;
  }
+diff --git a/examples-testing/examples/webgpu_sculpt.ts b/examples-testing/examples/webgpu_sculpt.ts
+index c792012a6..16d154206 100644
+--- a/examples-testing/examples/webgpu_sculpt.ts
++++ b/examples-testing/examples/webgpu_sculpt.ts
+@@ -4,11 +4,16 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js';
+-import { Sculptor } from 'three/addons/misc/Sculptor.js';
++import { Sculptor, SculptorTool } from 'three/addons/misc/Sculptor.js';
+ 
+-let renderer, scene, camera, controls, sculptor, mesh;
+-let cursorGroup, cursorRing, cursorDot, cursorMaterial;
+-let releasedPointerId = null;
++let renderer: THREE.WebGPURenderer,
++    scene: THREE.Scene,
++    camera: THREE.PerspectiveCamera,
++    controls: OrbitControls,
++    sculptor: Sculptor,
++    mesh: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>;
++let cursorGroup: THREE.Group, cursorRing: THREE.Mesh, cursorDot: THREE.Mesh, cursorMaterial: THREE.MeshBasicMaterial;
++let releasedPointerId: number | null = null;
+ 
+ const _normal = new THREE.Vector3();
+ const _normalMatrix = new THREE.Matrix3();
+@@ -30,7 +35,7 @@ function exportGLTF() {
+     exporter.parse(
+         snapshot,
+         function (buffer) {
+-            const blob = new Blob([buffer], { type: 'application/octet-stream' });
++            const blob = new Blob([buffer as ArrayBuffer], { type: 'application/octet-stream' });
+             const objectURL = URL.createObjectURL(blob);
+             link.href = objectURL;
+             link.download = 'sculpt.glb';
+@@ -108,7 +113,7 @@ function init() {
+         controls.enabled = true;
+     });
+ 
+-    function handlePointerUp(event) {
++    function handlePointerUp(event: PointerEvent) {
+         // Ignore releases from other pointers during a stroke.
+         if (sculptor.isSculpting()) return;
+ 
+@@ -121,7 +126,7 @@ function init() {
+         cursorGroup.visible = false;
+     }
+ 
+-    function handleLostPointerCapture(event) {
++    function handleLostPointerCapture(event: PointerEvent) {
+         // Keep the pointerup cursor; capture-loss coordinates are unreliable.
+         if (event.pointerId === releasedPointerId) {
+             releasedPointerId = null;
+@@ -142,7 +147,7 @@ function init() {
+ 
+     // Inspector
+ 
+-    const tools = {
++    const tools: Record<string, SculptorTool> = {
+         Clay: 'clay',
+         Brush: 'brush',
+         Inflate: 'inflate',
+@@ -161,7 +166,7 @@ function init() {
+         negative: sculptor.getNegative(),
+     };
+     const actions = { export: exportGLTF };
+-    const gui = renderer.inspector.createParameters('Sculptor');
++    const gui = (renderer.inspector as Inspector).createParameters('Sculptor');
+ 
+     gui.add(params, 'tool', tools).onChange(function (value) {
+         sculptor.setTool(value);
+@@ -227,12 +232,12 @@ function init() {
+         if (cursorGroup.visible && sculptor.isSculpting() === false) updateCursorPosition();
+     });
+ 
+-    function updateCursorScale(worldRadius) {
++    function updateCursorScale(worldRadius: number) {
+         cursorGroup.scale.setScalar(worldRadius);
+         cursorDot.scale.setScalar(cursorDotRadius / sculptor.getSize());
+     }
+ 
+-    function updateCursor(event) {
++    function updateCursor(event: PointerEvent) {
+         _pointer.set(event.clientX, event.clientY);
+ 
+         // Hide the cursor while orbiting.
 diff --git a/examples-testing/examples/webgpu_shadow_contact.ts b/examples-testing/examples/webgpu_shadow_contact.ts
 index ac3e4fbd8..642347107 100644
 --- a/examples-testing/examples/webgpu_shadow_contact.ts
@@ -25635,3 +25784,86 @@ index 2cd50ba4c..b97f3eee2 100644
  
              isDepthSupplied = false;
          });
+diff --git a/examples-testing/examples/webxr_xr_sculpt.ts b/examples-testing/examples/webxr_xr_sculpt.ts
+index 6921dd16b..01d4fbe47 100644
+--- a/examples-testing/examples/webxr_xr_sculpt.ts
++++ b/examples-testing/examples/webxr_xr_sculpt.ts
+@@ -2,15 +2,18 @@ import * as THREE from 'three';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { XRButton } from 'three/addons/webxr/XRButton.js';
+ import { XRControllerModelFactory } from 'three/addons/webxr/XRControllerModelFactory.js';
+-import { Sculptor } from 'three/addons/misc/Sculptor.js';
+-
+-let renderer, scene, camera, controls;
+-let controller1, controller2, controllerGrip1, controllerGrip2;
+-let sculptor, mesh;
+-let cursor1, cursor2;
+-let activeController = null;
+-
+-const tools = ['clay', 'brush', 'inflate', 'smooth', 'flatten', 'pinch', 'crease'];
++import { Sculptor, SculptorTool } from 'three/addons/misc/Sculptor.js';
++
++let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera, controls: OrbitControls;
++let controller1: THREE.XRTargetRaySpace,
++    controller2: THREE.XRTargetRaySpace,
++    controllerGrip1: THREE.XRGripSpace,
++    controllerGrip2: THREE.XRGripSpace;
++let sculptor: Sculptor, mesh: THREE.Mesh;
++let cursor1: THREE.Mesh, cursor2: THREE.Mesh;
++let activeController: THREE.XRTargetRaySpace | null = null;
++
++const tools: SculptorTool[] = ['clay', 'brush', 'inflate', 'smooth', 'flatten', 'pinch', 'crease'];
+ let toolIndex = 0;
+ const brushRadius = 0.06;
+ const strokeInterval = 1000 / 90;
+@@ -81,7 +84,7 @@ function init() {
+ 
+     const controllerModelFactory = new XRControllerModelFactory();
+ 
+-    function onSelectStart() {
++    function onSelectStart(this: THREE.XRTargetRaySpace) {
+         if (activeController !== null) return;
+ 
+         activeController = this;
+@@ -89,7 +92,7 @@ function init() {
+         sculptor.beginStroke();
+     }
+ 
+-    function onSelectEnd() {
++    function onSelectEnd(this: THREE.XRTargetRaySpace) {
+         if (activeController !== this) return;
+ 
+         activeController = null;
+@@ -102,12 +105,12 @@ function init() {
+         sculptor.setNegative(!sculptor.getNegative());
+     }
+ 
+-    function onConnected(event) {
++    function onConnected(this: THREE.XRTargetRaySpace, event: { data: XRInputSource }) {
+         this.userData.inputSource = event.data;
+         this.userData.thumbMoved = false;
+     }
+ 
+-    function onDisconnected() {
++    function onDisconnected(this: THREE.XRTargetRaySpace) {
+         this.userData.inputSource = null;
+         this.userData.thumbMoved = false;
+ 
+@@ -184,7 +187,7 @@ function onWindowResize() {
+     renderer.setSize(window.innerWidth, window.innerHeight);
+ }
+ 
+-function handleController(controller, cursor, time) {
++function handleController(controller: THREE.XRTargetRaySpace, cursor: THREE.Mesh, time: number) {
+     const inputSource = controller.userData.inputSource;
+ 
+     // Pause while tracking is lost; the controller retains its last pose.
+@@ -245,7 +248,7 @@ function handleController(controller, cursor, time) {
+     }
+ }
+ 
+-function animate(time) {
++function animate(time: number) {
+     handleController(controller1, cursor1, time);
+     handleController(controller2, cursor2, time);
+ 
