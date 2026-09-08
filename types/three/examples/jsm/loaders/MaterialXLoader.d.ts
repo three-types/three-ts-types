@@ -43,8 +43,6 @@ export interface MaterialXResult {
 export class MaterialXLoader extends Loader<MaterialXResult> {
     constructor(manager?: LoadingManager);
 
-    archiveDisposer: (() => void) | null;
-
     dispose(): this;
 
     load(
