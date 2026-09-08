@@ -157,6 +157,10 @@ export class LightProbeGrid extends Light {
      * then repeat with `pass: 1`, etc. Start each pass at index 0 to snapshot the
      * previous pass before updating its cells.
      *
+     * Shadow-casting instances of `SunLight` are temporarily replaced with
+     * equivalent directional lights, since their view-fitted shadow cascades
+     * cannot be frozen across probe renders.
+     *
      * @param {WebGPURenderer} renderer - The renderer.
      * @param {Scene} scene - The scene to render.
      * @param {Object} [options] - Bake options.
