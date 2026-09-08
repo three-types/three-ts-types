@@ -1,2 +1,0 @@
-declare const _default: "\n#ifdef USE_INSTANCING_MORPH\n\n\tfloat morphTargetInfluences[ MORPHTARGETS_COUNT ];\n\n\tfloat morphTargetBaseInfluence = texelFetch( morphTexture, ivec2( 0, gl_InstanceID ), 0 ).r;\n\n\tfor ( int i = 0; i < MORPHTARGETS_COUNT; i ++ ) {\n\n\t\tmorphTargetInfluences[i] =  texelFetch( morphTexture, ivec2( i + 1, gl_InstanceID ), 0 ).r;\n\n\t}\n#endif\n";
-export default _default;
