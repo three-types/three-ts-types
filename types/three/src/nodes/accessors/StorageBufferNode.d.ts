@@ -8,6 +8,8 @@ import StructTypeNode from "../core/StructTypeNode.js";
 import StorageArrayElementNode from "../utils/StorageArrayElementNode.js";
 import BufferNode from "./BufferNode.js";
 
+type StorageBufferNodeValue = StorageBufferAttribute | StorageInstancedBufferAttribute | BufferAttribute;
+
 interface StorageBufferNodeInterface<TNodeType> {
     readonly isStorageBufferNode: true;
 
@@ -29,13 +31,13 @@ interface StorageBufferNodeInterface<TNodeType> {
 
     toReadOnly(): this;
 
-    setAtmoic(value: boolean): this;
+    setAtomic(value: boolean): this;
 
     toAtomic(): this;
 }
 declare const StorageBufferNode: {
-    new<TNodeType>(
-        value: StorageBufferAttribute | StorageInstancedBufferAttribute,
+    new<TNodeType = unknown>(
+        value: StorageBufferNodeValue,
         bufferType?: string | Struct | null,
         bufferCount?: number,
     ): StorageBufferNode<TNodeType>;
@@ -43,7 +45,7 @@ declare const StorageBufferNode: {
 
 type StorageBufferNode<TNodeType> =
     & StorageBufferNodeInterface<TNodeType>
-    & BufferNode<TNodeType, StorageBufferAttribute | StorageInstancedBufferAttribute>;
+    & BufferNode<TNodeType, StorageBufferNodeValue>;
 
 export default StorageBufferNode;
 
@@ -66,15 +68,20 @@ type StorageNodeType =
 
 interface Storage {
     <const TNodeType extends StorageNodeType>(
-        value: StorageBufferAttribute | StorageInstancedBufferAttribute | BufferAttribute,
+        value: StorageBufferNodeValue,
         type: TNodeType,
-        count: number,
+        count?: number,
     ): StorageBufferNode<TNodeType>;
     (
-        value: StorageBufferAttribute | StorageInstancedBufferAttribute | BufferAttribute,
+        value: StorageBufferNodeValue,
         type: Struct,
-        count: number,
+        count?: number,
     ): StorageBufferNode<"struct">;
+    (
+        value: StorageBufferNodeValue,
+        type?: null,
+        count?: number,
+    ): StorageBufferNode<unknown>;
 }
 
 export const storage: Storage;
