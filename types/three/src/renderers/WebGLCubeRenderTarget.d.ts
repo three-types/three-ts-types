@@ -9,8 +9,6 @@ export class WebGLCubeRenderTarget extends WebGLRenderTarget {
 
     readonly isWebGLCubeRenderTarget: true;
 
-    readonly isCubeRenderTarget: true;
-
     textures: CubeTexture[];
 
     get texture(): CubeTexture;
