@@ -10,7 +10,7 @@ export interface MeshPhysicalMaterialProperties extends MeshStandardMaterialProp
      * counter-clockwise from the tangent. When `anisotropyMap` is present, this
      * property provides additional rotation to the vectors in the texture.
      *
-     * @default 1
+     * @default 0
      */
     anisotropyRotation: number;
     /**

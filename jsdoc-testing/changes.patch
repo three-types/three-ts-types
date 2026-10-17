@@ -3223,7 +3223,7 @@ index 113ff7df3..2b610bc4c 100644
 -export function setupWebGLXRFallback(renderer: WebGPURenderer, createFallbackRenderer: Function, onFallback?: Function): void;
 +export function setupWebGLXRFallback(renderer: WebGPURenderer, createFallbackRenderer: (renderer: WebGPURenderer) => WebGPURenderer, onFallback?: (fallbackRenderer: WebGPURenderer, renderer: WebGPURenderer) => Promise<void> | void): void;
 diff --git a/jsdoc-testing/jsdoc/src/animation/AnimationAction.d.ts b/jsdoc-testing/jsdoc/src/animation/AnimationAction.d.ts
-index 543005806..7849540e6 100644
+index 4c68696c3..39ded9e16 100644
 --- a/jsdoc-testing/jsdoc/src/animation/AnimationAction.d.ts
 +++ b/jsdoc-testing/jsdoc/src/animation/AnimationAction.d.ts
 @@ -1,3 +1,8 @@
@@ -3281,7 +3281,7 @@ index 543005806..7849540e6 100644
       * loop state).
       *
 -     * @type {number}
-      * @default Infinity
+      * @default 0
       */
      time: number;
 @@ -56,21 +41,17 @@ export class AnimationAction {
@@ -5400,7 +5400,7 @@ index 929bf5258..c4d22b7da 100644
  }
 -import { PerspectiveCamera } from './PerspectiveCamera.js';
 diff --git a/jsdoc-testing/jsdoc/src/extras/core/ShapePath.d.ts b/jsdoc-testing/jsdoc/src/extras/core/ShapePath.d.ts
-index 04032cbd6..56d13c92a 100644
+index fef0c558e..8f48716ce 100644
 --- a/jsdoc-testing/jsdoc/src/extras/core/ShapePath.d.ts
 +++ b/jsdoc-testing/jsdoc/src/extras/core/ShapePath.d.ts
 @@ -1,3 +1,8 @@
@@ -8129,7 +8129,7 @@ index e124b7403..c4885274d 100644
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface MeshBasicMaterial extends MeshBasicMaterialProperties {}
 diff --git a/jsdoc-testing/jsdoc/src/materials/MeshDepthMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/MeshDepthMaterial.d.ts
-index 0b95d4608..df76c01bb 100644
+index 7dd4292e2..ffa207c07 100644
 --- a/jsdoc-testing/jsdoc/src/materials/MeshDepthMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/MeshDepthMaterial.d.ts
 @@ -1,37 +1,14 @@
@@ -8181,7 +8181,7 @@ index 0b95d4608..df76c01bb 100644
       * map set, this value is not applied.
       *
 -     * @type {number}
-      * @default 0
+      * @default 1
       */
      displacementScale: number;
 @@ -90,14 +66,12 @@ export class MeshDepthMaterial extends Material {
@@ -8241,7 +8241,7 @@ index 0b95d4608..df76c01bb 100644
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface MeshDepthMaterial extends MeshDepthMaterialProperties {}
 diff --git a/jsdoc-testing/jsdoc/src/materials/MeshDistanceMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/MeshDistanceMaterial.d.ts
-index 459c2a606..c45bf3e61 100644
+index 37d37472e..e744437ce 100644
 --- a/jsdoc-testing/jsdoc/src/materials/MeshDistanceMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/MeshDistanceMaterial.d.ts
 @@ -1,34 +1,7 @@
@@ -8288,7 +8288,7 @@ index 459c2a606..c45bf3e61 100644
       * map set, this value is not applied.
       *
 -     * @type {number}
-      * @default 0
+      * @default 1
       */
      displacementScale: number;
 @@ -87,10 +59,42 @@ export class MeshDistanceMaterial extends Material {
@@ -8338,7 +8338,7 @@ index 459c2a606..c45bf3e61 100644
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface MeshDistanceMaterial extends MeshDistanceMaterialProperties {}
 diff --git a/jsdoc-testing/jsdoc/src/materials/MeshLambertMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/MeshLambertMaterial.d.ts
-index 375147a59..72461c386 100644
+index 7f4bb26fa..c7e9c4642 100644
 --- a/jsdoc-testing/jsdoc/src/materials/MeshLambertMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/MeshLambertMaterial.d.ts
 @@ -1,44 +1,14 @@
@@ -8454,7 +8454,7 @@ index 375147a59..72461c386 100644
       * map set, this value is not applied.
       *
 -     * @type {number}
-      * @default 0
+      * @default 1
       */
      displacementScale: number;
 @@ -202,7 +164,6 @@ export class MeshLambertMaterial extends Material {
@@ -8597,7 +8597,7 @@ index 375147a59..72461c386 100644
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface MeshLambertMaterial extends MeshLambertMaterialProperties {}
 diff --git a/jsdoc-testing/jsdoc/src/materials/MeshMatcapMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/MeshMatcapMaterial.d.ts
-index f345fb9f5..ec290b546 100644
+index c55f386c9..80dc2a4ea 100644
 --- a/jsdoc-testing/jsdoc/src/materials/MeshMatcapMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/MeshMatcapMaterial.d.ts
 @@ -1,42 +1,13 @@
@@ -8679,7 +8679,7 @@ index f345fb9f5..ec290b546 100644
       * map set, this value is not applied.
       *
 -     * @type {number}
-      * @default 0
+      * @default 1
       */
      displacementScale: number;
 @@ -146,7 +113,6 @@ export class MeshMatcapMaterial extends Material {
@@ -8761,7 +8761,7 @@ index f345fb9f5..ec290b546 100644
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface MeshMatcapMaterial extends MeshMatcapMaterialProperties {}
 diff --git a/jsdoc-testing/jsdoc/src/materials/MeshNormalMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/MeshNormalMaterial.d.ts
-index 794b28e73..3c8418294 100644
+index 03dc4b868..1e5507f45 100644
 --- a/jsdoc-testing/jsdoc/src/materials/MeshNormalMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/MeshNormalMaterial.d.ts
 @@ -1,29 +1,9 @@
@@ -8837,7 +8837,7 @@ index 794b28e73..3c8418294 100644
       * map set, this value is not applied.
       *
 -     * @type {number}
-      * @default 0
+      * @default 1
       */
      displacementScale: number;
 @@ -101,14 +76,12 @@ export class MeshNormalMaterial extends Material {
@@ -8904,7 +8904,7 @@ index 794b28e73..3c8418294 100644
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface MeshNormalMaterial extends MeshNormalMaterialProperties {}
 diff --git a/jsdoc-testing/jsdoc/src/materials/MeshPhongMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/MeshPhongMaterial.d.ts
-index 6fb55c994..aa891d3c3 100644
+index 43151a763..18f1aca1f 100644
 --- a/jsdoc-testing/jsdoc/src/materials/MeshPhongMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/MeshPhongMaterial.d.ts
 @@ -1,42 +1,14 @@
@@ -9033,7 +9033,7 @@ index 6fb55c994..aa891d3c3 100644
       * map set, this value is not applied.
       *
 -     * @type {number}
-      * @default 0
+      * @default 1
       */
      displacementScale: number;
 @@ -215,7 +176,6 @@ export class MeshPhongMaterial extends Material {
@@ -9174,7 +9174,7 @@ index 6fb55c994..aa891d3c3 100644
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface MeshPhongMaterial extends MeshPhongMaterialProperties {}
 diff --git a/jsdoc-testing/jsdoc/src/materials/MeshPhysicalMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/MeshPhysicalMaterial.d.ts
-index 77cff86de..5a0786511 100644
+index d66ccc5df..abb36caee 100644
 --- a/jsdoc-testing/jsdoc/src/materials/MeshPhysicalMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/MeshPhysicalMaterial.d.ts
 @@ -1,52 +1,15 @@
@@ -9234,7 +9234,7 @@ index 77cff86de..5a0786511 100644
       * property provides additional rotation to the vectors in the texture.
       *
 -     * @type {number}
-      * @default 1
+      * @default 0
       */
      anisotropyRotation: number;
 @@ -76,7 +39,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
@@ -9480,7 +9480,7 @@ index 77cff86de..5a0786511 100644
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface MeshPhysicalMaterial extends MeshPhysicalMaterialProperties {}
 diff --git a/jsdoc-testing/jsdoc/src/materials/MeshStandardMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/MeshStandardMaterial.d.ts
-index d95b258b5..0d09ec170 100644
+index 60c489a09..960ecfa34 100644
 --- a/jsdoc-testing/jsdoc/src/materials/MeshStandardMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/MeshStandardMaterial.d.ts
 @@ -1,64 +1,18 @@
@@ -9636,7 +9636,7 @@ index d95b258b5..0d09ec170 100644
       * map set, this value is not applied.
       *
 -     * @type {number}
-      * @default 0
+      * @default 1
       */
      displacementScale: number;
 @@ -241,7 +185,6 @@ export class MeshStandardMaterial extends Material {
@@ -9771,7 +9771,7 @@ index d95b258b5..0d09ec170 100644
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface MeshStandardMaterial extends MeshStandardMaterialProperties {}
 diff --git a/jsdoc-testing/jsdoc/src/materials/MeshToonMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/MeshToonMaterial.d.ts
-index 8777c4e00..65097898f 100644
+index 637f245b5..9175e102b 100644
 --- a/jsdoc-testing/jsdoc/src/materials/MeshToonMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/MeshToonMaterial.d.ts
 @@ -1,36 +1,13 @@
@@ -9878,7 +9878,7 @@ index 8777c4e00..65097898f 100644
       * map set, this value is not applied.
       *
 -     * @type {number}
-      * @default 0
+      * @default 1
       */
      displacementScale: number;
 @@ -206,7 +175,6 @@ export class MeshToonMaterial extends Material {
