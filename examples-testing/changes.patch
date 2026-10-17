@@ -1144,26 +1144,27 @@ index 4d1398eaa..e231be784 100644
      save(new Blob([buffer], { type: 'application/octet-stream' }), filename);
  }
 diff --git a/examples-testing/examples/misc_exporter_exr.ts b/examples-testing/examples/misc_exporter_exr.ts
-index 014ea58a0..643f63522 100644
+index 428d763ae..a5b1ab9f6 100644
 --- a/examples-testing/examples/misc_exporter_exr.ts
 +++ b/examples-testing/examples/misc_exporter_exr.ts
-@@ -5,7 +5,14 @@ import { EXRExporter, ZIP_COMPRESSION, ZIPS_COMPRESSION, NO_COMPRESSION } from '
+@@ -5,7 +5,15 @@ import { EXRExporter, ZIP_COMPRESSION, ZIPS_COMPRESSION, NO_COMPRESSION } from '
  import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
--let scene, camera, renderer, exporter, mesh, controls, renderTarget, dataTexture;
+-let scene, camera, renderer, exporter, mesh, controls, environment, renderTarget, dataTexture;
 +let scene: THREE.Scene,
 +    camera: THREE.PerspectiveCamera,
 +    renderer: THREE.WebGLRenderer,
 +    exporter: EXRExporter,
 +    mesh: THREE.Mesh,
 +    controls: OrbitControls,
++    environment: THREE.Texture,
 +    renderTarget: THREE.WebGLRenderTarget,
 +    dataTexture: THREE.DataTexture;
  
  const params = {
-     target: 'pmrem',
-@@ -148,7 +155,7 @@ async function exportFile() {
+     target: 'render-target',
+@@ -157,7 +165,7 @@ async function exportFile() {
      saveArrayBuffer(result, params.target + '.exr');
  }
  
@@ -1305,26 +1306,27 @@ index c2981aa33..4cbc0c74b 100644
      save(new Blob([buffer], { type: 'application/octet-stream' }), filename);
  }
 diff --git a/examples-testing/examples/misc_exporter_ktx2.ts b/examples-testing/examples/misc_exporter_ktx2.ts
-index c96889a24..1c8535e0e 100644
+index 75d5cc47d..96309bd46 100644
 --- a/examples-testing/examples/misc_exporter_ktx2.ts
 +++ b/examples-testing/examples/misc_exporter_ktx2.ts
-@@ -5,7 +5,14 @@ import { KTX2Exporter } from 'three/addons/exporters/KTX2Exporter.js';
+@@ -5,7 +5,15 @@ import { KTX2Exporter } from 'three/addons/exporters/KTX2Exporter.js';
  import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
--let scene, camera, renderer, exporter, mesh, controls, renderTarget, dataTexture;
+-let scene, camera, renderer, exporter, mesh, controls, environment, renderTarget, dataTexture;
 +let scene: THREE.Scene,
 +    camera: THREE.PerspectiveCamera,
 +    renderer: THREE.WebGLRenderer,
 +    exporter: KTX2Exporter,
 +    mesh: THREE.Mesh,
 +    controls: OrbitControls,
++    environment: THREE.Texture,
 +    renderTarget: THREE.WebGLRenderTarget,
 +    dataTexture: THREE.DataTexture;
  
  const params = {
-     target: 'pmrem',
-@@ -135,7 +142,7 @@ async function exportFile() {
+     target: 'render-target',
+@@ -145,7 +153,7 @@ async function exportFile() {
      saveArrayBuffer(result, params.target + '.ktx2');
  }
  
@@ -7475,7 +7477,7 @@ index 16dfb92e2..14f1b4850 100644
          model = object;
          model.position.copy(positions[assets.indexOf(asset)]);
 diff --git a/examples-testing/examples/webgl_loader_gltf.ts b/examples-testing/examples/webgl_loader_gltf.ts
-index e0cb68546..68c615001 100644
+index 42f3fc497..bcf5109f8 100644
 --- a/examples-testing/examples/webgl_loader_gltf.ts
 +++ b/examples-testing/examples/webgl_loader_gltf.ts
 @@ -5,8 +5,16 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -9040,29 +9042,35 @@ index c3f3f4f7d..4ae4cb959 100644
          roughness: params.roughness,
          envMapIntensity: 1.0,
 diff --git a/examples-testing/examples/webgl_materials_envmaps_fasthdr.ts b/examples-testing/examples/webgl_materials_envmaps_fasthdr.ts
-index f03862acf..181148ea8 100644
+index b25f3af78..05923192a 100644
 --- a/examples-testing/examples/webgl_materials_envmaps_fasthdr.ts
 +++ b/examples-testing/examples/webgl_materials_envmaps_fasthdr.ts
-@@ -13,8 +13,8 @@ const params = {
+@@ -13,13 +13,13 @@ const params = {
      backgroundBlurriness: 0.0,
  };
  
--let container, stats;
+-let stats;
 -let camera, scene, renderer, controls;
-+let container: HTMLDivElement, stats: Stats;
++let stats: Stats;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, controls: OrbitControls;
  
  init();
  
-@@ -96,7 +96,7 @@ function init() {
+ async function init() {
+-    const container = document.getElementById('container');
++    const container = document.getElementById('container')!;
  
-     const loader = new KTX2Loader().detectSupport(renderer);
+     camera = new THREE.PerspectiveCamera(params.fov, window.innerWidth / window.innerHeight, 0.1, 50);
+     camera.position.set(7, 0, 0);
+@@ -93,7 +93,7 @@ async function init() {
  
--    function loadTexture(url) {
-+    function loadTexture(url: string) {
-         loader.load(url, texture => {
-             texture.mapping = THREE.CubeUVReflectionMapping;
-             scene.environment = texture;
+     const loader = new KTX2Loader().setPath('textures/pmrem/').detectSupport(renderer);
+ 
+-    async function loadTexture(name) {
++    async function loadTexture(name: string) {
+         const texture = await loader.loadAsync(`${name}_2k.pmrem.ktx2`);
+ 
+         if (name !== params.image) {
 diff --git a/examples-testing/examples/webgl_materials_envmaps_groundprojected.ts b/examples-testing/examples/webgl_materials_envmaps_groundprojected.ts
 index 033b1dab3..9cfaf34a7 100644
 --- a/examples-testing/examples/webgl_materials_envmaps_groundprojected.ts
@@ -15780,7 +15788,7 @@ index 6fbdb55ae..fd5ec5705 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_custom_fog.ts b/examples-testing/examples/webgpu_custom_fog.ts
-index 840dce252..32711a295 100644
+index 840dce252..8474baef1 100644
 --- a/examples-testing/examples/webgpu_custom_fog.ts
 +++ b/examples-testing/examples/webgpu_custom_fog.ts
 @@ -7,9 +7,18 @@ import { SkyMesh } from 'three/addons/objects/SkyMesh.js';
@@ -15801,7 +15809,7 @@ index 840dce252..32711a295 100644
 +    sunLight: THREE.DirectionalLight,
 +    pmremGenerator: THREE.PMREMGenerator,
 +    envScene: THREE.Scene,
-+    envRenderTarget: THREE.RenderTarget;
++    envRenderTarget: THREE.CubeRenderTarget;
  
  const parameters = {
      elevation: 11, // sun height above the horizon, in degrees ( low = golden hour )
@@ -16275,7 +16283,7 @@ index f28157dbe..72a100fdc 100644
      gui.add(parameters, 'height', 60, 200, 1).onChange(generate);
      gui.add(parameters, 'width', 18, 60, 1).onChange(generate);
 diff --git a/examples-testing/examples/webgpu_generator_city.ts b/examples-testing/examples/webgpu_generator_city.ts
-index 198b036d2..49f553700 100644
+index 198b036d2..4eb6e070c 100644
 --- a/examples-testing/examples/webgpu_generator_city.ts
 +++ b/examples-testing/examples/webgpu_generator_city.ts
 @@ -9,10 +9,24 @@ import { CityGenerator, createBuildingMaterial, createRoadMaterial } from 'three
@@ -16301,7 +16309,7 @@ index 198b036d2..49f553700 100644
 +    sunLight: THREE.DirectionalLight,
 +    pmremGenerator: THREE.PMREMGenerator,
 +    envScene: THREE.Scene,
-+    envRenderTarget: THREE.RenderTarget,
++    envRenderTarget: THREE.CubeRenderTarget,
 +    cityBounds: THREE.Box3;
 +let probes: LightProbeGrid, probesHelper: LightProbeGridHelper;
  let bakeIndex = 0,
@@ -17679,7 +17687,7 @@ index 1bd916fee..f54b38fba 100644
      const param = {
          'line type': 0,
 diff --git a/examples-testing/examples/webgpu_loader_gltf.ts b/examples-testing/examples/webgpu_loader_gltf.ts
-index 6380bd903..355b05345 100644
+index 1e71779d6..83fee4dfe 100644
 --- a/examples-testing/examples/webgpu_loader_gltf.ts
 +++ b/examples-testing/examples/webgpu_loader_gltf.ts
 @@ -7,8 +7,16 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
