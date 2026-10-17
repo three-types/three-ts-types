@@ -31,6 +31,7 @@ const files = [
     'examples/jsm/misc/Sculptor',
     'examples/jsm/misc/TileCreasedNormalsPlugin',
     'examples/jsm/tsl/display/ImportanceSampledEnvironment',
+    'examples/jsm/tsl/display/lensDirt',
     'examples/jsm/tsl/display/OITPassNode',
     'examples/jsm/tsl/display/SSAONode',
     'examples/jsm/tsl/display/SSRNode',
