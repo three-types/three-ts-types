@@ -1,7 +1,6 @@
 import Node from "../core/Node.js";
-import TempNode from "../core/TempNode.js";
 
-declare class BumpMapNode extends TempNode {
+declare class BumpMapNode extends Node {
     textureNode: Node;
     scaleNode: Node | null;
 

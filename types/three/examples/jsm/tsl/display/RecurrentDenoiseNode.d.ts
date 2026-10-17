@@ -1,4 +1,4 @@
-import { Camera, Node, RenderTarget, TempNode, TextureNode, UniformNode } from "three/webgpu";
+import { Camera, Node, RenderTarget, TextureNode, UniformNode } from "three/webgpu";
 
 export type DenoiseMode = "diffuse" | "specular";
 
@@ -21,10 +21,10 @@ export interface RecurrentDenoiseNodeOptions {
  * The denoising kernel is selected at construction time via `mode`:
  * `'diffuse'` (SSGI) or `'specular'` (SSR). The kernel uses a fixed 8-sample Vogel disk.
  *
- * @augments TempNode
+ * @augments Node
  * @three_import import { recurrentDenoise } from 'three/addons/tsl/display/RecurrentDenoiseNode.js';
  */
-declare class RecurrentDenoiseNode extends TempNode<"vec4"> {
+declare class RecurrentDenoiseNode extends Node<"vec4"> {
     readonly isRecurrentDenoiseNode: boolean;
     camera: Camera;
 
