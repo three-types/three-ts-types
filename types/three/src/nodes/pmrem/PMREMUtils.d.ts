@@ -1,10 +1,6 @@
 import Node from "../core/Node.js";
 
-export const roughnessToMip: (
-    roughness: Node | number,
-    maxLod: Node | number,
-    size: Node | number,
-) => Node<"float">;
+export const roughnessToMip: (roughness: Node | number, maxLod: Node | number) => Node<"float">;
 
 export const sphericalGaussianBlur: (params: {
     SAMPLES: Node | number;
