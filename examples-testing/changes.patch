@@ -18560,6 +18560,109 @@ index b72e65a07..898c39fa0 100644
 +        loadFile(event.dataTransfer!.files[0]);
      });
  }
+diff --git a/examples-testing/examples/webgpu_materials_node_proxy.ts b/examples-testing/examples/webgpu_materials_node_proxy.ts
+index 964a75d5b..7d119e9ca 100644
+--- a/examples-testing/examples/webgpu_materials_node_proxy.ts
++++ b/examples-testing/examples/webgpu_materials_node_proxy.ts
+@@ -6,15 +6,20 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+ 
+-let camera, scene, renderer, controls, geometry, stats;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGPURenderer,
++    controls: OrbitControls,
++    geometry: THREE.IcosahedronGeometry,
++    stats: HTMLElement;
+ 
+ let compiling = false;
+ let builds = 0;
+ 
+ const amount = 40;
+-const meshes = [];
+-const colors = [];
+-const phases = [];
++const meshes: THREE.Mesh<THREE.IcosahedronGeometry>[] = [];
++const colors: THREE.Color[] = [];
++const phases: number[] = [];
+ 
+ const params = {
+     material: 'Proxy Node Material',
+@@ -24,7 +29,7 @@ const params = {
+ init();
+ 
+ async function init() {
+-    stats = document.getElementById('stats');
++    stats = document.getElementById('stats')!;
+ 
+     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 200);
+     camera.position.set(0, 30, 42);
+@@ -64,7 +69,7 @@ async function init() {
+     // count the shader builds of the spheres
+ 
+     renderer.debug.onNodeBuilderCreated = (builder, renderObject) => {
+-        if (renderObject.geometry === geometry) builds++;
++        if ((renderObject as { geometry: THREE.BufferGeometry }).geometry === geometry) builds++;
+     };
+ 
+     await renderer.init();
+@@ -80,7 +85,7 @@ async function init() {
+ 
+     //
+ 
+-    const gui = renderer.inspector.createParameters('Settings');
++    const gui = (renderer.inspector as Inspector).createParameters('Settings');
+ 
+     gui.add(params, 'material', ['Proxy Node Material', 'Node Material per Mesh']).onChange(setMaterials);
+     gui.add(params, 'randomize').name('randomize colors');
+@@ -90,7 +95,7 @@ async function init() {
+     window.addEventListener('resize', onWindowResize);
+ }
+ 
+-function createNodes(colorNode, phaseNode) {
++function createNodes(colorNode: THREE.Node<'color'>, phaseNode: THREE.Node<'float'>) {
+     // the same node graph is used by both approaches
+ 
+     const wave = sin(time.mul(2).add(phaseNode));
+@@ -108,12 +113,13 @@ async function setMaterials() {
+     compiling = true;
+     stats.textContent = 'Compiling...';
+ 
+-    const disposed = new Set();
++    const disposed = new Set<THREE.Material>();
+ 
+     for (const mesh of meshes) {
+-        if (mesh.material.isProxyNodeMaterial) disposed.add(mesh.material.nodeMaterial);
++        if ((mesh.material as THREE.ProxyNodeMaterial).isProxyNodeMaterial)
++            disposed.add((mesh.material as THREE.ProxyNodeMaterial).nodeMaterial);
+ 
+-        disposed.add(mesh.material);
++        disposed.add(mesh.material as THREE.Material);
+     }
+ 
+     if (params.material === 'Node Material per Mesh') {
+@@ -128,13 +134,18 @@ async function setMaterials() {
+         // one node material defines the shader, each proxy only stores its values
+ 
+         const nodeMaterial = new THREE.MeshStandardNodeMaterial(
+-            createNodes(materialReference('myColor'), materialReference('userData.phase')),
++            createNodes(
++                materialReference('myColor') as unknown as THREE.Node<'color'>,
++                materialReference('userData.phase') as unknown as THREE.Node<'float'>,
++            ),
+         );
+ 
+         for (let i = 0; i < meshes.length; i++) {
+             // values read by materialReference(), userData is independent for each proxy
+ 
+-            const material = new THREE.ProxyNodeMaterial(nodeMaterial);
++            const material = new THREE.ProxyNodeMaterial(nodeMaterial) as THREE.ProxyNodeMaterial & {
++                myColor: THREE.Color;
++            };
+             material.myColor = colors[i];
+             material.userData.phase = phases[i];
+ 
 diff --git a/examples-testing/examples/webgpu_materials_retroreflection.ts b/examples-testing/examples/webgpu_materials_retroreflection.ts
 index b7888635e..5b54c99e8 100644
 --- a/examples-testing/examples/webgpu_materials_retroreflection.ts

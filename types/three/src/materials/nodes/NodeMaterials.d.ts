@@ -13,6 +13,7 @@ export { default as MeshStandardNodeMaterial, MeshStandardNodeMaterialParameters
 export { default as MeshToonNodeMaterial, MeshToonNodeMaterialParameters } from "./MeshToonNodeMaterial.js";
 export { default as NodeMaterial, NodeMaterialParameters } from "./NodeMaterial.js";
 export { default as PointsNodeMaterial, PointsNodeMaterialParameters } from "./PointsNodeMaterial.js";
+export { default as ProxyNodeMaterial } from "./ProxyNodeMaterial.js";
 export { default as ShadowNodeMaterial, ShadowNodeMaterialParameters } from "./ShadowNodeMaterial.js";
 export { default as SpriteNodeMaterial, SpriteNodeMaterialParameters } from "./SpriteNodeMaterial.js";
 export { default as VolumeNodeMaterial, VolumeNodeMaterialParameters } from "./VolumeNodeMaterial.js";
