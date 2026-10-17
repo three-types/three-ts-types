@@ -14032,7 +14032,7 @@ index 9aa07b98f..dfe98826a 100644
      renderer.render(scene, camera);
  }
 diff --git a/examples-testing/examples/webgl_volume_instancing.ts b/examples-testing/examples/webgl_volume_instancing.ts
-index 7045732d6..3a6145920 100644
+index 00d9292c0..4d80337bf 100644
 --- a/examples-testing/examples/webgl_volume_instancing.ts
 +++ b/examples-testing/examples/webgl_volume_instancing.ts
 @@ -2,7 +2,11 @@ import * as THREE from 'three';
@@ -14048,20 +14048,7 @@ index 7045732d6..3a6145920 100644
  
  init();
  
-@@ -165,9 +169,9 @@ function init() {
- 				`;
- 
-     const loader = new VOXLoader();
--    loader.load('models/vox/menger.vox', function (chunks) {
--        for (let i = 0; i < chunks.length; i++) {
--            const chunk = chunks[i];
-+    loader.load('models/vox/menger.vox', function (result) {
-+        for (let i = 0; i < result.chunks.length; i++) {
-+            const chunk = result.chunks[i];
- 
-             const geometry = new THREE.BoxGeometry(1, 1, 1);
-             const material = new THREE.RawShaderMaterial({
-@@ -183,7 +187,7 @@ function init() {
+@@ -185,7 +189,7 @@ function init() {
  
              const mesh = new THREE.InstancedMesh(geometry, material, 50000);
              mesh.onBeforeRender = function () {
