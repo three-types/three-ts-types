@@ -40,6 +40,7 @@ export interface TextureParameters {
     flipY?: boolean | undefined;
 
     generateMipmaps?: boolean | undefined;
+    mipmapsAutoUpdate?: boolean | undefined;
     // premultiplyAlpha?: boolean | undefined;
     // unpackAlignment?: number | undefined;
 }
@@ -74,6 +75,7 @@ export interface TextureJSON {
     flipY: boolean;
 
     generateMipmaps: boolean;
+    mipmapsAutoUpdate: boolean;
     premultiplyAlpha: boolean;
     unpackAlignment: number;
 
@@ -374,6 +376,14 @@ export class Texture<TImage = unknown, TEventMap extends TextureEventMap = Textu
      * @defaultValue true
      */
     generateMipmaps: boolean;
+
+    /**
+     * Whether the renderer regenerates the mipmaps automatically whenever the texture is uploaded, rendered to or
+     * copied into. Set this to `false` to pause the regeneration and write the mip levels yourself. Requires
+     * {@link Texture#generateMipmaps}.
+     * @defaultValue true
+     */
+    mipmapsAutoUpdate: boolean;
 
     /**
      * If set to `true`, the alpha channel, if present, is multiplied into the color channels when the texture is uploaded to the GPU.
