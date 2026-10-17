@@ -90,11 +90,10 @@ while :; do
         log "Up to date with three.js dev."
         break
     fi
-    if ((processed >= MAX_COMMITS || $(date +%s) >= DEADLINE)); then
-        log "Commit or time budget reached, stopping before ${sha:0:10}."
+    if (($(date +%s) >= DEADLINE)); then
+        log "Time budget reached, stopping before ${sha:0:10}."
         break
     fi
-    processed=$((processed + 1))
 
     short=${sha:0:10}
     subject=$(git -C three.js log -1 --format=%s "$sha")
@@ -104,6 +103,13 @@ while :; do
         mark_triaged "$sha"
         continue
     fi
+
+    # Path skips are free, so only Claude sessions count toward MAX_COMMITS.
+    if ((processed >= MAX_COMMITS)); then
+        log "Session budget reached, stopping before $short."
+        break
+    fi
+    processed=$((processed + 1))
 
     log "Porting $short: $subject"
     branch="three-sync/$short"
@@ -124,7 +130,8 @@ while :; do
     result_line=$(jq -r '.result // empty' "$result_file" 2>/dev/null | grep -E '^RESULT: ' | tail -n 1 || true)
 
     if [ "$status" -ne 0 ] || [ -z "$result_line" ]; then
-        if grep -qiE 'usage limit|rate limit' "$result_file" 2>/dev/null; then
+        # e.g. "You've hit your session limit" or "You've hit your Opus limit".
+        if grep -qiE "usage limit|rate limit|hit your [a-z ]*limit" "$result_file" 2>/dev/null; then
             log "Claude usage limit reached at $short, the next run will retry."
             exit 0
         fi
