@@ -15,7 +15,9 @@ The driver has already created the commit "Update three.js", which moves the sub
 - `git -C three.js log -1 {{TARGET}}`
 - `git -C three.js diff {{BASE}} {{TARGET}} -- src examples/jsm examples/files.json 'examples/*.html'`
 
-Then follow the existing workflow. The scripts commit for you; run each from its own directory:
+Next, from the repository root, run `bash .github/sync-three/verify.sh`. If it passes and the range has no public API change, nothing needs regenerating: finish with `RESULT: NO_CHANGES` without running the steps below.
+
+Otherwise, follow the existing workflow. The scripts commit for you; run each from its own directory:
 
 1. `cd jsdoc-testing && sh prepare-jsdoc.sh` commits the freshly generated `jsdoc/` folder ("Add jsdoc") and applies `changes.patch` with `--3way`. Resolve any conflicts in `jsdoc/`, and fix the generated declarations for anything JSDoc can't express correctly, in the same style as the existing patch. Then run `sh update-patch.sh` ("Update patch and delete jsdoc") and `sh update-declarations.sh` ("Update declarations").
 2. Update the hand-written declarations in `types/three/` for any API change in the range: added, removed or renamed classes, members, parameters, constructor options, exports, TSL functions and so on. Match the style of neighboring declarations. Ignore purely internal changes (private fields, implementation details, renderer internals that aren't exposed).

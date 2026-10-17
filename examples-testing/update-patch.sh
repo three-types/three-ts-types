@@ -1,5 +1,5 @@
 pnpm run format
-git diff > ../changes.patch
+git diff --abbrev=9 HEAD > ../changes.patch
 mv ../changes.patch .
 rm -rf examples
 git add -A
