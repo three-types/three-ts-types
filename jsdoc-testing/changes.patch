@@ -2904,6 +2904,26 @@ index b9aceff9b..79efd30e3 100644
 +export default SSRNode;
 +
 +export function ssr(colorNode: Node<'vec4'>, depthNode: Node<'float'> | Node<'vec4'>, normalNode: Node<'vec3'>, options?: SSRNodeOptions): SSRNode;
+diff --git a/jsdoc-testing/jsdoc/examples/jsm/tsl/display/lensDirt.d.ts b/jsdoc-testing/jsdoc/examples/jsm/tsl/display/lensDirt.d.ts
+index a697e603d..b4d90ca4e 100644
+--- a/jsdoc-testing/jsdoc/examples/jsm/tsl/display/lensDirt.d.ts
++++ b/jsdoc-testing/jsdoc/examples/jsm/tsl/display/lensDirt.d.ts
+@@ -1,3 +1,5 @@
++import { Node, TextureNode } from 'three/webgpu';
++
+ /**
+  * Applies a lens dirt effect. The lens dirt texture is revealed wherever the
+  * scene's luminance is bright. The input is typically a blurred luminance of
+@@ -11,4 +13,8 @@
+  * @param {Node<float>} [intensity=float(1)] - Defines the intensity of the lens dirt.
+  * @return {Node<vec4>} The lens dirt.
+  */
+-export const lensDirt: () => void;
++export const lensDirt: (
++    textureNode: Node<'vec4'>,
++    dirtTextureNode: TextureNode,
++    intensity?: Node<'float'> | number,
++) => Node<'vec4'>;
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/tsl/lighting/ClusteredLightsNode.d.ts b/jsdoc-testing/jsdoc/examples/jsm/tsl/lighting/ClusteredLightsNode.d.ts
 index 7f0ab02db..1257d8f69 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/tsl/lighting/ClusteredLightsNode.d.ts
