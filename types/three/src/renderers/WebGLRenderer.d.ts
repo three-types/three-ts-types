@@ -3,6 +3,7 @@ import { TextureDataType, ToneMapping, WebGLCoordinateSystem } from "../constant
 import { TypedArray } from "../core/BufferAttribute.js";
 import { BufferGeometry, GeometryGroup } from "../core/BufferGeometry.js";
 import { Object3D } from "../core/Object3D.js";
+import { RenderTarget } from "../core/RenderTarget.js";
 import { Material } from "../materials/Material.js";
 import { Box2 } from "../math/Box2.js";
 import { Box3 } from "../math/Box3.js";
@@ -400,18 +401,18 @@ export class WebGLRenderer {
     /**
      * Sets the active render target.
      *
-     * @param renderTarget The {@link WebGLRenderTarget renderTarget} that needs to be activated. When `null` is given, the canvas is set as the active render target instead.
+     * @param renderTarget The {@link RenderTarget renderTarget} that needs to be activated. When `null` is given, the canvas is set as the active render target instead.
      * @param activeCubeFace Specifies the active cube side (PX 0, NX 1, PY 2, NY 3, PZ 4, NZ 5) of {@link WebGLCubeRenderTarget}.
      * @param activeMipmapLevel Specifies the active mipmap level.
      */
     setRenderTarget(
-        renderTarget: WebGLRenderTarget | WebGLRenderTarget<Texture[]> | null,
+        renderTarget: RenderTarget | RenderTarget<Texture[]> | null,
         activeCubeFace?: number,
         activeMipmapLevel?: number,
     ): void;
 
     readRenderTargetPixels(
-        renderTarget: WebGLRenderTarget | WebGLRenderTarget<Texture[]>,
+        renderTarget: RenderTarget | RenderTarget<Texture[]>,
         x: number,
         y: number,
         width: number,
@@ -422,7 +423,7 @@ export class WebGLRenderer {
     ): void;
 
     readRenderTargetPixelsAsync(
-        renderTarget: WebGLRenderTarget | WebGLRenderTarget<Texture[]>,
+        renderTarget: RenderTarget | RenderTarget<Texture[]>,
         x: number,
         y: number,
         width: number,
