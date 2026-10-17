@@ -24004,6 +24004,70 @@ index e57c66eeb..4ca0fc90d 100644
  
      gui.add(cellSizeUniform, 'value', 6, 50, 1).name('Cell Size');
      gui.add(cellOffsetUniform, 'value', 0, 1, 0.1).name('Cell Offset');
+diff --git a/examples-testing/examples/webgpu_tsl_occlusion_dither.ts b/examples-testing/examples/webgpu_tsl_occlusion_dither.ts
+index c56ba9ed8..eac0d3c6a 100644
+--- a/examples-testing/examples/webgpu_tsl_occlusion_dither.ts
++++ b/examples-testing/examples/webgpu_tsl_occlusion_dither.ts
+@@ -9,8 +9,8 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+ 
+-let camera, scene, renderer, controls;
+-let model, mixer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, controls: OrbitControls;
++let model: THREE.Group, mixer: THREE.AnimationMixer;
+ 
+ const timer = new THREE.Timer();
+ timer.connect(document);
+@@ -98,7 +98,15 @@ function init() {
+ 
+     // walls
+ 
+-    function addWall(x, z, width, height, depth, rotation, material) {
++    function addWall(
++        x: number,
++        z: number,
++        width: number,
++        height: number,
++        depth: number,
++        rotation: number,
++        material: THREE.MeshToonNodeMaterial,
++    ) {
+         const wall = new THREE.Mesh(new RoundedBoxGeometry(width, height, depth, 3, 0.12), material);
+         wall.position.set(x, height / 2, z);
+         wall.rotation.y = rotation;
+@@ -144,16 +152,19 @@ function init() {
+     new GLTFLoader().load('models/gltf/Xbot.glb', gltf => {
+         model = gltf.scene;
+         model.traverse(child => {
+-            if (child.isMesh) {
++            if ((child as THREE.Mesh).isMesh) {
+                 child.castShadow = true;
+-                child.material = new THREE.MeshToonNodeMaterial({ color: characterColors[child.name], gradientMap });
++                (child as THREE.Mesh).material = new THREE.MeshToonNodeMaterial({
++                    color: characterColors[child.name as keyof typeof characterColors],
++                    gradientMap,
++                });
+             }
+         });
+ 
+         scene.add(model);
+ 
+         mixer = new THREE.AnimationMixer(model);
+-        mixer.clipAction(THREE.AnimationClip.findByName(gltf.animations, 'walk')).play();
++        mixer.clipAction(THREE.AnimationClip.findByName(gltf.animations, 'walk')!).play();
+     });
+ 
+     // renderer
+@@ -182,7 +193,7 @@ function init() {
+ 
+     // debug
+ 
+-    const gui = renderer.inspector.createParameters('Parameters');
++    const gui = (renderer.inspector as Inspector).createParameters('Parameters');
+     gui.add(radius, 'value', 0.5, 3, 0.01).name('radius');
+     gui.add(stopDistance, 'value', 0, 5, 0.01).name('stop distance');
+     gui.add(ditherScale, 'value', 1, 8, 1).name('dither scale');
 diff --git a/examples-testing/examples/webgpu_tsl_procedural_terrain.ts b/examples-testing/examples/webgpu_tsl_procedural_terrain.ts
 index 5630137b8..ebffc04e0 100644
 --- a/examples-testing/examples/webgpu_tsl_procedural_terrain.ts
