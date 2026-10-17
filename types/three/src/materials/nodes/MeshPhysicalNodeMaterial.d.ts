@@ -28,6 +28,17 @@ export interface MeshPhysicalNodeMaterialNodeProperties extends MeshStandardNode
      */
     clearcoatRoughnessNode: Node | null;
     /**
+     * The diffuse roughness of physical materials is by default inferred from the
+     * `diffuseRoughness` and `diffuseRoughnessMap` properties. This node property allows to overwrite the
+     * default and define the diffuse roughness with a node instead.
+     *
+     * If you don't want to overwrite the diffuse roughness but modify the existing
+     * value instead, use {@link materialDiffuseRoughness}.
+     *
+     * @default null
+     */
+    diffuseRoughnessNode: Node | null;
+    /**
      * The clearcoat normal of physical materials is by default inferred from the `clearcoatNormalMap`
      * property. This node property allows to overwrite the default
      * and define the clearcoat normal with a node instead.
@@ -230,6 +241,12 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
      * @default true
      */
     get useClearcoat(): boolean;
+    /**
+     * Whether the lighting model should use EON rough diffuse reflection or not.
+     *
+     * @default false
+     */
+    get useDiffuseRoughness(): boolean;
     /**
      * Whether the lighting model should use iridescence or not.
      *

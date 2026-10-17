@@ -7175,7 +7175,7 @@ index 3cb1a34d8..63489ffa1 100644
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface LineDashedMaterial extends LineDashedMaterialProperties {}
 diff --git a/jsdoc-testing/jsdoc/src/materials/Material.d.ts b/jsdoc-testing/jsdoc/src/materials/Material.d.ts
-index a559b6e84..6101dec39 100644
+index a559b6e84..e1d0cb977 100644
 --- a/jsdoc-testing/jsdoc/src/materials/Material.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/Material.d.ts
 @@ -1,41 +1,36 @@
@@ -7569,7 +7569,7 @@ index a559b6e84..6101dec39 100644
       * @default true
       */
      visible: boolean;
-@@ -381,36 +336,230 @@ export class Material extends EventDispatcher {
+@@ -381,36 +336,233 @@ export class Material extends EventDispatcher {
       * It is ignored when rendering to a render target or using post processing or when using
       * `WebGPURenderer`. In all these cases, all materials are honored by tone mapping.
       *
@@ -7634,6 +7634,9 @@ index a559b6e84..6101dec39 100644
 +    clearcoatRoughnessMap?: string;
 +    clearcoatNormalMap?: string;
 +    clearcoatNormalScale?: Vector2Tuple;
++
++    diffuseRoughness?: number;
++    diffuseRoughnessMap?: string;
 +
 +    dispersion?: number;
 +
@@ -7815,7 +7818,7 @@ index a559b6e84..6101dec39 100644
      /**
       * An optional callback that is executed immediately before the material is used to render a 3D object.
       *
-@@ -423,7 +572,14 @@ export class Material extends EventDispatcher {
+@@ -423,7 +575,14 @@ export class Material extends EventDispatcher {
       * @param {Object3D} object - The 3D object.
       * @param {Object} group - The geometry group data.
       */
@@ -7831,7 +7834,7 @@ index a559b6e84..6101dec39 100644
      /**
       * An optional callback that is executed immediately before the shader
       * program is compiled. This function is called with the shader source code
-@@ -436,7 +592,7 @@ export class Material extends EventDispatcher {
+@@ -436,7 +595,7 @@ export class Material extends EventDispatcher {
       * @param {{vertexShader:string,fragmentShader:string,uniforms:Object}} shaderobject - The object holds the uniforms and the vertex and fragment shader source.
       * @param {WebGLRenderer} renderer - A reference to the renderer.
       */
@@ -7840,7 +7843,7 @@ index a559b6e84..6101dec39 100644
      /**
       * In case {@link Material#onBeforeCompile} is used, this callback can be used to identify
       * values of settings used in `onBeforeCompile()`, so three.js can reuse a cached
-@@ -454,7 +610,7 @@ export class Material extends EventDispatcher {
+@@ -454,7 +613,7 @@ export class Material extends EventDispatcher {
       *
       * @param {Object} [values] - The material values to set.
       */
@@ -7849,7 +7852,7 @@ index a559b6e84..6101dec39 100644
      /**
       * Serializes the material into JSON.
       *
-@@ -462,7 +618,7 @@ export class Material extends EventDispatcher {
+@@ -462,7 +621,7 @@ export class Material extends EventDispatcher {
       * @return {Object} A JSON object representing the serialized material.
       * @see {@link ObjectLoader#parse}
       */
@@ -7858,7 +7861,7 @@ index a559b6e84..6101dec39 100644
      /**
       * Deserializes the material from the given JSON.
       *
-@@ -470,22 +626,20 @@ export class Material extends EventDispatcher {
+@@ -470,22 +629,20 @@ export class Material extends EventDispatcher {
       * @param {Object<string,Texture>} textures - A dictionary holding textures referenced by the material.
       * @return {Material} A reference to this material.
       */
@@ -7884,7 +7887,7 @@ index a559b6e84..6101dec39 100644
      /**
       * Frees the GPU-related resources allocated by this instance. Call this
       * method whenever this instance is no longer used in your app.
-@@ -497,12 +651,11 @@ export class Material extends EventDispatcher {
+@@ -497,12 +654,11 @@ export class Material extends EventDispatcher {
       * Setting this property to `true` indicates the engine the material
       * needs to be recompiled.
       *
@@ -9158,10 +9161,10 @@ index 6fb55c994..aa891d3c3 100644
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface MeshPhongMaterial extends MeshPhongMaterialProperties {}
 diff --git a/jsdoc-testing/jsdoc/src/materials/MeshPhysicalMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/MeshPhysicalMaterial.d.ts
-index 285e8a2bb..92612613f 100644
+index 77cff86de..5a0786511 100644
 --- a/jsdoc-testing/jsdoc/src/materials/MeshPhysicalMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/MeshPhysicalMaterial.d.ts
-@@ -1,50 +1,18 @@
+@@ -1,52 +1,15 @@
 -/**
 - * An extension of the {@link MeshStandardMaterial}, providing more advanced
 - * physically-based rendering properties:
@@ -9171,6 +9174,8 @@ index 285e8a2bb..92612613f 100644
 - * - Clearcoat: Some materials — like car paints, carbon fiber, and wet surfaces — require
 - * a clear, reflective layer on top of another layer that may be irregular or rough.
 - * Clearcoat approximates this effect, without the need for a separate transparent surface.
+- * - Diffuse roughness: Produces the flatter appearance and enhanced backscattering of
+- * rough diffuse surfaces such as clay, concrete, and unpolished materials.
 - * - Iridescence: Allows to render the effect where hue varies  depending on the viewing
 - * angle and illumination angle. This can be seen on soap bubbles, oil films, or on the
 - * wings of many insects.
@@ -9203,14 +9208,11 @@ index 285e8a2bb..92612613f 100644
 -        STANDARD: string;
 -        PHYSICAL: string;
 -    };
-+import {
-+    MeshStandardMaterial,
-+    MeshStandardMaterialProperties,
-+} from './MeshStandardMaterial.js';
-+import { Vector2 } from '../math/Vector2.js';
-+import { Color } from '../math/Color.js';
++import { Color } from "../math/Color.js";
++import { Vector2 } from "../math/Vector2.js";
 +import { Texture } from "../textures/Texture.js";
-+import { MapColorPropertiesToColorRepresentations } from './Material.js';
++import { MapColorPropertiesToColorRepresentations } from "./Material.js";
++import { MeshStandardMaterial, MeshStandardMaterialProperties } from "./MeshStandardMaterial.js";
 +
 +export interface MeshPhysicalMaterialProperties extends MeshStandardMaterialProperties {
      /**
@@ -9222,7 +9224,7 @@ index 285e8a2bb..92612613f 100644
       * @default 1
       */
      anisotropyRotation: number;
-@@ -74,7 +42,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -76,7 +39,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
      /**
       * Roughness of the clear coat layer, from `0.0` to `1.0`.
       *
@@ -9230,7 +9232,7 @@ index 285e8a2bb..92612613f 100644
       * @default 0
       */
      clearcoatRoughness: number;
-@@ -93,7 +60,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -95,7 +57,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * How much `clearcoatNormalMap` affects the clear coat layer, from
       * `(0,0)` to `(1,1)`.
       *
@@ -9238,7 +9240,7 @@ index 285e8a2bb..92612613f 100644
       * @default (1,1)
       */
      clearcoatNormalScale: Vector2;
-@@ -110,10 +76,21 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -123,10 +84,21 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
      /**
       * Index-of-refraction for non-metallic materials, from `1.0` to `2.333`.
       *
@@ -9261,7 +9263,7 @@ index 285e8a2bb..92612613f 100644
      /**
       * The red channel of this texture is multiplied against `iridescence`, for per-pixel
       * control over iridescence.
-@@ -129,7 +106,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -142,7 +114,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * Strength of the iridescence RGB color shift effect, represented by an index-of-refraction.
       * Between `1.0` to `2.333`.
       *
@@ -9269,7 +9271,7 @@ index 285e8a2bb..92612613f 100644
       * @default 1.3
       */
      iridescenceIOR: number;
-@@ -137,10 +113,9 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -150,10 +121,9 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       *Array of exactly 2 elements, specifying minimum and maximum thickness of the iridescence layer.
       Thickness of iridescence layer has an equivalent effect of the one `thickness` has on `ior`.
       *
@@ -9281,7 +9283,7 @@ index 285e8a2bb..92612613f 100644
      /**
       * A texture that defines the thickness of the iridescence layer, stored in the green channel.
       * Minimum and maximum values of thickness are defined by `iridescenceThicknessRange` array:
-@@ -158,7 +133,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -171,7 +141,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
      /**
       * The sheen tint.
       *
@@ -9289,7 +9291,7 @@ index 285e8a2bb..92612613f 100644
       * @default (0,0,0)
       */
      sheenColor: Color;
-@@ -177,7 +151,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -190,7 +159,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
      /**
       * Roughness of the sheen layer, from `0.0` to `1.0`.
       *
@@ -9297,7 +9299,7 @@ index 285e8a2bb..92612613f 100644
       * @default 1
       */
      sheenRoughness: number;
-@@ -208,7 +181,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -221,7 +189,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * coordinate space of the mesh. If the value is `0` the material is
       * thin-walled. Otherwise the material is a volume boundary.
       *
@@ -9305,7 +9307,7 @@ index 285e8a2bb..92612613f 100644
       * @default 0
       */
      thickness: number;
-@@ -228,7 +200,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -241,7 +208,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * the medium before interacting with a particle. The value is given in world
       * space units, and must be greater than zero.
       *
@@ -9313,7 +9315,7 @@ index 285e8a2bb..92612613f 100644
       * @default Infinity
       */
      attenuationDistance: number;
-@@ -236,7 +207,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -249,7 +215,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * The color that white light turns into due to absorption when reaching the
       * attenuation distance.
       *
@@ -9321,7 +9323,7 @@ index 285e8a2bb..92612613f 100644
       * @default (1,1,1)
       */
      attenuationColor: Color;
-@@ -244,7 +214,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -257,7 +222,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * A float that scales the amount of specular reflection for non-metals only.
       * When set to zero, the model is effectively Lambertian. From `0.0` to `1.0`.
       *
@@ -9329,7 +9331,7 @@ index 285e8a2bb..92612613f 100644
       * @default 1
       */
      specularIntensity: number;
-@@ -262,7 +231,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -275,7 +239,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
      /**
       * Tints the specular reflection at normal incidence for non-metals only.
       *
@@ -9337,12 +9339,13 @@ index 285e8a2bb..92612613f 100644
       * @default (1,1,1)
       */
      specularColor: Color;
-@@ -278,18 +246,10 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -291,19 +254,10 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * @default null
       */
      specularColorMap: Texture | null;
 -    _anisotropy: number;
 -    _clearcoat: number;
+-    _diffuseRoughness: number;
 -    _dispersion: number;
 -    _iridescence: number;
 -    _retroreflectivity: number;
@@ -9356,7 +9359,7 @@ index 285e8a2bb..92612613f 100644
       * @default 0
       */
      get anisotropy(): number;
-@@ -299,7 +259,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -313,7 +267,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * clear coat related properties to enable multilayer materials that have a
       * thin translucent layer over the base layer.
       *
@@ -9364,7 +9367,15 @@ index 285e8a2bb..92612613f 100644
       * @default 0
       */
      get clearcoat(): number;
-@@ -308,7 +267,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -323,7 +276,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+      * uses Lambertian diffuse reflection. Values above `0.0` use the EON
+      * energy-preserving rough diffuse model.
+      *
+-     * @type {number}
+      * @default 0
+      */
+     get diffuseRoughness(): number;
+@@ -332,7 +284,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * The intensity of the iridescence layer, simulating RGB color shift based on the angle between
       * the surface and the viewer, from `0.0` to `1.0`.
       *
@@ -9372,7 +9383,7 @@ index 285e8a2bb..92612613f 100644
       * @default 0
       */
      get iridescence(): number;
-@@ -318,7 +276,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -342,7 +293,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * through a relatively clear volume. Any value zero or larger is valid, the typical range of
       * realistic values is `[0, 1]`. This property can be only be used with transmissive objects.
       *
@@ -9380,7 +9391,7 @@ index 285e8a2bb..92612613f 100644
       * @default 0
       */
      get dispersion(): number;
-@@ -329,7 +286,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -353,7 +303,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * reflected about the surface normal, redirecting the specular lobe back
       * toward the light source.
       *
@@ -9388,7 +9399,7 @@ index 285e8a2bb..92612613f 100644
       * @default 0
       */
      get retroreflectivity(): number;
-@@ -337,7 +293,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -361,7 +310,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
      /**
       * The intensity of the sheen layer, from `0.0` to `1.0`.
       *
@@ -9396,7 +9407,7 @@ index 285e8a2bb..92612613f 100644
       * @default 0
       */
      get sheen(): number;
-@@ -351,12 +306,51 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -375,12 +323,53 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       *
       * When transmission is non-zero, `opacity` should be  set to `1`.
       *
@@ -9424,6 +9435,8 @@ index 285e8a2bb..92612613f 100644
 + * - Clearcoat: Some materials — like car paints, carbon fiber, and wet surfaces — require
 + * a clear, reflective layer on top of another layer that may be irregular or rough.
 + * Clearcoat approximates this effect, without the need for a separate transparent surface.
++ * - Diffuse roughness: Produces the flatter appearance and enhanced backscattering of
++ * rough diffuse surfaces such as clay, concrete, and unpolished materials.
 + * - Iridescence: Allows to render the effect where hue varies  depending on the viewing
 + * angle and illumination angle. This can be seen on soap bubbles, oil films, or on the
 + * wings of many insects.
@@ -11359,10 +11372,10 @@ index 374eb470a..d2d224b90 100644
 +
 +export default MeshPhongNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/MeshPhysicalNodeMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/MeshPhysicalNodeMaterial.d.ts
-index f5cd2ac32..41e47a1e3 100644
+index df5884d09..d30b9975f 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/MeshPhysicalNodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/MeshPhysicalNodeMaterial.d.ts
-@@ -1,18 +1,12 @@
+@@ -1,18 +1,10 @@
 -export default MeshPhysicalNodeMaterial;
 -/**
 - * Node material version of {@link MeshPhysicalMaterial}.
@@ -11378,19 +11391,17 @@ index f5cd2ac32..41e47a1e3 100644
 -     * @default true
 -     */
 -    readonly isMeshPhysicalNodeMaterial: boolean;
-+import MeshStandardNodeMaterial, {
-+    MeshStandardNodeMaterialNodeProperties,
-+} from './MeshStandardNodeMaterial.js';
-+import { MapColorPropertiesToColorRepresentations } from '../Material.js';
 +import Node from "../../nodes/core/Node.js";
 +import NodeBuilder from "../../nodes/core/NodeBuilder.js";
-+import { MeshPhysicalMaterialParameters, MeshPhysicalMaterialProperties } from '../MeshPhysicalMaterial.js';
++import { MapColorPropertiesToColorRepresentations } from "../Material.js";
++import { MeshPhysicalMaterialParameters, MeshPhysicalMaterialProperties } from "../MeshPhysicalMaterial.js";
++import MeshStandardNodeMaterial, { MeshStandardNodeMaterialNodeProperties } from "./MeshStandardNodeMaterial.js";
 +
 +export interface MeshPhysicalNodeMaterialNodeProperties extends MeshStandardNodeMaterialNodeProperties {
      /**
       * The clearcoat of physical materials is by default inferred from the `clearcoat`
       * and `clearcoatMap` properties. This node property allows to overwrite the default
-@@ -21,10 +15,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+@@ -21,10 +13,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
       * If you don't want to overwrite the clearcoat but modify the existing
       * value instead, use {@link materialClearcoat}.
       *
@@ -11402,7 +11413,7 @@ index f5cd2ac32..41e47a1e3 100644
      /**
       * The clearcoat roughness of physical materials is by default inferred from the `clearcoatRoughness`
       * and `clearcoatRoughnessMap` properties. This node property allows to overwrite the default
-@@ -33,10 +26,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+@@ -33,10 +24,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
       * If you don't want to overwrite the clearcoat roughness but modify the existing
       * value instead, use {@link materialClearcoatRoughness}.
       *
@@ -11412,9 +11423,21 @@ index f5cd2ac32..41e47a1e3 100644
 -    clearcoatRoughnessNode: Node<any> | null;
 +    clearcoatRoughnessNode: Node | null;
      /**
+      * The diffuse roughness of physical materials is by default inferred from the
+      * `diffuseRoughness` and `diffuseRoughnessMap` properties. This node property allows to overwrite the
+@@ -45,10 +35,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+      * If you don't want to overwrite the diffuse roughness but modify the existing
+      * value instead, use {@link materialDiffuseRoughness}.
+      *
+-     * @type {?Node<float>}
+      * @default null
+      */
+-    diffuseRoughnessNode: Node<any> | null;
++    diffuseRoughnessNode: Node | null;
+     /**
       * The clearcoat normal of physical materials is by default inferred from the `clearcoatNormalMap`
       * property. This node property allows to overwrite the default
-@@ -45,10 +37,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+@@ -57,10 +46,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
       * If you don't want to overwrite the clearcoat normal but modify the existing
       * value instead, use {@link materialClearcoatNormal}.
       *
@@ -11426,7 +11449,7 @@ index f5cd2ac32..41e47a1e3 100644
      /**
       * The sheen of physical materials is by default inferred from the `sheen`, `sheenColor`
       * and `sheenColorMap` properties. This node property allows to overwrite the default
-@@ -57,10 +48,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+@@ -69,10 +57,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
       * If you don't want to overwrite the sheen but modify the existing
       * value instead, use {@link materialSheen}.
       *
@@ -11438,7 +11461,7 @@ index f5cd2ac32..41e47a1e3 100644
      /**
       * The sheen roughness of physical materials is by default inferred from the `sheenRoughness` and
       * `sheenRoughnessMap` properties. This node property allows to overwrite the default
-@@ -69,10 +59,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+@@ -81,10 +68,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
       * If you don't want to overwrite the sheen roughness but modify the existing
       * value instead, use {@link materialSheenRoughness}.
       *
@@ -11450,7 +11473,7 @@ index f5cd2ac32..41e47a1e3 100644
      /**
       * The iridescence of physical materials is by default inferred from the `iridescence`
       * property. This node property allows to overwrite the default
-@@ -81,10 +70,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+@@ -93,10 +79,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
       * If you don't want to overwrite the iridescence but modify the existing
       * value instead, use {@link materialIridescence}.
       *
@@ -11462,7 +11485,7 @@ index f5cd2ac32..41e47a1e3 100644
      /**
       * The iridescence IOR of physical materials is by default inferred from the `iridescenceIOR`
       * property. This node property allows to overwrite the default
-@@ -93,10 +81,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+@@ -105,10 +90,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
       * If you don't want to overwrite the iridescence IOR but modify the existing
       * value instead, use {@link materialIridescenceIOR}.
       *
@@ -11474,7 +11497,7 @@ index f5cd2ac32..41e47a1e3 100644
      /**
       * The iridescence thickness of physical materials is by default inferred from the `iridescenceThicknessRange`
       * and `iridescenceThicknessMap` properties. This node property allows to overwrite the default
-@@ -105,10 +92,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+@@ -117,10 +101,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
       * If you don't want to overwrite the iridescence thickness but modify the existing
       * value instead, use {@link materialIridescenceThickness}.
       *
@@ -11486,7 +11509,7 @@ index f5cd2ac32..41e47a1e3 100644
      /**
       * The specular intensity of physical materials is by default inferred from the `specularIntensity`
       * and `specularIntensityMap` properties. This node property allows to overwrite the default
-@@ -117,10 +103,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+@@ -129,10 +112,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
       * If you don't want to overwrite the specular intensity but modify the existing
       * value instead, use {@link materialSpecularIntensity}.
       *
@@ -11498,7 +11521,7 @@ index f5cd2ac32..41e47a1e3 100644
      /**
       * The specular color of physical materials is by default inferred from the `specularColor`
       * and `specularColorMap` properties. This node property allows to overwrite the default
-@@ -129,10 +114,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+@@ -141,10 +123,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
       * If you don't want to overwrite the specular color but modify the existing
       * value instead, use {@link materialSpecularColor}.
       *
@@ -11510,7 +11533,7 @@ index f5cd2ac32..41e47a1e3 100644
      /**
       * The ior of physical materials is by default inferred from the `ior`
       * property. This node property allows to overwrite the default
-@@ -141,10 +125,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+@@ -153,10 +134,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
       * If you don't want to overwrite the ior but modify the existing
       * value instead, use {@link materialIOR}.
       *
@@ -11522,7 +11545,7 @@ index f5cd2ac32..41e47a1e3 100644
      /**
       * The transmission of physical materials is by default inferred from the `transmission` and
       * `transmissionMap` properties. This node property allows to overwrite the default
-@@ -153,10 +136,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+@@ -165,10 +145,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
       * If you don't want to overwrite the transmission but modify the existing
       * value instead, use {@link materialTransmission}.
       *
@@ -11534,7 +11557,7 @@ index f5cd2ac32..41e47a1e3 100644
      /**
       * The thickness of physical materials is by default inferred from the `thickness` and
       * `thicknessMap` properties. This node property allows to overwrite the default
-@@ -165,10 +147,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+@@ -177,10 +156,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
       * If you don't want to overwrite the thickness but modify the existing
       * value instead, use {@link materialThickness}.
       *
@@ -11546,7 +11569,7 @@ index f5cd2ac32..41e47a1e3 100644
      /**
       * The attenuation distance of physical materials is by default inferred from the
       * `attenuationDistance` property. This node property allows to overwrite the default
-@@ -177,10 +158,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+@@ -189,10 +167,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
       * If you don't want to overwrite the attenuation distance but modify the existing
       * value instead, use {@link materialAttenuationDistance}.
       *
@@ -11558,7 +11581,7 @@ index f5cd2ac32..41e47a1e3 100644
      /**
       * The attenuation color of physical materials is by default inferred from the
       * `attenuationColor` property. This node property allows to overwrite the default
-@@ -189,10 +169,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+@@ -201,10 +178,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
       * If you don't want to overwrite the attenuation color but modify the existing
       * value instead, use {@link materialAttenuationColor}.
       *
@@ -11570,7 +11593,7 @@ index f5cd2ac32..41e47a1e3 100644
      /**
       * The dispersion of physical materials is by default inferred from the
       * `dispersion` property. This node property allows to overwrite the default
-@@ -201,10 +180,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+@@ -213,10 +189,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
       * If you don't want to overwrite the dispersion but modify the existing
       * value instead, use {@link materialDispersion}.
       *
@@ -11582,7 +11605,7 @@ index f5cd2ac32..41e47a1e3 100644
      /**
       * The retroreflective strength of physical materials is by default inferred from the
       * `retroreflectivity` property. This node property allows to overwrite the default
-@@ -213,10 +191,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+@@ -225,10 +200,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
       * If you don't want to overwrite the retroreflective strength but modify the existing
       * value instead, use {@link materialRetroreflectivity}.
       *
@@ -11594,7 +11617,7 @@ index f5cd2ac32..41e47a1e3 100644
      /**
       * The anisotropy of physical materials is by default inferred from the
       * `anisotropy` property. This node property allows to overwrite the default
-@@ -225,56 +202,65 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+@@ -237,63 +211,75 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
       * If you don't want to overwrite the anisotropy but modify the existing
       * value instead, use {@link materialAnisotropy}.
       *
@@ -11606,7 +11629,11 @@ index f5cd2ac32..41e47a1e3 100644
 +}
 +
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
-+export interface MeshPhysicalNodeMaterialParameters extends Partial<MapColorPropertiesToColorRepresentations<MeshPhysicalNodeMaterialNodeProperties>>, MeshPhysicalMaterialParameters {}
++export interface MeshPhysicalNodeMaterialParameters
++    extends
++        Partial<MapColorPropertiesToColorRepresentations<MeshPhysicalNodeMaterialNodeProperties>>,
++        MeshPhysicalMaterialParameters
++{}
 +
 +/**
 + * Node material version of {@link MeshPhysicalMaterial}.
@@ -11627,6 +11654,13 @@ index f5cd2ac32..41e47a1e3 100644
       * @default true
       */
      get useClearcoat(): boolean;
+     /**
+      * Whether the lighting model should use EON rough diffuse reflection or not.
+      *
+-     * @type {boolean}
+      * @default false
+      */
+     get useDiffuseRoughness(): boolean;
      /**
       * Whether the lighting model should use iridescence or not.
       *
@@ -11669,7 +11703,7 @@ index f5cd2ac32..41e47a1e3 100644
       * @default true
       */
      get useRetroreflection(): boolean;
-@@ -289,7 +275,10 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+@@ -308,7 +294,10 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
       *
       * @return {Node<vec3>} The clearcoat normal.
       */
@@ -11684,18 +11718,18 @@ index f5cd2ac32..41e47a1e3 100644
 +
 +export default MeshPhysicalNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/MeshSSSNodeMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/MeshSSSNodeMaterial.d.ts
-index 29ec54604..e23399cca 100644
+index ca33d8128..5ad95d202 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/MeshSSSNodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/MeshSSSNodeMaterial.d.ts
-@@ -1,52 +1,86 @@
+@@ -1,52 +1,98 @@
 -export default MeshSSSNodeMaterial;
-+import MeshPhysicalNodeMaterial, { MeshPhysicalNodeMaterialNodeProperties } from './MeshPhysicalNodeMaterial.js';
-+import PhysicalLightingModel from '../../nodes/functions/PhysicalLightingModel.js';
-+import NodeBuilder from "../../nodes/core/NodeBuilder.js";
-+import { LightingModelDirectInput } from '../../nodes/core/LightingModel.js';
-+import { MapColorPropertiesToColorRepresentations } from '../Material.js';
-+import { MeshPhysicalMaterialParameters, MeshPhysicalMaterialProperties } from '../MeshPhysicalMaterial.js';
++import { LightingModelDirectInput } from "../../nodes/core/LightingModel.js";
 +import Node from "../../nodes/core/Node.js";
++import NodeBuilder from "../../nodes/core/NodeBuilder.js";
++import PhysicalLightingModel from "../../nodes/functions/PhysicalLightingModel.js";
++import { MapColorPropertiesToColorRepresentations } from "../Material.js";
++import { MeshPhysicalMaterialParameters, MeshPhysicalMaterialProperties } from "../MeshPhysicalMaterial.js";
++import MeshPhysicalNodeMaterial, { MeshPhysicalNodeMaterialNodeProperties } from "./MeshPhysicalNodeMaterial.js";
 +
  /**
 - * This node material is an experimental extension of {@link MeshPhysicalNodeMaterial}
@@ -11717,7 +11751,15 @@ index 29ec54604..e23399cca 100644
 +     * @param {boolean} [dispersion=false] - Whether dispersion is supported or not.
 +     * @param {boolean} [sss=false] - Whether SSS is supported or not.
 +     */
-+    constructor(clearcoat?: boolean, sheen?: boolean, iridescence?: boolean, anisotropy?: boolean, transmission?: boolean, dispersion?: boolean, sss?: boolean);
++    constructor(
++        clearcoat?: boolean,
++        sheen?: boolean,
++        iridescence?: boolean,
++        anisotropy?: boolean,
++        transmission?: boolean,
++        dispersion?: boolean,
++        sss?: boolean,
++    );
 +    /**
 +     * Whether the lighting model should use SSS or not.
 +     *
@@ -11782,7 +11824,11 @@ index 29ec54604..e23399cca 100644
 +}
 +
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
-+export interface MeshSSSNodeMaterialParameters extends Partial<MapColorPropertiesToColorRepresentations<MeshSSSNodeMaterialNodeProperties>>, MeshPhysicalMaterialParameters {}
++export interface MeshSSSNodeMaterialParameters
++    extends
++        Partial<MapColorPropertiesToColorRepresentations<MeshSSSNodeMaterialNodeProperties>>,
++        MeshPhysicalMaterialParameters
++{}
 +
 +/**
 + * This node material is an experimental extension of {@link MeshPhysicalNodeMaterial}
@@ -11798,7 +11844,7 @@ index 29ec54604..e23399cca 100644
       * @default true
       */
      get useSSS(): boolean;
-@@ -57,28 +91,8 @@ declare class MeshSSSNodeMaterial extends MeshPhysicalNodeMaterial {
+@@ -57,40 +103,8 @@ declare class MeshSSSNodeMaterial extends MeshPhysicalNodeMaterial {
       */
      setupLightingModel(): SSSLightingModel;
  }
@@ -11809,6 +11855,18 @@ index 29ec54604..e23399cca 100644
 - * @augments PhysicalLightingModel
 - */
 -declare class SSSLightingModel extends PhysicalLightingModel {
+-    /**
+-     * Constructs a new physical lighting model.
+-     *
+-     * @param {boolean} [clearcoat=false] - Whether clearcoat is supported or not.
+-     * @param {boolean} [sheen=false] - Whether sheen is supported or not.
+-     * @param {boolean} [iridescence=false] - Whether iridescence is supported or not.
+-     * @param {boolean} [anisotropy=false] - Whether anisotropy is supported or not.
+-     * @param {boolean} [transmission=false] - Whether transmission is supported or not.
+-     * @param {boolean} [dispersion=false] - Whether dispersion is supported or not.
+-     * @param {boolean} [sss=false] - Whether SSS is supported or not.
+-     */
+-    constructor(clearcoat?: boolean, sheen?: boolean, iridescence?: boolean, anisotropy?: boolean, transmission?: boolean, dispersion?: boolean, sss?: boolean);
 -    /**
 -     * Whether the lighting model should use SSS or not.
 -     *

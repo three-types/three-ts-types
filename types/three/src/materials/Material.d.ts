@@ -390,6 +390,9 @@ export interface MaterialJSON {
     clearcoatNormalMap?: string;
     clearcoatNormalScale?: Vector2Tuple;
 
+    diffuseRoughness?: number;
+    diffuseRoughnessMap?: string;
+
     dispersion?: number;
 
     iridescence?: number;

@@ -71,6 +71,17 @@ export interface MeshPhysicalMaterialProperties extends MeshStandardMaterialProp
      */
     clearcoatNormalMap: Texture | null;
     /**
+     * The red channel of this texture is multiplied against `diffuseRoughness`,
+     * for per-pixel control over the diffuse roughness.
+     *
+     * `diffuseRoughnessMap` represents non-color data. Any texture assigned must have
+     * `texture.colorSpace = NoColorSpace` (default).
+     *
+     * @type {?Texture}
+     * @default null
+     */
+    diffuseRoughnessMap: Texture | null;
+    /**
      * Index-of-refraction for non-metallic materials, from `1.0` to `2.333`.
      *
      * @default 1.5
@@ -259,6 +270,15 @@ export interface MeshPhysicalMaterialProperties extends MeshStandardMaterialProp
      * @default 0
      */
     get clearcoat(): number;
+    set diffuseRoughness(value: number);
+    /**
+     * Roughness of the diffuse layer, from `0.0` to `1.0`. A value of `0.0`
+     * uses Lambertian diffuse reflection. Values above `0.0` use the EON
+     * energy-preserving rough diffuse model.
+     *
+     * @default 0
+     */
+    get diffuseRoughness(): number;
     set iridescence(value: number);
     /**
      * The intensity of the iridescence layer, simulating RGB color shift based on the angle between
@@ -322,6 +342,8 @@ export interface MeshPhysicalMaterialParameters
  * - Clearcoat: Some materials — like car paints, carbon fiber, and wet surfaces — require
  * a clear, reflective layer on top of another layer that may be irregular or rough.
  * Clearcoat approximates this effect, without the need for a separate transparent surface.
+ * - Diffuse roughness: Produces the flatter appearance and enhanced backscattering of
+ * rough diffuse surfaces such as clay, concrete, and unpolished materials.
  * - Iridescence: Allows to render the effect where hue varies  depending on the viewing
  * angle and illumination angle. This can be seen on soap bubbles, oil films, or on the
  * wings of many insects.
