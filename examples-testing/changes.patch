@@ -19006,7 +19006,7 @@ index 084030e44..791aa2cba 100644
      }
  
 diff --git a/examples-testing/examples/webgpu_materialx_noise.ts b/examples-testing/examples/webgpu_materialx_noise.ts
-index 2edfe8b4d..1d1862f47 100644
+index baa9d1f0f..27e5264ff 100644
 --- a/examples-testing/examples/webgpu_materialx_noise.ts
 +++ b/examples-testing/examples/webgpu_materialx_noise.ts
 @@ -29,17 +29,17 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -19048,7 +19048,7 @@ index 2edfe8b4d..1d1862f47 100644
          jitter = 1,
          outmin = 0,
          outmax = 1,
-@@ -103,17 +103,23 @@ async function init() {
+@@ -103,18 +103,24 @@ async function init() {
                  style,
              ),
          )();
@@ -19070,13 +19070,14 @@ index 2edfe8b4d..1d1862f47 100644
 +        const checkerMix = mx_modulo(dot(floor(tiledUv), vec2(1, 1)), float(2)) as THREE.Node<'float'>;
          return mix(color2, color1, checkerMix);
      };
+ 
      const hextiledCheckerboard = (
 -        texcoord,
 +        texcoord: THREE.Node<'vec2'>,
          {
              color1 = vec3(1, 1, 1),
              color2 = vec3(0, 0, 0),
-@@ -129,6 +135,21 @@ async function init() {
+@@ -130,6 +136,21 @@ async function init() {
              falloff = 0.5,
              falloffcontrast = 0.5,
              lumacoeffs = vec3(0.2722287, 0.6740818, 0.0536895),
@@ -19098,7 +19099,7 @@ index 2edfe8b4d..1d1862f47 100644
          } = {},
      ) => {
          const tileData = mxHextileCoord(
-@@ -148,7 +169,11 @@ async function init() {
+@@ -149,7 +170,11 @@ async function init() {
              vec3(dot(c0, lumacoeffs), dot(c1, lumacoeffs), dot(c2, lumacoeffs)),
              vec3(falloffcontrast, falloffcontrast, falloffcontrast),
          );
@@ -19111,12 +19112,12 @@ index 2edfe8b4d..1d1862f47 100644
          return add(
              add(mul(element(blendWeights, 0), c0), mul(element(blendWeights, 1), c1)),
              mul(element(blendWeights, 2), c2),
-@@ -290,7 +315,12 @@ function render() {
+@@ -294,7 +319,12 @@ function render() {
      renderer.render(scene, camera);
  }
  
--function createNoiseGrid(noiseExamples, geometry, font, labelMaterial) {
-+function createNoiseGrid(
+-async function createNoiseGrid(noiseExamples, geometry, font, labelMaterial) {
++async function createNoiseGrid(
 +    noiseExamples: Array<{ label: string[]; createNode: () => THREE.Node<'float'> | THREE.Node<'vec3'> }>,
 +    geometry: THREE.BufferGeometry,
 +    font: Font,
@@ -19125,7 +19126,7 @@ index 2edfe8b4d..1d1862f47 100644
      const columns = 7;
      const spacingX = 15.5;
      const spacingY = 18;
-@@ -326,7 +356,7 @@ function createNoiseGrid(noiseExamples, geometry, font, labelMaterial) {
+@@ -336,7 +366,7 @@ async function createNoiseGrid(noiseExamples, geometry, font, labelMaterial) {
      }
  }
  
@@ -19134,7 +19135,7 @@ index 2edfe8b4d..1d1862f47 100644
      const label = new THREE.Group();
      const lineHeight = 1.55;
      const startY = (lines.length - 1) * lineHeight * 0.5;
-@@ -341,7 +371,7 @@ function createLabel(lines, font, material) {
+@@ -351,7 +381,7 @@ function createLabel(lines, font, material) {
  
          textGeometry.computeBoundingBox();
  
