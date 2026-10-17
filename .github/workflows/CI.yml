@@ -24,11 +24,21 @@ jobs:
         working-directory: 'DefinitelyTyped'
       - run: git config --global user.email "nbierema@gmail.com"
       - run: git config --global user.name "Nathan Bierema"
-      - run: git commit -m "Changes"
+      # PRs that don't touch types/three (e.g. only patch updates) have nothing to test against DefinitelyTyped.
+      - id: commit
+        run: |
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            git commit -m "Changes"
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
         working-directory: 'DefinitelyTyped'
-      - run: pnpm install --filter . --filter ...[HEAD^1]...
+      - if: steps.commit.outputs.changed == 'true'
+        run: pnpm install --filter . --filter ...[HEAD^1]...
         working-directory: 'DefinitelyTyped'
-      - run: pnpm run test-all --diffBase HEAD^1
+      - if: steps.commit.outputs.changed == 'true'
+        run: pnpm run test-all --diffBase HEAD^1
         working-directory: 'DefinitelyTyped'
   check-fomatting:
     runs-on: ubuntu-latest
