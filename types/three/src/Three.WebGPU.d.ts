@@ -38,5 +38,5 @@ export { default as GLSLNodeBuilder } from "./renderers/webgl-fallback/nodes/GLS
 export { default as BasicNodeLibrary } from "./renderers/webgpu/nodes/BasicNodeLibrary.js";
 export { default as StandardNodeLibrary } from "./renderers/webgpu/nodes/StandardNodeLibrary.js";
 export { default as WGSLNodeBuilder } from "./renderers/webgpu/nodes/WGSLNodeBuilder.js";
-import * as TSL from "./nodes/TSL.js";
+import * as TSL from "./Three.TSL.js";
 export { TSL };

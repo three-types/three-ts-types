@@ -30,5 +30,5 @@ export { default as InspectorBase, type InspectorBaseEventMap } from "./renderer
 export { default as StorageBufferAttribute } from "./renderers/common/StorageBufferAttribute.js";
 export { default as StorageInstancedBufferAttribute } from "./renderers/common/StorageInstancedBufferAttribute.js";
 export { default as StorageTexture } from "./renderers/common/StorageTexture.js";
-import * as TSL from "./nodes/TSL.js";
+import * as TSL from "./Three.TSL.js";
 export { TSL };
