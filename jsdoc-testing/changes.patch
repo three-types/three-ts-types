@@ -1613,7 +1613,7 @@ index 3b52ec72c..4f168b6ac 100644
 -import { StorageBufferAttribute } from 'three/webgpu';
 -import { Vector4 } from 'three/webgpu';
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/lights/SunLight.d.ts b/jsdoc-testing/jsdoc/examples/jsm/lights/SunLight.d.ts
-index 535d0a91e..411a4dd0c 100644
+index 286054b0d..a6cdfb8b7 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/lights/SunLight.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/lights/SunLight.d.ts
 @@ -1,3 +1,10 @@
@@ -1628,7 +1628,7 @@ index 535d0a91e..411a4dd0c 100644
   * A sun-like light that gets emitted in a specific direction, with rays that
   * are all parallel, and casts Cascaded Shadow Maps (CSM) via {@link SunLightShadow},
 @@ -26,7 +33,6 @@
-  * renderer.library.addLight( SunLightNode, SunLight );
+  * SunLight.registerNode( SunLightNode );
   * ```
   *
 - * @augments Light
@@ -1662,7 +1662,7 @@ index 535d0a91e..411a4dd0c 100644
 -import { Light } from 'three';
 -import { SunLightShadow } from './SunLightShadow.js';
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/lights/SunLightNode.d.ts b/jsdoc-testing/jsdoc/examples/jsm/lights/SunLightNode.d.ts
-index f8395d43b..32f9d44f5 100644
+index 50f0d40c9..0219eafa8 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/lights/SunLightNode.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/lights/SunLightNode.d.ts
 @@ -1,3 +1,7 @@
@@ -1671,10 +1671,10 @@ index f8395d43b..32f9d44f5 100644
 +import { SunShadowNode } from "./SunShadowNode.js";
 +
  /**
-  * Module for representing sun lights as nodes. Register it with the
-  * renderer's node library to use {@link SunLight} with `WebGPURenderer`:
+  * Module for representing sun lights as nodes. Register it with {@link SunLight}
+  * to use the light with `WebGPURenderer`:
 @@ -5,10 +9,9 @@
-  * renderer.library.addLight( SunLightNode, SunLight );
+  * SunLight.registerNode( SunLightNode );
   * ```
   *
 - * @augments AnalyticLightNode
@@ -6260,12 +6260,13 @@ index 9bffa0d03..29ee9a37e 100644
 -import { Light } from './Light.js';
 -import { Color } from '../math/Color.js';
 diff --git a/jsdoc-testing/jsdoc/src/lights/Light.d.ts b/jsdoc-testing/jsdoc/src/lights/Light.d.ts
-index 53b1d77ab..dda91793d 100644
+index ff44d1e48..06de93aed 100644
 --- a/jsdoc-testing/jsdoc/src/lights/Light.d.ts
 +++ b/jsdoc-testing/jsdoc/src/lights/Light.d.ts
-@@ -1,42 +1,39 @@
+@@ -1,48 +1,50 @@
 +import { JSONMeta, Object3D, Object3DJSON } from "../core/Object3D.js";
 +import { Color, ColorRepresentation } from '../math/Color.js';
++import AnalyticLightNode from "../nodes/lighting/AnalyticLightNode.js";
 +
 +export interface LightJSON extends Object3DJSON {
 +    color: number;
@@ -6281,6 +6282,17 @@ index 53b1d77ab..dda91793d 100644
   */
 -export class Light extends Object3D {
 +export abstract class Light extends Object3D {
+     /**
+      * Registers the node class that `WebGPURenderer` uses to shade lights of this type.
+      *
+      * @param {AnalyticLightNode.constructor} lightNodeClass - The light node class.
+      */
+-    static registerNode(lightNodeClass: AnalyticLightNode.constructor): void;
++    static registerNode<TLight extends Light>(this: {
++        new(...args: any[]): TLight;
++    }, lightNodeClass: {
++        new(light: TLight): AnalyticLightNode<TLight>;
++    }): void;
      /**
       * Constructs a new light.
       *
@@ -17982,7 +17994,7 @@ index af3e23934..2b66ae129 100644
 +
 +export default NodeBuilderState;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeLibrary.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeLibrary.d.ts
-index 0121dd34b..f5741f970 100644
+index dbc311e14..d40f048a9 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeLibrary.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeLibrary.d.ts
 @@ -1,4 +1,10 @@
@@ -17997,18 +18009,7 @@ index 0121dd34b..f5741f970 100644
  /**
   * The purpose of a node library is to assign node implementations
   * to existing library features. In `WebGPURenderer` lights, materials
-@@ -13,20 +19,26 @@ declare class NodeLibrary {
-      *
-      * @type {WeakMap<Light.constructor,AnalyticLightNode.constructor>}
-      */
--    lightNodes: WeakMap<Light.constructor, AnalyticLightNode.constructor>;
-+    lightNodes: WeakMap<{
-+        new(): Light;
-+    }, {
-+        new(light: Light): AnalyticLightNode<Light>;
-+    }>;
-     /**
-      * A map that maps materials to node materials.
+@@ -13,14 +19,16 @@ declare class NodeLibrary {
       *
       * @type {Map<string,NodeMaterial.constructor>}
       */
@@ -18027,7 +18028,7 @@ index 0121dd34b..f5741f970 100644
      /**
       * Returns a matching node material instance for the given material object.
       *
-@@ -44,42 +56,52 @@ declare class NodeLibrary {
+@@ -38,28 +46,30 @@ declare class NodeLibrary {
       * @param {Function} toneMappingNode - The tone mapping node function.
       * @param {number} toneMapping - The tone mapping.
       */
@@ -18062,11 +18063,12 @@ index 0121dd34b..f5741f970 100644
      /**
       * Returns a light node class definition for a light class definition.
       *
-      * @param {Light.constructor} light - The light class definition.
+@@ -67,7 +77,11 @@ declare class NodeLibrary {
+      * @param {Light.constructor} lightClass - The light class definition.
       * @return {?AnalyticLightNode.constructor} The light node class definition. Returns `null` if no light node is found.
       */
--    getLightNodeClass(light: Light.constructor): AnalyticLightNode.constructor | null;
-+    getLightNodeClass(light: {
+-    getLightNodeClass(lightClass: Light.constructor): AnalyticLightNode.constructor | null;
++    getLightNodeClass(lightClass: {
 +        new(): Light;
 +    }): ({
 +        new(light: Light): AnalyticLightNode<Light>;
@@ -18074,6 +18076,7 @@ index 0121dd34b..f5741f970 100644
      /**
       * Adds a light node class definition for a given light class definition.
       *
+@@ -75,7 +89,11 @@ declare class NodeLibrary {
       * @param {AnalyticLightNode.constructor} lightNodeClass - The light node class definition.
       * @param {Light.constructor} lightClass - The light class definition.
       */
@@ -18086,21 +18089,12 @@ index 0121dd34b..f5741f970 100644
      /**
       * Adds a node class definition for the given type to the provided type library.
       *
-@@ -87,7 +109,7 @@ declare class NodeLibrary {
+@@ -83,5 +101,7 @@ declare class NodeLibrary {
       * @param {number|string} type - The object type.
       * @param {Map<number|string,Node.constructor>} library - The type library.
       */
 -    addType(nodeClass: Node.constructor, type: number | string, library: Map<number | string, Node.constructor>): void;
 +    addType<TNodeClass, TType>(nodeClass: TNodeClass, type: TType, library: Map<TType, TNodeClass>): void;
-     /**
-      * Adds a node class definition for the given class definition to the provided type library.
-      *
-@@ -95,5 +117,7 @@ declare class NodeLibrary {
-      * @param {Node.constructor} baseClass - The class definition.
-      * @param {WeakMap<Node.constructor, Node.constructor>} library - The type library.
-      */
--    addClass(nodeClass: Node.constructor, baseClass: Node.constructor, library: WeakMap<Node.constructor, Node.constructor>): void;
-+    addClass<TNodeClass, TBaseClass extends object>(nodeClass: TNodeClass, baseClass: TBaseClass, library: WeakMap<TBaseClass, TNodeClass>): void;
  }
 +
 +export default NodeLibrary;
