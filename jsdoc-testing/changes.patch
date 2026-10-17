@@ -1302,11 +1302,11 @@ index 522d13858..57ebee155 100644
 -import { Vector3 } from 'three/webgpu';
 -import { Box3 } from 'three/webgpu';
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/lighting/LightProbeGridWebGL.d.ts b/jsdoc-testing/jsdoc/examples/jsm/lighting/LightProbeGridWebGL.d.ts
-index 58b588590..8875d77a9 100644
+index 83242b8cf..87c3ee971 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/lighting/LightProbeGridWebGL.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/lighting/LightProbeGridWebGL.d.ts
 @@ -1,3 +1,37 @@
-+import { Box3, Data3DTexture, Object3D, Scene, Vector3, WebGLRenderer } from 'three';
++import { Box3, Data3DTexture, Light, Scene, Vector3, WebGLRenderer } from 'three';
 +
 +export interface LightProbeGridWebGLBakeOptions {
 +    /**
@@ -1343,7 +1343,7 @@ index 58b588590..8875d77a9 100644
  /**
   * A 3D grid of L2 Spherical Harmonic irradiance probes that provides
   * position-dependent diffuse global illumination.
-@@ -87,16 +121,6 @@ export class LightProbeGridWebGL extends Object3D {
+@@ -87,16 +121,6 @@ export class LightProbeGridWebGL extends Light {
       * @default null
       */
      texture: Data3DTexture | null;
@@ -1360,7 +1360,7 @@ index 58b588590..8875d77a9 100644
      /**
       * Returns the world-space position of the probe at grid indices (ix, iy, iz).
       *
-@@ -139,53 +163,9 @@ export class LightProbeGridWebGL extends Object3D {
+@@ -139,53 +163,9 @@ export class LightProbeGridWebGL extends Light {
       * @param {number} [options.count] - Number of probes to bake. Defaults to the remaining probes.
       * @param {number} [options.pass=0] - Starting pass. Zero captures direct light; later passes sample the previous pass. Ranged calls require `bounces: 0`.
       */
@@ -1412,7 +1412,7 @@ index 58b588590..8875d77a9 100644
 -    private _ensureTextures;
 +    dispose(): void;
  }
--import { Object3D } from 'three';
+-import { Light } from 'three';
 -import { Vector3 } from 'three';
 -import { Box3 } from 'three';
 -import { Data3DTexture } from 'three';
@@ -18171,7 +18171,7 @@ index dbc311e14..d40f048a9 100644
 +
 +export default NodeLibrary;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeManager.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeManager.d.ts
-index de56ee186..2d47f3de4 100644
+index dadca57c0..695671207 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeManager.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeManager.d.ts
 @@ -1,4 +1,28 @@
@@ -18222,7 +18222,7 @@ index de56ee186..2d47f3de4 100644
      };
      /**
       * Returns `true` if the given node uniforms group must be updated or not.
-@@ -135,7 +159,7 @@ declare class NodeManager extends DataMap {
+@@ -142,7 +166,7 @@ declare class NodeManager extends DataMap {
       * @param {any} object - The object to delete.
       * @return {?Object} The deleted dictionary.
       */
@@ -18231,7 +18231,7 @@ index de56ee186..2d47f3de4 100644
      /**
       * Returns a node builder state for the given compute node.
       *
-@@ -143,7 +167,7 @@ declare class NodeManager extends DataMap {
+@@ -150,7 +174,7 @@ declare class NodeManager extends DataMap {
       * @param {boolean} [useAsync=false] - Whether to use async build with yielding.
       * @return {NodeBuilderState|Promise<NodeBuilderState>} The node builder state (or Promise if async).
       */
@@ -18240,7 +18240,7 @@ index de56ee186..2d47f3de4 100644
      /**
       * Async version of getForCompute() that yields to main thread during build.
       * Use this in compileComputeAsync() to prevent blocking the main thread.
-@@ -151,7 +175,7 @@ declare class NodeManager extends DataMap {
+@@ -158,7 +182,7 @@ declare class NodeManager extends DataMap {
       * @param {Node} computeNode - The compute node.
       * @return {Promise<NodeBuilderState>} A promise that resolves to the node builder state.
       */
@@ -18249,7 +18249,7 @@ index de56ee186..2d47f3de4 100644
      /**
       * Creates a node builder state for the given node builder.
       *
-@@ -228,7 +252,7 @@ declare class NodeManager extends DataMap {
+@@ -235,7 +259,7 @@ declare class NodeManager extends DataMap {
       * @param {boolean} [forceUpdate=false] - Whether an update should be enforced or not.
       * @return {Node} The node representation.
       */
@@ -18258,7 +18258,7 @@ index de56ee186..2d47f3de4 100644
      /**
       * If a scene fog is configured, this method makes sure to
       * represent the fog with a corresponding node-based implementation.
-@@ -254,7 +278,7 @@ declare class NodeManager extends DataMap {
+@@ -261,7 +285,7 @@ declare class NodeManager extends DataMap {
       * @param {?Node} [compute=null] - The compute node.
       * @return {NodeFrame} The node frame.
       */
@@ -18267,7 +18267,7 @@ index de56ee186..2d47f3de4 100644
      /**
       * Returns a node frame configured for the given render object.
       *
-@@ -268,7 +292,7 @@ declare class NodeManager extends DataMap {
+@@ -275,7 +299,7 @@ declare class NodeManager extends DataMap {
       * @param {Node} computeNode - The compute node.
       * @return {NodeFrame} The node frame.
       */
@@ -18276,7 +18276,7 @@ index de56ee186..2d47f3de4 100644
      /**
       * Returns the current output cache key.
       *
-@@ -310,21 +334,21 @@ declare class NodeManager extends DataMap {
+@@ -317,21 +341,21 @@ declare class NodeManager extends DataMap {
       *
       * @param {Node} computeNode - The compute node.
       */
@@ -18301,7 +18301,7 @@ index de56ee186..2d47f3de4 100644
      /**
       * Triggers the call of `update()` methods
       * for all nodes of the given render object.
-@@ -340,7 +364,5 @@ declare class NodeManager extends DataMap {
+@@ -347,7 +371,5 @@ declare class NodeManager extends DataMap {
       */
      needsRefresh(renderObject: RenderObject): number;
  }

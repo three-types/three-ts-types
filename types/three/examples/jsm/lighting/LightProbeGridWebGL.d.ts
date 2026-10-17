@@ -1,4 +1,4 @@
-import { Box3, Data3DTexture, Object3D, Scene, Vector3, WebGLRenderer } from "three";
+import { Box3, Data3DTexture, Light, Scene, Vector3, WebGLRenderer } from "three";
 
 export interface LightProbeGridWebGLBakeOptions {
     /**
@@ -61,7 +61,7 @@ export interface LightProbeGridWebGLBakeOptions {
  *
  * @three_import import { LightProbeGridWebGL } from 'three/addons/lighting/LightProbeGridWebGL.js';
  */
-export class LightProbeGridWebGL extends Object3D {
+export class LightProbeGridWebGL extends Light {
     /**
      * Constructs a new irradiance probe grid.
      *
