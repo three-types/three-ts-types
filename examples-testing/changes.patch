@@ -17907,7 +17907,7 @@ index de3fa7909..1d7a65696 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_loader_materialx.ts b/examples-testing/examples/webgpu_loader_materialx.ts
-index 62e3aa434..e1d639fe9 100644
+index 218f04a30..4187fbd68 100644
 --- a/examples-testing/examples/webgpu_loader_materialx.ts
 +++ b/examples-testing/examples/webgpu_loader_materialx.ts
 @@ -11,6 +11,7 @@ import * as MikkTSpace from 'three/addons/libs/mikktspace.module.js';
@@ -18030,7 +18030,7 @@ index 62e3aa434..e1d639fe9 100644
      previewMesh.material = material;
  
      if (material.transparent) {
-@@ -256,7 +263,7 @@ async function addSample(sample, path) {
+@@ -260,7 +267,7 @@ async function addSample(sample, path) {
  }
  
  function addGUI() {
@@ -18039,7 +18039,7 @@ index 62e3aa434..e1d639fe9 100644
  
      const API = {
          showCalibrationMesh: true,
-@@ -276,9 +283,9 @@ function addGUI() {
+@@ -280,9 +287,9 @@ function addGUI() {
          });
  }
  
@@ -19006,7 +19006,7 @@ index 084030e44..791aa2cba 100644
      }
  
 diff --git a/examples-testing/examples/webgpu_materialx_noise.ts b/examples-testing/examples/webgpu_materialx_noise.ts
-index baa9d1f0f..27e5264ff 100644
+index df24f1e97..a5e76f328 100644
 --- a/examples-testing/examples/webgpu_materialx_noise.ts
 +++ b/examples-testing/examples/webgpu_materialx_noise.ts
 @@ -29,17 +29,17 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -19112,12 +19112,12 @@ index baa9d1f0f..27e5264ff 100644
          return add(
              add(mul(element(blendWeights, 0), c0), mul(element(blendWeights, 1), c1)),
              mul(element(blendWeights, 2), c2),
-@@ -294,7 +319,12 @@ function render() {
+@@ -291,7 +316,12 @@ function render() {
      renderer.render(scene, camera);
  }
  
--async function createNoiseGrid(noiseExamples, geometry, font, labelMaterial) {
-+async function createNoiseGrid(
+-function createNoiseGrid(noiseExamples, geometry, font, labelMaterial) {
++function createNoiseGrid(
 +    noiseExamples: Array<{ label: string[]; createNode: () => THREE.Node<'float'> | THREE.Node<'vec3'> }>,
 +    geometry: THREE.BufferGeometry,
 +    font: Font,
@@ -19126,7 +19126,7 @@ index baa9d1f0f..27e5264ff 100644
      const columns = 7;
      const spacingX = 15.5;
      const spacingY = 18;
-@@ -336,7 +366,7 @@ async function createNoiseGrid(noiseExamples, geometry, font, labelMaterial) {
+@@ -327,7 +357,7 @@ function createNoiseGrid(noiseExamples, geometry, font, labelMaterial) {
      }
  }
  
@@ -19135,7 +19135,7 @@ index baa9d1f0f..27e5264ff 100644
      const label = new THREE.Group();
      const lineHeight = 1.55;
      const startY = (lines.length - 1) * lineHeight * 0.5;
-@@ -351,7 +381,7 @@ function createLabel(lines, font, material) {
+@@ -342,7 +372,7 @@ function createLabel(lines, font, material) {
  
          textGeometry.computeBoundingBox();
  
