@@ -111,6 +111,7 @@ const files = [
     'src/materials/nodes/NodeMaterial',
     'src/materials/nodes/NodeMaterials',
     'src/materials/nodes/PointsNodeMaterial',
+    'src/materials/nodes/ProxyNodeMaterial',
     'src/materials/nodes/ShadowNodeMaterial',
     'src/materials/nodes/SpriteNodeMaterial',
     'src/materials/nodes/VolumeNodeMaterial',
