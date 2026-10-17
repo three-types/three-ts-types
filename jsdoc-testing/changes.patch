@@ -2208,27 +2208,27 @@ index d15fa4427..cfa2eb3b1 100644
 +
 +export function oitPass(scene: Scene, camera: Camera, options?: PassNodeOptions): OITPassNode;
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/tsl/display/SSAONode.d.ts b/jsdoc-testing/jsdoc/examples/jsm/tsl/display/SSAONode.d.ts
-index 83bcbea9c..92fe3fcc5 100644
+index 0f8db6fc4..10768a5e8 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/tsl/display/SSAONode.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/tsl/display/SSAONode.d.ts
 @@ -1,5 +1,5 @@
 -export default SSAONode;
 -export function ssao(depthNode: Node<any>, normalNode: Node<vec3>, camera: Camera): SSAONode;
-+import { Camera, Node, TempNode, TextureNode, UniformNode, Vector2 } from 'three/webgpu';
++import { Camera, Node, TextureNode, UniformNode, Vector2 } from 'three/webgpu';
 +
  /**
   * Post processing node for a fast, screen-space ambient occlusion (SSAO).
   *
 @@ -22,7 +22,7 @@ export function ssao(depthNode: Node<any>, normalNode: Node<vec3>, camera: Camer
-  * @augments TempNode
+  * @augments Node
   * @three_import import { ssao } from 'three/addons/tsl/display/SSAONode.js';
   */
--declare class SSAONode extends TempNode {
-+declare class SSAONode extends TempNode<'float'> {
+-declare class SSAONode extends Node {
++declare class SSAONode extends Node<'float'> {
      /**
       * Constructs a new SSAO node.
       *
-@@ -30,19 +30,19 @@ declare class SSAONode extends TempNode {
+@@ -30,19 +30,19 @@ declare class SSAONode extends Node {
       * @param {Node<vec3>} normalNode - A node that represents the scene's normals.
       * @param {Camera} camera - The camera the scene is rendered with.
       */
@@ -2251,7 +2251,7 @@ index 83bcbea9c..92fe3fcc5 100644
      /**
       * The resolution scale. The effect renders at a fraction of the drawing buffer
       * for extra speed; `0.5` is a good default for a low-frequency signal like AO.
-@@ -56,26 +56,26 @@ declare class SSAONode extends TempNode {
+@@ -56,26 +56,26 @@ declare class SSAONode extends Node {
       *
       * @type {UniformNode<float>}
       */
@@ -2282,7 +2282,7 @@ index 83bcbea9c..92fe3fcc5 100644
      /**
       * Whether the depth-aware blur that denoises the raw AO is applied or not.
       *
-@@ -89,105 +89,19 @@ declare class SSAONode extends TempNode {
+@@ -89,105 +89,19 @@ declare class SSAONode extends Node {
       *
       * @type {UniformNode<float>}
       */
@@ -2390,7 +2390,7 @@ index 83bcbea9c..92fe3fcc5 100644
      /**
       * Sets the size of the effect.
       *
-@@ -195,19 +109,8 @@ declare class SSAONode extends TempNode {
+@@ -195,19 +109,8 @@ declare class SSAONode extends Node {
       * @param {number} height - The height of the effect.
       */
      setSize(width: number, height: number): void;
@@ -2408,21 +2408,21 @@ index 83bcbea9c..92fe3fcc5 100644
 -     */
 -    setup(builder: NodeBuilder): PassTextureNode;
  }
--import { TempNode } from 'three/webgpu';
+-import { Node } from 'three/webgpu';
 -import { Vector2 } from 'three/webgpu';
 +
 +export default SSAONode;
 +
 +export function ssao(depthNode: Node, normalNode: Node, camera: Camera): SSAONode;
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/tsl/display/SSRNode.d.ts b/jsdoc-testing/jsdoc/examples/jsm/tsl/display/SSRNode.d.ts
-index 641827e0f..8bcc92481 100644
+index b9aceff9b..79efd30e3 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/tsl/display/SSRNode.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/tsl/display/SSRNode.d.ts
 @@ -1,6 +1,6 @@
 -export default SSRNode;
 -export function ssr(colorNode: Node<any>, depthNode: Node<any>, normalNode: Node<any>, options?: SSRNodeOptions): SSRNode;
 -export type SSRNodeOptions = {
-+import { Camera, Node, RenderTarget, TempNode, Texture, TextureNode, UniformNode } from 'three/webgpu';
++import { Camera, Node, RenderTarget, Texture, TextureNode, UniformNode } from 'three/webgpu';
 +
 +export interface SSRNodeOptions {
      /**
@@ -2485,15 +2485,15 @@ index 641827e0f..8bcc92481 100644
   * Post processing node for computing screen space reflections (SSR).
   *
 @@ -58,7 +47,7 @@ export type SSRNodeOptions = {
-  * @augments TempNode
+  * @augments Node
   * @three_import import { ssr } from 'three/addons/tsl/display/SSRNode.js';
   */
--declare class SSRNode extends TempNode {
-+declare class SSRNode extends TempNode<'vec4'> {
+-declare class SSRNode extends Node {
++declare class SSRNode extends Node<'vec4'> {
      /**
       * Constructs a new SSR node.
       *
-@@ -67,7 +56,7 @@ declare class SSRNode extends TempNode {
+@@ -67,7 +56,7 @@ declare class SSRNode extends Node {
       * @param {Node<vec3>} normalNode - A node that represents the beauty pass's normals.
       * @param {SSRNodeOptions} [options] - Optional inputs for material and environment data.
       */
@@ -2502,7 +2502,7 @@ index 641827e0f..8bcc92481 100644
      /**
       * When `true`, the reflection direction is varied per pixel with stochastic GGX rays
       * (second-generation SSR). When `false`, a single mirror reflection is traced and
-@@ -88,50 +77,40 @@ declare class SSRNode extends TempNode {
+@@ -88,50 +77,40 @@ declare class SSRNode extends Node {
       *
       * @type {Node<vec4>}
       */
@@ -2559,7 +2559,7 @@ index 641827e0f..8bcc92481 100644
      /**
       * The resolution scale. Valid values are in the range
       * `[0,1]`. `1` means best quality but also results in
-@@ -148,13 +127,13 @@ declare class SSRNode extends TempNode {
+@@ -148,13 +127,13 @@ declare class SSRNode extends Node {
       *
       * @type {UniformNode<float>}
       */
@@ -2575,7 +2575,7 @@ index 641827e0f..8bcc92481 100644
      /**
       * A multiplier for the overall reflection intensity. `1` leaves the
       * reflections unchanged, lower values dim them and higher values boost them.
-@@ -162,7 +141,7 @@ declare class SSRNode extends TempNode {
+@@ -162,7 +141,7 @@ declare class SSRNode extends Node {
       * @type {UniformNode<float>}
       * @default 1
       */
@@ -2584,7 +2584,7 @@ index 641827e0f..8bcc92481 100644
      /**
       * Screen-edge fade width, in UV units. As a screen-space hit approaches a screen
       * border, the reflection is faded over this distance — either toward the environment
-@@ -172,26 +151,14 @@ declare class SSRNode extends TempNode {
+@@ -172,26 +151,14 @@ declare class SSRNode extends Node {
       * @type {UniformNode<float>}
       * @default 0.2
       */
@@ -2613,7 +2613,7 @@ index 641827e0f..8bcc92481 100644
      /**
       * This parameter controls how detailed the raymarching process works.
       * The value ranges is `[0,1]` where `1` means best quality (the maximum number
-@@ -203,7 +170,7 @@ declare class SSRNode extends TempNode {
+@@ -203,7 +170,7 @@ declare class SSRNode extends Node {
       *
       * @type {UniformNode<float>}
       */
@@ -2622,7 +2622,7 @@ index 641827e0f..8bcc92481 100644
      /**
       * Mirror bias for the stochastic GGX sampling. Concentrates the reflected rays toward
       * the lobe's narrow (near-mirror) core, trading a small amount of bias for less noise.
-@@ -212,40 +179,7 @@ declare class SSRNode extends TempNode {
+@@ -212,40 +179,7 @@ declare class SSRNode extends Node {
       * @type {UniformNode<float>}
       * @default 0.5
       */
@@ -2664,7 +2664,7 @@ index 641827e0f..8bcc92481 100644
      /**
       * HDR environment map for screen-space misses.
       *
-@@ -263,67 +197,13 @@ declare class SSRNode extends TempNode {
+@@ -263,67 +197,13 @@ declare class SSRNode extends Node {
       *
       * @type {?Node<vec2>}
       */
@@ -2733,7 +2733,7 @@ index 641827e0f..8bcc92481 100644
      /**
       * Intensity multiplier applied to environment-map reflections on screen-space
       * misses and at screen edges. Defaults to π to match the former hardcoded multiplier.
-@@ -331,66 +211,7 @@ declare class SSRNode extends TempNode {
+@@ -331,66 +211,7 @@ declare class SSRNode extends Node {
       * @type {UniformNode<float>}
       * @default Math.PI
       */
@@ -2801,7 +2801,7 @@ index 641827e0f..8bcc92481 100644
      /**
       * Non-linear step distribution exponent (compile-time constant). See the backing
       * field for details. Assigning a new value recompiles the SSR material.
-@@ -398,7 +219,7 @@ declare class SSRNode extends TempNode {
+@@ -398,7 +219,7 @@ declare class SSRNode extends Node {
       * @type {number}
       */
      get stepExponent(): number;
@@ -2810,7 +2810,7 @@ index 641827e0f..8bcc92481 100644
      /**
       * Blur kernel size (compile-time constant). Assigning a new value recompiles the
       * blur material.
-@@ -406,14 +227,7 @@ declare class SSRNode extends TempNode {
+@@ -406,14 +227,7 @@ declare class SSRNode extends Node {
       * @type {number}
       */
      get blurQuality(): number;
@@ -2826,7 +2826,7 @@ index 641827e0f..8bcc92481 100644
      /**
       * Whether SSR fades to black near screen borders (compile-time constant). Assigning
       * a new value recompiles the SSR material.
-@@ -421,7 +235,7 @@ declare class SSRNode extends TempNode {
+@@ -421,7 +235,7 @@ declare class SSRNode extends Node {
       * @type {boolean}
       */
      get screenEdgeFadeBlack(): boolean;
@@ -2835,7 +2835,7 @@ index 641827e0f..8bcc92481 100644
      /**
       * Whether sub-step binary-search hit refinement is enabled (compile-time constant).
       * Assigning a new value rebuilds the SSR material.
-@@ -429,7 +243,7 @@ declare class SSRNode extends TempNode {
+@@ -429,7 +243,7 @@ declare class SSRNode extends Node {
       * @type {boolean}
       */
      get binaryRefine(): boolean;
@@ -2844,7 +2844,7 @@ index 641827e0f..8bcc92481 100644
      /**
       * Whether dielectrics are reflected in the non-stochastic path (compile-time constant).
       * Assigning a new value rebuilds the SSR material.
-@@ -437,21 +251,13 @@ declare class SSRNode extends TempNode {
+@@ -437,21 +251,13 @@ declare class SSRNode extends Node {
       * @type {boolean}
       */
      get reflectNonMetals(): boolean;
@@ -2868,7 +2868,7 @@ index 641827e0f..8bcc92481 100644
      /**
       * Sets the size of the effect.
       *
-@@ -469,7 +275,7 @@ declare class SSRNode extends TempNode {
+@@ -469,7 +275,7 @@ declare class SSRNode extends Node {
       * @param {Texture} history
       * @param {Node<vec2>} velocity
       */
@@ -2877,7 +2877,7 @@ index 641827e0f..8bcc92481 100644
      /**
       * Sets the environment map for importance-sampled env lighting when
       * screen-space rays miss. Call this whenever the scene's env map changes.
-@@ -487,21 +293,10 @@ declare class SSRNode extends TempNode {
+@@ -487,21 +293,10 @@ declare class SSRNode extends Node {
       *
       * @type {?UniformNode<float>}
       */
@@ -2898,7 +2898,7 @@ index 641827e0f..8bcc92481 100644
 +    get envMapIntensity(): UniformNode<'float', number> | null;
      getRenderTarget(): RenderTarget;
  }
--import { TempNode } from 'three/webgpu';
+-import { Node } from 'three/webgpu';
 -import { RenderTarget } from 'three/webgpu';
 +
 +export default SSRNode;
@@ -14096,7 +14096,7 @@ index ca4dd3dff..a65e1ccc8 100644
 -export const computeSkinning: () => void;
 +export const computeSkinning: (skinnedMesh: SkinnedMesh, toPosition?: Node<'vec3'> | Vector3 | null) => void;
 diff --git a/jsdoc-testing/jsdoc/src/nodes/core/Node.d.ts b/jsdoc-testing/jsdoc/src/nodes/core/Node.d.ts
-index f18a242fb..b3a899e0b 100644
+index d19ed5cc6..1b3b50030 100644
 --- a/jsdoc-testing/jsdoc/src/nodes/core/Node.d.ts
 +++ b/jsdoc-testing/jsdoc/src/nodes/core/Node.d.ts
 @@ -1,10 +1,85 @@
@@ -14244,7 +14244,16 @@ index f18a242fb..b3a899e0b 100644
      /**
       * The unique ID of the node.
       *
-@@ -139,7 +189,7 @@ declare class Node extends EventDispatcher {
+@@ -125,7 +175,7 @@ declare class Node extends EventDispatcher {
+      * @param {NodeBuilder} builder - The current node builder.
+      * @return {boolean} Whether temporary caching is allowed.
+      */
+-    isCacheable(): boolean;
++    isCacheable(builder: NodeBuilder): boolean;
+     /**
+      * Set this property to `true` when the node should be regenerated.
+      *
+@@ -147,7 +197,7 @@ declare class Node extends EventDispatcher {
       * @type {string}
       * @readonly
       */
@@ -14253,7 +14262,7 @@ index f18a242fb..b3a899e0b 100644
      /**
       * Convenient method for defining {@link Node#update}.
       *
-@@ -147,7 +197,7 @@ declare class Node extends EventDispatcher {
+@@ -155,7 +205,7 @@ declare class Node extends EventDispatcher {
       * @param {string} updateType - The update type.
       * @return {Node} A reference to this node.
       */
@@ -14262,7 +14271,7 @@ index f18a242fb..b3a899e0b 100644
      /**
       * The method can be implemented to update the node's internal state when it is used to render an object.
       * The {@link Node#updateType} property defines how often the update is executed.
-@@ -156,7 +206,7 @@ declare class Node extends EventDispatcher {
+@@ -164,7 +214,7 @@ declare class Node extends EventDispatcher {
       * @param {NodeFrame} frame - A reference to the current node frame.
       * @return {?boolean} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
       */
@@ -14271,7 +14280,7 @@ index f18a242fb..b3a899e0b 100644
      /**
       * Convenient method for defining {@link Node#update}. Similar to {@link Node#onUpdate}, but
       * this method automatically sets the update type to `FRAME`.
-@@ -164,7 +214,7 @@ declare class Node extends EventDispatcher {
+@@ -172,7 +222,7 @@ declare class Node extends EventDispatcher {
       * @param {Function} callback - The update method.
       * @return {Node} A reference to this node.
       */
@@ -14280,7 +14289,7 @@ index f18a242fb..b3a899e0b 100644
      /**
       * Convenient method for defining {@link Node#update}. Similar to {@link Node#onUpdate}, but
       * this method automatically sets the update type to `RENDER`.
-@@ -172,7 +222,7 @@ declare class Node extends EventDispatcher {
+@@ -180,7 +230,7 @@ declare class Node extends EventDispatcher {
       * @param {Function} callback - The update method.
       * @return {Node} A reference to this node.
       */
@@ -14289,7 +14298,7 @@ index f18a242fb..b3a899e0b 100644
      /**
       * Convenient method for defining {@link Node#update}. Similar to {@link Node#onUpdate}, but
       * this method automatically sets the update type to `OBJECT`.
-@@ -180,14 +230,14 @@ declare class Node extends EventDispatcher {
+@@ -188,14 +238,14 @@ declare class Node extends EventDispatcher {
       * @param {Function} callback - The update method.
       * @return {Node} A reference to this node.
       */
@@ -14306,7 +14315,7 @@ index f18a242fb..b3a899e0b 100644
      /**
       * Nodes might refer to other objects like materials. This method allows to dynamically update the reference
       * to such objects based on a given state (e.g. the current node frame or builder).
-@@ -195,7 +245,7 @@ declare class Node extends EventDispatcher {
+@@ -203,7 +253,7 @@ declare class Node extends EventDispatcher {
       * @param {any} state - This method can be invocated in different contexts so `state` can refer to any object type.
       * @return {any} The updated reference.
       */
@@ -14315,7 +14324,7 @@ index f18a242fb..b3a899e0b 100644
      /**
       * By default this method returns the value of the {@link Node#global} flag. This method
       * can be overwritten in derived classes if an analytical way is required to determine the
-@@ -204,39 +254,25 @@ declare class Node extends EventDispatcher {
+@@ -212,39 +262,25 @@ declare class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {boolean} Whether this node is global or not.
       */
@@ -14358,7 +14367,7 @@ index f18a242fb..b3a899e0b 100644
      /**
       * Returns the cache key for this node.
       *
-@@ -256,7 +292,7 @@ declare class Node extends EventDispatcher {
+@@ -264,7 +300,7 @@ declare class Node extends EventDispatcher {
       *
       * @return {Node} A reference to this node.
       */
@@ -14367,7 +14376,7 @@ index f18a242fb..b3a899e0b 100644
      /**
       * Returns the hash of the node which is used to identify the node. By default it's
       * the {@link Node#uuid} however derived node classes might have to overwrite this method
-@@ -265,43 +301,28 @@ declare class Node extends EventDispatcher {
+@@ -273,43 +309,28 @@ declare class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {string} The hash.
       */
@@ -14415,7 +14424,7 @@ index f18a242fb..b3a899e0b 100644
      /**
       * Certain types are composed of multiple elements. For example a `vec3`
       * is composed of three `float` values. This method returns the type of
-@@ -318,7 +339,7 @@ declare class Node extends EventDispatcher {
+@@ -326,7 +347,7 @@ declare class Node extends EventDispatcher {
       * @param {string} name - The name of the member.
       * @return {string} The type of the node.
       */
@@ -14424,7 +14433,7 @@ index f18a242fb..b3a899e0b 100644
      /**
       * Returns the node's type.
       *
-@@ -352,7 +373,7 @@ declare class Node extends EventDispatcher {
+@@ -360,7 +381,7 @@ declare class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {?number} The number of elements in the node array.
       */
@@ -14433,7 +14442,7 @@ index f18a242fb..b3a899e0b 100644
      /**
       * Represents the setup stage which is the first step of the build process, see {@link Node#build} method.
       * This method is often overwritten in derived modules to prepare the node which is used as a node's output/result.
-@@ -361,7 +382,7 @@ declare class Node extends EventDispatcher {
+@@ -369,7 +390,7 @@ declare class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {?Node} The output node.
       */
@@ -14442,7 +14451,7 @@ index f18a242fb..b3a899e0b 100644
      /**
       * Represents the analyze stage which is the second step of the build process, see {@link Node#build} method.
       * This stage analyzes the node hierarchy and ensures descendent nodes are built.
-@@ -378,7 +399,7 @@ declare class Node extends EventDispatcher {
+@@ -386,7 +407,7 @@ declare class Node extends EventDispatcher {
       * @param {?string} [output] - Can be used to define the output type.
       * @return {?string} The generated shader string.
       */
@@ -14451,7 +14460,7 @@ index f18a242fb..b3a899e0b 100644
      /**
       * The method can be implemented to update the node's internal state before it is used to render an object.
       * The {@link Node#updateBeforeType} property defines how often the update is executed.
-@@ -387,7 +408,7 @@ declare class Node extends EventDispatcher {
+@@ -395,7 +416,7 @@ declare class Node extends EventDispatcher {
       * @param {NodeFrame} frame - A reference to the current node frame.
       * @return {?boolean} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
       */
@@ -14460,7 +14469,7 @@ index f18a242fb..b3a899e0b 100644
      /**
       * The method can be implemented to update the node's internal state after it was used to render an object.
       * The {@link Node#updateAfterType} property defines how often the update is executed.
-@@ -396,8 +417,8 @@ declare class Node extends EventDispatcher {
+@@ -404,8 +425,8 @@ declare class Node extends EventDispatcher {
       * @param {NodeFrame} frame - A reference to the current node frame.
       * @return {?boolean} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
       */
@@ -14471,7 +14480,7 @@ index f18a242fb..b3a899e0b 100644
      /**
       * This method performs the build of a node. The behavior and return value depend on the current build stage:
       * - **setup**: Prepares the node and its children for the build process. This process can also create new nodes. Returns the node itself or a variant.
-@@ -414,28 +435,188 @@ declare class Node extends EventDispatcher {
+@@ -422,28 +443,188 @@ declare class Node extends EventDispatcher {
       *
       * @return {Generator<Object>} An iterable list of serialized child objects as JSON.
       */
@@ -15039,6 +15048,19 @@ index 7fb5881df..3d7dcd09c 100644
 -import Node from './Node.js';
 +
 +export default StructTypeNode;
+diff --git a/jsdoc-testing/jsdoc/src/nodes/core/TempNode.d.ts b/jsdoc-testing/jsdoc/src/nodes/core/TempNode.d.ts
+index 8f758a028..4218eb1db 100644
+--- a/jsdoc-testing/jsdoc/src/nodes/core/TempNode.d.ts
++++ b/jsdoc-testing/jsdoc/src/nodes/core/TempNode.d.ts
+@@ -17,7 +17,7 @@ declare class TempNode extends Node {
+      * @default true
+      */
+     readonly isTempNode: boolean;
+-    isCacheable(builder: any): boolean;
++    isCacheable(builder: NodeBuilder): boolean;
+     /**
+      * Whether this node is used more than once in context of other nodes.
+      *
 diff --git a/jsdoc-testing/jsdoc/src/nodes/core/UniformNode.d.ts b/jsdoc-testing/jsdoc/src/nodes/core/UniformNode.d.ts
 index 780398f37..dbfdd00b4 100644
 --- a/jsdoc-testing/jsdoc/src/nodes/core/UniformNode.d.ts

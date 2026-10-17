@@ -1,6 +1,6 @@
-import { Node, TempNode, TextureNode, UniformNode } from "three/webgpu";
+import { Node, TextureNode, UniformNode } from "three/webgpu";
 
-declare class Lut3DNode extends TempNode {
+declare class Lut3DNode extends Node {
     inputNode: Node;
     lutNode: TextureNode;
     size: UniformNode<"float", number>;

@@ -1,5 +1,4 @@
 import Node from "../core/Node.js";
-import TempNode from "../core/TempNode.js";
 
 export type SubgroupFunctionNodeMethod0 = typeof SubgroupFunctionNode.SUBGROUP_ELECT;
 
@@ -31,7 +30,7 @@ export type SubgroupFunctionNodeMethod2 =
     | typeof SubgroupFunctionNode.SUBGROUP_SHUFFLE_DOWN
     | typeof SubgroupFunctionNode.QUAD_BROADCAST;
 
-declare class SubgroupFunctionNode extends TempNode {
+declare class SubgroupFunctionNode extends Node {
     constructor(method: SubgroupFunctionNodeMethod0);
     constructor(method: SubgroupFunctionNodeMethod1, aNode: Node);
     constructor(method: SubgroupFunctionNodeMethod2, aNode: Node, bNode: Node);

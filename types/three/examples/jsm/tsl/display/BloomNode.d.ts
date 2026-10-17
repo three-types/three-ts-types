@@ -1,6 +1,6 @@
-import { Node, TempNode, TextureNode, UniformNode, Vector3 } from "three/webgpu";
+import { Node, TextureNode, UniformNode, Vector3 } from "three/webgpu";
 
-declare class BloomNode extends TempNode<"vec4"> {
+declare class BloomNode extends Node<"vec4"> {
     inputNode: Node<"vec4">;
     strength: UniformNode<"float", number>;
     radius: UniformNode<"float", number>;

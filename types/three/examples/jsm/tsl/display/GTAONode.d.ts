@@ -1,6 +1,6 @@
-import { Camera, Node, TempNode, TextureNode, UniformNode } from "three/webgpu";
+import { Camera, Node, TextureNode, UniformNode } from "three/webgpu";
 
-declare class GTAONode extends TempNode<"float"> {
+declare class GTAONode extends Node<"float"> {
     depthNode: Node;
     normalNode: Node;
 

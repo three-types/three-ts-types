@@ -1,4 +1,4 @@
-import { Camera, SampleNode, Scene, TempNode, TextureNode, UniformNode } from "three/webgpu";
+import { Camera, Node, SampleNode, Scene, TextureNode, UniformNode } from "three/webgpu";
 import { VXGIVolume } from "./VXGIVolume.js";
 
 /**
@@ -18,7 +18,7 @@ import { VXGIVolume } from "./VXGIVolume.js";
  *
  * Note: This node can only be used with `WebGPURenderer` and a WebGPU backend.
  *
- * @augments TempNode
+ * @augments Node
  * @three_import import { vxgi } from 'three/addons/lighting/vxgi/VXGINode.js';
  */
 declare class VXGINodeInterface {
@@ -87,7 +87,7 @@ declare const VXGINode: {
     ): VXGINode;
 };
 
-type VXGINode = VXGINodeInterface & TempNode<"vec4">;
+type VXGINode = VXGINodeInterface & Node<"vec4">;
 
 export default VXGINode;
 

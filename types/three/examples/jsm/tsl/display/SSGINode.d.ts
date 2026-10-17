@@ -1,6 +1,6 @@
-import { Node, PerspectiveCamera, TempNode, TextureNode, UniformNode } from "three/webgpu";
+import { Node, PerspectiveCamera, TextureNode, UniformNode } from "three/webgpu";
 
-declare class SSGINode extends TempNode<"vec4"> {
+declare class SSGINode extends Node<"vec4"> {
     beautyNode: Node;
     depthNode: Node;
     normalNode: Node;

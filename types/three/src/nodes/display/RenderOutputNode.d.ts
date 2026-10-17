@@ -1,8 +1,7 @@
 import { ToneMapping } from "../../constants.js";
 import Node from "../core/Node.js";
-import TempNode from "../core/TempNode.js";
 
-declare class RenderOutputNode extends TempNode<"vec4"> {
+declare class RenderOutputNode extends Node<"vec4"> {
     colorNode: Node;
     outputColorSpace: string | null;
 

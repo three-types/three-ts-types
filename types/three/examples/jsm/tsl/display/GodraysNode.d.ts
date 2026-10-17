@@ -1,6 +1,6 @@
-import { Camera, DirectionalLight, PointLight, TempNode, TextureNode, UniformNode } from "three/webgpu";
+import { Camera, DirectionalLight, Node, PointLight, TextureNode, UniformNode } from "three/webgpu";
 
-declare class GodraysNode extends TempNode<"vec4"> {
+declare class GodraysNode extends Node<"vec4"> {
     depthNode: TextureNode;
 
     raymarchSteps: UniformNode<"uint", number>;

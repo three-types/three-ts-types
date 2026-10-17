@@ -1,4 +1,4 @@
-import { Camera, Node, RenderTarget, TempNode, Texture, TextureNode, UniformNode } from "three/webgpu";
+import { Camera, Node, RenderTarget, Texture, TextureNode, UniformNode } from "three/webgpu";
 
 export interface SSRNodeOptions {
     /**
@@ -44,10 +44,10 @@ export interface SSRNodeOptions {
  *
  * Reference: {@link https://lettier.github.io/3d-game-shaders-for-beginners/screen-space-reflection.html}
  *
- * @augments TempNode
+ * @augments Node
  * @three_import import { ssr } from 'three/addons/tsl/display/SSRNode.js';
  */
-declare class SSRNode extends TempNode<"vec4"> {
+declare class SSRNode extends Node<"vec4"> {
     /**
      * Constructs a new SSR node.
      *
