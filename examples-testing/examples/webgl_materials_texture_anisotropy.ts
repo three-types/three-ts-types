@@ -5,9 +5,9 @@ import Stats from 'three/addons/libs/stats.module.js';
 const SCREEN_WIDTH = window.innerWidth;
 const SCREEN_HEIGHT = window.innerHeight;
 
-let container, stats;
+let container: HTMLDivElement, stats: Stats;
 
-let camera, scene1, scene2, renderer;
+let camera: THREE.PerspectiveCamera, scene1: THREE.Scene, scene2: THREE.Scene, renderer: THREE.WebGLRenderer;
 
 let mouseX = 0,
     mouseY = 0;
@@ -70,11 +70,11 @@ function init() {
     texture2.repeat.set(512, 512);
 
     if (maxAnisotropy > 0) {
-        document.getElementById('val_left').innerHTML = texture1.anisotropy;
-        document.getElementById('val_right').innerHTML = texture2.anisotropy;
+        document.getElementById('val_left')!.innerHTML = texture1.anisotropy.toString();
+        document.getElementById('val_right')!.innerHTML = texture2.anisotropy.toString();
     } else {
-        document.getElementById('val_left').innerHTML = 'not supported';
-        document.getElementById('val_right').innerHTML = 'not supported';
+        document.getElementById('val_left')!.innerHTML = 'not supported';
+        document.getElementById('val_right')!.innerHTML = 'not supported';
     }
 
     //
@@ -110,7 +110,7 @@ function init() {
     document.addEventListener('mousemove', onDocumentMouseMove);
 }
 
-function onDocumentMouseMove(event) {
+function onDocumentMouseMove(event: MouseEvent) {
     mouseX = event.clientX - windowHalfX;
     mouseY = event.clientY - windowHalfY;
 }

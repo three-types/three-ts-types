@@ -18,8 +18,8 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let camera, scene, renderer;
-let raycaster, pointer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let raycaster: THREE.Raycaster, pointer: THREE.Vector2;
 
 let mesh;
 
@@ -36,7 +36,7 @@ const jelly = Fn(({ renderer, geometry, object }) => {
 
     // Create storage buffer attribute for modified position.
 
-    const positionBaseAttribute = geometry.attributes.position;
+    const positionBaseAttribute = geometry.attributes.position as THREE.BufferAttribute;
     const positionStorageBufferAttribute = new THREE.StorageBufferAttribute(count, 3);
     const speedBufferAttribute = new THREE.StorageBufferAttribute(count, 3);
 
@@ -132,7 +132,7 @@ function init() {
 
         // apply the material to the mesh
 
-        mesh = gltf.scene.children[0];
+        mesh = gltf.scene.children[0] as THREE.Mesh;
         mesh.scale.setScalar(0.1);
         mesh.material = material;
         scene.add(mesh);
@@ -151,7 +151,7 @@ function init() {
     controls.minDistance = 0.7;
     controls.maxDistance = 2;
 
-    const gui = renderer.inspector.createParameters('Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
     gui.add(elasticity, 'value', 0, 0.5).name('elasticity');
     gui.add(damping, 'value', 0.9, 0.98).name('damping');
     gui.add(brushSize, 'value', 0.1, 0.5).name('brush size');
@@ -161,7 +161,7 @@ function init() {
     window.addEventListener('pointermove', onPointerMove);
 }
 
-function onPointerMove(event) {
+function onPointerMove(event: PointerEvent) {
     pointer.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1);
 
     raycaster.setFromCamera(pointer, camera);
@@ -171,7 +171,7 @@ function onPointerMove(event) {
     if (intersects.length > 0) {
         const intersect = intersects[0];
 
-        pointerPosition.value.copy(intersect.point);
+        pointerPosition.value.copy(intersect.point as unknown as THREE.Vector4Like);
         pointerPosition.value.w = 1; // enable
     } else {
         pointerPosition.value.w = 0; // disable

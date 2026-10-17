@@ -4,10 +4,10 @@ import Stats from 'three/addons/libs/stats.module.js';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let stats;
-let camera, scene, renderer;
+let stats: Stats;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
 
-let group;
+let group: THREE.Group;
 
 init();
 
@@ -95,13 +95,13 @@ function init() {
 
     shader = shader.replace(
         '#ifdef USE_SHADOWMAP',
-        '#ifdef USE_SHADOWMAP' + document.getElementById('PCSS').textContent,
+        '#ifdef USE_SHADOWMAP' + document.getElementById('PCSS')!.textContent,
     );
 
     shader = shader.replace(
         '\t\t\tif ( frustumTest ) {\n\t\t\t\tfloat depth = texture2D( shadowMap, shadowCoord.xy ).r;',
         '\t\t\tif ( frustumTest ) {\n' +
-            document.getElementById('PCSSGetShadow').textContent +
+            document.getElementById('PCSSGetShadow')!.textContent +
             '\n' +
             '\t\t\t\tfloat depth = texture2D( shadowMap, shadowCoord.xy ).r;',
     );

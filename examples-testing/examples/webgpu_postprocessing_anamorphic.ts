@@ -26,8 +26,12 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let camera, scene, renderer, instancedMesh, controls;
-let renderPipeline;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    instancedMesh: THREE.InstancedMesh<THREE.SphereGeometry, THREE.MeshBasicNodeMaterial>,
+    controls: OrbitControls;
+let renderPipeline: THREE.RenderPipeline;
 
 const _dummy = new THREE.Object3D();
 
@@ -104,31 +108,41 @@ async function init() {
     bloomPass.setResolutionScale(0.25);
 
     // Custom high pass for anamorphic bloom
-    bloomPass.highPassFn = Fn(({ input, threshold, smoothWidth }) => {
-        // Extract bright areas to a texture (computed once, sampled many times)
-        const v = luminance(input.rgb);
-        const alpha = smoothstep(threshold, threshold.add(smoothWidth), v);
-        const brightPass = rtt(mix(vec4(0), input, alpha), null, null, {
-            wrapS: THREE.MirroredRepeatWrapping,
-            wrapT: THREE.MirroredRepeatWrapping,
-        });
+    bloomPass.highPassFn = Fn(
+        ({
+            input,
+            threshold,
+            smoothWidth,
+        }: {
+            input: THREE.Node<'vec4'>;
+            threshold: THREE.UniformNode<'float', number>;
+            smoothWidth: THREE.UniformNode<'float', number>;
+        }) => {
+            // Extract bright areas to a texture (computed once, sampled many times)
+            const v = luminance(input.rgb);
+            const alpha = smoothstep(threshold, threshold.add(smoothWidth), v);
+            const brightPass = rtt(mix(vec4(0), input, alpha), null, null, {
+                wrapS: THREE.MirroredRepeatWrapping,
+                wrapT: THREE.MirroredRepeatWrapping,
+            });
 
-        // Horizontal blur
-        const total = vec4(0);
-        const halfSamples = samples.div(2);
+            // Horizontal blur
+            const total = vec4(0);
+            const halfSamples = samples.div(2);
 
-        const invSize = vec2(1.0).div(viewportSize);
+            const invSize = vec2(1.0).div(viewportSize);
 
-        Loop({ start: halfSamples.negate(), end: halfSamples }, ({ i }) => {
-            let softness = float(i).abs().div(halfSamples).oneMinus();
-            softness = softness.pow(2.0);
+            Loop({ start: halfSamples.negate(), end: halfSamples }, ({ i }) => {
+                let softness = float(i).abs().div(halfSamples).oneMinus();
+                softness = softness.pow(2.0);
 
-            const shiftedUV = vec2(uv().x.add(invSize.x.mul(i).mul(4.0)), uv().y);
-            total.addAssign(brightPass.sample(shiftedUV).mul(softness));
-        });
+                const shiftedUV = vec2(uv().x.add(invSize.x.mul(i).mul(4.0)), uv().y);
+                total.addAssign(brightPass.sample(shiftedUV).mul(softness));
+            });
 
-        return total.div(samples.div(3.0));
-    });
+            return total.div(samples.div(3.0));
+        },
+    );
 
     const anamorphicPass = bloomPass.mul(tintColor).toInspector('Anamorphic');
 
@@ -137,7 +151,7 @@ async function init() {
 
     // gui
 
-    const gui = renderer.inspector.createParameters('Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
     gui.add(intensity, 'value', 0, 10).name('intensity');
     gui.add(threshold, 'value', 0, 0.9).name('threshold');
     gui.add(samples, 'value', 2, 128, 1).name('samples');

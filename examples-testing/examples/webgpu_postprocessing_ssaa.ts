@@ -1,13 +1,22 @@
 import * as THREE from 'three/webgpu';
-import { ssaaPass } from 'three/addons/tsl/display/SSAAPassNode.js';
+import SSAAPassNode, { ssaaPass } from 'three/addons/tsl/display/SSAAPassNode.js';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let scene, mesh, renderer, renderPipeline;
-let camera, ssaaRenderPass;
-let timer;
+let scene: THREE.Scene, mesh: THREE.InstancedMesh, renderer: THREE.WebGPURenderer, renderPipeline: THREE.RenderPipeline;
+let camera: THREE.PerspectiveCamera, ssaaRenderPass: SSAAPassNode;
+let timer: THREE.Timer;
 
-const params = {
+interface Params {
+    sampleLevel: number;
+    camera: string;
+    clearColor: 'black' | 'white' | 'blue' | 'green' | 'red';
+    clearAlpha: number;
+    viewOffsetX: number;
+    autoRotate: boolean;
+}
+
+const params: Params = {
     sampleLevel: 3,
     camera: 'perspective',
     clearColor: 'black',
@@ -102,7 +111,7 @@ function init() {
 
     // GUI
 
-    const gui = renderer.inspector.createParameters('Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
 
     gui.add(params, 'sampleLevel', {
         'Level 0: 1 Sample': 0,
@@ -139,7 +148,7 @@ function animate() {
         mesh.rotation.y += delta * 0.5;
     }
 
-    let newColor;
+    let newColor: THREE.ColorRepresentation;
 
     switch (params.clearColor) {
         case 'blue':
@@ -163,7 +172,7 @@ function animate() {
 
     ssaaRenderPass.sampleLevel = params.sampleLevel;
 
-    camera.view.offsetX = params.viewOffsetX;
+    camera.view!.offsetX = params.viewOffsetX;
 
     renderPipeline.render();
 }

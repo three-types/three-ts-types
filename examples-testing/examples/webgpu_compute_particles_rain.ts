@@ -25,14 +25,17 @@ import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js'
 const maxParticleCount = 50000;
 const instanceCount = maxParticleCount / 2;
 
-let camera, scene, renderer;
-let controls;
-let computeParticles;
-let monkey;
-let timer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let controls: OrbitControls;
+let computeParticles: THREE.ComputeNode;
+let monkey: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>;
+let timer: THREE.Timer;
 
-let collisionBox, collisionCamera, collisionPosRT, collisionPosMaterial;
-let collisionBoxPos, collisionBoxPosUI;
+let collisionBox: THREE.Mesh<THREE.BoxGeometry, THREE.MeshStandardMaterial>,
+    collisionCamera: THREE.OrthographicCamera,
+    collisionPosRT: THREE.RenderTarget,
+    collisionPosMaterial: THREE.MeshBasicNodeMaterial;
+let collisionBoxPos: THREE.Vector3, collisionBoxPosUI: THREE.Vector3;
 
 init();
 
@@ -106,7 +109,7 @@ async function init() {
     //
 
     const computeUpdate = Fn(() => {
-        const getCoord = pos => pos.add(50).div(100);
+        const getCoord = (pos: THREE.Node<'vec2'>) => pos.add(50).div(100);
 
         const position = positionBuffer.element(instanceIndex);
         const velocity = velocityBuffer.element(instanceIndex);
@@ -141,8 +144,8 @@ async function init() {
 
             // next drops will not fall in the same place
 
-            position.x = hash(instanceIndex.add(time)).mul(100).add(-50);
-            position.z = hash(instanceIndex.add(time.add(randUint())))
+            position.x = hash(instanceIndex.toFloat().add(time)).mul(100).add(-50);
+            position.z = hash(instanceIndex.toFloat().add(time.add(randUint())))
                 .mul(100)
                 .add(-50);
         });
@@ -279,7 +282,7 @@ async function init() {
 
     // gui
 
-    const gui = renderer.inspector.createParameters('Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
 
     // use lerp to smooth the movement
     collisionBoxPosUI = new THREE.Vector3().copy(collisionBox.position);

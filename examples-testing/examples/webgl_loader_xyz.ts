@@ -2,9 +2,9 @@ import * as THREE from 'three';
 
 import { XYZLoader } from 'three/addons/loaders/XYZLoader.js';
 
-let camera, scene, renderer, timer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, timer: THREE.Timer;
 
-let points;
+let points: THREE.Points;
 
 init();
 

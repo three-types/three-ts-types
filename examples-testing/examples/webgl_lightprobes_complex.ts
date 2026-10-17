@@ -5,9 +5,9 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import { LightProbeGridWebGL } from 'three/addons/lighting/LightProbeGridWebGL.js';
 import { LightProbeGridHelperWebGL } from 'three/addons/helpers/LightProbeGridHelperWebGL.js';
 
-let camera, scene, renderer, controls;
-let probesLeft, probesRight;
-let probesHelperLeft, probesHelperRight;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, controls: OrbitControls;
+let probesLeft: LightProbeGridWebGL, probesRight: LightProbeGridWebGL;
+let probesHelperLeft: LightProbeGridHelperWebGL, probesHelperRight: LightProbeGridHelperWebGL;
 
 init();
 
@@ -215,7 +215,7 @@ async function init() {
         resolution: 6,
     };
 
-    async function bake(resolution) {
+    async function bake(resolution: number) {
         // Remove both volumes before baking to prevent feedback
 
         if (probesLeft) {

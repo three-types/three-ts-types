@@ -3,17 +3,33 @@ import * as THREE from 'three/webgpu';
 import TWEEN from 'three/addons/libs/tween.module.js';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
+import { ValueSlider } from 'three/addons/inspector/ui/Values.js';
 
 import { uniform, pass } from 'three/tsl';
-import { transition } from 'three/addons/tsl/display/TransitionNode.js';
+import TransitionNode, { transition } from 'three/addons/tsl/display/TransitionNode.js';
 
-let renderer, renderPipeline, transitionController, transitionPass;
+let renderer: THREE.WebGPURenderer,
+    renderPipeline: THREE.RenderPipeline,
+    transitionController: ValueSlider<EffectController, 'transition'>,
+    transitionPass: TransitionNode;
 
-const textures = [];
+const textures: THREE.Texture[] = [];
 const timer = new THREE.Timer();
 timer.connect(document);
 
-const effectController = {
+interface EffectController {
+    animateScene: boolean;
+    animateTransition: boolean;
+    transition: number;
+    _transition: THREE.UniformNode<'float', number>;
+    useTexture: boolean;
+    _useTexture: THREE.UniformNode<'float', number>;
+    texture: number;
+    cycle: boolean;
+    threshold: THREE.UniformNode<'float', number>;
+}
+
+const effectController: EffectController = {
     animateScene: true,
     animateTransition: true,
     transition: 0,
@@ -25,7 +41,7 @@ const effectController = {
     threshold: uniform(0.1),
 };
 
-function generateInstancedMesh(geometry, material, count) {
+function generateInstancedMesh(geometry: THREE.BufferGeometry, material: THREE.MeshPhongNodeMaterial, count: number) {
     const mesh = new THREE.InstancedMesh(geometry, material, count);
 
     const dummy = new THREE.Object3D();
@@ -59,42 +75,54 @@ function generateInstancedMesh(geometry, material, count) {
     return mesh;
 }
 
-function FXScene(geometry, rotationSpeed, backgroundColor) {
-    const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
-    camera.position.z = 20;
+class FXScene {
+    rotationSpeed: THREE.Vector3;
 
-    // Setup scene
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color(backgroundColor);
-    scene.add(new THREE.AmbientLight(0xaaaaaa, 3));
+    scene: THREE.Scene;
+    camera: THREE.PerspectiveCamera;
+    mesh: THREE.InstancedMesh;
 
-    const light = new THREE.DirectionalLight(0xffffff, 3);
-    light.position.set(0, 1, 4);
-    scene.add(light);
+    update: (delta: number) => void;
 
-    this.rotationSpeed = rotationSpeed;
+    resize: () => void;
 
-    const color = geometry.type === 'BoxGeometry' ? 0x0000ff : 0xff0000;
-    const material = new THREE.MeshPhongNodeMaterial({ color: color, flatShading: true });
-    const mesh = generateInstancedMesh(geometry, material, 500);
-    scene.add(mesh);
+    constructor(geometry: THREE.BufferGeometry, rotationSpeed: THREE.Vector3, backgroundColor: number) {
+        const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
+        camera.position.z = 20;
 
-    this.scene = scene;
-    this.camera = camera;
-    this.mesh = mesh;
+        // Setup scene
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(backgroundColor);
+        scene.add(new THREE.AmbientLight(0xaaaaaa, 3));
 
-    this.update = function (delta) {
-        if (effectController.animateScene) {
-            mesh.rotation.x += this.rotationSpeed.x * delta;
-            mesh.rotation.y += this.rotationSpeed.y * delta;
-            mesh.rotation.z += this.rotationSpeed.z * delta;
-        }
-    };
+        const light = new THREE.DirectionalLight(0xffffff, 3);
+        light.position.set(0, 1, 4);
+        scene.add(light);
 
-    this.resize = function () {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-    };
+        this.rotationSpeed = rotationSpeed;
+
+        const color = geometry.type === 'BoxGeometry' ? 0x0000ff : 0xff0000;
+        const material = new THREE.MeshPhongNodeMaterial({ color: color, flatShading: true });
+        const mesh = generateInstancedMesh(geometry, material, 500);
+        scene.add(mesh);
+
+        this.scene = scene;
+        this.camera = camera;
+        this.mesh = mesh;
+
+        this.update = function (delta) {
+            if (effectController.animateScene) {
+                mesh.rotation.x += this.rotationSpeed.x * delta;
+                mesh.rotation.y += this.rotationSpeed.y * delta;
+                mesh.rotation.z += this.rotationSpeed.z * delta;
+            }
+        };
+
+        this.resize = function () {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+        };
+    }
 }
 
 const fxSceneA = new FXScene(new THREE.BoxGeometry(2, 2, 2), new THREE.Vector3(0, -0.4, 0), 0xffffff);
@@ -132,7 +160,7 @@ function init() {
 
     renderPipeline.outputNode = transitionPass;
 
-    const gui = renderer.inspector.createParameters('Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
 
     gui.add(effectController, 'animateScene').name('Animate Scene');
     gui.add(effectController, 'animateTransition').name('Animate Transition');

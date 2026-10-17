@@ -5,8 +5,8 @@ import Stats from 'three/addons/libs/stats.module.js';
 import { SelectionBox } from 'three/addons/interactive/SelectionBox.js';
 import { SelectionHelper } from 'three/addons/interactive/SelectionHelper.js';
 
-let container, stats;
-let camera, scene, renderer;
+let container: HTMLElement, stats: Stats;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
 
 init();
 
@@ -87,12 +87,12 @@ function animate() {
     stats.update();
 }
 
-const selectionBox = new SelectionBox(camera, scene);
-const helper = new SelectionHelper(renderer, 'selectBox');
+const selectionBox = new SelectionBox(camera!, scene!);
+const helper = new SelectionHelper(renderer!, 'selectBox');
 
 document.addEventListener('pointerdown', function (event) {
     for (const item of selectionBox.collection) {
-        item.material.emissive.set(0x000000);
+        (item as THREE.Mesh<THREE.BufferGeometry, THREE.MeshLambertMaterial>).material.emissive.set(0x000000);
     }
 
     selectionBox.startPoint.set(
@@ -105,7 +105,9 @@ document.addEventListener('pointerdown', function (event) {
 document.addEventListener('pointermove', function (event) {
     if (helper.isDown) {
         for (let i = 0; i < selectionBox.collection.length; i++) {
-            selectionBox.collection[i].material.emissive.set(0x000000);
+            (
+                selectionBox.collection[i] as THREE.Mesh<THREE.BufferGeometry, THREE.MeshLambertMaterial>
+            ).material.emissive.set(0x000000);
         }
 
         selectionBox.endPoint.set(
@@ -117,7 +119,9 @@ document.addEventListener('pointermove', function (event) {
         const allSelected = selectionBox.select();
 
         for (let i = 0; i < allSelected.length; i++) {
-            allSelected[i].material.emissive.set(0xffffff);
+            (allSelected[i] as THREE.Mesh<THREE.BufferGeometry, THREE.MeshLambertMaterial>).material.emissive.set(
+                0xffffff,
+            );
         }
     }
 });
@@ -132,6 +136,6 @@ document.addEventListener('pointerup', function (event) {
     const allSelected = selectionBox.select();
 
     for (let i = 0; i < allSelected.length; i++) {
-        allSelected[i].material.emissive.set(0xffffff);
+        (allSelected[i] as THREE.Mesh<THREE.BufferGeometry, THREE.MeshLambertMaterial>).material.emissive.set(0xffffff);
     }
 });

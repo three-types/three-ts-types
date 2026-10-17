@@ -8,8 +8,8 @@ import { RGBShiftShader } from 'three/addons/shaders/RGBShiftShader.js';
 import { DotScreenShader } from 'three/addons/shaders/DotScreenShader.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 
-let camera, renderer, composer;
-let object;
+let camera: THREE.PerspectiveCamera, renderer: THREE.WebGLRenderer, composer: EffectComposer;
+let object: THREE.Object3D;
 
 init();
 

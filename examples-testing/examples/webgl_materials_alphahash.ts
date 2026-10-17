@@ -10,9 +10,15 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { TAARenderPass } from 'three/addons/postprocessing/TAARenderPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 
-let camera, scene, renderer, controls, stats, mesh, material;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGLRenderer,
+    controls,
+    stats: Stats,
+    mesh: THREE.InstancedMesh,
+    material: THREE.MeshStandardMaterial;
 
-let composer, renderPass, taaRenderPass, outputPass;
+let composer: EffectComposer, renderPass: RenderPass, taaRenderPass: TAARenderPass, outputPass: OutputPass;
 
 let needsUpdate = false;
 

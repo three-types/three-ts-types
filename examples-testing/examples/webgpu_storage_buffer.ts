@@ -2,8 +2,8 @@ import * as THREE from 'three/webgpu';
 import { storage, If, vec3, uv, uint, float, Fn, instanceIndex, workgroupBarrier } from 'three/tsl';
 
 const timestamps = {
-    webgpu: document.getElementById('timestamps'),
-    webgl: document.getElementById('timestamps_webgl'),
+    webgpu: document.getElementById('timestamps')!,
+    webgl: document.getElementById('timestamps_webgl')!,
 };
 
 // WebGPU Backend
@@ -26,7 +26,7 @@ async function init(forceWebGL = false) {
 
     const type = ['float', 'vec2', 'vec3', 'vec4'];
 
-    const arrayBufferNodes = [];
+    const arrayBufferNodes: THREE.StorageBufferNode<unknown>[] = [];
 
     for (let i = 0; i < type.length; i++) {
         const typeSize = i + 1;
@@ -34,7 +34,7 @@ async function init(forceWebGL = false) {
 
         const arrayBuffer = new THREE.StorageInstancedBufferAttribute(new Float32Array(array), typeSize);
 
-        arrayBufferNodes.push(storage(arrayBuffer, type[i], size).setPBO(true));
+        arrayBufferNodes.push(storage(arrayBuffer, type[i] as 'float', size).setPBO(true));
     }
 
     const computeInitOrder = Fn(() => {
@@ -45,7 +45,9 @@ async function init(forceWebGL = false) {
 
     const computeInvertOrder = Fn(() => {
         for (let i = 0; i < type.length; i++) {
-            const invertIndex = arrayBufferNodes[i].element(uint(size - 1).sub(instanceIndex)).toVar();
+            const invertIndex = (
+                arrayBufferNodes[i].element(uint(size - 1).sub(instanceIndex)) as THREE.StorageArrayElementNode<'float'>
+            ).toVar();
             workgroupBarrier();
             arrayBufferNodes[i].element(instanceIndex).assign(invertIndex);
         }
@@ -69,28 +71,28 @@ async function init(forceWebGL = false) {
         const color = vec3(0, 0, 0).toVar();
 
         If(uv().y.greaterThan(0.0), () => {
-            const indexValue = arrayBufferNodes[0].element(index).toVar();
+            const indexValue = (arrayBufferNodes[0].element(index) as THREE.StorageArrayElementNode<'float'>).toVar();
             const value = float(indexValue).div(float(size)).mul(barCount).floor().div(barCount);
 
             color.assign(vec3(value, 0, 0));
         });
 
         If(uv().y.greaterThan(0.25), () => {
-            const indexValue = arrayBufferNodes[1].element(index).toVar();
+            const indexValue = (arrayBufferNodes[1].element(index) as THREE.StorageArrayElementNode<'float'>).toVar();
             const value = float(indexValue).div(float(size)).mul(barCount).floor().div(barCount);
 
             color.assign(vec3(0, value, 0));
         });
 
         If(uv().y.greaterThan(0.5), () => {
-            const indexValue = arrayBufferNodes[2].element(index).toVar();
+            const indexValue = (arrayBufferNodes[2].element(index) as THREE.StorageArrayElementNode<'float'>).toVar();
             const value = float(indexValue).div(float(size)).mul(barCount).floor().div(barCount);
 
             color.assign(vec3(0, 0, value));
         });
 
         If(uv().y.greaterThan(0.75), () => {
-            const indexValue = arrayBufferNodes[3].element(index).toVar();
+            const indexValue = (arrayBufferNodes[3].element(index) as THREE.StorageArrayElementNode<'float'>).toVar();
             const value = float(indexValue).div(float(size)).mul(barCount).floor().div(barCount);
 
             color.assign(vec3(value, value, value));

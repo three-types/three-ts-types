@@ -3,6 +3,7 @@ import { instancedBufferAttribute, pass, uniform, vec3, float, mix, step, render
 import { fxaa } from 'three/addons/tsl/display/FXAANode.js';
 
 import { ClusteredLighting } from 'three/addons/lighting/ClusteredLighting.js';
+import type ClusteredLightsNode from 'three/addons/tsl/lighting/ClusteredLightsNode.js';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
@@ -17,10 +18,25 @@ const WAVE_HEIGHT = 4;
 const BIG_RADIUS = 6;
 const BASE_POWER = 45;
 
-let camera, scene, renderer, controls, spheresMesh, lighting;
-let renderPipeline, scenePass, clusterInfluence, debugZSliceNode;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    controls: OrbitControls,
+    spheresMesh: THREE.InstancedMesh<THREE.SphereGeometry, THREE.MeshBasicNodeMaterial>,
+    lighting: ClusteredLighting;
+let renderPipeline: THREE.RenderPipeline,
+    scenePass: THREE.PassNode,
+    clusterInfluence: THREE.UniformNode<'float', number>,
+    debugZSliceNode: THREE.UniformNode<'int', number>;
 
-const balls = [];
+interface Ball {
+    x: number;
+    z: number;
+    phase: number;
+    light: THREE.PointLight;
+}
+
+const balls: Ball[] = [];
 const dummy = new THREE.Object3D();
 
 const params = {
@@ -88,7 +104,7 @@ async function init() {
     const colorAttribute = new THREE.InstancedBufferAttribute(new Float32Array(maxCount * 3), 3);
 
     const material = new THREE.MeshBasicNodeMaterial();
-    material.colorNode = instancedBufferAttribute(colorAttribute);
+    material.colorNode = instancedBufferAttribute<'vec3'>(colorAttribute);
 
     spheresMesh = new THREE.InstancedMesh(new THREE.SphereGeometry(RADIUS, 32, 16), material, maxCount);
     spheresMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
@@ -154,7 +170,7 @@ async function init() {
 
     // gui
 
-    const gui = renderer.inspector.createParameters('Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
     gui.add(params, 'intensity', 0, 3)
         .name('light intensity')
         .onChange(value => {
@@ -182,9 +198,10 @@ function updatePostProcessing() {
     // the overlay samples the cluster grid at the current resolution, so it
     // is rebuilt whenever the renderer size changes
 
-    const lightingNode = lighting
-        .getNode(scene)
-        .setSize(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio);
+    const lightingNode = (lighting.getNode(scene) as ClusteredLightsNode).setSize(
+        window.innerWidth * window.devicePixelRatio,
+        window.innerHeight * window.devicePixelRatio,
+    );
 
     // map the light count of each cluster ( 0 … maxLightsPerCluster ) to a
     // blue → green → red gradient

@@ -1,16 +1,26 @@
 import * as THREE from 'three';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { SVGLoader } from 'three/addons/loaders/SVGLoader.js';
+import { SVGLoader, StrokeStyle } from 'three/addons/loaders/SVGLoader.js';
 
-let renderer, scene, camera, gui, guiData;
+let renderer: THREE.WebGLRenderer,
+    scene: THREE.Scene,
+    camera: THREE.PerspectiveCamera,
+    gui: GUI,
+    guiData: {
+        currentURL: string;
+        drawFillShapes: boolean;
+        drawStrokes: boolean;
+        fillShapesWireframe: boolean;
+        strokesWireframe: boolean;
+    };
 
 init();
 
 //
 
 function init() {
-    const container = document.getElementById('container');
+    const container = document.getElementById('container')!;
 
     //
 
@@ -105,7 +115,7 @@ function createGUI() {
     }
 }
 
-function loadSVG(url) {
+function loadSVG(url: string) {
     //
 
     if (scene) disposeScene(scene);
@@ -160,7 +170,10 @@ function loadSVG(url) {
                     material.wireframe = guiData.strokesWireframe;
 
                     for (const subPath of path.subPaths) {
-                        const geometry = SVGLoader.pointsToStroke(subPath.getPoints(), path.userData.style);
+                        const geometry = SVGLoader.pointsToStroke(
+                            subPath.getPoints(),
+                            path.userData.style as StrokeStyle,
+                        );
 
                         if (geometry) {
                             const mesh = new THREE.Mesh(geometry, material);
@@ -191,12 +204,26 @@ function render() {
     renderer.render(scene, camera);
 }
 
-function disposeScene(scene) {
+function disposeScene(scene: THREE.Scene) {
     scene.traverse(function (object) {
-        if (object.isMesh || object.isLine) {
-            object.geometry.dispose();
-            if (object.material.map) object.material.map.dispose();
-            object.material.dispose();
+        if ((object as THREE.Mesh).isMesh || (object as THREE.Line).isLine) {
+            (object as THREE.Mesh | THREE.Line).geometry.dispose();
+            if (
+                (
+                    object as
+                        | THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial>
+                        | THREE.Line<THREE.BufferGeometry, THREE.LineBasicMaterial>
+                ).material.map
+            )
+                (
+                    object as
+                        | THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial>
+                        | THREE.Line<THREE.BufferGeometry, THREE.LineBasicMaterial>
+                ).material.map!.dispose();
+            (
+                object as
+                    THREE.Mesh<THREE.BufferGeometry, THREE.Material> | THREE.Line<THREE.BufferGeometry, THREE.Material>
+            ).material.dispose();
         }
     });
 }

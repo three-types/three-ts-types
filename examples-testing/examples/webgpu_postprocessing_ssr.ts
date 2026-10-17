@@ -14,7 +14,7 @@ import {
     vec2,
     colorSpaceToWorking,
 } from 'three/tsl';
-import { ssr } from 'three/addons/tsl/display/SSRNode.js';
+import SSRNode, { ssr } from 'three/addons/tsl/display/SSRNode.js';
 import { smaa } from 'three/addons/tsl/display/SMAANode.js';
 
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
@@ -34,8 +34,13 @@ const params = {
     enabled: true,
 };
 
-let camera, scene, model, renderer, renderPipeline, ssrPass;
-let controls;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    model: THREE.Group,
+    renderer: THREE.WebGPURenderer,
+    renderPipeline: THREE.RenderPipeline,
+    ssrPass: SSRNode;
+let controls: OrbitControls;
 
 init();
 
@@ -54,13 +59,12 @@ async function init() {
         model = gltf.scene;
 
         model.traverse(function (object) {
-            if (object.material) {
-                if (object.material.name === 'Lense_Casing') {
-                    object.material.transparent = true;
+            if ((object as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material) {
+                if ((object as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material.name === 'Lense_Casing') {
+                    (object as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material.transparent = true;
                 }
-
                 // Avoid overdrawing
-                object.material.side = THREE.FrontSide;
+                (object as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material.side = THREE.FrontSide;
             }
         });
 
@@ -157,7 +161,7 @@ async function init() {
 
     // GUI
 
-    const gui = renderer.inspector.createParameters('Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
     const ssrFolder = gui.addFolder('SSR');
     ssrFolder.add(params, 'quality', 0, 1).onChange(updateParameters);
     ssrFolder.add(params, 'blurQuality', 1, 3, 1).onChange(updateParameters);
@@ -177,8 +181,8 @@ async function init() {
     const modelFolder = gui.addFolder('Model');
     modelFolder.add(params, 'roughness', 0, 1).onChange(value => {
         model.traverse(function (object) {
-            if (object.material) {
-                object.material.roughness = value;
+            if ((object as THREE.Mesh).material) {
+                (object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).material.roughness = value;
             }
         });
     });

@@ -6,7 +6,36 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-let camera, scene, renderer, controls, timer, halftoneSettings;
+interface HalftoneSettings {
+    count: number;
+    color: string;
+    direction: THREE.Vector3;
+    start: number;
+    end: number;
+    mixLow: number;
+    mixHigh: number;
+    radius: number;
+
+    uniforms?: Uniforms;
+}
+
+interface Uniforms {
+    count: THREE.UniformNode<'float', number>;
+    color: THREE.UniformNode<'color', THREE.Color>;
+    direction: THREE.UniformNode<'vec3', THREE.Vector3>;
+    start: THREE.UniformNode<'float', number>;
+    end: THREE.UniformNode<'float', number>;
+    mixLow: THREE.UniformNode<'float', number>;
+    mixHigh: THREE.UniformNode<'float', number>;
+    radius: THREE.UniformNode<'float', number>;
+}
+
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    controls: OrbitControls,
+    timer: THREE.Timer,
+    halftoneSettings: HalftoneSettings[];
 
 init();
 
@@ -32,7 +61,7 @@ function init() {
 
     renderer.inspector = new Inspector();
 
-    const gui = renderer.inspector.createParameters('Parameters');
+    const gui = (renderer.inspector as Inspector).createParameters('Parameters');
 
     // lights
 
@@ -82,7 +111,7 @@ function init() {
 
         // uniforms
 
-        const uniforms = {};
+        const uniforms = {} as Uniforms;
 
         uniforms.count = uniform(settings.count);
         uniforms.color = uniform(color(settings.color));
@@ -113,40 +142,51 @@ function init() {
 
     // halftone functions
 
-    const halftone = Fn(([count, color, direction, start, end, radius, mixLow, mixHigh]) => {
-        // grid pattern
+    const halftone = Fn(
+        ([count, color, direction, start, end, radius, mixLow, mixHigh]: [
+            THREE.Node<'float'>,
+            THREE.Node<'color'>,
+            THREE.Node<'vec3'>,
+            THREE.Node<'float'>,
+            THREE.Node<'float'>,
+            THREE.Node<'float'>,
+            THREE.Node<'float'>,
+            THREE.Node<'float'>,
+        ]) => {
+            // grid pattern
 
-        let gridUv = screenCoordinate.xy.div(screenSize.yy).mul(count);
-        gridUv = rotate(gridUv, Math.PI * 0.25).mod(1);
+            let gridUv = screenCoordinate.xy.div(screenSize.yy).mul(count);
+            gridUv = rotate(gridUv, Math.PI * 0.25).mod(1);
 
-        // orientation strength
+            // orientation strength
 
-        const orientationStrength = normalWorld.dot(direction.normalize()).remapClamp(end, start, 0, 1);
+            const orientationStrength = normalWorld.dot(direction.normalize()).remapClamp(end, start, 0, 1);
 
-        // mask
+            // mask
 
-        const mask = orientationStrength
-            .mul(radius)
-            .mul(0.5)
-            .step(gridUv.sub(0.5).length())
-            .mul(mix(mixLow, mixHigh, orientationStrength));
+            const mask = orientationStrength
+                .mul(radius)
+                .mul(0.5)
+                .step(gridUv.sub(0.5).length())
+                .mul(mix(mixLow, mixHigh, orientationStrength));
 
-        return vec4(color, mask);
-    });
+            return vec4(color, mask);
+        },
+    );
 
-    const halftones = Fn(([input]) => {
+    const halftones = Fn(([input]: [THREE.Node<'vec4'>]) => {
         const halftonesOutput = input;
 
         for (const settings of halftoneSettings) {
             const halfToneOutput = halftone(
-                settings.uniforms.count,
-                settings.uniforms.color,
-                settings.uniforms.direction,
-                settings.uniforms.start,
-                settings.uniforms.end,
-                settings.uniforms.radius,
-                settings.uniforms.mixLow,
-                settings.uniforms.mixHigh,
+                settings.uniforms!.count,
+                settings.uniforms!.color,
+                settings.uniforms!.direction,
+                settings.uniforms!.start,
+                settings.uniforms!.end,
+                settings.uniforms!.radius,
+                settings.uniforms!.mixLow,
+                settings.uniforms!.mixHigh,
             );
             halftonesOutput.rgb.assign(mix(halftonesOutput.rgb, halfToneOutput.rgb, halfToneOutput.a));
         }
@@ -178,7 +218,9 @@ function init() {
         model.position.y = -2;
         model.scale.setScalar(2.5);
         model.traverse(child => {
-            if (child.isMesh) child.material.outputNode = halftones(output);
+            if ((child as THREE.Mesh).isMesh)
+                (child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhysicalMaterial>).material.outputNode =
+                    halftones(output);
         });
 
         scene.add(model);
@@ -207,8 +249,8 @@ async function animate() {
     controls.update();
 
     const time = timer.getElapsed();
-    halftoneSettings[1].uniforms.direction.value.x = Math.cos(time);
-    halftoneSettings[1].uniforms.direction.value.y = Math.sin(time);
+    halftoneSettings[1].uniforms!.direction.value.x = Math.cos(time);
+    halftoneSettings[1].uniforms!.direction.value.y = Math.sin(time);
 
     renderer.render(scene, camera);
 }

@@ -6,9 +6,9 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
 
-let container;
-let camera, scene, renderer;
-let model;
+let container: HTMLDivElement;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let model: THREE.Mesh;
 
 init();
 
@@ -58,7 +58,7 @@ function init() {
     //
 
     renderer.inspector = new Inspector();
-    document.body.appendChild(renderer.inspector.domElement);
+    document.body.appendChild((renderer.inspector as Inspector).domElement);
 
     //
 
@@ -93,7 +93,7 @@ function initMaterial() {
 
     const loaderFBX = new FBXLoader();
     loaderFBX.load('models/fbx/stanford-bunny.fbx', function (object) {
-        model = object.children[0];
+        model = object.children[0] as THREE.Mesh;
         model.position.set(0, 0, 10);
         model.scale.setScalar(1);
         model.material = material;
@@ -103,37 +103,45 @@ function initMaterial() {
     initGUI(material);
 }
 
-function initGUI(material) {
-    const gui = renderer.inspector.createParameters('Parameters');
+function initGUI(material: THREE.MeshSSSNodeMaterial) {
+    const gui = (renderer.inspector as Inspector).createParameters('Parameters');
 
-    const ThicknessControls = function () {
-        this.distortion = material.thicknessDistortionNode.value;
-        this.ambient = material.thicknessAmbientNode.value;
-        this.attenuation = material.thicknessAttenuationNode.value;
-        this.power = material.thicknessPowerNode.value;
-        this.scale = material.thicknessScaleNode.value;
-    };
+    class ThicknessControls {
+        distortion: number;
+        ambient: number;
+        attenuation: number;
+        power: number;
+        scale: number;
+
+        constructor() {
+            this.distortion = (material.thicknessDistortionNode as THREE.UniformNode<'float', number>).value;
+            this.ambient = (material.thicknessAmbientNode as THREE.UniformNode<'float', number>).value;
+            this.attenuation = (material.thicknessAttenuationNode as THREE.UniformNode<'float', number>).value;
+            this.power = (material.thicknessPowerNode as THREE.UniformNode<'float', number>).value;
+            this.scale = (material.thicknessScaleNode as THREE.UniformNode<'float', number>).value;
+        }
+    }
 
     const thicknessControls = new ThicknessControls();
 
     gui.add(thicknessControls, 'distortion', 0.01, 1, 0.01).onChange(function () {
-        material.thicknessDistortionNode.value = thicknessControls.distortion;
+        (material.thicknessDistortionNode as THREE.UniformNode<'float', number>).value = thicknessControls.distortion;
     });
 
     gui.add(thicknessControls, 'ambient', 0.01, 5.0, 0.05).onChange(function () {
-        material.thicknessAmbientNode.value = thicknessControls.ambient;
+        (material.thicknessAmbientNode as THREE.UniformNode<'float', number>).value = thicknessControls.ambient;
     });
 
     gui.add(thicknessControls, 'attenuation', 0.01, 5.0, 0.05).onChange(function () {
-        material.thicknessAttenuationNode.value = thicknessControls.attenuation;
+        (material.thicknessAttenuationNode as THREE.UniformNode<'float', number>).value = thicknessControls.attenuation;
     });
 
     gui.add(thicknessControls, 'power', 0.01, 16.0, 0.1).onChange(function () {
-        material.thicknessPowerNode.value = thicknessControls.power;
+        (material.thicknessPowerNode as THREE.UniformNode<'float', number>).value = thicknessControls.power;
     });
 
     gui.add(thicknessControls, 'scale', 0.01, 50.0, 0.1).onChange(function () {
-        material.thicknessScaleNode.value = thicknessControls.scale;
+        (material.thicknessScaleNode as THREE.UniformNode<'float', number>).value = thicknessControls.scale;
     });
 }
 

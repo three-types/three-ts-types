@@ -4,13 +4,13 @@ import Stats from 'three/addons/libs/stats.module.js';
 
 import { ColladaLoader } from 'three/addons/loaders/ColladaLoader.js';
 
-let container, stats, timer;
-let camera, scene, renderer, elf;
+let container: HTMLElement, stats: Stats, timer: THREE.Timer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, elf: THREE.Scene;
 
 init();
 
 function init() {
-    container = document.getElementById('container');
+    container = document.getElementById('container')!;
 
     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 2000);
     camera.position.set(8, 10, 8);
@@ -31,7 +31,7 @@ function init() {
 
     const loader = new ColladaLoader(loadingManager);
     loader.load('./models/collada/elf/elf.dae', function (collada) {
-        elf = collada.scene;
+        elf = collada!.scene;
     });
 
     //

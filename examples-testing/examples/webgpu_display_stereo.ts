@@ -1,22 +1,36 @@
 import * as THREE from 'three/webgpu';
 
-import { stereoPass } from 'three/addons/tsl/display/StereoPassNode.js';
-import { anaglyphPass, AnaglyphAlgorithm, AnaglyphColorMode } from 'three/addons/tsl/display/AnaglyphPassNode.js';
-import { parallaxBarrierPass } from 'three/addons/tsl/display/ParallaxBarrierPassNode.js';
+import StereoPassNode, { stereoPass } from 'three/addons/tsl/display/StereoPassNode.js';
+import AnaglyphPassNode, {
+    anaglyphPass,
+    AnaglyphAlgorithm,
+    AnaglyphColorMode,
+} from 'three/addons/tsl/display/AnaglyphPassNode.js';
+import ParallaxBarrierPassNode, { parallaxBarrierPass } from 'three/addons/tsl/display/ParallaxBarrierPassNode.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { Inspector } from 'three/addons/inspector/Inspector.js';
+import { ParametersGroup } from 'three/addons/inspector/tabs/Parameters.js';
 
-let camera, scene, renderer, renderPipeline;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    renderPipeline: THREE.RenderPipeline;
 
-let stereo, anaglyph, parallaxBarrier;
+let stereo: StereoPassNode, anaglyph: AnaglyphPassNode, parallaxBarrier: ParallaxBarrierPassNode;
 
-let mesh, dummy, timer;
+let mesh: THREE.InstancedMesh, dummy: THREE.Mesh, timer: THREE.Timer;
 
-let anaglyphFolder;
+let anaglyphFolder: ParametersGroup;
 
 const position = new THREE.Vector3();
 
-const params = {
+const params: {
+    effect: 'stereo' | 'anaglyph' | 'parallaxBarrier';
+    eyeSep: number;
+    planeDistance: number;
+    anaglyphAlgorithm: AnaglyphAlgorithm;
+    anaglyphColorMode: AnaglyphColorMode;
+} = {
     effect: 'stereo',
     eyeSep: 0.064,
     planeDistance: 3,
@@ -24,7 +38,7 @@ const params = {
     anaglyphColorMode: 'redCyan',
 };
 
-const effects = { Stereo: 'stereo', Anaglyph: 'anaglyph', ParallaxBarrier: 'parallaxBarrier' };
+const effects = { Stereo: 'stereo', Anaglyph: 'anaglyph', ParallaxBarrier: 'parallaxBarrier' } as const;
 
 const anaglyphAlgorithms = {
     True: AnaglyphAlgorithm.TRUE,
@@ -102,7 +116,7 @@ function init() {
 
     renderPipeline.outputNode = stereo;
 
-    const gui = renderer.inspector.createParameters('Stereo Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Stereo Settings');
     gui.add(params, 'effect', effects).onChange(update);
     gui.add(params, 'eyeSep', 0.001, 0.15, 0.001).onChange(function (value) {
         stereo.stereo.eyeSep = value;
@@ -139,7 +153,7 @@ function init() {
     controls.maxDistance = 25;
 }
 
-function update(value) {
+function update(value: 'stereo' | 'anaglyph' | 'parallaxBarrier') {
     if (value === 'stereo') {
         renderPipeline.outputNode = stereo;
         anaglyphFolder.paramList.domElement.style.display = 'none';
@@ -161,7 +175,7 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function extractPosition(matrix, position) {
+function extractPosition(matrix: THREE.Matrix4, position: THREE.Vector3) {
     position.x = matrix.elements[12];
     position.y = matrix.elements[13];
     position.z = matrix.elements[14];

@@ -2,7 +2,7 @@ import * as THREE from 'three';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let camera, scene, renderer, video;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, video: HTMLVideoElement;
 
 init();
 
@@ -12,7 +12,7 @@ function init() {
 
     scene = new THREE.Scene();
 
-    video = document.getElementById('video');
+    video = document.getElementById('video') as HTMLVideoElement;
 
     const texture = new THREE.VideoTexture(video);
     texture.colorSpace = THREE.SRGBColorSpace;

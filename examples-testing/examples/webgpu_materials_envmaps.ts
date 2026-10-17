@@ -4,9 +4,18 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let controls, camera, scene, renderer;
-let textureEquirec, textureCube;
-let sphereMesh, sphereMaterial, params;
+let controls, camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let textureEquirec: THREE.Texture, textureCube: THREE.CubeTexture;
+let sphereMesh: THREE.Mesh<THREE.IcosahedronGeometry, THREE.MeshBasicMaterial>,
+    sphereMaterial: THREE.MeshBasicMaterial,
+    params: {
+        Type: 'Cube' | 'Equirectangular';
+        Refraction: boolean;
+        backgroundRotationX: boolean;
+        backgroundRotationY: boolean;
+        backgroundRotationZ: boolean;
+        syncMaterial: boolean;
+    };
 
 init();
 
@@ -68,7 +77,7 @@ function init() {
         syncMaterial: false,
     };
 
-    const gui = renderer.inspector.createParameters('Parameters');
+    const gui = (renderer.inspector as Inspector).createParameters('Parameters');
     gui.add(params, 'Type', ['Cube', 'Equirectangular']).onChange(function (value) {
         if (value === 'Cube') {
             scene.background = textureCube;

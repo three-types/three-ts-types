@@ -4,7 +4,11 @@ import Stats from 'three/addons/libs/stats.module.js';
 
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let camera, scene, renderer, stats, material;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGLRenderer,
+    stats: Stats,
+    material: THREE.PointsMaterial;
 let mouseX = 0,
     mouseY = 0;
 
@@ -91,7 +95,7 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function onPointerMove(event) {
+function onPointerMove(event: PointerEvent) {
     if (event.isPrimary === false) return;
 
     mouseX = event.clientX - windowHalfX;

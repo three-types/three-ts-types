@@ -6,7 +6,12 @@ import { UltraHDRLoader } from 'three/addons/loaders/UltraHDRLoader.js';
 
 import { DRACOLoader, DRACO_GLTF_CONFIG } from 'three/addons/loaders/DRACOLoader.js';
 
-let camera, scene, renderer, controls, timer, mixer;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGLRenderer,
+    controls: OrbitControls,
+    timer: THREE.Timer,
+    mixer: THREE.AnimationMixer;
 
 init();
 

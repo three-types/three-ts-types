@@ -4,7 +4,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { ConvexGeometry } from 'three/addons/geometries/ConvexGeometry.js';
 import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js';
 
-let group, camera, scene, renderer;
+let group: THREE.Group, camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
 
 init();
 
@@ -54,7 +54,7 @@ function init() {
 
     // points
 
-    let dodecahedronGeometry = new THREE.DodecahedronGeometry(10);
+    let dodecahedronGeometry: THREE.BufferGeometry = new THREE.DodecahedronGeometry(10);
 
     // if normal and uv attributes are not removed, mergeVertices() can't consolidate identical vertices with different normal/uv data
 

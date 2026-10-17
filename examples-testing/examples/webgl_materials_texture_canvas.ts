@@ -1,6 +1,10 @@
 import * as THREE from 'three';
 
-let camera, scene, renderer, mesh, material;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGLRenderer,
+    mesh: THREE.Mesh,
+    material: THREE.MeshBasicMaterial;
 const drawStartPos = new THREE.Vector2();
 
 init();
@@ -31,8 +35,8 @@ function init() {
 function setupCanvasDrawing() {
     // get canvas and context
 
-    const drawingCanvas = document.getElementById('drawing-canvas');
-    const drawingContext = drawingCanvas.getContext('2d');
+    const drawingCanvas = document.getElementById('drawing-canvas') as HTMLCanvasElement;
+    const drawingContext = drawingCanvas.getContext('2d')!;
 
     // draw white background
 
@@ -66,7 +70,7 @@ function setupCanvasDrawing() {
     });
 }
 
-function draw(drawContext, x, y) {
+function draw(drawContext: CanvasRenderingContext2D, x: number, y: number) {
     drawContext.moveTo(drawStartPos.x, drawStartPos.y);
     drawContext.strokeStyle = '#000000';
     drawContext.lineTo(x, y);
@@ -74,7 +78,7 @@ function draw(drawContext, x, y) {
     // reset drawing start position to current position.
     drawStartPos.set(x, y);
     // need to flag the map as needing updating.
-    material.map.needsUpdate = true;
+    material.map!.needsUpdate = true;
 }
 
 function onWindowResize() {

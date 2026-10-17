@@ -7,8 +7,16 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let camera, scene, renderer, controls;
-let currentModel, mixer;
+interface Model {
+    label: string;
+    name: string;
+    screenshot: string;
+    tags: string[];
+    variants: Record<string, string>;
+}
+
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, controls: OrbitControls;
+let currentModel: THREE.Group | null, mixer: THREE.AnimationMixer | null;
 let currentLoadId = 0;
 
 const timer = new THREE.Timer();
@@ -36,8 +44,8 @@ async function init() {
 
         fetch('https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/model-index.json')
             .then(response => response.json())
-            .then(models => {
-                const gui = renderer.inspector.createParameters('Model');
+            .then((models: Model[]) => {
+                const gui = (renderer.inspector as Inspector).createParameters('Model');
                 const modelNames = models.map(m => m.name);
                 const params = { model: 'DamagedHelmet' };
 
@@ -46,7 +54,7 @@ async function init() {
                 }
 
                 gui.add(params, 'model', modelNames).onChange(name => {
-                    const modelInfo = models.find(m => m.name === name);
+                    const modelInfo = models.find(m => m.name === name)!;
                     loadModel(modelInfo);
                 });
 
@@ -77,20 +85,22 @@ async function init() {
     window.addEventListener('resize', onWindowResize);
 }
 
-function loadModel(modelInfo) {
+function loadModel(modelInfo: Model) {
     const variants = modelInfo.variants;
     const variant = variants['glTF-Binary'] || variants['glTF'];
     const url = `https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/${modelInfo.name}/${variant.endsWith('.glb') ? 'glTF-Binary' : 'glTF'}/${variant}`;
 
     if (currentModel) {
         currentModel.traverse(model => {
-            if (model.isMesh) {
-                model.geometry.dispose();
-                model.material.dispose();
+            if ((model as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).isMesh) {
+                (model as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).geometry.dispose();
+                (model as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material.dispose();
 
-                for (const value of Object.values(model.material)) {
-                    if (value && value.isTexture) {
-                        value.dispose();
+                for (const value of Object.values(
+                    (model as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material,
+                )) {
+                    if (value && (value as THREE.Texture).isTexture) {
+                        (value as THREE.Texture).dispose();
                     }
                 }
             }
@@ -135,7 +145,12 @@ function loadModel(modelInfo) {
     });
 }
 
-function fitCameraToSelection(camera, controls, selection, fitOffset = 1.3) {
+function fitCameraToSelection(
+    camera: THREE.PerspectiveCamera,
+    controls: OrbitControls,
+    selection: THREE.Group,
+    fitOffset = 1.3,
+) {
     const box = new THREE.Box3();
     box.setFromObject(selection);
 

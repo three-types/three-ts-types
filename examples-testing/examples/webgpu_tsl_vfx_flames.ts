@@ -20,7 +20,15 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let camera, scene, renderer, controls;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, controls: OrbitControls;
+
+interface Gradient {
+    element: HTMLCanvasElement;
+    context: CanvasRenderingContext2D;
+    colors: string[];
+    texture: THREE.CanvasTexture;
+    update: () => void;
+}
 
 init();
 
@@ -40,11 +48,11 @@ function init() {
 
     // gradient canvas
 
-    const gradient = {};
+    const gradient = {} as Gradient;
     gradient.element = document.createElement('canvas');
     gradient.element.width = 128;
     gradient.element.height = 1;
-    gradient.context = gradient.element.getContext('2d');
+    gradient.context = gradient.element.getContext('2d')!;
 
     gradient.colors = ['#090033', '#5f1f93', '#e02e96', '#ffbd80', '#fff0db'];
 

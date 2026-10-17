@@ -4,16 +4,16 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { PositionalAudioHelper } from 'three/addons/helpers/PositionalAudioHelper.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-let scene, camera, renderer;
+let scene: THREE.Scene, camera: THREE.PerspectiveCamera, renderer: THREE.WebGLRenderer;
 
-const startButton = document.getElementById('startButton');
+const startButton = document.getElementById('startButton')!;
 startButton.addEventListener('click', init);
 
 function init() {
-    const overlay = document.getElementById('overlay');
+    const overlay = document.getElementById('overlay')!;
     overlay.remove();
 
-    const container = document.getElementById('container');
+    const container = document.getElementById('container')!;
 
     //
 
@@ -65,7 +65,7 @@ function init() {
     const listener = new THREE.AudioListener();
     camera.add(listener);
 
-    const audioElement = document.getElementById('music');
+    const audioElement = document.getElementById('music') as HTMLAudioElement;
     audioElement.play();
 
     const positionalAudio = new THREE.PositionalAudio(listener);
@@ -85,10 +85,10 @@ function init() {
         boomBox.scale.set(20, 20, 20);
 
         boomBox.traverse(function (object) {
-            if (object.isMesh) {
-                object.material.envMap = reflectionCube;
-                object.geometry.rotateY(-Math.PI);
-                object.castShadow = true;
+            if ((object as THREE.Mesh).isMesh) {
+                ((object as THREE.Mesh).material as THREE.MeshStandardMaterial).envMap = reflectionCube;
+                (object as THREE.Mesh).geometry.rotateY(-Math.PI);
+                (object as THREE.Mesh).castShadow = true;
             }
         });
 
@@ -101,7 +101,11 @@ function init() {
     // sound is damped behind this wall
 
     const wallGeometry = new THREE.BoxGeometry(2, 1, 0.1);
-    const wallMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.5 });
+    const wallMaterial = new THREE.MeshBasicMaterial({
+        color: 0xff0000,
+        transparent: true,
+        opacity: 0.5,
+    });
 
     const wall = new THREE.Mesh(wallGeometry, wallMaterial);
     wall.position.set(0, 0.5, -0.5);

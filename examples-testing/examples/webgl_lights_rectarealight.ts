@@ -6,9 +6,9 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RectAreaLightHelper } from 'three/addons/helpers/RectAreaLightHelper.js';
 import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUniformsLib.js';
 
-let renderer, scene, camera;
-let rectLight1, rectLight2, rectLight3;
-let timer, stats;
+let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
+let rectLight1: THREE.RectAreaLight, rectLight2: THREE.RectAreaLight, rectLight3: THREE.RectAreaLight;
+let timer: THREE.Timer, stats: Stats;
 
 init();
 
@@ -73,7 +73,7 @@ function createCheckerTexture(repeat = 1) {
     canvas.width = 2;
     canvas.height = 2;
 
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d')!;
     ctx.fillStyle = '#000';
     ctx.fillRect(0, 0, 2, 2);
     ctx.fillStyle = '#fff';
