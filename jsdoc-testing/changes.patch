@@ -12520,12 +12520,14 @@ index 6389a9643..089bc1dd6 100644
 +
 +export default NodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/NodeMaterials.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/NodeMaterials.d.ts
-index 3ab3141d1..df1dde1dc 100644
+index 40d5e5317..e60b4db52 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/NodeMaterials.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/NodeMaterials.d.ts
-@@ -1,18 +1,18 @@
+@@ -1,19 +1,19 @@
  export { default as NodeMaterialObserver } from "./manager/NodeMaterialObserver.js";
 -export { default as NodeMaterial } from "./NodeMaterial.js";
++export { default as NodeMaterial, NodeMaterialParameters } from "./NodeMaterial.js";
+ export { default as ProxyNodeMaterial } from "./ProxyNodeMaterial.js";
 -export { default as LineBasicNodeMaterial } from "./LineBasicNodeMaterial.js";
 -export { default as LineDashedNodeMaterial } from "./LineDashedNodeMaterial.js";
 -export { default as Line2NodeMaterial } from "./Line2NodeMaterial.js";
@@ -12542,7 +12544,6 @@ index 3ab3141d1..df1dde1dc 100644
 -export { default as SpriteNodeMaterial } from "./SpriteNodeMaterial.js";
 -export { default as ShadowNodeMaterial } from "./ShadowNodeMaterial.js";
 -export { default as VolumeNodeMaterial } from "./VolumeNodeMaterial.js";
-+export { default as NodeMaterial, NodeMaterialParameters } from "./NodeMaterial.js";
 +export { default as LineBasicNodeMaterial, LineBasicNodeMaterialParameters } from "./LineBasicNodeMaterial.js";
 +export { default as LineDashedNodeMaterial, LineDashedNodeMaterialParameters } from "./LineDashedNodeMaterial.js";
 +export { default as Line2NodeMaterial, Line2NodeMaterialParameters } from "./Line2NodeMaterial.js";
@@ -12633,6 +12634,57 @@ index 1a6e48eef..5bdf6b56f 100644
 +interface PointsNodeMaterial extends PointsNodeMaterialNodeProperties, PointsMaterialProperties {}
 +
 +export default PointsNodeMaterial;
+diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/ProxyNodeMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/ProxyNodeMaterial.d.ts
+index ce4cbeede..7a94e76ab 100644
+--- a/jsdoc-testing/jsdoc/src/materials/nodes/ProxyNodeMaterial.d.ts
++++ b/jsdoc-testing/jsdoc/src/materials/nodes/ProxyNodeMaterial.d.ts
+@@ -1,3 +1,7 @@
++import NodeBuilder from "../../nodes/core/NodeBuilder.js";
++import { Material } from "../Material.js";
++import NodeMaterial from "./NodeMaterial.js";
++
+ export default ProxyNodeMaterial;
+ /**
+  * A material instance that reuses the shader of a node material with its own properties.
+@@ -24,8 +28,6 @@ declare class ProxyNodeMaterial extends Material {
+      * @throws {TypeError} When the given material is not a node material.
+      */
+     constructor(nodeMaterial: NodeMaterial);
+-    userData: {};
+-    type: string;
+     /**
+      * This flag can be used for type testing.
+      *
+@@ -47,14 +49,6 @@ declare class ProxyNodeMaterial extends Material {
+      * @param {NodeBuilder} builder - The current node builder.
+      */
+     build(builder: NodeBuilder): void;
+-    set version(value: number);
+-    /**
+-     * The version of the node material. Setting `needsUpdate` on the node material
+-     * updates all its instances, while setting it on an instance has no effect.
+-     *
+-     * @type {number}
+-     */
+-    get version(): number;
+     /**
+      * Copies the values of the given proxy node material to this instance.
+      * Object values such as colors are shared with the source, except in `userData`.
+@@ -65,12 +59,11 @@ declare class ProxyNodeMaterial extends Material {
+      * @param {ProxyNodeMaterial} source - The material to copy.
+      * @return {ProxyNodeMaterial} A reference to this instance.
+      */
+-    copy(source: ProxyNodeMaterial): ProxyNodeMaterial;
++    copy(source: ProxyNodeMaterial): this;
+     /**
+      * Returns a new proxy node material that shares the same node material.
+      *
+      * @return {ProxyNodeMaterial} A clone of this instance.
+      */
+-    clone(): ProxyNodeMaterial;
++    clone(): this;
+ }
+-import { Material } from '../Material.js';
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/ShadowNodeMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/ShadowNodeMaterial.d.ts
 index edf904684..947f9df05 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/ShadowNodeMaterial.d.ts
