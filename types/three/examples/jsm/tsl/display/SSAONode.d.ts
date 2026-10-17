@@ -1,4 +1,4 @@
-import { Camera, Node, TempNode, TextureNode, UniformNode, Vector2 } from "three/webgpu";
+import { Camera, Node, TextureNode, UniformNode, Vector2 } from "three/webgpu";
 
 /**
  * Post processing node for a fast, screen-space ambient occlusion (SSAO).
@@ -19,10 +19,10 @@ import { Camera, Node, TempNode, TextureNode, UniformNode, Vector2 } from "three
  * renderPipeline.outputNode = scenePassColor.mul( aoPass.r );
  * ```
  *
- * @augments TempNode
+ * @augments Node
  * @three_import import { ssao } from 'three/addons/tsl/display/SSAONode.js';
  */
-declare class SSAONode extends TempNode<"float"> {
+declare class SSAONode extends Node<"float"> {
     /**
      * Constructs a new SSAO node.
      *

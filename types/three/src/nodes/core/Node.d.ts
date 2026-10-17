@@ -169,6 +169,14 @@ declare class NodeClass<TEventMap extends NodeClassEventMap = NodeClassEventMap>
      */
     stackTrace: string | null;
     /**
+     * Whether this node allows caching its result in a temporary variable.
+     * Caching is enabled by default. Override this method to disable it.
+     *
+     * @param {NodeBuilder} builder - The current node builder.
+     * @return {boolean} Whether temporary caching is allowed.
+     */
+    isCacheable(builder: NodeBuilder): boolean;
+    /**
      * Set this property to `true` when the node should be regenerated.
      *
      * @type {boolean}
