@@ -5,9 +5,9 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
 import { LightProbeGrid } from 'three/addons/lighting/LightProbeGrid.js';
 import { LightProbeGridHelper } from 'three/addons/helpers/LightProbeGridHelper.js';
 
-let camera, scene, renderer, controls;
-let probesLeft, probesRight;
-let probesHelperLeft, probesHelperRight;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, controls: OrbitControls;
+let probesLeft: LightProbeGrid, probesRight: LightProbeGrid;
+let probesHelperLeft: LightProbeGridHelper, probesHelperRight: LightProbeGridHelper;
 
 init();
 
@@ -218,7 +218,7 @@ async function init() {
         resolution: 6,
     };
 
-    async function bake(resolution) {
+    async function bake(resolution: number) {
         // Remove both volumes before baking to prevent feedback
 
         if (probesLeft) {
@@ -275,7 +275,7 @@ async function init() {
 
     // GUI
 
-    const gui = renderer.inspector.createParameters('Light Probes');
+    const gui = (renderer.inspector as Inspector).createParameters('Light Probes');
     gui.add(params, 'enabled')
         .name('GI')
         .onChange(value => {

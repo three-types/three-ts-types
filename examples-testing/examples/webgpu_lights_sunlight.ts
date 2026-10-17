@@ -7,7 +7,16 @@ import { SkyMesh } from 'three/addons/objects/SkyMesh.js';
 import { SunLight } from 'three/addons/lights/SunLight.js';
 import { SunLightNode } from 'three/addons/lights/SunLightNode.js';
 
-let renderer, scene, camera, controls, timer, sunLight, sky, sceneEnv, pmremGenerator, renderTarget;
+let renderer: THREE.WebGPURenderer,
+    scene: THREE.Scene,
+    camera: THREE.PerspectiveCamera,
+    controls: FirstPersonControls,
+    timer: THREE.Timer,
+    sunLight: SunLight,
+    sky: SkyMesh,
+    sceneEnv: THREE.Scene,
+    pmremGenerator: THREE.PMREMGenerator,
+    renderTarget: THREE.RenderTarget;
 
 const params = {
     showCascades: false,
@@ -25,10 +34,10 @@ const _fogDay = new THREE.Color(0xd8e2ea),
 // tints each fragment by its cascade, using the data of the built-in sun shadow node
 
 function tintCascades() {
-    const cascadeData = reference('_cascadeData', 'vec4', sunLight.shadow);
+    const cascadeData = reference('_cascadeData', 'vec4', sunLight.shadow) as unknown as THREE.ArrayNode<'vec4'>;
     const viewDepth = positionView.z.negate();
 
-    let cascade = float(0);
+    let cascade: THREE.Node<'float'> = float(0);
 
     for (let i = 0; i < sunLight.shadow.getViewportCount(); i++) {
         cascade = cascade.add(step(cascadeData.element(i).y, viewDepth));
@@ -62,7 +71,7 @@ function updateSun() {
     sunLight.color.lerpColors(_sunDusk, _sunDay, daylight);
     sunLight.intensity = 3 + daylight * 2;
 
-    scene.fog.color.lerpColors(_fogDusk, _fogDay, daylight);
+    scene.fog!.color.lerpColors(_fogDusk, _fogDay, daylight);
 
     sky.sunPosition.value.copy(sunLight.position);
 
@@ -188,7 +197,7 @@ function init() {
 
     // gui
 
-    const gui = renderer.inspector.createParameters('Sun Light');
+    const gui = (renderer.inspector as Inspector).createParameters('Sun Light');
 
     gui.add(params, 'showCascades')
         .name('show cascades')

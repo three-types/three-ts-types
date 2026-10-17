@@ -4,19 +4,19 @@ import Stats from 'three/addons/libs/stats.module.js';
 
 import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js';
 
-let renderer, scene, camera, stats;
+let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera, stats: Stats;
 
-let particles;
+let particles: THREE.Points;
 
 const PARTICLE_SIZE = 20;
 
-let raycaster, intersects;
-let pointer, INTERSECTED;
+let raycaster: THREE.Raycaster, intersects: THREE.Intersection<THREE.Object3D>[];
+let pointer: THREE.Vector2, INTERSECTED: number | null;
 
 init();
 
 function init() {
-    const container = document.getElementById('container');
+    const container = document.getElementById('container')!;
 
     scene = new THREE.Scene();
 
@@ -25,7 +25,7 @@ function init() {
 
     //
 
-    let boxGeometry = new THREE.BoxGeometry(200, 200, 200, 16, 16, 16);
+    let boxGeometry: THREE.BufferGeometry = new THREE.BoxGeometry(200, 200, 200, 16, 16, 16);
 
     // if normal and uv attributes are not removed, mergeVertices() can't consolidate identical vertices with different normal/uv data
 
@@ -38,8 +38,8 @@ function init() {
 
     const positionAttribute = boxGeometry.getAttribute('position');
 
-    const colors = [];
-    const sizes = [];
+    const colors: number[] = [];
+    const sizes: number[] = [];
 
     const color = new THREE.Color();
 
@@ -63,8 +63,8 @@ function init() {
             pointTexture: { value: new THREE.TextureLoader().load('textures/sprites/disc.png') },
             alphaTest: { value: 0.9 },
         },
-        vertexShader: document.getElementById('vertexshader').textContent,
-        fragmentShader: document.getElementById('fragmentshader').textContent,
+        vertexShader: document.getElementById('vertexshader')!.textContent!,
+        fragmentShader: document.getElementById('fragmentshader')!.textContent!,
     });
 
     //
@@ -96,7 +96,7 @@ function init() {
     document.addEventListener('pointermove', onPointerMove);
 }
 
-function onPointerMove(event) {
+function onPointerMove(event: PointerEvent) {
     pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
     pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
 }
@@ -126,9 +126,9 @@ function render() {
 
     if (intersects.length > 0) {
         if (INTERSECTED != intersects[0].index) {
-            attributes.size.array[INTERSECTED] = PARTICLE_SIZE;
+            attributes.size.array[INTERSECTED!] = PARTICLE_SIZE;
 
-            INTERSECTED = intersects[0].index;
+            INTERSECTED = intersects[0].index!;
 
             attributes.size.array[INTERSECTED] = PARTICLE_SIZE * 1.25;
             attributes.size.needsUpdate = true;

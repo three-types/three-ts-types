@@ -25,9 +25,14 @@ const MODEL_INDEX_URL =
     'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/model-index.json';
 const SAMPLE_ASSETS_BASE_URL = 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/';
 
-let camera, scene, renderer, renderPipeline, controls, timer;
-let dirLight = null,
-    sky = null;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    renderPipeline: THREE.RenderPipeline,
+    controls: FirstPersonControls,
+    timer: THREE.Timer;
+let dirLight: THREE.DirectionalLight | null = null,
+    sky: SkyMesh | null = null;
 
 const sun = new THREE.Vector3();
 
@@ -76,7 +81,7 @@ async function init() {
     controls.movementSpeed = 2.0;
     controls.lookSpeed = 0.2;
 
-    const progressBar = document.getElementById('progressBar');
+    const progressBar = document.getElementById('progressBar') as HTMLProgressElement;
 
     const manager = new THREE.LoadingManager();
     manager.onProgress = function (url, loaded, total) {
@@ -91,14 +96,14 @@ async function init() {
     const modelURL = await getSponzaModelURL();
     const gltf = await loader.loadAsync(modelURL);
     const model = gltf.scene;
-    const embeddedLights = [];
+    const embeddedLights: THREE.Light[] = [];
 
     model.traverse(child => {
-        if (child.isMesh) {
-            child.castShadow = true;
-            child.receiveShadow = true;
-        } else if (child.isLight) {
-            embeddedLights.push(child);
+        if ((child as THREE.Mesh).isMesh) {
+            (child as THREE.Mesh).castShadow = true;
+            (child as THREE.Mesh).receiveShadow = true;
+        } else if ((child as THREE.Light).isLight) {
+            embeddedLights.push(child as THREE.Light);
         }
     });
 
@@ -197,11 +202,11 @@ async function init() {
         const azimuth = THREE.MathUtils.degToRad(params.lightAzimuth);
 
         sun.setFromSphericalCoords(1, Math.PI / 2 - elevation, azimuth);
-        sky.sunPosition.value.copy(sun);
+        sky!.sunPosition.value.copy(sun);
 
-        dirLight.target.position.set(modelCenter.x, targetY, modelCenter.z);
-        dirLight.position.copy(dirLight.target.position).addScaledVector(sun, lightBaseDistance);
-        dirLight.target.updateMatrixWorld();
+        dirLight!.target.position.set(modelCenter.x, targetY, modelCenter.z);
+        dirLight!.position.copy(dirLight!.target.position).addScaledVector(sun, lightBaseDistance);
+        dirLight!.target.updateMatrixWorld();
     }
 
     updateLightPosition();
@@ -209,7 +214,7 @@ async function init() {
     const types = { Combined: 0, Direct: 3, AO: 1, GI: 2 };
     const debugTypes = { Off: 0, Radiance: 1, Opacity: 2 };
 
-    const gui = renderer.inspector.createParameters('VXGI Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('VXGI Settings');
 
     const effectFolder = gui.addFolder('Effect Settings');
     effectFolder.add(params, 'output', types).onChange(updatePostprocessing);
@@ -234,8 +239,8 @@ async function init() {
     lightingFolder
         .add(params, 'lightIntensity', 0, 100, 0.1)
         .name('Light Intensity')
-        .onChange(value => {
-            dirLight.intensity = value;
+        .onChange((value: number) => {
+            dirLight!.intensity = value;
         });
     lightingFolder.add(ambientLight, 'intensity', 0, 1, 0.01).name('Ambient Intensity');
 
@@ -265,9 +270,17 @@ async function init() {
     window.addEventListener('resize', onWindowResize);
 }
 
+interface Model {
+    label: string;
+    name: string;
+    screenshot: string;
+    tags: string[];
+    variants: Record<string, string>;
+}
+
 async function getSponzaModelURL() {
     const response = await fetch(MODEL_INDEX_URL);
-    const models = await response.json();
+    const models = (await response.json()) as Model[];
     const sponzaInfo = models.find(model => model.name === 'Sponza');
 
     if (!sponzaInfo) {
@@ -293,7 +306,7 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function animate(timestamp) {
+function animate(timestamp: number) {
     timer.update(timestamp);
     controls.update(timer.getDelta());
 

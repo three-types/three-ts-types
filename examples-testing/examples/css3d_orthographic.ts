@@ -2,11 +2,11 @@ import * as THREE from 'three';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { CSS3DRenderer, CSS3DObject } from 'three/addons/renderers/CSS3DRenderer.js';
-import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+import { Controller, GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let camera, scene, renderer;
+let camera: THREE.OrthographicCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
 
-let scene2, renderer2;
+let scene2: THREE.Scene, renderer2: CSS3DRenderer;
 
 const frustumSize = 500;
 
@@ -75,18 +75,18 @@ function init() {
     renderer2 = new CSS3DRenderer();
     renderer2.setSize(window.innerWidth, window.innerHeight);
     renderer2.domElement.style.position = 'absolute';
-    renderer2.domElement.style.top = 0;
+    renderer2.domElement.style.top = '0';
     document.body.appendChild(renderer2.domElement);
 
     const controls = new OrbitControls(camera, renderer2.domElement);
     controls.minZoom = 0.5;
     controls.maxZoom = 2;
 
-    function createPlane(width, height, cssColor, pos, rot) {
+    function createPlane(width: number, height: number, cssColor: string, pos: THREE.Vector3, rot: THREE.Euler) {
         const element = document.createElement('div');
         element.style.width = width + 'px';
         element.style.height = height + 'px';
-        element.style.opacity = 0.75;
+        element.style.opacity = '0.75';
         element.style.background = cssColor;
 
         const object = new CSS3DObject(element);
@@ -133,12 +133,12 @@ function createPanel() {
 
     const settings = {
         setViewOffset() {
-            folder1.children[1].enable().setValue(window.innerWidth);
-            folder1.children[2].enable().setValue(window.innerHeight);
-            folder1.children[3].enable().setValue(0);
-            folder1.children[4].enable().setValue(0);
-            folder1.children[5].enable().setValue(window.innerWidth);
-            folder1.children[6].enable().setValue(window.innerHeight);
+            (folder1.children[1] as Controller).enable().setValue(window.innerWidth);
+            (folder1.children[2] as Controller).enable().setValue(window.innerHeight);
+            (folder1.children[3] as Controller).enable().setValue(0);
+            (folder1.children[4] as Controller).enable().setValue(0);
+            (folder1.children[5] as Controller).enable().setValue(window.innerWidth);
+            (folder1.children[6] as Controller).enable().setValue(window.innerHeight);
         },
         fullWidth: 0,
         fullHeight: 0,
@@ -147,12 +147,12 @@ function createPanel() {
         width: 0,
         height: 0,
         clearViewOffset() {
-            folder1.children[1].setValue(0).disable();
-            folder1.children[2].setValue(0).disable();
-            folder1.children[3].setValue(0).disable();
-            folder1.children[4].setValue(0).disable();
-            folder1.children[5].setValue(0).disable();
-            folder1.children[6].setValue(0).disable();
+            (folder1.children[1] as Controller).setValue(0).disable();
+            (folder1.children[2] as Controller).setValue(0).disable();
+            (folder1.children[3] as Controller).setValue(0).disable();
+            (folder1.children[4] as Controller).setValue(0).disable();
+            (folder1.children[5] as Controller).setValue(0).disable();
+            (folder1.children[6] as Controller).setValue(0).disable();
             camera.clearViewOffset();
         },
     };
@@ -185,7 +185,21 @@ function createPanel() {
     folder1.add(settings, 'clearViewOffset');
 }
 
-function updateCameraViewOffset({ fullWidth, fullHeight, x, y, width, height }) {
+function updateCameraViewOffset({
+    fullWidth,
+    fullHeight,
+    x,
+    y,
+    width,
+    height,
+}: {
+    fullWidth?: number;
+    fullHeight?: number;
+    x?: number;
+    y?: number;
+    width?: number;
+    height?: number;
+}) {
     if (!camera.view) {
         camera.setViewOffset(
             fullWidth || window.innerWidth,

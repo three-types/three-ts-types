@@ -16,9 +16,9 @@ let MESH_COUNT = 256;
 let GRID_SIZE = 16;
 const ADD_DELAY = 1000;
 
-let camera, scene, renderer;
-let sphere;
-let gui;
+let camera: THREE.OrthographicCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let sphere: THREE.Mesh<THREE.SphereGeometry, THREE.MeshNormalMaterial>;
+let gui: GUI;
 
 // Frame timing
 let lastFrameTime = 0;
@@ -29,11 +29,11 @@ let sphereStartTime = 0;
 let currentMode = '';
 let framesAfterComplete = 0;
 let testDone = false;
-let meshGroup = null;
+let meshGroup: THREE.Group | null = null;
 
-const longestFrameEl = document.getElementById('longestFrame');
-const meshCountEl = document.getElementById('meshCount');
-const compileModeEl = document.getElementById('compileMode');
+const longestFrameEl = document.getElementById('longestFrame')!;
+const meshCountEl = document.getElementById('meshCount')!;
+const compileModeEl = document.getElementById('compileMode')!;
 
 const params = {
     withoutCompile: function () {
@@ -87,10 +87,10 @@ async function init() {
     await renderer.init();
 
     // Reduce mesh count for WebGL (slower compilation)
-    if (renderer.backend.isWebGLBackend) {
+    if ((renderer.backend as THREE.WebGLBackend).isWebGLBackend) {
         MESH_COUNT = 64;
         GRID_SIZE = 8;
-        document.getElementById('materialCount').textContent = '64';
+        document.getElementById('materialCount')!.textContent = '64';
         meshCountEl.textContent = '0 / 64';
     }
 
@@ -108,7 +108,7 @@ async function init() {
     setTimeout(() => addMeshes(mode), ADD_DELAY);
 }
 
-function createUniqueMaterial(index) {
+function createUniqueMaterial(index: number) {
     const material = new THREE.MeshBasicNodeMaterial();
 
     const seed = float(index * 0.1 + 1.0);
@@ -118,7 +118,7 @@ function createUniqueMaterial(index) {
         .add(hash(float(index)));
 
     const noiseType = index % 4;
-    let colorNode;
+    let colorNode: THREE.Node<'vec3'>;
 
     switch (noiseType) {
         case 0:
@@ -146,12 +146,12 @@ function createUniqueMaterial(index) {
     const tintB = hash(float(index * 3 + 2));
     const tint = vec3(tintR, tintG, tintB).mul(0.3).add(0.7);
 
-    material.colorNode = colorNode.mul(tint);
+    material.colorNode = colorNode!.mul(tint);
 
     return material;
 }
 
-async function addMeshes(mode) {
+async function addMeshes(mode: string) {
     const geometry = new THREE.PlaneGeometry(0.9, 0.9);
     const startX = -(GRID_SIZE - 1) / 2;
     const startY = -(GRID_SIZE - 1) / 2;

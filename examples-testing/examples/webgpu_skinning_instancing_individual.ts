@@ -23,20 +23,63 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
 
 import WebGPU from 'three/addons/capabilities/WebGPU.js';
 
-let camera, scene, renderer, controls;
-let mixer, timer, animatedObject, proportionBones, referenceMesh, footBones, groundFoot, dummy;
-let instanceMatrices, instanceMatricesNode, bellyWeightsNode;
-let computeSkinning;
+interface ProportionBones {
+    head: THREE.Bone;
+    belly: THREE.Bone;
+    chest: THREE.Bone;
+    arms: THREE.Bone[];
+    legs: THREE.Bone[];
+    baseScales: THREE.Vector3[];
+}
 
-const skeletonStates = new Map();
-const timeOffsets = [];
-const variations = [];
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, controls: OrbitControls;
+let mixer: THREE.AnimationMixer,
+    timer: THREE.Timer,
+    animatedObject: THREE.Group,
+    proportionBones: ProportionBones,
+    referenceMesh: THREE.SkinnedMesh,
+    footBones: [THREE.Bone, THREE.Bone],
+    groundFoot: number,
+    dummy: THREE.Object3D;
+let instanceMatrices: THREE.StorageBufferAttribute,
+    instanceMatricesNode: THREE.StorageBufferNode<'mat4'>,
+    bellyWeightsNode: THREE.StorageBufferNode<'float'>;
+let computeSkinning: THREE.ComputeNode;
+
+interface SkeletonState {
+    skeleton: THREE.Skeleton;
+    boneCount: number;
+    boneMatrices: THREE.StorageBufferAttribute;
+    boneMatricesNode: THREE.StorageBufferNode<'mat4'>;
+}
+
+interface BodyType {
+    width: number;
+    height: number;
+    depth: number;
+    belly: number;
+    headScale: number;
+    bellyWidth: number;
+    chestWidth: number;
+    armLength: number;
+    legLength: number;
+}
+
+interface Variation extends BodyType {
+    size: number;
+    x: number;
+    y: number;
+}
+
+const skeletonStates = new Map<THREE.Skeleton, SkeletonState>();
+const timeOffsets: number[] = [];
+const variations: Variation[] = [];
 const leftFoot = new THREE.Vector3();
 const rightFoot = new THREE.Vector3();
 
 init();
 
-function createSourceVertexAttribute(geometry) {
+function createSourceVertexAttribute(geometry: THREE.BufferGeometry) {
     const position = geometry.getAttribute('position');
     const normal = geometry.getAttribute('normal');
     const bellyPosition = position.clone();
@@ -63,7 +106,7 @@ function createSourceVertexAttribute(geometry) {
     return new THREE.StorageBufferAttribute(data, 4);
 }
 
-function getSkeletonState(skeleton, instanceCount) {
+function getSkeletonState(skeleton: THREE.Skeleton, instanceCount: number) {
     let state = skeletonStates.get(skeleton);
 
     if (state === undefined) {
@@ -83,7 +126,10 @@ function getSkeletonState(skeleton, instanceCount) {
     return state;
 }
 
-function createComputedMesh(source, instanceCount) {
+function createComputedMesh(
+    source: THREE.SkinnedMesh<THREE.BufferGeometry, THREE.MeshPhysicalMaterial>,
+    instanceCount: number,
+) {
     const geometry = source.geometry.clone();
     const material = source.material.clone();
     const vertexCount = geometry.getAttribute('position').count;
@@ -155,7 +201,7 @@ function createComputedMesh(source, instanceCount) {
     mesh.castShadow = true;
     mesh.frustumCulled = false;
 
-    source.parent.add(mesh);
+    source.parent!.add(mesh);
     source.visible = false;
 }
 
@@ -207,7 +253,7 @@ async function init() {
         const object = gltf.scene;
         const instanceCount = 30;
         const duration = gltf.animations[0].duration;
-        const skinnedMeshes = [];
+        const skinnedMeshes: THREE.SkinnedMesh<THREE.BufferGeometry, THREE.MeshPhysicalMaterial>[] = [];
 
         dummy = new THREE.Object3D();
         animatedObject = object;
@@ -215,12 +261,13 @@ async function init() {
         mixer.clipAction(gltf.animations[0]).play();
 
         object.traverse(child => {
-            if (child.isSkinnedMesh === true) skinnedMeshes.push(child);
+            if ((child as THREE.SkinnedMesh<THREE.BufferGeometry, THREE.MeshPhysicalMaterial>).isSkinnedMesh === true)
+                skinnedMeshes.push(child as THREE.SkinnedMesh<THREE.BufferGeometry, THREE.MeshPhysicalMaterial>);
         });
 
         referenceMesh = skinnedMeshes[0];
         const skeleton = referenceMesh.skeleton;
-        const getBone = name => skeleton.bones.find(bone => bone.name.endsWith(name));
+        const getBone = (name: string) => skeleton.bones.find(bone => bone.name.endsWith(name))!;
         const proportionTargets = [
             getBone('Head'),
             getBone('Spine'),
@@ -245,7 +292,7 @@ async function init() {
         };
         footBones = [getBone('LeftFoot'), getBone('RightFoot')];
 
-        const bodyTypes = [
+        const bodyTypes: BodyType[] = [
             {
                 width: 0.92,
                 height: 1.09,
@@ -368,7 +415,7 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function applyProportions(variation) {
+function applyProportions(variation: Variation) {
     const { head, belly, chest, arms, legs, baseScales } = proportionBones;
     const bones = [head, belly, chest, ...arms, ...legs];
 
@@ -393,7 +440,7 @@ function getFootCoordinate() {
     return Math.max(leftFoot.z, rightFoot.z);
 }
 
-function updateInstanceMatrix(index, variation) {
+function updateInstanceMatrix(index: number, variation: Variation) {
     const foot = getFootCoordinate();
 
     dummy.position.set(variation.x, variation.y, groundFoot - foot * variation.height * variation.size);
@@ -416,7 +463,7 @@ function animate() {
 
             for (const state of skeletonStates.values()) {
                 state.skeleton.update();
-                state.boneMatrices.array.set(state.skeleton.boneMatrices, i * state.boneCount * 16);
+                state.boneMatrices.array.set(state.skeleton.boneMatrices!, i * state.boneCount * 16);
             }
 
             updateInstanceMatrix(i, variations[i]);

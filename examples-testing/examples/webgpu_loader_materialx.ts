@@ -13,6 +13,7 @@ import * as MikkTSpace from 'three/addons/libs/mikktspace.module.js';
 import { computeMikkTSpaceTangents } from 'three/addons/utils/BufferGeometryUtils.js';
 
 import { MaterialXLoader } from 'three/addons/loaders/MaterialXLoader.js';
+import { MaterialXLogEntry } from 'three/addons/loaders/materialx/MaterialXLog.js';
 import { createStrictInterfaceValidator } from 'three/addons/loaders/materialx/MaterialXInterfaceValidation.js';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -75,9 +76,9 @@ const localSamples = [
     'displacement.mtlx',
 ];
 
-let camera, scene, renderer;
-let controls, prefab;
-const models = [];
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let controls: OrbitControls, prefab: THREE.Group;
+const models: THREE.Group[] = [];
 const strictInterfaceValidator = createStrictInterfaceValidator();
 
 // Let MaterialX <image> nodes load .exr, .tif and .hdr files through their loaders.
@@ -110,26 +111,32 @@ function init() {
 
     const material = new THREE.MeshBasicNodeMaterial();
 
-    const grid = Fn(([coord, lineWidth = float(0.01), dotSize = float(0.03)]) => {
-        // https://bgolus.medium.com/the-best-darn-grid-shader-yet-727f9278b9d8
+    const grid = Fn(
+        ([coord, lineWidth = float(0.01), dotSize = float(0.03)]: [
+            THREE.Node<'vec2'>,
+            THREE.Node<'float'>,
+            THREE.Node<'float'>,
+        ]) => {
+            // https://bgolus.medium.com/the-best-darn-grid-shader-yet-727f9278b9d8
 
-        const g = fract(coord);
-        const fw = fwidth(coord);
-        const gx = abs(g.x.sub(0.5));
-        const gy = abs(g.y.sub(0.5));
+            const g = fract(coord);
+            const fw = fwidth(coord);
+            const gx = abs(g.x.sub(0.5));
+            const gy = abs(g.y.sub(0.5));
 
-        const lineX = saturate(lineWidth.sub(gx).div(fw.x).add(0.5));
-        const lineY = saturate(lineWidth.sub(gy).div(fw.y).add(0.5));
-        const lines = max(lineX, lineY);
+            const lineX = saturate(lineWidth.sub(gx).div(fw.x).add(0.5));
+            const lineY = saturate(lineWidth.sub(gy).div(fw.y).add(0.5));
+            const lines = max(lineX, lineY);
 
-        const squareDist = max(gx, gy);
-        const aa = max(fw.x, fw.y);
-        const dots = smoothstep(dotSize.add(aa), dotSize.sub(aa), squareDist);
+            const squareDist = max(gx, gy);
+            const aa = max(fw.x, fw.y);
+            const dots = smoothstep(dotSize.add(aa), dotSize.sub(aa), squareDist);
 
-        return max(dots, lines);
-    });
+            return max(dots, lines);
+        },
+    );
 
-    const fade = Fn(([radius = float(10.0), falloff = float(1.0)]) => {
+    const fade = Fn(([radius = float(10.0), falloff = float(1.0)]: [THREE.Node<'float'>, THREE.Node<'float'>]) => {
         return smoothstep(radius, radius.sub(falloff), length(positionWorld));
     });
 
@@ -178,9 +185,9 @@ function init() {
 
 function computePrefabTangents() {
     prefab.traverse(function (node) {
-        if (node.isMesh === false) return;
+        if ((node as THREE.Object3D & { isMesh?: boolean }).isMesh === false) return;
 
-        const geometry = node.geometry;
+        const geometry = (node as THREE.Mesh).geometry;
 
         if (geometry === undefined) return;
 
@@ -210,7 +217,7 @@ function updateModelsAlign() {
     }
 }
 
-function reportMaterialXLog(sample, materialName, log) {
+function reportMaterialXLog(sample: string, materialName: string | null, log: MaterialXLogEntry[]) {
     if (log.length === 0) return;
 
     const label = materialName ? `"${materialName}"` : `"${sample}"`;
@@ -232,7 +239,7 @@ function reportMaterialXLog(sample, materialName, log) {
     console.groupEnd();
 }
 
-async function addSample(sample, path) {
+async function addSample(sample: string, path: string) {
     const model = prefab.clone();
 
     // Single-sided plane facing up with UVs running (0,0) at the front-left to (1,1) at the back-right.
@@ -254,13 +261,13 @@ async function addSample(sample, path) {
         interfaceValidator: strictInterfaceValidator,
         throwOnErrors: false,
     });
-    const material = Object.values(materials).pop();
+    const material = Object.values(materials).pop()!;
     reportMaterialXLog(sample, material ? material.name : null, log);
 
-    const calibrationMesh = model.getObjectByName('Calibration_Mesh');
+    const calibrationMesh = model.getObjectByName('Calibration_Mesh') as THREE.Mesh;
     calibrationMesh.material = material;
 
-    const previewMesh = model.getObjectByName('Preview_Mesh');
+    const previewMesh = model.getObjectByName('Preview_Mesh') as THREE.Mesh;
     previewMesh.material = material;
 
     uvPlane.material = material;
@@ -279,7 +286,7 @@ async function addSample(sample, path) {
 }
 
 function addGUI() {
-    const gui = renderer.inspector.createParameters('MaterialX Loader');
+    const gui = (renderer.inspector as Inspector).createParameters('MaterialX Loader');
 
     const API = {
         geometry: 'Shader Ball',
@@ -300,9 +307,9 @@ function addGUI() {
     gui.add(API, 'showPreviewMesh').name('Preview Mesh').onChange(updateVisibility);
 }
 
-function setVisibility(name, visible) {
+function setVisibility(name: string, visible: boolean) {
     scene.traverse(function (node) {
-        if (node.isMesh) {
+        if ((node as THREE.Mesh).isMesh) {
             if (node.name == name) node.visible = visible;
         }
     });

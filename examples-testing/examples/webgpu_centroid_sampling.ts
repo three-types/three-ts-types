@@ -2,14 +2,22 @@ import * as THREE from 'three/webgpu';
 import { varying, uv, texture, Fn } from 'three/tsl';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
+import { ParametersGroup } from 'three/addons/inspector/tabs/Parameters.js';
 
-let rendererAntialiasingEnabled;
-let rendererAntialiasingDisabled;
-let camera;
-let scene;
-let gui;
+let rendererAntialiasingEnabled: THREE.WebGPURenderer;
+let rendererAntialiasingDisabled: THREE.WebGPURenderer;
+let camera: THREE.PerspectiveCamera;
+let scene: THREE.Scene;
+let gui: ParametersGroup;
 
-const effectController = {
+const effectController: {
+    sampling:
+        | typeof THREE.InterpolationSamplingMode.NORMAL
+        | typeof THREE.InterpolationSamplingMode.CENTROID
+        | typeof THREE.InterpolationSamplingMode.SAMPLE
+        | 'flat first'
+        | 'flat either';
+} = {
     sampling: 'normal',
 };
 
@@ -17,7 +25,7 @@ const atlasCanvas = document.createElement('canvas');
 atlasCanvas.width = 16;
 atlasCanvas.height = 16;
 
-const ctx = atlasCanvas.getContext('2d');
+const ctx = atlasCanvas.getContext('2d')!;
 ctx.fillStyle = 'red';
 ctx.fillRect(0, 0, 8, 8);
 
@@ -62,7 +70,7 @@ function init() {
 
     scene = new THREE.Scene();
 
-    const makeFaceGeometry = uvs => {
+    const makeFaceGeometry = (uvs: number[]) => {
         const geometry = new THREE.BufferGeometry();
         const positions = [-1, -1, 0, 1, -1, 0, 1, 1, 0, -1, 1, 0];
         geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(positions), 3));
@@ -78,7 +86,7 @@ function init() {
     const material = new THREE.MeshBasicNodeMaterial();
     const testUV = varying(uv(), 'testUV');
 
-    const createShader = (type, sampling) => {
+    const createShader = (type: THREE.InterpolationSamplingType, sampling: THREE.InterpolationSamplingMode) => {
         return Fn(() => {
             testUV.setInterpolation(type, sampling);
 
@@ -113,7 +121,7 @@ function init() {
 
     material.colorNode = withoutInterpolationShader();
 
-    const faceMeshes = [];
+    const faceMeshes: THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicNodeMaterial>[] = [];
 
     for (let x = -5; x < 5; x++) {
         for (let y = -5; y < 5; y++) {
@@ -142,20 +150,20 @@ function init() {
         forceWebGL: forceWebGL,
     });
 
-    document.body.querySelector('#antialiasing-enabled').appendChild(rendererAntialiasingEnabled.domElement);
+    document.body.querySelector('#antialiasing-enabled')!.appendChild(rendererAntialiasingEnabled.domElement);
     rendererAntialiasingEnabled.setPixelRatio(window.devicePixelRatio);
     rendererAntialiasingEnabled.setSize(window.innerWidth / 2, window.innerHeight);
     rendererAntialiasingEnabled.setAnimationLoop(animateAliased);
     rendererAntialiasingEnabled.inspector = new Inspector();
 
-    document.body.querySelector('#antialiasing-disabled').appendChild(rendererAntialiasingDisabled.domElement);
-    document.body.querySelector('#antialiasing-disabled').appendChild(rendererAntialiasingDisabled.domElement);
+    document.body.querySelector('#antialiasing-disabled')!.appendChild(rendererAntialiasingDisabled.domElement);
+    document.body.querySelector('#antialiasing-disabled')!.appendChild(rendererAntialiasingDisabled.domElement);
 
     onWindowResize();
 
     window.addEventListener('resize', onWindowResize);
 
-    gui = rendererAntialiasingEnabled.inspector.createParameters('Settings');
+    gui = (rendererAntialiasingEnabled.inspector as Inspector).createParameters('Settings');
     gui.add(effectController, 'sampling', [
         THREE.InterpolationSamplingMode.NORMAL,
         THREE.InterpolationSamplingMode.CENTROID,

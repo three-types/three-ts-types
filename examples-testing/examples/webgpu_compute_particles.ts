@@ -14,11 +14,11 @@ const size = uniform(0.12);
 
 const clickPosition = uniform(new THREE.Vector3());
 
-let camera, scene, renderer;
-let controls;
-let computeParticles;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let controls: OrbitControls;
+let computeParticles: THREE.ComputeNode;
 
-let isOrbitControlsActive;
+let isOrbitControlsActive: boolean;
 
 init();
 
@@ -149,7 +149,7 @@ async function init() {
 
     //
 
-    function onMove(event) {
+    function onMove(event: PointerEvent) {
         if (isOrbitControlsActive) return;
 
         pointer.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1);
@@ -201,7 +201,7 @@ async function init() {
 
     // gui
 
-    const gui = renderer.inspector.createParameters('Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
 
     gui.add(gravity, 'value', -0.0098, 0, 0.0001).name('gravity');
     gui.add(bounce, 'value', 0.1, 1, 0.01).name('bounce');

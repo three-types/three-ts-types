@@ -6,7 +6,7 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-let camera, scene, renderer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
 
 init();
 
@@ -64,7 +64,7 @@ async function init() {
     floor.scale.x += 4;
     floor.scale.y += 4;
 
-    const dragon = gltf.scene.children[1];
+    const dragon = gltf.scene.children[1] as THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhysicalMaterial>;
     dragon.position.set(-1.5, -0.8, 1);
 
     const dragon2 = dragon.clone();
@@ -75,10 +75,12 @@ async function init() {
 
     // shadow node
 
-    const customShadow = Fn(([color, opacity = 1]) => {
-        //return vec4( color, opacity ); // opacity by blending
-        return mix(1, color, opacity); // opacity by color
-    });
+    const customShadow = Fn(
+        ([color, opacity = 1]: [THREE.Node<'color'>, THREE.Node<'float'> | number] | [THREE.Node<'color'>]) => {
+            //return vec4( color, opacity ); // opacity by blending
+            return mix(1, color, opacity); // opacity by color
+        },
+    );
 
     // apply shadow
 

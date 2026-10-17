@@ -2,9 +2,14 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import Stats from 'three/addons/libs/stats.module.js';
 
-let camera, controls, timer, scene, renderer, stats;
+let camera: THREE.PerspectiveCamera,
+    controls: OrbitControls,
+    timer: THREE.Timer,
+    scene: THREE.Scene,
+    renderer: THREE.WebGLRenderer,
+    stats: Stats;
 
-let material;
+let material: THREE.ShaderMaterial;
 
 init();
 
@@ -26,7 +31,7 @@ function init() {
     document.body.appendChild(renderer.domElement);
 
     if (renderer.extensions.has('WEBGL_clip_cull_distance') === false) {
-        document.getElementById('notSupported').style.display = '';
+        document.getElementById('notSupported')!.style.display = '';
         return;
     }
 
@@ -70,8 +75,8 @@ function init() {
         uniforms: {
             time: { value: 1.0 },
         },
-        vertexShader: document.getElementById('vertexShader').textContent,
-        fragmentShader: document.getElementById('fragmentShader').textContent,
+        vertexShader: document.getElementById('vertexShader')!.textContent!,
+        fragmentShader: document.getElementById('fragmentShader')!.textContent!,
         side: THREE.DoubleSide,
         transparent: true,
         vertexColors: true,

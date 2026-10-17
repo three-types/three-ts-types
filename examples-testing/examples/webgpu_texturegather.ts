@@ -93,7 +93,7 @@ async function init(forceWebGL = false) {
     renderer.setRenderTarget(null);
 
     colorNode.value = rt.texture;
-    depthNode.value = rt.depthTexture;
+    depthNode.value = rt.depthTexture!;
 
     //
 

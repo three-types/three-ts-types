@@ -8,7 +8,15 @@ const WRAPPING = {
     MirroredRepeatWrapping: THREE.MirroredRepeatWrapping,
 };
 
-const params = {
+const params: {
+    wrapS: THREE.Wrapping;
+    wrapT: THREE.Wrapping;
+    offsetX: number;
+    offsetY: number;
+    repeatX: number;
+    repeatY: number;
+    rotation: number;
+} = {
     wrapS: THREE.RepeatWrapping,
     wrapT: THREE.RepeatWrapping,
     offsetX: 0,
@@ -18,68 +26,68 @@ const params = {
     rotation: 0,
 };
 
-function CanvasTexture(parentTexture) {
-    this._canvas = document.createElement('canvas');
-    this._canvas.width = this._canvas.height = 1024;
-    this._context2D = this._canvas.getContext('2d');
+class CanvasTexture {
+    _background: HTMLImageElement;
 
-    if (parentTexture) {
-        this._parentTexture.push(parentTexture);
-        parentTexture.image = this._canvas;
+    constructor(parentTexture: THREE.Texture) {
+        this._canvas = document.createElement('canvas');
+        this._canvas.width = this._canvas.height = 1024;
+        this._context2D = this._canvas.getContext('2d');
+
+        if (parentTexture) {
+            this._parentTexture.push(parentTexture);
+            parentTexture.image = this._canvas;
+        }
+
+        const that = this;
+        this._background = document.createElement('img');
+        this._background.addEventListener('load', function () {
+            that._canvas!.width = that._background.naturalWidth;
+            that._canvas!.height = that._background.naturalHeight;
+
+            that._crossRadius = Math.ceil(Math.min(that._canvas!.width, that._canvas!.height / 30));
+            that._crossMax = Math.ceil(0.70710678 * that._crossRadius);
+            that._crossMin = Math.ceil(that._crossMax / 10);
+            that._crossThickness = Math.ceil(that._crossMax / 10);
+
+            that._draw();
+        });
+        this._background.crossOrigin = '';
+        this._background.src = 'textures/uv_grid_opengl.jpg';
+
+        this._draw();
     }
 
-    const that = this;
-    this._background = document.createElement('img');
-    this._background.addEventListener('load', function () {
-        that._canvas.width = that._background.naturalWidth;
-        that._canvas.height = that._background.naturalHeight;
+    _canvas: HTMLCanvasElement | null = null;
+    _context2D: CanvasRenderingContext2D | null = null;
+    _xCross = 0;
+    _yCross = 0;
 
-        that._crossRadius = Math.ceil(Math.min(that._canvas.width, that._canvas.height / 30));
-        that._crossMax = Math.ceil(0.70710678 * that._crossRadius);
-        that._crossMin = Math.ceil(that._crossMax / 10);
-        that._crossThickness = Math.ceil(that._crossMax / 10);
+    _crossRadius = 57;
+    _crossMax = 40;
+    _crossMin = 4;
+    _crossThickness = 4;
 
-        that._draw();
-    });
-    this._background.crossOrigin = '';
-    this._background.src = 'textures/uv_grid_opengl.jpg';
+    _parentTexture: THREE.Texture[] = [];
 
-    this._draw();
-}
-
-CanvasTexture.prototype = {
-    constructor: CanvasTexture,
-
-    _canvas: null,
-    _context2D: null,
-    _xCross: 0,
-    _yCross: 0,
-
-    _crossRadius: 57,
-    _crossMax: 40,
-    _crossMin: 4,
-    _crossThickness: 4,
-
-    _parentTexture: [],
-
-    addParent: function (parentTexture) {
+    addParent = function (this: CanvasTexture, parentTexture: THREE.Texture) {
         if (this._parentTexture.indexOf(parentTexture) === -1) {
             this._parentTexture.push(parentTexture);
             parentTexture.image = this._canvas;
         }
-    },
+    };
 
-    setCrossPosition: function (x, y) {
-        this._xCross = x * this._canvas.width;
-        this._yCross = y * this._canvas.height;
+    setCrossPosition = function (this: CanvasTexture, x: number, y: number) {
+        this._xCross = x * this._canvas!.width;
+        this._yCross = y * this._canvas!.height;
 
         this._draw();
-    },
+    };
 
-    _draw: function () {
+    _draw = function (this: CanvasTexture) {
         if (!this._context2D) return;
 
-        this._context2D.clearRect(0, 0, this._canvas.width, this._canvas.height);
+        this._context2D.clearRect(0, 0, this._canvas!.width, this._canvas!.height);
 
         // Background.
         this._context2D.drawImage(this._background, 0, 0);
@@ -106,18 +114,18 @@ CanvasTexture.prototype = {
         for (let i = 0; i < this._parentTexture.length; i++) {
             this._parentTexture[i].needsUpdate = true;
         }
-    },
-};
+    };
+}
 
 const width = window.innerWidth;
 const height = window.innerHeight;
 
-let canvas;
-let planeTexture, cubeTexture, circleTexture;
+let canvas: CanvasTexture;
+let planeTexture: THREE.Texture, cubeTexture: THREE.Texture, circleTexture: THREE.Texture;
 
-let container;
+let container: HTMLElement;
 
-let camera, scene, renderer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
 
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
@@ -126,7 +134,7 @@ const onClickPosition = new THREE.Vector2();
 init();
 
 function init() {
-    container = document.getElementById('container');
+    container = document.getElementById('container')!;
 
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0xeeeeee);
@@ -233,7 +241,7 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function onMouseMove(evt) {
+function onMouseMove(evt: MouseEvent) {
     evt.preventDefault();
 
     const array = getMousePosition(container, evt.clientX, evt.clientY);
@@ -243,17 +251,19 @@ function onMouseMove(evt) {
 
     if (intersects.length > 0 && intersects[0].uv) {
         const uv = intersects[0].uv;
-        intersects[0].object.material.map.transformUv(uv);
+        (intersects[0].object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial>).material.map!.transformUv(
+            uv,
+        );
         canvas.setCrossPosition(uv.x, uv.y);
     }
 }
 
-function getMousePosition(dom, x, y) {
+function getMousePosition(dom: HTMLElement, x: number, y: number) {
     const rect = dom.getBoundingClientRect();
     return [(x - rect.left) / rect.width, (y - rect.top) / rect.height];
 }
 
-function getIntersects(point, objects) {
+function getIntersects(point: THREE.Vector2, objects: THREE.Object3D[]) {
     mouse.set(point.x * 2 - 1, -(point.y * 2) + 1);
 
     raycaster.setFromCamera(mouse, camera);
@@ -275,12 +285,12 @@ function animate() {
     renderer.render(scene, camera);
 }
 
-function setwrapS(value) {
+function setwrapS(value: THREE.Wrapping) {
     circleTexture.wrapS = value;
     circleTexture.needsUpdate = true;
 }
 
-function setwrapT(value) {
+function setwrapT(value: THREE.Wrapping) {
     circleTexture.wrapT = value;
     circleTexture.needsUpdate = true;
 }

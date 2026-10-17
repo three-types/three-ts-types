@@ -6,7 +6,13 @@ import { SPZLoader } from 'three/addons/loaders/SPZLoader.js';
 import { GaussianSplat } from 'three/addons/objects/GaussianSplat.js';
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let camera, scene, renderer, controls, splats, splatRoot, hitMarker;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    controls: OrbitControls,
+    splats: GaussianSplat | undefined,
+    splatRoot: GaussianSplat | undefined,
+    hitMarker: THREE.Mesh<THREE.SphereGeometry, THREE.MeshBasicMaterial>;
 THREE.ColorManagement.workingColorSpace = THREE.SRGBColorSpace;
 
 const zeroVector = new THREE.Vector3();
@@ -19,7 +25,25 @@ const HIT_MARKER_SIZE_RATIO = 1 / 50;
 let pointerDownX = 0;
 let pointerDownY = 0;
 
-const sources = {
+interface SplatSource {
+    name: string;
+    url: string;
+    loader: new () => THREE.Loader<THREE.BufferGeometry>;
+    rotation?: THREE.Euler;
+    cameraPosition: THREE.Vector3;
+    cameraTarget?: THREE.Vector3;
+    minDistance?: number;
+    maxDistance?: number;
+    credit?: {
+        author: string;
+        authorUrl: string;
+        source: string;
+        license: string;
+        licenseUrl: string;
+    };
+}
+
+const sources: Record<string, SplatSource> = {
     millipede: {
         name: 'Millipede (SPLAT)',
         url: './models/splat/millipede.splat',
@@ -92,7 +116,7 @@ async function init() {
     controls.target.set(0, 0, 0);
     controls.update();
 
-    const gui = renderer.inspector.createParameters('Building');
+    const gui = (renderer.inspector as Inspector).createParameters('Building');
     gui.add(params, 'source', sourceNames)
         .name('Splat')
         .onChange(async value => {
@@ -113,12 +137,12 @@ async function init() {
     renderer.domElement.addEventListener('click', onClick);
 }
 
-function onPointerDown(event) {
+function onPointerDown(event: PointerEvent) {
     pointerDownX = event.clientX;
     pointerDownY = event.clientY;
 }
 
-function onClick(event) {
+function onClick(event: MouseEvent) {
     // check drag distance
     const dx = event.clientX - pointerDownX;
     const dy = event.clientY - pointerDownY;
@@ -131,7 +155,7 @@ function onClick(event) {
 
     raycaster.setFromCamera(pointer, camera);
 
-    const hit = raycaster.intersectObject(splatRoot, true)[0];
+    const hit = raycaster.intersectObject(splatRoot!, true)[0];
     if (hit) {
         hitMarker.position.copy(hit.point);
         hitMarker.visible = true;
@@ -140,7 +164,7 @@ function onClick(event) {
     }
 }
 
-async function loadSplatSource(sourceKey) {
+async function loadSplatSource(sourceKey: string) {
     const source = sources[sourceKey];
     const splatData = await new source.loader().loadAsync(source.url);
 
@@ -159,19 +183,19 @@ async function loadSplatSource(sourceKey) {
     updateLicenseInfo(source);
 }
 
-function getWorldBoundingSphere(mesh) {
+function getWorldBoundingSphere(mesh: GaussianSplat) {
     mesh.updateWorldMatrix(true, false);
 
-    return mesh.splatGeometry.boundingSphere.clone().applyMatrix4(mesh.matrixWorld);
+    return mesh.splatGeometry.boundingSphere!.clone().applyMatrix4(mesh.matrixWorld);
 }
 
-function updateHitMarkerSize(mesh) {
+function updateHitMarkerSize(mesh: GaussianSplat) {
     const sphere = getWorldBoundingSphere(mesh);
     hitMarker.scale.setScalar(Math.max(sphere.radius * HIT_MARKER_SIZE_RATIO, 0.0001));
 }
 
-function updateLicenseInfo(source) {
-    const license = document.getElementById('license');
+function updateLicenseInfo(source: SplatSource) {
+    const license = document.getElementById('license')!;
     const credit = source.credit;
 
     if (credit === undefined) {
@@ -195,21 +219,21 @@ function updateLicenseInfo(source) {
         '</a>.';
 }
 
-function getSourceKeyByName(sourceName) {
-    return Object.keys(sources).find(key => sources[key].name === sourceName);
+function getSourceKeyByName(sourceName: string) {
+    return Object.keys(sources).find(key => sources[key].name === sourceName)!;
 }
 
 function disposeCurrentSplats() {
     if (splatRoot === undefined) return;
 
     scene.remove(splatRoot);
-    splats.geometry.dispose();
-    splats.material.dispose();
+    splats!.geometry.dispose();
+    splats!.material.dispose();
     splats = undefined;
     splatRoot = undefined;
 }
 
-function fitCameraToSplats(mesh, source) {
+function fitCameraToSplats(mesh: GaussianSplat, source: SplatSource) {
     const sphere = getWorldBoundingSphere(mesh);
     const radius = Math.max(sphere.radius, 0.01);
     const distance = radius / Math.sin(THREE.MathUtils.degToRad(camera.fov) * 0.5);
