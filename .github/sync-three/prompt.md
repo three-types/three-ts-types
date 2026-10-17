@@ -23,7 +23,7 @@ Then follow the existing workflow. The scripts commit for you; run each from its
    - Commit these edits separately with short descriptive messages, for example "Add Sculptor to Addons declaration".
 3. `cd examples-testing && sh prepare-examples.sh` commits the converted examples ("Add examples") and applies `changes.patch` with `--3way`. Resolve conflicts and make `pnpm run type-check` pass. Fix type errors in the declarations when the declarations are wrong, and in the examples only when the example code itself needs an annotation or cast, the way the existing patch does. Then run `sh update-patch.sh` ("Update patch and delete examples").
 4. Only if `src/nodes/tsl/TSLCore.js` changed in the range, or the TSL checks fail: `cd tsl-testing && sh prepare-tsl.sh`, fix the result, then `sh update-patch.sh`.
-5. From the repository root, run `sh .github/sync-three/verify.sh`. It must pass. If it fails, fix the problem, commit, and run it again.
+5. From the repository root, run `bash .github/sync-three/verify.sh`. It must pass. If it fails, fix the problem, commit, and run it again.
 
 ## Rules
 
