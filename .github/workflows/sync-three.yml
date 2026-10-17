@@ -1,0 +1,44 @@
+name: Sync three.js
+on:
+  schedule:
+    - cron: '17 */6 * * *'
+  workflow_dispatch:
+    inputs:
+      max_commits:
+        description: 'Maximum number of three.js commits to process'
+        default: '50'
+
+concurrency:
+  group: sync-three
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    if: github.repository == 'three-types/three-ts-types'
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          submodules: true
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 10.34.5
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 'lts/*'
+          cache: 'pnpm'
+      - run: pnpm install
+      - run: pnpm exec playwright install --with-deps chromium
+        working-directory: tsl-testing
+      - run: npm install -g @anthropic-ai/claude-code
+      - run: git config --global user.email "nbierema@gmail.com"
+      - run: git config --global user.name "Nathan Bierema"
+      - run: bash .github/sync-three/sync.sh
+        env:
+          GH_TOKEN: ${{ secrets.THREE_SYNC_PAT }}
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          MAX_COMMITS: ${{ inputs.max_commits || '50' }}
+          TIME_BUDGET_MINUTES: '300'
