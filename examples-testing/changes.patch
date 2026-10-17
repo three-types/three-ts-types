@@ -17907,10 +17907,10 @@ index de3fa7909..1d7a65696 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_loader_materialx.ts b/examples-testing/examples/webgpu_loader_materialx.ts
-index 3367433ca..3d04e3335 100644
+index 5372c2579..9068f3129 100644
 --- a/examples-testing/examples/webgpu_loader_materialx.ts
 +++ b/examples-testing/examples/webgpu_loader_materialx.ts
-@@ -11,6 +11,7 @@ import * as MikkTSpace from 'three/addons/libs/mikktspace.module.js';
+@@ -13,6 +13,7 @@ import * as MikkTSpace from 'three/addons/libs/mikktspace.module.js';
  import { computeMikkTSpaceTangents } from 'three/addons/utils/BufferGeometryUtils.js';
  
  import { MaterialXLoader } from 'three/addons/loaders/MaterialXLoader.js';
@@ -17918,7 +17918,7 @@ index 3367433ca..3d04e3335 100644
  import { createStrictInterfaceValidator } from 'three/addons/loaders/materialx/MaterialXInterfaceValidation.js';
  
  import { Inspector } from 'three/addons/inspector/Inspector.js';
-@@ -70,9 +71,9 @@ const localSamples = [
+@@ -75,9 +76,9 @@ const localSamples = [
      'displacement.mtlx',
  ];
  
@@ -17930,8 +17930,8 @@ index 3367433ca..3d04e3335 100644
 +const models: THREE.Group[] = [];
  const strictInterfaceValidator = createStrictInterfaceValidator();
  
- init();
-@@ -100,26 +101,32 @@ function init() {
+ // Let MaterialX <image> nodes load .exr, .tif and .hdr files through their loaders.
+@@ -110,26 +111,32 @@ function init() {
  
      const material = new THREE.MeshBasicNodeMaterial();
  
@@ -17983,7 +17983,7 @@ index 3367433ca..3d04e3335 100644
          return smoothstep(radius, radius.sub(falloff), length(positionWorld));
      });
  
-@@ -168,9 +175,9 @@ function init() {
+@@ -178,9 +185,9 @@ function init() {
  
  function computePrefabTangents() {
      prefab.traverse(function (node) {
@@ -17995,7 +17995,7 @@ index 3367433ca..3d04e3335 100644
  
          if (geometry === undefined) return;
  
-@@ -200,7 +207,7 @@ function updateModelsAlign() {
+@@ -210,7 +217,7 @@ function updateModelsAlign() {
      }
  }
  
@@ -18004,7 +18004,7 @@ index 3367433ca..3d04e3335 100644
      if (log.length === 0) return;
  
      const label = materialName ? `"${materialName}"` : `"${sample}"`;
-@@ -222,7 +229,7 @@ function reportMaterialXLog(sample, materialName, log) {
+@@ -232,7 +239,7 @@ function reportMaterialXLog(sample, materialName, log) {
      console.groupEnd();
  }
  
@@ -18012,8 +18012,8 @@ index 3367433ca..3d04e3335 100644
 +async function addSample(sample: string, path: string) {
      const model = prefab.clone();
  
-     models.push(model);
-@@ -236,13 +243,13 @@ async function addSample(sample, path) {
+     // Single-sided plane facing up with UVs running (0,0) at the front-left to (1,1) at the back-right.
+@@ -254,13 +261,13 @@ async function addSample(sample, path) {
          interfaceValidator: strictInterfaceValidator,
          throwOnErrors: false,
      });
@@ -18029,8 +18029,8 @@ index 3367433ca..3d04e3335 100644
 +    const previewMesh = model.getObjectByName('Preview_Mesh') as THREE.Mesh;
      previewMesh.material = material;
  
-     if (material.transparent) {
-@@ -259,7 +266,7 @@ async function addSample(sample, path) {
+     uvPlane.material = material;
+@@ -279,7 +286,7 @@ async function addSample(sample, path) {
  }
  
  function addGUI() {
@@ -18038,9 +18038,9 @@ index 3367433ca..3d04e3335 100644
 +    const gui = (renderer.inspector as Inspector).createParameters('MaterialX Loader');
  
      const API = {
-         showCalibrationMesh: true,
-@@ -279,9 +286,9 @@ function addGUI() {
-         });
+         geometry: 'Shader Ball',
+@@ -300,9 +307,9 @@ function addGUI() {
+     gui.add(API, 'showPreviewMesh').name('Preview Mesh').onChange(updateVisibility);
  }
  
 -function setVisibility(name, visible) {
