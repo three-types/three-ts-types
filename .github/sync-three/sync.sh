@@ -84,7 +84,8 @@ while :; do
         start=$last
     fi
 
-    sha=$(git -C three.js rev-list --reverse --first-parent "$start..origin/dev" | head -n 1)
+    # sed reads all input, unlike head, so rev-list isn't killed by SIGPIPE under pipefail.
+    sha=$(git -C three.js rev-list --reverse --first-parent "$start..origin/dev" | sed -n 1p)
     if [ -z "$sha" ]; then
         log "Up to date with three.js dev."
         break
