@@ -21181,31 +21181,29 @@ index 07b059d88..3fd597142 100644
          selectedObjects.push(object);
      }
 diff --git a/examples-testing/examples/webgpu_postprocessing_pixel.ts b/examples-testing/examples/webgpu_postprocessing_pixel.ts
-index 30a33ede3..82cfa3e8a 100644
+index d7831df7b..f30ef06a8 100644
 --- a/examples-testing/examples/webgpu_postprocessing_pixel.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_pixel.ts
-@@ -8,8 +8,18 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
+@@ -6,10 +6,15 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { Inspector } from 'three/addons/inspector/Inspector.js';
+ 
  import { uniform } from 'three/tsl';
- import { pixelationPass } from 'three/addons/tsl/display/PixelationPassNode.js';
+-import { pixelationPass } from 'three/addons/tsl/display/PixelationPassNode.js';
++import PixelationPassNode, { pixelationPass } from 'three/addons/tsl/display/PixelationPassNode.js';
  
 -let camera, scene, renderer, renderPipeline, crystalMesh, timer;
--let effectController;
+-let scenePass;
 +let camera: THREE.OrthographicCamera,
 +    scene: THREE.Scene,
 +    renderer: THREE.WebGPURenderer,
 +    renderPipeline: THREE.RenderPipeline,
 +    crystalMesh: THREE.Mesh<THREE.IcosahedronGeometry, THREE.MeshPhongMaterial>,
 +    timer: THREE.Timer;
-+let effectController: {
-+    pixelSize: THREE.UniformNode<'float', number>;
-+    normalEdgeStrength: THREE.UniformNode<'float', number>;
-+    depthEdgeStrength: THREE.UniformNode<'float', number>;
-+    pixelAlignedPanning: boolean;
-+};
++let scenePass: PixelationPassNode;
  
- init();
- 
-@@ -38,7 +48,7 @@ function init() {
+ const params = {
+     pixelAlignedPanning: true,
+@@ -42,7 +47,7 @@ function init() {
  
      const boxMaterial = new THREE.MeshPhongMaterial({ map: texChecker2 });
  
@@ -21214,16 +21212,25 @@ index 30a33ede3..82cfa3e8a 100644
          const mesh = new THREE.Mesh(new THREE.BoxGeometry(boxSideLength, boxSideLength, boxSideLength), boxMaterial);
          mesh.castShadow = true;
          mesh.receiveShadow = true;
-@@ -128,7 +138,7 @@ function init() {
+@@ -119,10 +124,14 @@ function init() {
  
      // gui
  
 -    const gui = renderer.inspector.createParameters('Settings');
 +    const gui = (renderer.inspector as Inspector).createParameters('Settings');
-     gui.add(effectController.pixelSize, 'value', 1, 16, 1).name('Pixel Size');
-     gui.add(effectController.normalEdgeStrength, 'value', 0, 2, 0.05).name('Normal Edge Strength');
-     gui.add(effectController.depthEdgeStrength, 'value', 0, 1, 0.05).name('Depth Edge Strength');
-@@ -179,7 +189,7 @@ function animate() {
+     gui.add(scenePass, 'pixelSize', 1, 16, 1).name('Pixel Size');
+-    gui.add(scenePass.normalEdgeStrength, 'value', 0, 2, 0.05).name('Normal Edge Strength');
+-    gui.add(scenePass.depthEdgeStrength, 'value', 0, 1, 0.05).name('Depth Edge Strength');
++    gui.add(scenePass.normalEdgeStrength as THREE.UniformNode<'float', number>, 'value', 0, 2, 0.05).name(
++        'Normal Edge Strength',
++    );
++    gui.add(scenePass.depthEdgeStrength as THREE.UniformNode<'float', number>, 'value', 0, 1, 0.05).name(
++        'Depth Edge Strength',
++    );
+     gui.add(params, 'pixelAlignedPanning');
+ }
+ 
+@@ -170,7 +179,7 @@ function animate() {
  
  // Helper functions
  
@@ -21232,7 +21239,7 @@ index 30a33ede3..82cfa3e8a 100644
      texture.minFilter = THREE.NearestFilter;
      texture.magFilter = THREE.NearestFilter;
      texture.generateMipmaps = false;
-@@ -189,25 +199,30 @@ function pixelTexture(texture) {
+@@ -180,25 +189,30 @@ function pixelTexture(texture) {
      return texture;
  }
  
