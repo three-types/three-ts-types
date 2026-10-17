@@ -1,4 +1,5 @@
-import Node from "../core/Node.js";
+import Node, { IntegerType } from "../core/Node.js";
+import VarNode from "../core/VarNode.js";
 import MathNode from "./MathNode.js";
 
 export type BitcountNodeMethod =
@@ -18,6 +19,13 @@ declare class BitcountNode extends MathNode {
 
 export default BitcountNode;
 
-export const countTrailingZeros: (x: Node | number) => BitcountNode;
-export const countLeadingZeros: (x: Node | number) => BitcountNode;
-export const countOneBits: (x: Node | number) => BitcountNode;
+interface Bitcount {
+    <TNodeType extends IntegerType | `${"i" | "u"}vec${2 | 3 | 4}`>(
+        x: Node<TNodeType>,
+    ): VarNode<TNodeType, BitcountNode & Node<TNodeType>>;
+    (x: Node | number): VarNode<unknown, BitcountNode>;
+}
+
+export const countTrailingZeros: Bitcount;
+export const countLeadingZeros: Bitcount;
+export const countOneBits: Bitcount;
