@@ -6,6 +6,7 @@ declare class VelocityNode extends TempNode {
     projectionMatrix: Matrix4 | null;
 
     previousModelWorldMatrix: UniformNode<"mat4", Matrix4>;
+    currentProjectionMatrix: UniformNode<"mat4", Matrix4>;
     previousProjectionMatrix: UniformNode<"mat4", Matrix4>;
     previousCameraViewMatrix: UniformNode<"mat4", Matrix4>;
 
