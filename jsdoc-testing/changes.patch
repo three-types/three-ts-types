@@ -16366,7 +16366,7 @@ index 70218d55a..21a89871b 100644
 +
 +export default ReadbackBuffer;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/Renderer.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/Renderer.d.ts
-index 13ddf22ec..d10b1bc06 100644
+index b5703ddef..d10b1bc06 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/Renderer.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/common/Renderer.d.ts
 @@ -1,8 +1,76 @@
@@ -17302,7 +17302,7 @@ index 13ddf22ec..d10b1bc06 100644
      /**
       * Reads pixel data from the given render target.
       *
-@@ -1368,67 +1029,6 @@ declare class Renderer {
+@@ -1368,76 +1029,6 @@ declare class Renderer {
       * @return {Promise<TypedArray>} A Promise that resolves when the read has been finished. The resolve provides the read data as a typed array.
       */
      readRenderTargetPixelsAsync(renderTarget: RenderTarget, x: number, y: number, width: number, height: number, textureIndex?: number, faceIndex?: number): Promise<TypedArray>;
@@ -17367,10 +17367,19 @@ index 13ddf22ec..d10b1bc06 100644
 -     * @return {Camera} The returned camera might be different depending on whether XR is used or not.
 -     */
 -    private _updateCamera;
+-    /**
+-     * Updates the indirect storage attribute that defines the dispatch size
+-     * of the given compute node, if any.
+-     *
+-     * @private
+-     * @param {ComputeNode} computeNode - The compute node.
+-     * @param {?(number|Array<number>|IndirectStorageBufferAttribute)} dispatchSize - The dispatch size of the compute call.
+-     */
+-    private _updateDispatchSize;
      /**
       * This method represents the default render object function that manages the render lifecycle
       * of the object.
-@@ -1443,7 +1043,7 @@ declare class Renderer {
+@@ -1452,7 +1043,7 @@ declare class Renderer {
       * @param {?ClippingContext} clippingContext - The clipping context.
       * @param {?string} [passId=null] - An optional ID for identifying the pass.
       */
@@ -17379,7 +17388,7 @@ index 13ddf22ec..d10b1bc06 100644
      /**
       * Checks if the given compatibility is supported by the selected backend.
       *
-@@ -1451,36 +1051,6 @@ declare class Renderer {
+@@ -1460,36 +1051,6 @@ declare class Renderer {
       * @return {boolean} Whether the compatibility is supported or not.
       */
      hasCompatibility(name: string): boolean;
@@ -17416,7 +17425,7 @@ index 13ddf22ec..d10b1bc06 100644
      /**
       * Alias for `compileAsync()`.
       *
-@@ -1491,16 +1061,12 @@ declare class Renderer {
+@@ -1500,16 +1061,12 @@ declare class Renderer {
       * @param {onProgressCallback} [onProgress] - Executed while the compilation is in progress.
       * @return {function(Object3D, Camera, ?Scene, ?onProgressCallback): Promise|undefined} A Promise that resolves when the compile has been finished.
       */
