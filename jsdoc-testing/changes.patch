@@ -16429,7 +16429,7 @@ index 70218d55a..21a89871b 100644
 +
 +export default ReadbackBuffer;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/Renderer.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/Renderer.d.ts
-index b5703ddef..d10b1bc06 100644
+index 7f5f69c33..0136d9e7c 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/Renderer.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/common/Renderer.d.ts
 @@ -1,8 +1,76 @@
@@ -17139,10 +17139,10 @@ index b5703ddef..d10b1bc06 100644
       * Can be used to transfer buffer data from a storage buffer attribute
       * from the GPU to the CPU in context of compute shaders.
 @@ -900,13 +559,14 @@ declare class Renderer {
-      * @param {number} count - The offset from which to start reading the
+      * @param {number} [count=-1] - The number of bytes to read. Must be a multiple of 4, or `-1` to read to the end of the buffer.
       * @return {Promise<ArrayBuffer|ReadbackBuffer>} A promise that resolves with the buffer data when the data are ready.
       */
--    getArrayBufferAsync(attribute: BufferAttribute, target?: ReadbackBuffer | ArrayBuffer, offset?: number, count?: number): Promise<ArrayBuffer | ReadbackBuffer>;
+-    getArrayBufferAsync(attribute: BufferAttribute, target?: (ReadbackBuffer | ArrayBuffer) | null, offset?: number, count?: number): Promise<ArrayBuffer | ReadbackBuffer>;
 +    getArrayBufferAsync(attribute: BufferAttribute, target?: null, offset?: number, count?: number): Promise<ArrayBuffer>;
 +    getArrayBufferAsync<TTarget extends ReadbackBuffer | ArrayBuffer>(attribute: BufferAttribute, target: TTarget, offset?: number, count?: number): Promise<TTarget>;
      /**
