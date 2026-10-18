@@ -1140,11 +1140,11 @@ index 1e007e460..a2de0b896 100644
 -import { BufferGeometry } from 'three';
 -import { Vector3 } from 'three';
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/lighting/ClusteredLighting.d.ts b/jsdoc-testing/jsdoc/examples/jsm/lighting/ClusteredLighting.d.ts
-index 66ac1de37..196e0702d 100644
+index e82b5711c..8131a4ece 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/lighting/ClusteredLighting.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/lighting/ClusteredLighting.d.ts
 @@ -1,3 +1,6 @@
-+import { Light, Lighting } from 'three/webgpu';
++import { Light, Lighting, LightsNode, Scene } from 'three/webgpu';
 +import ClusteredLightsNode from '../tsl/lighting/ClusteredLightsNode.js';
 +
  /**
@@ -1162,7 +1162,7 @@ index 66ac1de37..196e0702d 100644
      /**
       * Constructs a new clustered lighting system.
       *
-@@ -23,10 +31,7 @@ export class ClusteredLighting extends Lighting {
+@@ -23,25 +31,7 @@ export class ClusteredLighting extends Lighting {
       * @param {number} [maxLightsPerCluster=64] - Per-cluster light-list capacity.
       */
      constructor(maxLights?: number, tileSize?: number, zSlices?: number, maxLightsPerCluster?: number);
@@ -1170,16 +1170,37 @@ index 66ac1de37..196e0702d 100644
 -    tileSize: number;
 -    zSlices: number;
 -    maxLightsPerCluster: number;
+-    /**
+-     * The number of renders in progress per scene. A scene rendered inside one of its own
+-     * renders (e.g. by a reflector) has more than one.
+-     *
+-     * @private
+-     * @type {WeakMap<Scene, number>}
+-     */
+-    private _activeRenders;
+-    /**
+-     * The lights nodes of nested renders of the same scene, per scene and depth.
+-     *
+-     * @private
+-     * @type {WeakMap<Scene, Array<ClusteredLightsNode>>}
+-     */
+-    private _nestedNodes;
 +
      /**
       * Creates a new clustered lights node for the given array of lights.
       *
-@@ -36,7 +41,5 @@ export class ClusteredLighting extends Lighting {
+@@ -51,7 +41,7 @@ export class ClusteredLighting extends Lighting {
       * @param {Array<Light>} lights - The lights.
       * @return {ClusteredLightsNode} The clustered lights node.
       */
 -    createNode(lights?: Array<Light>): ClusteredLightsNode;
 +    createNode(lights?: Light[]): ClusteredLightsNode;
+     /**
+      * Returns the lights node of the given scene for the current render depth of that scene.
+      * A scene rendered inside one of its own renders uses another node, so it never modifies
+@@ -77,5 +67,3 @@ export class ClusteredLighting extends Lighting {
+      */
+     finishRender(scene: Scene): void;
  }
 -import { Lighting } from 'three/webgpu';
 -import ClusteredLightsNode from '../tsl/lighting/ClusteredLightsNode.js';
@@ -2926,7 +2947,7 @@ index a697e603d..b4d90ca4e 100644
 +    intensity?: Node<'float'> | number,
 +) => Node<'vec4'>;
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/tsl/lighting/ClusteredLightsNode.d.ts b/jsdoc-testing/jsdoc/examples/jsm/tsl/lighting/ClusteredLightsNode.d.ts
-index 0074f6874..56d491bff 100644
+index 74eeb693b..2437a2c84 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/tsl/lighting/ClusteredLightsNode.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/tsl/lighting/ClusteredLightsNode.d.ts
 @@ -1,16 +1,5 @@
@@ -2936,7 +2957,7 @@ index 0074f6874..56d491bff 100644
 - *
 - * @tsl
 - * @function
-- * @param {number} [maxLights=1024] - Maximum number of point lights.
+- * @param {number} [maxLights=1024] - Maximum number of point and spot lights.
 - * @param {number} [tileSize=32] - Screen tile size in pixels.
 - * @param {number} [zSlices=24] - Depth slice count.
 - * @param {number} [maxLightsPerCluster=64] - Per-cluster light-list capacity.
@@ -2965,10 +2986,18 @@ index 0074f6874..56d491bff 100644
      /**
       * Constructs a new clustered lights node.
       *
-@@ -33,87 +28,14 @@ declare class ClusteredLightsNode extends LightsNode {
+@@ -33,6 +28,7 @@ declare class ClusteredLightsNode extends LightsNode {
       * @param {number} [maxLightsPerCluster=64] - Per-cluster light-list capacity.
       */
      constructor(maxLights?: number, tileSize?: number, zSlices?: number, maxLightsPerCluster?: number);
++
+     /**
+      * This flag can be used for type testing.
+      *
+@@ -41,137 +37,14 @@ declare class ClusteredLightsNode extends LightsNode {
+      * @default true
+      */
+     readonly isClusteredLightsNode: boolean;
 -    materialLights: any[];
 -    clusteredLights: any[];
 -    maxLights: number;
@@ -2977,7 +3006,11 @@ index 0074f6874..56d491bff 100644
 -    maxLightsPerCluster: number;
 -    _chunksPerCluster: number;
 -    _bufferSize: Vector2 | null;
+-    _isWebGLBackend: boolean;
+-    _needsRebuild: boolean;
+-    _invocationsPerCluster: number;
 -    _lightIndexes: any;
+-    _renderer: any;
 -    _screenClusterIndex: any;
 -    _compute: any;
 -    _lightsTexture: DataTexture;
@@ -2999,19 +3032,57 @@ index 0074f6874..56d491bff 100644
 -     */
 -    private _updateLightsTexture;
 -    /**
+-     * Returns the normalized world-space direction pointing from the spot light's
+-     * target to the spot light.
+-     *
+-     * @private
+-     * @param {SpotLight} light - The spot light.
+-     * @param {Vector3} target - The target vector.
+-     * @return {Vector3} The direction.
+-     */
+-    private _getSpotDirection;
+-    /**
+-     * Returns the world-space center of the light's bounding sphere. For spot lights,
+-     * this is the center of the smallest sphere enclosing the cone.
+-     *
+-     * @private
+-     * @param {PointLight|SpotLight} light - The light.
+-     * @param {Vector3} target - The target vector.
+-     * @return {Vector3} The bounding sphere center.
+-     */
+-    private _getBoundingSphereCenter;
+-    /**
+-     * Returns the radius of the light's bounding sphere.
+-     *
+-     * @private
+-     * @param {PointLight|SpotLight} light - The light.
+-     * @return {number} The bounding sphere radius. `-1` if the light has no cutoff distance.
+-     */
+-    private _getBoundingSphereRadius;
+-    /**
 -     * Updates the light data and assigns the lights to the clusters.
 -     *
 -     * @param {NodeFrame} frame - A reference to the current node frame.
 -     */
 -    updateBefore(frame: NodeFrame): void;
 -    /**
--     * Configures this node with an array of lights. Point lights without shadows
--     * are clustered, all other lights use the default lighting.
+-     * Configures this node with an array of lights. Point and spot lights without
+-     * shadows are clustered (except lights with a `colorNode`, spot lights with a
+-     * projected `map` and light types with their own light node, like `IESSpotLight`
+-     * or `ProjectorLight`), all other lights use the default lighting.
 -     *
 -     * @param {Array<Light>} lights - An array of lights.
 -     * @return {ClusteredLightsNode} A reference to this node.
 -     */
 -    setLights(lights: Array<Light>): ClusteredLightsNode;
+-    /**
+-     * Returns `true` if the given light can be clustered.
+-     *
+-     * @private
+-     * @param {Light} light - The light.
+-     * @return {boolean} Whether the light is clustered or not.
+-     */
+-    private _isClusteredLight;
 -    /**
 -     * Returns the light index stored at the given slot of the fragment's cluster.
 -     *
@@ -3029,15 +3100,23 @@ index 0074f6874..56d491bff 100644
       */
 -    getClusterLightCount(zSliceNode: Node<any>): Node<any>;
 -    /**
--     * Returns the data of the light at the given index.
+-     * Returns the shading data of the light at the given index.
 -     *
 -     * @private
 -     * @param {number|Node<int>} index - The light index.
--     * @return {Object} The light's position, view position, distance, color and decay.
+-     * @return {Object} The light's view position, distance, color, decay, view-space spot direction and spot offset.
 -     */
 -    private _getLightData;
 -    /**
--     * Sets up the default lights and the clustered point lights.
+-     * Returns the culling data of the light at the given index.
+-     *
+-     * @private
+-     * @param {number|Node<int>} index - The light index.
+-     * @return {Object} The view-space center and the radius of the light's bounding sphere. A negative radius marks an unbounded light.
+-     */
+-    private _getLightBounds;
+-    /**
+-     * Sets up the default lights and the clustered point and spot lights.
 -     *
 -     * @param {NodeBuilder} builder - A reference to the current node builder.
 -     * @param {Array<LightingNode>} lightNodes - An array of lighting nodes.
@@ -3053,29 +3132,54 @@ index 0074f6874..56d491bff 100644
 -    private _getBufferFitSize;
 +    getClusterLightCount(zSliceNode: Node<'int'>): Node<'int'>;
      /**
-      * Sets the size of the cluster grid. Must be called with the new drawing buffer
-      * size whenever the renderer is resized.
-@@ -122,23 +44,19 @@ declare class ClusteredLightsNode extends LightsNode {
+      * Sets the size of the cluster grid. Must be called outside of rendering. Not required
+      * with {@link ClusteredLighting}, which fits the grid at the beginning of each render.
+@@ -180,7 +53,7 @@ declare class ClusteredLightsNode extends LightsNode {
       * @param {number} height - The drawing buffer height.
       * @return {ClusteredLightsNode} A reference to this node.
       */
 -    setSize(width: number, height: number): ClusteredLightsNode;
++    setSize(width: number, height: number): this;
+     /**
+      * Fits the cluster grid to the framebuffer of the render that is about to start. Called by
+      * {@link ClusteredLighting} before the render objects of the render are prepared. Since each
+@@ -188,40 +61,19 @@ declare class ClusteredLightsNode extends LightsNode {
+      * this point, so a rebuild can free the replaced resources immediately.
+      */
+     updateSize(): void;
 -    /**
--     * Creates the cluster grid on first use and recreates it when the drawing buffer size changes.
+-     * Creates the cluster grid on first use. While rendering, the grid is never rebuilt: the
+-     * replaced resources could still be used by a command buffer that was not submitted yet.
 -     *
 -     * @private
 -     * @param {Renderer} renderer - The renderer.
 -     */
--    private _updateProgram;
+-    private _initGrid;
 -    /**
--     * Creates the cluster grid, the light index storage and the compute node for the given size.
+-     * Fits the cluster grid to the framebuffer the renderer is rendering to.
+-     *
+-     * @private
+-     * @param {Renderer} renderer - The renderer.
+-     */
+-    private _fitToRenderer;
+-    /**
+-     * Resizes the cluster grid. The grid dimensions are uniforms, so resizing only updates
+-     * them and the compute count; the compute and the storage are rebuilt only when the
+-     * storage has to grow (or the backend changed).
 -     *
 -     * @private
 -     * @param {number} width - The fitted width.
 -     * @param {number} height - The fitted height.
 -     */
+-    private _resize;
+-    /**
+-     * Creates the light index storage, the compute node and the fragment cluster lookup.
+-     * The storage is allocated with headroom so that most resizes do not need a rebuild.
+-     *
+-     * @private
+-     * @param {number} clusterCount - The number of clusters of the current grid.
+-     */
 -    private _create;
-+    setSize(width: number, height: number): this;
  }
 -import { LightsNode } from 'three/webgpu';
 -import { Vector2 } from 'three/webgpu';
@@ -3084,8 +3188,9 @@ index 0074f6874..56d491bff 100644
 +/**
 + * TSL function that creates a clustered lights node.
 + *
++ * @tsl
 + * @function
-+ * @param {number} [maxLights=1024] - Maximum number of point lights.
++ * @param {number} [maxLights=1024] - Maximum number of point and spot lights.
 + * @param {number} [tileSize=32] - Screen tile size in pixels.
 + * @param {number} [zSlices=24] - Depth slice count.
 + * @param {number} [maxLightsPerCluster=64] - Per-cluster light-list capacity.
@@ -16416,7 +16521,7 @@ index 25b2e5e94..80e23a83d 100644
 +
 +export default InspectorBase;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/Lighting.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/Lighting.d.ts
-index ae4011fdf..a3c28b01f 100644
+index 2146b4760..b3e00150f 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/Lighting.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/common/Lighting.d.ts
 @@ -1,4 +1,7 @@
@@ -16428,7 +16533,7 @@ index ae4011fdf..a3c28b01f 100644
  /**
   * This renderer module manages the lights nodes which are unique
   * per scene + camera + lighting combination.
-@@ -16,20 +19,6 @@ declare class Lighting {
+@@ -16,36 +19,6 @@ declare class Lighting {
       * @default true
       */
      enabled: boolean;
@@ -16446,12 +16551,43 @@ index ae4011fdf..a3c28b01f 100644
 -     * @type {WeakMap<Scene, LightsNode>}
 -     */
 -    private _lightsNodeMap;
+-    /**
+-     * Weak references to the lights nodes created by this lighting manager, so they
+-     * can be disposed with {@link Lighting#dispose} without keeping scenes alive.
+-     *
+-     * @private
+-     * @type {Set<WeakRef<LightsNode>>}
+-     */
+-    private _tracked;
+-    /**
+-     * Removes weak references from `_tracked` when their lights node has been
+-     * garbage collected without an explicit `dispose()`.
+-     *
+-     * @private
+-     * @type {FinalizationRegistry}
+-     */
+-    private _registry;
      /**
       * Creates a new lights node for the given array of lights.
       *
-@@ -62,4 +51,5 @@ declare class Lighting {
+@@ -60,14 +33,6 @@ declare class Lighting {
+      * @return {LightsNode} The lights node.
       */
-     finishRender(scene: Scene): void;
+     getNode(scene: Scene): LightsNode;
+-    /**
+-     * Tracks the given lights node so it is disposed with {@link Lighting#dispose}.
+-     * Subclasses creating additional lights nodes should track them as well.
+-     *
+-     * @private
+-     * @param {LightsNode} node - The lights node.
+-     */
+-    private _track;
+     /**
+      * Saves the current lights of the scene's lights node so they can be restored
+      * in {@link Lighting#finishRender}. Must be paired with a `finishRender()` call
+@@ -92,4 +57,5 @@ declare class Lighting {
+      */
+     dispose(): void;
  }
 -import { LightsNode } from '../../nodes/Nodes.js';
 +
