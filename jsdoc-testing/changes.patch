@@ -13199,7 +13199,7 @@ index 8b5885c3c..6175b46ab 100644
 +
 +export default VolumeNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/manager/NodeMaterialObserver.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/manager/NodeMaterialObserver.d.ts
-index 93e4f033f..4c3c3fa76 100644
+index 5ff1ed1e5..4c3c3fa76 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/manager/NodeMaterialObserver.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/manager/NodeMaterialObserver.d.ts
 @@ -1,4 +1,6 @@
@@ -13285,7 +13285,7 @@ index 93e4f033f..4c3c3fa76 100644
      /**
       * Returns `true` if the node builder's context (e.g. material, scene) uses node properties.
       *
-@@ -95,60 +52,6 @@ declare class NodeMaterialObserver {
+@@ -95,76 +52,6 @@ declare class NodeMaterialObserver {
       * @return {boolean} Whether the node builder's context uses node properties or not.
       */
      containsNode(builder: NodeBuilder): boolean;
@@ -13305,6 +13305,22 @@ index 93e4f033f..4c3c3fa76 100644
 -     * @return {Object} An object for monitoring the texture.
 -     */
 -    getTextureData(texture: Texture): Object;
+-    /**
+-     * Returns a data structure holding the uv transformation of the given
+-     * texture for monitoring.
+-     *
+-     * @param {Texture} texture - The texture.
+-     * @return {Object} An object for monitoring the uv transformation.
+-     */
+-    getTextureTransformData(texture: Texture): Object;
+-    /**
+-     * Returns `true` if the uv transformation of the given texture has not changed.
+-     *
+-     * @param {Object} transformData - The monitored uv transformation.
+-     * @param {Texture} texture - The texture.
+-     * @return {boolean} Whether the uv transformation has not changed or not.
+-     */
+-    equalsTextureTransform(transformData: Object, texture: Texture): boolean;
 -    /**
 -     * Returns a material data structure holding the material property values for
 -     * monitoring.
