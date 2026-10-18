@@ -16040,6 +16040,50 @@ index 0bc37ff1c..22902cb59 100644
 -import { Plane } from '../../math/Plane.js';
 +
 +export default ClippingContext;
+diff --git a/jsdoc-testing/jsdoc/src/renderers/common/ComputePipeline.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/ComputePipeline.d.ts
+index 9341fac42..2ffead8f6 100644
+--- a/jsdoc-testing/jsdoc/src/renderers/common/ComputePipeline.d.ts
++++ b/jsdoc-testing/jsdoc/src/renderers/common/ComputePipeline.d.ts
+@@ -1,4 +1,6 @@
+-export default ComputePipeline;
++import NodeAttribute from '../../nodes/core/NodeAttribute.js';
++import Pipeline from './Pipeline.js';
++
+ /**
+  * Class for representing compute pipelines.
+  *
+@@ -14,7 +16,7 @@ declare class ComputePipeline extends Pipeline {
+      * @param {?Array<Object>} [transforms=null] - The transforms (only relevant for WebGL 2 which uses Transform Feedback).
+      * @param {?Array<Object>} [attributes=null] - The attributes (only relevant for WebGL 2 which uses Transform Feedback).
+      */
+-    constructor(cacheKey: string, computeProgram: ProgrammableStage, transforms?: Array<Object> | null, attributes?: Array<Object> | null);
++    constructor(cacheKey: string, computeProgram: ProgrammableStage, transforms?: unknown[] | null, attributes?: NodeAttribute[] | null);
+     /**
+      * The pipeline's compute shader.
+      *
+@@ -26,13 +28,13 @@ declare class ComputePipeline extends Pipeline {
+      *
+      * @type {?Array<Object>}
+      */
+-    transforms: Array<Object> | null;
++    transforms: unknown[] | null;
+     /**
+      * The attributes (only relevant for WebGL 2 which uses Transform Feedback).
+      *
+      * @type {?Array<Object>}
+      */
+-    attributes: Array<Object> | null;
++    attributes: NodeAttribute[] | null;
+     /**
+      * This flag can be used for type testing.
+      *
+@@ -42,4 +44,5 @@ declare class ComputePipeline extends Pipeline {
+      */
+     readonly isComputePipeline: boolean;
+ }
+-import Pipeline from './Pipeline.js';
++
++export default ComputePipeline;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/Constants.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/Constants.d.ts
 index 0561bfadb..93988f36e 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/Constants.d.ts
@@ -16428,26 +16472,15 @@ index ae4011fdf..a3c28b01f 100644
 +
 +export default Lighting;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/ProgrammableStage.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/ProgrammableStage.d.ts
-index 5fdbd4d68..ed7bc5700 100644
+index d15500787..90d1a53d8 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/ProgrammableStage.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/common/ProgrammableStage.d.ts
-@@ -1,4 +1,5 @@
+@@ -1,4 +1,3 @@
 -export default ProgrammableStage;
-+import NodeAttribute from '../../nodes/core/NodeAttribute.js';
-+
  /**
   * Class for representing programmable stages which are vertex,
   * fragment or compute shaders. Unlike fixed-function states (like blending),
-@@ -16,7 +17,7 @@ declare class ProgrammableStage {
-      * @param {?Array<Object>} [transforms=null] - The transforms (only relevant for compute stages with WebGL 2 which uses Transform Feedback).
-      * @param {?Array<Object>} [attributes=null] - The attributes (only relevant for compute stages with WebGL 2 which uses Transform Feedback).
-      */
--    constructor(code: string, stage: ("vertex" | "fragment" | "compute"), name: string, transforms?: Array<Object> | null, attributes?: Array<Object> | null);
-+    constructor(code: string, stage: ("vertex" | "fragment" | "compute"), name: string, transforms?: unknown[] | null, attributes?: NodeAttribute[] | null);
-     /**
-      * The id of the programmable stage.
-      *
-@@ -34,7 +35,7 @@ declare class ProgrammableStage {
+@@ -32,7 +31,7 @@ declare class ProgrammableStage {
       *
       * @type {string}
       */
@@ -16456,23 +16489,7 @@ index 5fdbd4d68..ed7bc5700 100644
      /**
       * The name of the stage.
       * This is used for debugging purposes.
-@@ -47,13 +48,13 @@ declare class ProgrammableStage {
-      *
-      * @type {?Array<Object>}
-      */
--    transforms: Array<Object> | null;
-+    transforms: unknown[] | null;
-     /**
-      * The attributes (only relevant for compute stages with WebGL 2 which uses Transform Feedback).
-      *
-      * @type {?Array<Object>}
-      */
--    attributes: Array<Object> | null;
-+    attributes: NodeAttribute[] | null;
-     /**
-      * How often the programmable stage is currently in use.
-      *
-@@ -62,3 +63,5 @@ declare class ProgrammableStage {
+@@ -48,3 +47,5 @@ declare class ProgrammableStage {
       */
      usedTimes: number;
  }
