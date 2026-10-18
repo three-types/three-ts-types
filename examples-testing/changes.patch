@@ -1144,10 +1144,10 @@ index 4d1398eaa..e231be784 100644
      save(new Blob([buffer], { type: 'application/octet-stream' }), filename);
  }
 diff --git a/examples-testing/examples/misc_exporter_exr.ts b/examples-testing/examples/misc_exporter_exr.ts
-index af145fcbc..7d3424dce 100644
+index 26d25eb0f..cb2768177 100644
 --- a/examples-testing/examples/misc_exporter_exr.ts
 +++ b/examples-testing/examples/misc_exporter_exr.ts
-@@ -11,7 +11,15 @@ import {
+@@ -12,7 +12,15 @@ import {
  import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
@@ -1164,7 +1164,7 @@ index af145fcbc..7d3424dce 100644
  
  const params = {
      target: 'render-target',
-@@ -164,7 +172,7 @@ async function exportFile() {
+@@ -166,7 +174,7 @@ async function exportFile() {
      saveArrayBuffer(result, params.target + '.exr');
  }
  
@@ -16994,7 +16994,7 @@ index 6970a8f96..584f58e6b 100644
      controls.update(timer.getDelta());
      updateProbes();
 diff --git a/examples-testing/examples/webgpu_lights_clustered.ts b/examples-testing/examples/webgpu_lights_clustered.ts
-index cf86514ba..58a5e3656 100644
+index 473cd018e..602d5eed3 100644
 --- a/examples-testing/examples/webgpu_lights_clustered.ts
 +++ b/examples-testing/examples/webgpu_lights_clustered.ts
 @@ -3,6 +3,7 @@ import { instancedBufferAttribute, pass, uniform, vec3, float, mix, step, render
@@ -17032,9 +17032,9 @@ index cf86514ba..58a5e3656 100644
 -const balls = [];
 +const balls: Ball[] = [];
  const dummy = new THREE.Object3D();
+ const size = new THREE.Vector2();
  
- const params = {
-@@ -88,7 +104,7 @@ async function init() {
+@@ -89,7 +105,7 @@ async function init() {
      const colorAttribute = new THREE.InstancedBufferAttribute(new Float32Array(maxCount * 3), 3);
  
      const material = new THREE.MeshBasicNodeMaterial();
@@ -17043,7 +17043,7 @@ index cf86514ba..58a5e3656 100644
  
      spheresMesh = new THREE.InstancedMesh(new THREE.SphereGeometry(RADIUS, 32, 16), material, maxCount);
      spheresMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
-@@ -154,7 +170,7 @@ async function init() {
+@@ -155,7 +171,7 @@ async function init() {
  
      // gui
  
@@ -17052,17 +17052,12 @@ index cf86514ba..58a5e3656 100644
      gui.add(params, 'intensity', 0, 3)
          .name('light intensity')
          .onChange(value => {
-@@ -182,9 +198,10 @@ function updatePostProcessing() {
-     // the overlay samples the cluster grid at the current resolution, so it
-     // is rebuilt whenever the renderer size changes
+@@ -185,7 +201,7 @@ function updatePostProcessing() {
  
--    const lightingNode = lighting
--        .getNode(scene)
--        .setSize(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio);
-+    const lightingNode = (lighting.getNode(scene) as ClusteredLightsNode).setSize(
-+        window.innerWidth * window.devicePixelRatio,
-+        window.innerHeight * window.devicePixelRatio,
-+    );
+     renderer.getDrawingBufferSize(size);
+ 
+-    const lightingNode = lighting.getNode(scene).setSize(size.width, size.height);
++    const lightingNode = (lighting.getNode(scene) as ClusteredLightsNode).setSize(size.width, size.height);
  
      // map the light count of each cluster ( 0 … maxLightsPerCluster ) to a
      // blue → green → red gradient
