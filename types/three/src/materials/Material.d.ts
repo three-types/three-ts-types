@@ -397,7 +397,8 @@ export interface MaterialJSON {
 
     iridescence?: number;
     iridescenceIOR?: number;
-    iridescenceThicknessRange?: number;
+    iridescenceThicknessMinimum?: number;
+    iridescenceThicknessMaximum?: number;
     iridescenceMap?: string;
     iridescenceThicknessMap?: string;
 
