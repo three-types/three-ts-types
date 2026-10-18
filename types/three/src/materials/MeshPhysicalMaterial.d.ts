@@ -118,18 +118,25 @@ export interface MeshPhysicalMaterialProperties extends MeshStandardMaterialProp
      */
     iridescenceIOR: number;
     /**
-     *Array of exactly 2 elements, specifying minimum and maximum thickness of the iridescence layer.
-     Thickness of iridescence layer has an equivalent effect of the one `thickness` has on `ior`.
+     * The minimum thickness of the iridescence layer in nanometers.
      *
-     * @default [100,400]
+     * @default 100
      */
-    iridescenceThicknessRange: [number, number];
+    iridescenceThicknessMinimum: number;
+    /**
+     * The maximum thickness of the iridescence layer in nanometers. If no
+     * `iridescenceThicknessMap` is defined, this value is used as the thickness.
+     *
+     * @default 400
+     */
+    iridescenceThicknessMaximum: number;
     /**
      * A texture that defines the thickness of the iridescence layer, stored in the green channel.
-     * Minimum and maximum values of thickness are defined by `iridescenceThicknessRange` array:
-     * - `0.0` in the green channel will result in thickness equal to first element of the array.
-     * - `1.0` in the green channel will result in thickness equal to second element of the array.
-     * - Values in-between will linearly interpolate between the elements of the array.
+     * Minimum and maximum values of thickness are defined by `iridescenceThicknessMinimum` and
+     * `iridescenceThicknessMaximum`:
+     * - `0.0` in the green channel will result in thickness equal to `iridescenceThicknessMinimum`.
+     * - `1.0` in the green channel will result in thickness equal to `iridescenceThicknessMaximum`.
+     * - Values in-between will linearly interpolate between both values.
      *
      * `iridescenceThicknessMap` represents non-color data. Any texture assigned must have
      * `texture.colorSpace = NoColorSpace` (default).
@@ -326,6 +333,14 @@ export interface MeshPhysicalMaterialProperties extends MeshStandardMaterialProp
      * @default 0
      */
     get transmission(): number;
+    set iridescenceThicknessRange(value: [number, number]);
+    /**
+     * Array of exactly 2 elements, specifying minimum and maximum thickness of the iridescence layer.
+     *
+     * @deprecated since r187. Use {@link MeshPhysicalMaterial#iridescenceThicknessMinimum} and {@link MeshPhysicalMaterial#iridescenceThicknessMaximum} instead.
+     * @default [100,400]
+     */
+    get iridescenceThicknessRange(): [number, number];
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
