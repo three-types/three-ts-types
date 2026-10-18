@@ -10,7 +10,12 @@ import { USDZExporter } from 'three/addons/exporters/USDZExporter.js';
 import * as WebGLTextureUtils from 'three/addons/utils/WebGLTextureUtils.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let camera, scene, renderer, mixer, timer, controls;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGLRenderer,
+    mixer: THREE.AnimationMixer,
+    timer: THREE.Timer,
+    controls: OrbitControls;
 
 const params = {
     exportUSDZ: exportUSDZ,
@@ -61,7 +66,7 @@ function init() {
         const arraybuffer = await exporter.parseAsync(gltf.scene, { animations: gltf.animations });
         const blob = new Blob([arraybuffer], { type: 'application/octet-stream' });
 
-        const link = document.getElementById('link');
+        const link = document.getElementById('link') as HTMLAnchorElement;
         link.href = URL.createObjectURL(blob);
     });
 
@@ -92,7 +97,7 @@ function onWindowResize() {
 }
 
 function exportUSDZ() {
-    const link = document.getElementById('link');
+    const link = document.getElementById('link')!;
     link.click();
 }
 

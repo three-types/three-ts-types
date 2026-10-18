@@ -45,7 +45,7 @@ scene.background = new THREE.Color(0x00001f);
 camera.position.set(1, 1, 1);
 const controls = new OrbitControls(camera, renderer.domElement);
 
-let computeDrawBuffer, computeInitDrawBuffer;
+let computeDrawBuffer: THREE.ComputeNode, computeInitDrawBuffer: THREE.ComputeNode;
 
 init();
 
@@ -143,11 +143,11 @@ async function init() {
     const vColor = varyingProperty('vec4', 'vColor');
 
     const positionShaderParams = {
-        position: attribute('position'),
-        offset: attribute('offset'),
-        color: attribute('color'),
-        orientationStart: attribute('orientationStart'),
-        orientationEnd: attribute('orientationEnd'),
+        position: attribute<'vec3'>('position'),
+        offset: attribute<'vec3'>('offset'),
+        color: attribute<'vec4'>('color'),
+        orientationStart: attribute<'vec4'>('orientationStart'),
+        orientationEnd: attribute<'vec4'>('orientationEnd'),
         time: time,
     };
 

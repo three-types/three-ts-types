@@ -6,8 +6,8 @@ import { UltraHDRLoader } from 'three/addons/loaders/UltraHDRLoader.js';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let camera, scene, renderer;
-let controls;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let controls: OrbitControls;
 
 init();
 

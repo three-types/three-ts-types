@@ -2,7 +2,7 @@ import * as THREE from 'three';
 
 import { TIFFLoader } from 'three/addons/loaders/TIFFLoader.js';
 
-let renderer, scene, camera;
+let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
 
 init();
 

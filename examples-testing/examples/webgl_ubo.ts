@@ -1,11 +1,11 @@
 import * as THREE from 'three';
 
-let camera, scene, renderer, timer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, timer: THREE.Timer;
 
 init();
 
 function init() {
-    const container = document.getElementById('container');
+    const container = document.getElementById('container')!;
 
     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
     camera.position.set(0, 0, 25);
@@ -52,8 +52,8 @@ function init() {
             normalMatrix: { value: null },
             color: { value: null },
         },
-        vertexShader: document.getElementById('vertexShader1').textContent,
-        fragmentShader: document.getElementById('fragmentShader1').textContent,
+        vertexShader: document.getElementById('vertexShader1')!.textContent!,
+        fragmentShader: document.getElementById('fragmentShader1')!.textContent!,
         glslVersion: THREE.GLSL3,
     });
 
@@ -62,8 +62,8 @@ function init() {
             modelMatrix: { value: null },
             diffuseMap: { value: null },
         },
-        vertexShader: document.getElementById('vertexShader2').textContent,
-        fragmentShader: document.getElementById('fragmentShader2').textContent,
+        vertexShader: document.getElementById('vertexShader2')!.textContent!,
+        fragmentShader: document.getElementById('fragmentShader2')!.textContent!,
         glslVersion: THREE.GLSL3,
     });
 
@@ -130,7 +130,7 @@ function animate() {
     const delta = timer.getDelta();
 
     scene.traverse(function (child) {
-        if (child.isMesh) {
+        if ((child as THREE.Mesh).isMesh) {
             child.rotation.x += delta * 0.5;
             child.rotation.y += delta * 0.3;
         }

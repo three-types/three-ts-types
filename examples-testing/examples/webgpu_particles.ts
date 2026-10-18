@@ -7,8 +7,8 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 import WebGPU from 'three/addons/capabilities/WebGPU.js';
 
-let camera, scene, renderer;
-let controls;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let controls: OrbitControls;
 
 init();
 
@@ -92,7 +92,7 @@ function init() {
     // indirect draw ( optional )
     // each indirect draw call is 5 uint32 values for indexes ( different structure for non-indexed draw calls using 4 uint32 values )
 
-    const indexCount = fireGeometry.index.array.length;
+    const indexCount = fireGeometry.index!.array.length;
 
     const uint32 = new Uint32Array(5);
     uint32[0] = indexCount; // indexCount
@@ -132,7 +132,7 @@ function init() {
 
     // gui
 
-    const gui = renderer.inspector.createParameters('Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
 
     gui.add(speed, 'value', 0, 1, 0.01).name('speed');
 }

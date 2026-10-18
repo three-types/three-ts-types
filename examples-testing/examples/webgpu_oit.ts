@@ -1,16 +1,16 @@
 import * as THREE from 'three/webgpu';
 import { pass } from 'three/tsl';
-import { oitPass } from 'three/addons/tsl/display/OITPassNode.js';
+import OITPassNode, { oitPass } from 'three/addons/tsl/display/OITPassNode.js';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let camera, scene, renderer;
-let renderPipeline, scenePassOIT, scenePass;
-let spheres, controls;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let renderPipeline: THREE.RenderPipeline, scenePassOIT: OITPassNode, scenePass: THREE.PassNode;
+let spheres: THREE.Group, controls: OrbitControls;
 
-const transparentMaterials = [];
+const transparentMaterials: THREE.MeshStandardMaterial[] = [];
 
 const params = {
     oit: true,
@@ -118,14 +118,14 @@ function init() {
 
     //
 
-    const gui = renderer.inspector.createParameters('Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
 
-    gui.add(params, 'oit').onChange(value => {
+    gui.add(params, 'oit').onChange((value: boolean) => {
         renderPipeline.outputNode = value === true ? scenePassOIT : scenePass;
         renderPipeline.needsUpdate = true;
     });
 
-    gui.add(params, 'opacity', 0, 1).onChange(value => {
+    gui.add(params, 'opacity', 0, 1).onChange((value: number) => {
         for (const material of transparentMaterials) {
             material.opacity = value;
         }

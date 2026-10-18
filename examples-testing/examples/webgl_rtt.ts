@@ -2,9 +2,16 @@ import * as THREE from 'three';
 
 import Stats from 'three/addons/libs/stats.module.js';
 
-let container, stats;
+let container: HTMLElement, stats: Stats;
 
-let cameraRTT, camera, sceneRTT, sceneScreen, scene, renderer, zmesh1, zmesh2;
+let cameraRTT: THREE.OrthographicCamera,
+    camera: THREE.PerspectiveCamera,
+    sceneRTT: THREE.Scene,
+    sceneScreen: THREE.Scene,
+    scene: THREE.Scene,
+    renderer: THREE.WebGLRenderer,
+    zmesh1: THREE.Mesh,
+    zmesh2: THREE.Mesh;
 
 let mouseX = 0,
     mouseY = 0;
@@ -12,14 +19,14 @@ let mouseX = 0,
 const windowHalfX = window.innerWidth / 2;
 const windowHalfY = window.innerHeight / 2;
 
-let rtTexture, material, quad;
+let rtTexture: THREE.WebGLRenderTarget, material: THREE.ShaderMaterial, quad: THREE.Mesh;
 
 let delta = 0.01;
 
 init();
 
 function init() {
-    container = document.getElementById('container');
+    container = document.getElementById('container')!;
 
     camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 1, 10000);
     camera.position.z = 100;
@@ -52,14 +59,14 @@ function init() {
 
     material = new THREE.ShaderMaterial({
         uniforms: { time: { value: 0.0 } },
-        vertexShader: document.getElementById('vertexShader').textContent,
-        fragmentShader: document.getElementById('fragment_shader_pass_1').textContent,
+        vertexShader: document.getElementById('vertexShader')!.textContent!,
+        fragmentShader: document.getElementById('fragment_shader_pass_1')!.textContent!,
     });
 
     const materialScreen = new THREE.ShaderMaterial({
         uniforms: { tDiffuse: { value: rtTexture.texture } },
-        vertexShader: document.getElementById('vertexShader').textContent,
-        fragmentShader: document.getElementById('fragment_shader_screen').textContent,
+        vertexShader: document.getElementById('vertexShader')!.textContent!,
+        fragmentShader: document.getElementById('fragment_shader_screen')!.textContent!,
 
         depthWrite: false,
     });
@@ -121,7 +128,7 @@ function init() {
     document.addEventListener('mousemove', onDocumentMouseMove);
 }
 
-function onDocumentMouseMove(event) {
+function onDocumentMouseMove(event: MouseEvent) {
     mouseX = event.clientX - windowHalfX;
     mouseY = event.clientY - windowHalfY;
 }

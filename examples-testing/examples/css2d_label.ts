@@ -7,7 +7,7 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
 let gui;
 
-let camera, scene, renderer, labelRenderer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, labelRenderer: CSS2DRenderer;
 
 const layers = {
     'Toggle Name': function () {
@@ -29,7 +29,7 @@ const timer = new THREE.Timer();
 timer.connect(document);
 const textureLoader = new THREE.TextureLoader();
 
-let moon;
+let moon: THREE.Mesh;
 
 init();
 animate();
@@ -64,7 +64,7 @@ function init() {
         normalMap: textureLoader.load('textures/planets/earth_normal_2048.jpg'),
         normalScale: new THREE.Vector2(0.85, 0.85),
     });
-    earthMaterial.map.colorSpace = THREE.SRGBColorSpace;
+    earthMaterial.map!.colorSpace = THREE.SRGBColorSpace;
     const earth = new THREE.Mesh(earthGeometry, earthMaterial);
     scene.add(earth);
 
@@ -73,7 +73,7 @@ function init() {
         shininess: 5,
         map: textureLoader.load('textures/planets/moon_1024.jpg'),
     });
-    moonMaterial.map.colorSpace = THREE.SRGBColorSpace;
+    moonMaterial.map!.colorSpace = THREE.SRGBColorSpace;
     moon = new THREE.Mesh(moonGeometry, moonMaterial);
     scene.add(moon);
 

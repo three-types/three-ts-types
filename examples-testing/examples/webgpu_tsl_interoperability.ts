@@ -23,13 +23,13 @@ import WebGPU from 'three/addons/capabilities/WebGPU.js';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let renderer, camera, scene;
+let renderer: THREE.WebGPURenderer, camera: THREE.OrthographicCamera, scene: THREE.Scene;
 const dpr = window.devicePixelRatio;
 
 const crtWidthUniform = uniform(1608);
 const crtHeightUniform = uniform(1608);
 
-const canvas = document.getElementById('c');
+const canvas = document.getElementById('c') as HTMLCanvasElement;
 
 function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -195,7 +195,7 @@ function init() {
         samplePoint.x = samplePoint.x.add(fract(scaledTime.div(20)));
         samplePoint.y = samplePoint.y.sub(1.5);
 
-        let color = texture(planetTexture, samplePoint);
+        let color: THREE.Node<'vec4'> = texture(planetTexture, samplePoint);
 
         const ind = floor(subCoord.x).mod(3);
 
@@ -249,7 +249,7 @@ function init() {
 
     window.addEventListener('resize', onWindowResize);
 
-    const gui = renderer.inspector.createParameters('Parameters');
+    const gui = (renderer.inspector as Inspector).createParameters('Parameters');
 
     gui.add(cellSizeUniform, 'value', 6, 50, 1).name('Cell Size');
     gui.add(cellOffsetUniform, 'value', 0, 1, 0.1).name('Cell Offset');

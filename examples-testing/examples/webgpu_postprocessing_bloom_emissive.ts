@@ -9,8 +9,8 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let camera, scene, renderer;
-let renderPipeline;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let renderPipeline: THREE.RenderPipeline;
 
 init();
 
@@ -91,7 +91,7 @@ function init() {
 
     //
 
-    const gui = renderer.inspector.createParameters('Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
 
     const bloomFolder = gui.addFolder('Bloom');
     bloomFolder.add(bloomPass.strength, 'value', 0.0, 5.0).name('strength');

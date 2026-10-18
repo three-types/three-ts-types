@@ -4,9 +4,14 @@ import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js';
 import { Sculptor } from 'three/addons/misc/Sculptor.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let renderer, scene, camera, controls, sculptor, mesh;
-let cursorGroup, cursorRing, cursorDot, cursorMaterial;
-let releasedPointerId = null;
+let renderer: THREE.WebGLRenderer,
+    scene: THREE.Scene,
+    camera: THREE.PerspectiveCamera,
+    controls: OrbitControls,
+    sculptor: Sculptor,
+    mesh: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>;
+let cursorGroup: THREE.Group, cursorRing: THREE.Mesh, cursorDot: THREE.Mesh, cursorMaterial: THREE.MeshBasicMaterial;
+let releasedPointerId: number | null = null;
 
 const _normal = new THREE.Vector3();
 const _normalMatrix = new THREE.Matrix3();
@@ -28,7 +33,7 @@ function exportGLTF() {
     exporter.parse(
         snapshot,
         function (buffer) {
-            const blob = new Blob([buffer], { type: 'application/octet-stream' });
+            const blob = new Blob([buffer as ArrayBuffer], { type: 'application/octet-stream' });
             const objectURL = URL.createObjectURL(blob);
             link.href = objectURL;
             link.download = 'sculpt.glb';
@@ -104,7 +109,7 @@ function init() {
         controls.enabled = true;
     });
 
-    function handlePointerUp(event) {
+    function handlePointerUp(event: PointerEvent) {
         // Ignore releases from other pointers during a stroke.
         if (sculptor.isSculpting()) return;
 
@@ -117,7 +122,7 @@ function init() {
         cursorGroup.visible = false;
     }
 
-    function handleLostPointerCapture(event) {
+    function handleLostPointerCapture(event: PointerEvent) {
         // Keep the pointerup cursor; capture-loss coordinates are unreliable.
         if (event.pointerId === releasedPointerId) {
             releasedPointerId = null;
@@ -234,12 +239,12 @@ function init() {
         if (cursorGroup.visible && sculptor.isSculpting() === false) updateCursorPosition();
     });
 
-    function updateCursorScale(worldRadius) {
+    function updateCursorScale(worldRadius: number) {
         cursorGroup.scale.setScalar(worldRadius);
         cursorDot.scale.setScalar(cursorDotRadius / sculptor.getSize());
     }
 
-    function updateCursor(event) {
+    function updateCursor(event: PointerEvent) {
         _pointer.set(event.clientX, event.clientY);
 
         // Hide the cursor while orbiting.

@@ -5,8 +5,8 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
 import { LightProbeGrid } from 'three/addons/lighting/LightProbeGrid.js';
 import { LightProbeGridHelper } from 'three/addons/helpers/LightProbeGridHelper.js';
 
-let camera, scene, renderer, controls;
-let probes, probesHelper;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, controls: OrbitControls;
+let probes: LightProbeGrid, probesHelper: LightProbeGridHelper;
 
 init();
 
@@ -125,7 +125,7 @@ async function init() {
 
     // Bake light probe volume
 
-    async function bake(resolution) {
+    async function bake(resolution: number) {
         if (probes) {
             scene.remove(probes);
             probes.dispose();
@@ -159,7 +159,7 @@ async function init() {
 
     // GUI
 
-    const gui = renderer.inspector.createParameters('Light Probes');
+    const gui = (renderer.inspector as Inspector).createParameters('Light Probes');
     gui.add(params, 'enabled')
         .name('GI')
         .onChange(value => {

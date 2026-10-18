@@ -5,8 +5,8 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
 import { useNeedleProgressive } from '@needle-tools/gltf-progressive';
 
-let camera, scene, renderer, mixer;
-let airshipModel;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, mixer: THREE.AnimationMixer;
+let airshipModel: THREE.Group;
 
 init();
 

@@ -9,8 +9,12 @@ const params = {
     animated: true,
 };
 
-let camera, scene, renderer, timer, group;
-let renderPipeline;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    timer: THREE.Timer,
+    group: THREE.Group;
+let renderPipeline: THREE.RenderPipeline;
 
 init();
 
@@ -111,7 +115,7 @@ async function init() {
 
     //
 
-    const gui = renderer.inspector.createParameters('Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
     gui.add(weightUniform, 'value', 0, 1).name('weight');
     gui.add(decayUniform, 'value', 0, 1).name('decay');
     gui.add(countUniform, 'value', 16, 64, 1).name('sample count');

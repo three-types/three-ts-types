@@ -3,9 +3,9 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let camera, scene, renderer, controls;
-let renderTarget;
-let postScene, postCamera;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, controls: OrbitControls;
+let renderTarget: THREE.WebGLRenderTarget;
+let postScene: THREE.Scene, postCamera: THREE.OrthographicCamera;
 
 const parameters = {
     samples: 4,
@@ -62,8 +62,8 @@ function init() {
             new THREE.TorusKnotGeometry(1, 0.3, 128, 32),
             new THREE.RawShaderMaterial({
                 name: 'G-Buffer Shader',
-                vertexShader: document.querySelector('#gbuffer-vert').textContent.trim(),
-                fragmentShader: document.querySelector('#gbuffer-frag').textContent.trim(),
+                vertexShader: document.querySelector('#gbuffer-vert')!.textContent!.trim(),
+                fragmentShader: document.querySelector('#gbuffer-frag')!.textContent!.trim(),
                 uniforms: {
                     tDiffuse: { value: diffuse },
                     repeat: { value: new THREE.Vector2(5, 0.5) },
@@ -83,8 +83,8 @@ function init() {
             new THREE.PlaneGeometry(2, 2),
             new THREE.RawShaderMaterial({
                 name: 'Post-FX Shader',
-                vertexShader: document.querySelector('#render-vert').textContent.trim(),
-                fragmentShader: document.querySelector('#render-frag').textContent.trim(),
+                vertexShader: document.querySelector('#render-vert')!.textContent!.trim(),
+                fragmentShader: document.querySelector('#render-frag')!.textContent!.trim(),
                 uniforms: {
                     tDiffuse: { value: renderTarget.textures[0] },
                     tNormal: { value: renderTarget.textures[1] },
@@ -118,8 +118,8 @@ function render() {
     renderTarget.samples = parameters.samples;
 
     scene.traverse(function (child) {
-        if (child.material !== undefined) {
-            child.material.wireframe = parameters.wireframe;
+        if ((child as THREE.Mesh).material !== undefined) {
+            ((child as THREE.Mesh).material as THREE.RawShaderMaterial).wireframe = parameters.wireframe;
         }
     });
 

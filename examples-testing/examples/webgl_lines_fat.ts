@@ -7,15 +7,20 @@ import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
 import { LineGeometry } from 'three/addons/lines/LineGeometry.js';
 import * as GeometryUtils from 'three/addons/utils/GeometryUtils.js';
 
-let line, renderer, scene, camera, camera2, controls;
-let cameraPerspective, cameraOrthographic;
-let line1;
-let matLine, matLineBasic, matLineDashed;
-let gui;
+let line: Line2,
+    renderer: THREE.WebGLRenderer,
+    scene: THREE.Scene,
+    camera: THREE.PerspectiveCamera | THREE.OrthographicCamera,
+    camera2: THREE.PerspectiveCamera,
+    controls: OrbitControls;
+let cameraPerspective: THREE.PerspectiveCamera, cameraOrthographic: THREE.OrthographicCamera;
+let line1: THREE.Line;
+let matLine: LineMaterial, matLineBasic: THREE.LineBasicMaterial, matLineDashed: THREE.LineDashedMaterial;
+let gui: GUI;
 
 // viewport
-let insetWidth;
-let insetHeight;
+let insetWidth: number;
+let insetHeight: number;
 
 const frustumSize = 60;
 

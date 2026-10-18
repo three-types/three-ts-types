@@ -8,9 +8,9 @@ import { RectAreaLightTexturesLib } from 'three/addons/lights/RectAreaLightTextu
 
 import { checker, uv } from 'three/tsl';
 
-let renderer, scene, camera;
-let rectLight1, rectLight2, rectLight3;
-let timer;
+let renderer: THREE.WebGPURenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
+let rectLight1: THREE.RectAreaLight, rectLight2: THREE.RectAreaLight, rectLight3: THREE.RectAreaLight;
+let timer: THREE.Timer;
 
 init();
 

@@ -25,7 +25,11 @@ if (WebGPU.isAvailable() === false) {
     throw new Error('No WebGPU support');
 }
 
-let camera, scene, renderer, renderPipeline, controls;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    renderPipeline: THREE.RenderPipeline,
+    controls: OrbitControls;
 
 init();
 
@@ -198,7 +202,7 @@ async function init() {
     const types = { Combined: 0, Direct: 3, AO: 1, GI: 2 };
     const debugTypes = { Off: 0, Radiance: 1, Opacity: 2 };
 
-    const gui = renderer.inspector.createParameters('VXGI Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('VXGI Settings');
     gui.add(params, 'output', types).onChange(updatePostprocessing);
     gui.add(params, 'debug', debugTypes).name('voxel view').onChange(updatePostprocessing);
     gui.add(giPass.debugLevel, 'value', 0, 4, 1).name('voxel view level');

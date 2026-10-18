@@ -5,13 +5,13 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let container, loader;
+let container: HTMLDivElement, loader: GLTFLoader;
 
-let camera, scene, renderer, controls;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, controls: OrbitControls;
 
-let mesh;
+let mesh: THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhongMaterial>;
 
-let spotLight;
+let spotLight: THREE.SpotLight;
 
 const params = {
     enableBumpMap: true,
@@ -67,7 +67,7 @@ function init() {
 
     loader = new GLTFLoader();
     loader.load('models/gltf/LeePerrySmith/LeePerrySmith.glb', function (gltf) {
-        createScene(gltf.scene.children[0].geometry, 1, material);
+        createScene((gltf.scene.children[0] as THREE.Mesh).geometry, 1, material);
     });
 
     renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -104,7 +104,7 @@ function init() {
     controls.enableDamping = true;
 }
 
-function createScene(geometry, scale, material) {
+function createScene(geometry: THREE.BufferGeometry, scale: number, material: THREE.MeshPhongMaterial) {
     mesh = new THREE.Mesh(geometry, material);
 
     mesh.position.y = -0.5;

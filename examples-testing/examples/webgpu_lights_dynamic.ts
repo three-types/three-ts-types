@@ -5,10 +5,15 @@ import { DynamicLighting } from 'three/addons/lighting/DynamicLighting.js';
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 import Stats from 'three/addons/libs/stats.module.js';
 
-let camera, scene, renderer, controls, timer, stats;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    controls: OrbitControls,
+    timer: THREE.Timer,
+    stats: Stats;
 
-const pointLights = [];
-let autoAddInterval = null;
+const pointLights: THREE.PointLight[] = [];
+let autoAddInterval: number | null = null;
 
 const params = {
     dynamic: true,
@@ -130,14 +135,14 @@ function createRenderer() {
 
     // Inspector GUI
 
-    const gui = renderer.inspector.createParameters('Dynamic Lights');
+    const gui = (renderer.inspector as Inspector).createParameters('Dynamic Lights');
 
     gui.add(params, 'dynamic')
         .name('dynamic mode')
         .onChange(() => {
             renderer.dispose();
             document.body.removeChild(renderer.domElement);
-            clearInterval(autoAddInterval);
+            clearInterval(autoAddInterval!);
             autoAddInterval = null;
             params.autoAdd = false;
             createRenderer();
@@ -151,7 +156,7 @@ function createRenderer() {
                     addLight();
                 }, 500);
             } else {
-                clearInterval(autoAddInterval);
+                clearInterval(autoAddInterval!);
                 autoAddInterval = null;
             }
         });
@@ -193,7 +198,7 @@ function addLight() {
 function removeLight() {
     if (pointLights.length === 0) return;
 
-    const light = pointLights.pop();
+    const light = pointLights.pop()!;
     scene.remove(light);
     light.dispose();
 
@@ -202,7 +207,7 @@ function removeLight() {
 
 function removeAllLights() {
     while (pointLights.length > 0) {
-        const light = pointLights.pop();
+        const light = pointLights.pop()!;
         scene.remove(light);
         light.dispose();
     }

@@ -1,13 +1,14 @@
 import * as THREE from 'three/webgpu';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
+import { ParametersGroup } from 'three/addons/inspector/tabs/Parameters.js';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let camera, scene, renderer;
-let controls;
-let gui;
-let geometries, group, instancedMesh;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let controls: OrbitControls;
+let gui: ParametersGroup;
+let geometries: THREE.BufferGeometry[], group: THREE.Group, instancedMesh: THREE.InstancedMesh;
 
 //
 
@@ -33,7 +34,7 @@ init();
 
 //
 
-function randomizeMatrix(matrix) {
+function randomizeMatrix(matrix: THREE.Matrix4) {
     position.x = Math.random() * 80 - 40;
     position.y = Math.random() * 80 - 40;
     position.z = Math.random() * 80 - 40;
@@ -49,7 +50,7 @@ function randomizeMatrix(matrix) {
     return matrix.compose(position, quaternion, scale);
 }
 
-function randomizeRotationSpeed(rotation) {
+function randomizeRotationSpeed(rotation: THREE.Euler) {
     rotation.x = Math.random() * 0.05;
     rotation.y = Math.random() * 0.05;
     rotation.z = Math.random() * 0.05;
@@ -76,7 +77,7 @@ function initGeometries() {
     ];
 }
 
-function initMesh(count) {
+function initMesh(count: number) {
     group = api.renderBundle ? new THREE.BundleGroup() : new THREE.Group();
 
     for (let i = 0; i < count; i++) {
@@ -118,7 +119,7 @@ function init() {
     const searchParams = new URLSearchParams(window.location.search);
     api.webgpu = searchParams.get('backend') !== 'webgl';
     api.renderBundle = searchParams.get('renderBundle') !== 'false';
-    api.count = parseFloat(searchParams.get('count') || 4000);
+    api.count = parseFloat(searchParams.get('count') || (4000 as unknown as string));
 
     const count = api.count;
 
@@ -156,7 +157,7 @@ function init() {
 
     // gui
 
-    gui = renderer.inspector.createParameters('Settings');
+    gui = (renderer.inspector as Inspector).createParameters('Settings');
     gui.add(api, 'renderBundle').name('render bundle').onChange(reload);
 
     gui.add(api, 'webgpu').onChange(reload);
@@ -177,7 +178,7 @@ function init() {
         camera.updateProjectionMatrix();
 
         renderer.setSize(width, height);
-        group.needsUpdate = true;
+        (group as THREE.BundleGroup).needsUpdate = true;
     }
 
     function reload() {

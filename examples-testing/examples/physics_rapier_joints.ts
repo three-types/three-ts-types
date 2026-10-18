@@ -1,11 +1,11 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { RapierPhysics } from 'three/addons/physics/RapierPhysics.js';
+import { RapierPhysics, RapierPhysicsObject } from 'three/addons/physics/RapierPhysics.js';
 import { RapierHelper } from 'three/addons/helpers/RapierHelper.js';
 import Stats from 'three/addons/libs/stats.module.js';
 
-let camera, scene, renderer, stats;
-let physics, pivot, physicsHelper;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, stats: Stats;
+let physics: RapierPhysicsObject, pivot: THREE.Mesh, physicsHelper: RapierHelper;
 
 init();
 
@@ -88,7 +88,7 @@ async function initPhysics() {
 
 //link - the mesh that the new link will be attached to
 //x    - used to position the new link
-function addLink(link, x) {
+function addLink(link: THREE.Mesh, x: number) {
     const geometry = new THREE.CapsuleGeometry(0.25, 1.8);
     const material = new THREE.MeshStandardMaterial({ color: 0xcccc00 });
 

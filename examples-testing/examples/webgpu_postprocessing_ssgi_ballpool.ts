@@ -14,7 +14,8 @@ import {
 } from 'three/tsl';
 import { ssgi } from 'three/addons/tsl/display/SSGINode.js';
 import { traa } from 'three/addons/tsl/display/TRAANode.js';
-import { World } from '@perplexdotgg/bounce';
+import { Body, Vec3, World } from '@perplexdotgg/bounce';
+import { WithPool } from 'monomorph';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
@@ -27,15 +28,18 @@ const WALL_THICKNESS = 0.5;
 const CAM_FOV = 45;
 const EASE_SPEED = 8;
 
-let camera, scene, renderer, renderPipeline;
-let raycaster, pointer;
-let mouseLight;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    renderPipeline: THREE.RenderPipeline;
+let raycaster: THREE.Raycaster, pointer: THREE.Vector2;
+let mouseLight: THREE.PointLight;
 
-let world;
+let world: World;
 let ballCount = 0;
-let bodies = [];
-let ballsMesh = null;
-let wallMeshes = [];
+let bodies: WithPool<Body>[] = [];
+let ballsMesh: THREE.InstancedMesh<THREE.SphereGeometry, THREE.MeshPhysicalMaterial> | null = null;
+let wallMeshes: THREE.Mesh<THREE.BoxGeometry, THREE.MeshPhysicalMaterial>[] = [];
 const boxSize = { w: 8, h: BOX_HEIGHT, d: BOX_DEPTH };
 
 const mouseRayOrigin = new THREE.Vector3();
@@ -210,7 +214,12 @@ function createBox() {
         metalness: 0.0,
     });
 
-    const walls = [
+    const walls: {
+        size: [number, number, number];
+        pos: [number, number, number];
+        mat?: THREE.MeshPhysicalMaterial;
+        noMesh?: boolean;
+    }[] = [
         { size: [boxSize.w, t, boxSize.d], pos: [0, -t / 2, 0], mat: whiteMaterial },
         { size: [boxSize.w, t, boxSize.d], pos: [0, boxSize.h + t / 2, 0], mat: whiteMaterial },
         { size: [boxSize.w, boxSize.h, t], pos: [0, hh, -hd - t / 2], mat: whiteMaterial },
@@ -274,7 +283,7 @@ function createBalls() {
     }
 }
 
-function onPointerDown(event) {
+function onPointerDown(event: PointerEvent) {
     activePointers.add(event.pointerId);
 
     if (event.pointerType === 'touch') {
@@ -284,7 +293,7 @@ function onPointerDown(event) {
     }
 }
 
-function onPointerUp(event) {
+function onPointerUp(event: PointerEvent) {
     activePointers.delete(event.pointerId);
 
     if (event.pointerType === 'touch') {
@@ -294,7 +303,7 @@ function onPointerUp(event) {
     }
 }
 
-function onPointerMove(event) {
+function onPointerMove(event: PointerEvent) {
     pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
     pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
@@ -389,7 +398,7 @@ function animate() {
                     x: _pushDir.x * strength,
                     y: _pushDir.y * strength,
                     z: _pushDir.z * strength,
-                });
+                } as Vec3);
             }
         }
     }
@@ -407,10 +416,10 @@ function animate() {
         _dummy.quaternion.set(q.x, q.y, q.z, q.w);
         _dummy.updateMatrix();
 
-        ballsMesh.setMatrixAt(i, _dummy.matrix);
+        ballsMesh!.setMatrixAt(i, _dummy.matrix);
     }
 
-    ballsMesh.instanceMatrix.needsUpdate = true;
+    ballsMesh!.instanceMatrix.needsUpdate = true;
 
     renderPipeline.render();
 }

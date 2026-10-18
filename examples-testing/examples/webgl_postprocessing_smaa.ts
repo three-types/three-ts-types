@@ -8,7 +8,12 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { SMAAPass } from 'three/addons/postprocessing/SMAAPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 
-let camera, scene, renderer, composer, stats, smaaPass;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGLRenderer,
+    composer: EffectComposer,
+    stats: Stats,
+    smaaPass: SMAAPass;
 
 const params = {
     enabled: true,
@@ -18,7 +23,7 @@ const params = {
 init();
 
 function init() {
-    const container = document.getElementById('container');
+    const container = document.getElementById('container')!;
 
     renderer = new THREE.WebGLRenderer();
     renderer.setPixelRatio(window.devicePixelRatio);

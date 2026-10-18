@@ -5,9 +5,13 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let camera, scene, renderer, timer, stats;
-let dirLight, spotLight;
-let torusKnot, dirGroup;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGLRenderer,
+    timer: THREE.Timer,
+    stats: Stats;
+let dirLight: THREE.DirectionalLight, spotLight: THREE.SpotLight;
+let torusKnot: THREE.Mesh, dirGroup: THREE.Group;
 
 init();
 
@@ -185,7 +189,7 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function animate(time) {
+function animate(time: DOMHighResTimeStamp) {
     timer.update();
 
     const delta = timer.getDelta();
@@ -195,7 +199,7 @@ function animate(time) {
     torusKnot.rotation.z += 1 * delta;
 
     dirGroup.rotation.y += 0.7 * delta;
-    dirLight.position.z = 17 + Math.sin(time * 0.001) * 5;
+    dirLight.position.z = 17 + Math.sin(time! * 0.001) * 5;
 
     renderer.render(scene, camera);
 

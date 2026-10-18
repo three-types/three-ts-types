@@ -18,8 +18,8 @@ const StepType = {
 };
 
 const timestamps = {
-    local_swap: document.getElementById('local_swap'),
-    global_swap: document.getElementById('global_swap'),
+    local_swap: document.getElementById('local_swap')!,
+    global_swap: document.getElementById('global_swap')!,
 };
 
 const localColors = ['rgb(203, 64, 203)', 'rgb(0, 215, 215)'];
@@ -64,7 +64,7 @@ if (WebGPU.isAvailable() === false) {
 // Display utilities
 
 const getElementIndex = Fn(
-    ([uvNode, gridWidth, gridHeight]) => {
+    ([uvNode, gridWidth, gridHeight]: readonly [THREE.Node<'vec2'>, THREE.Node<'float'>, THREE.Node<'float'>]) => {
         const newUV = uvNode.mul(vec2(gridWidth, gridHeight));
         const pixel = uvec2(uint(floor(newUV.x)), uint(floor(newUV.y)));
         const elementIndex = uint(gridWidth).mul(pixel.y).add(pixel.x);
@@ -80,7 +80,11 @@ const getElementIndex = Fn(
 );
 
 const getColor = Fn(
-    ([colorChanger, gridWidth, gridHeight]) => {
+    ([colorChanger, gridWidth, gridHeight]: readonly [
+        THREE.Node<'float'>,
+        THREE.Node<'float'>,
+        THREE.Node<'float'>,
+    ]) => {
         const subtracter = colorChanger.div(gridWidth.mul(gridHeight));
         return vec3(subtracter.oneMinus()).toVar();
     },
@@ -92,7 +96,7 @@ const getColor = Fn(
     },
 );
 
-const randomizeDataArray = array => {
+const randomizeDataArray = (array: Uint32Array) => {
     let currentIndex = array.length;
     while (currentIndex !== 0) {
         const randomIndex = Math.floor(Math.random() * currentIndex);
@@ -101,7 +105,7 @@ const randomizeDataArray = array => {
     }
 };
 
-const windowResizeCallback = (renderer, scene, camera) => {
+const windowResizeCallback = (renderer: THREE.WebGPURenderer, scene: THREE.Scene, camera: THREE.OrthographicCamera) => {
     renderer.setSize(window.innerWidth / 2, window.innerHeight);
     const aspect = window.innerWidth / 2 / window.innerHeight;
     const frustumHeight = camera.top - camera.bottom;
@@ -111,7 +115,7 @@ const windowResizeCallback = (renderer, scene, camera) => {
     renderer.render(scene, camera);
 };
 
-const constructInnerHTML = (isGlobal, colorsArr) => {
+const constructInnerHTML = (isGlobal: boolean, colorsArr: string[]) => {
     return `
 
 				Compute ${isGlobal ? 'Global' : 'Local'}:
@@ -123,7 +127,11 @@ const constructInnerHTML = (isGlobal, colorsArr) => {
 				</div>`;
 };
 
-const createDisplayMesh = (elementsStorage, algoStorage = null, blockHeightStorage = null) => {
+const createDisplayMesh = (
+    elementsStorage: THREE.StorageBufferNode<'uint'>,
+    algoStorage: THREE.StorageBufferNode<'uint'> | null = null,
+    blockHeightStorage: THREE.StorageBufferNode<'uint'> | null = null,
+) => {
     const material = new THREE.MeshBasicNodeMaterial({ color: 0x00ff00 });
 
     const display = Fn(() => {
@@ -151,7 +159,10 @@ const createDisplayMesh = (elementsStorage, algoStorage = null, blockHeightStora
     return plane;
 };
 
-const createDisplayMesh2 = (elementsStorage, infoStorage) => {
+const createDisplayMesh2 = (
+    elementsStorage: THREE.StorageBufferNode<'uint'>,
+    infoStorage: THREE.StorageBufferNode<'uint'>,
+) => {
     const material = new THREE.MeshBasicNodeMaterial({ color: 0x00ff00 });
 
     const display = Fn(() => {
@@ -175,7 +186,7 @@ const createDisplayMesh2 = (elementsStorage, infoStorage) => {
     return plane;
 };
 
-const setupDomElement = renderer => {
+const setupDomElement = (renderer: THREE.WebGPURenderer) => {
     document.body.appendChild(renderer.domElement);
     renderer.domElement.style.position = 'absolute';
     renderer.domElement.style.top = '0';
@@ -319,7 +330,7 @@ async function initGlobalSwapOnly() {
         .setName('RandomizedElements');
 
     // Swap the elements in local storage
-    const globalCompareAndSwap = (idxBefore, idxAfter) => {
+    const globalCompareAndSwap = (idxBefore: THREE.Node, idxAfter: THREE.Node) => {
         // If the later element is less than the current element
         If(currentElementsStorage.element(idxAfter).lessThan(currentElementsStorage.element(idxBefore)), () => {
             // Apply the swapped values to temporary storage.
