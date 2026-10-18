@@ -13021,7 +13021,7 @@ index 8b5885c3c..6175b46ab 100644
 +
 +export default VolumeNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/manager/NodeMaterialObserver.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/manager/NodeMaterialObserver.d.ts
-index 3f21040e0..962926ab4 100644
+index f5816cadb..962926ab4 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/manager/NodeMaterialObserver.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/manager/NodeMaterialObserver.d.ts
 @@ -1,4 +1,6 @@
@@ -13077,7 +13077,7 @@ index 3f21040e0..962926ab4 100644
      /**
       * Returns `true` if the current rendering produces motion vectors.
       *
-@@ -65,21 +45,6 @@ declare class NodeMaterialObserver {
+@@ -65,29 +45,6 @@ declare class NodeMaterialObserver {
       * @return {boolean} Whether the current rendering produces motion vectors or not.
       */
      needsVelocity(renderer: Renderer): boolean;
@@ -13089,6 +13089,14 @@ index 3f21040e0..962926ab4 100644
 -     */
 -    getRenderObjectData(renderObject: RenderObject): Object;
 -    /**
+-     * Returns the current output target of the given renderer. That is the active
+-     * render target or, if none is set, the output render target or the canvas target.
+-     *
+-     * @param {Renderer} renderer - The renderer.
+-     * @return {RenderTarget|CanvasTarget} The output target.
+-     */
+-    getOutputTarget(renderer: Renderer): RenderTarget | CanvasTarget;
+-    /**
 -     * Returns an attribute data structure holding the attributes versions for
 -     * monitoring.
 -     *
@@ -13099,7 +13107,7 @@ index 3f21040e0..962926ab4 100644
      /**
       * Returns `true` if the node builder's material uses
       * node properties.
-@@ -88,60 +53,6 @@ declare class NodeMaterialObserver {
+@@ -96,60 +53,6 @@ declare class NodeMaterialObserver {
       * @return {boolean} Whether the node builder's material uses node properties or not.
       */
      containsNode(builder: NodeBuilder): boolean;
