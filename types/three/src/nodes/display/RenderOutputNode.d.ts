@@ -4,6 +4,7 @@ import Node from "../core/Node.js";
 declare class RenderOutputNode extends Node<"vec4"> {
     colorNode: Node;
     outputColorSpace: string | null;
+    premultipliedAlpha: boolean;
 
     readonly isRenderOutput: true;
 
