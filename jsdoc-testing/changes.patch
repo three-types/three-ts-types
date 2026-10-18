@@ -14251,7 +14251,7 @@ index ca4dd3dff..a65e1ccc8 100644
 -export const computeSkinning: () => void;
 +export const computeSkinning: (skinnedMesh: SkinnedMesh, toPosition?: Node<'vec3'> | Vector3 | null) => void;
 diff --git a/jsdoc-testing/jsdoc/src/nodes/core/Node.d.ts b/jsdoc-testing/jsdoc/src/nodes/core/Node.d.ts
-index d19ed5cc6..1b3b50030 100644
+index cd80f209a..4eeb4905b 100644
 --- a/jsdoc-testing/jsdoc/src/nodes/core/Node.d.ts
 +++ b/jsdoc-testing/jsdoc/src/nodes/core/Node.d.ts
 @@ -1,10 +1,85 @@
@@ -14367,7 +14367,7 @@ index d19ed5cc6..1b3b50030 100644
      /**
       * The version of the node. The version automatically is increased when {@link Node#needsUpdate} is set to `true`.
       *
-@@ -79,31 +154,6 @@ declare class Node extends EventDispatcher {
+@@ -87,31 +162,6 @@ declare class Node extends EventDispatcher {
       * @default true
       */
      readonly isNode: boolean;
@@ -14399,16 +14399,25 @@ index d19ed5cc6..1b3b50030 100644
      /**
       * The unique ID of the node.
       *
-@@ -125,7 +175,7 @@ declare class Node extends EventDispatcher {
+@@ -133,7 +183,7 @@ declare class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {boolean} Whether temporary caching is allowed.
       */
 -    isCacheable(): boolean;
 +    isCacheable(builder: NodeBuilder): boolean;
      /**
-      * Set this property to `true` when the node should be regenerated.
+      * Makes this node assignable and adds it to the current stack,
+      * so it can be declared where it was created if it is assigned later.
+@@ -141,7 +191,7 @@ declare class Node extends EventDispatcher {
       *
-@@ -147,7 +197,7 @@ declare class Node extends EventDispatcher {
+      * @return {Node} A reference to this node.
+      */
+-    toAssignable(): Node;
++    toAssignable(): this;
+     /**
+      * Checks if this node is assignable without a forced declaration.
+      *
+@@ -248,7 +298,7 @@ declare class Node extends EventDispatcher {
       * @type {string}
       * @readonly
       */
@@ -14417,7 +14426,7 @@ index d19ed5cc6..1b3b50030 100644
      /**
       * Convenient method for defining {@link Node#update}.
       *
-@@ -155,7 +205,7 @@ declare class Node extends EventDispatcher {
+@@ -256,7 +306,7 @@ declare class Node extends EventDispatcher {
       * @param {string} updateType - The update type.
       * @return {Node} A reference to this node.
       */
@@ -14426,7 +14435,7 @@ index d19ed5cc6..1b3b50030 100644
      /**
       * The method can be implemented to update the node's internal state when it is used to render an object.
       * The {@link Node#updateType} property defines how often the update is executed.
-@@ -164,7 +214,7 @@ declare class Node extends EventDispatcher {
+@@ -265,7 +315,7 @@ declare class Node extends EventDispatcher {
       * @param {NodeFrame} frame - A reference to the current node frame.
       * @return {?boolean} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
       */
@@ -14435,7 +14444,7 @@ index d19ed5cc6..1b3b50030 100644
      /**
       * Convenient method for defining {@link Node#update}. Similar to {@link Node#onUpdate}, but
       * this method automatically sets the update type to `FRAME`.
-@@ -172,7 +222,7 @@ declare class Node extends EventDispatcher {
+@@ -273,7 +323,7 @@ declare class Node extends EventDispatcher {
       * @param {Function} callback - The update method.
       * @return {Node} A reference to this node.
       */
@@ -14444,7 +14453,7 @@ index d19ed5cc6..1b3b50030 100644
      /**
       * Convenient method for defining {@link Node#update}. Similar to {@link Node#onUpdate}, but
       * this method automatically sets the update type to `RENDER`.
-@@ -180,7 +230,7 @@ declare class Node extends EventDispatcher {
+@@ -281,7 +331,7 @@ declare class Node extends EventDispatcher {
       * @param {Function} callback - The update method.
       * @return {Node} A reference to this node.
       */
@@ -14453,7 +14462,7 @@ index d19ed5cc6..1b3b50030 100644
      /**
       * Convenient method for defining {@link Node#update}. Similar to {@link Node#onUpdate}, but
       * this method automatically sets the update type to `OBJECT`.
-@@ -188,14 +238,14 @@ declare class Node extends EventDispatcher {
+@@ -289,14 +339,14 @@ declare class Node extends EventDispatcher {
       * @param {Function} callback - The update method.
       * @return {Node} A reference to this node.
       */
@@ -14470,7 +14479,7 @@ index d19ed5cc6..1b3b50030 100644
      /**
       * Nodes might refer to other objects like materials. This method allows to dynamically update the reference
       * to such objects based on a given state (e.g. the current node frame or builder).
-@@ -203,7 +253,7 @@ declare class Node extends EventDispatcher {
+@@ -304,7 +354,7 @@ declare class Node extends EventDispatcher {
       * @param {any} state - This method can be invocated in different contexts so `state` can refer to any object type.
       * @return {any} The updated reference.
       */
@@ -14479,22 +14488,16 @@ index d19ed5cc6..1b3b50030 100644
      /**
       * By default this method returns the value of the {@link Node#global} flag. This method
       * can be overwritten in derived classes if an analytical way is required to determine the
-@@ -212,39 +262,25 @@ declare class Node extends EventDispatcher {
+@@ -313,7 +363,7 @@ declare class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {boolean} Whether this node is global or not.
       */
 -    isGlobal(): boolean;
 +    isGlobal(builder: NodeBuilder): boolean;
      /**
-      * Generator function that can be used to iterate over the child nodes.
+      * Returns the child nodes of this node.
       *
-      * @generator
-      * @yields {Node} A child node.
-      */
--    getChildren(): Generator<any, void, unknown>;
-+    getChildren(): Generator<Node<unknown>, void, unknown>;
-     /**
-      * Calling this method dispatches the `dispose` event. This event can be used
+@@ -325,26 +375,12 @@ declare class Node extends EventDispatcher {
       * to register event listeners for clean up tasks.
       */
      dispose(): void;
@@ -14522,7 +14525,7 @@ index d19ed5cc6..1b3b50030 100644
      /**
       * Returns the cache key for this node.
       *
-@@ -264,7 +300,7 @@ declare class Node extends EventDispatcher {
+@@ -364,7 +400,7 @@ declare class Node extends EventDispatcher {
       *
       * @return {Node} A reference to this node.
       */
@@ -14531,7 +14534,7 @@ index d19ed5cc6..1b3b50030 100644
      /**
       * Returns the hash of the node which is used to identify the node. By default it's
       * the {@link Node#uuid} however derived node classes might have to overwrite this method
-@@ -273,43 +309,28 @@ declare class Node extends EventDispatcher {
+@@ -373,43 +409,28 @@ declare class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {string} The hash.
       */
@@ -14579,7 +14582,7 @@ index d19ed5cc6..1b3b50030 100644
      /**
       * Certain types are composed of multiple elements. For example a `vec3`
       * is composed of three `float` values. This method returns the type of
-@@ -326,7 +347,7 @@ declare class Node extends EventDispatcher {
+@@ -426,7 +447,7 @@ declare class Node extends EventDispatcher {
       * @param {string} name - The name of the member.
       * @return {string} The type of the node.
       */
@@ -14588,7 +14591,7 @@ index d19ed5cc6..1b3b50030 100644
      /**
       * Returns the node's type.
       *
-@@ -360,7 +381,7 @@ declare class Node extends EventDispatcher {
+@@ -460,7 +481,7 @@ declare class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {?number} The number of elements in the node array.
       */
@@ -14597,7 +14600,7 @@ index d19ed5cc6..1b3b50030 100644
      /**
       * Represents the setup stage which is the first step of the build process, see {@link Node#build} method.
       * This method is often overwritten in derived modules to prepare the node which is used as a node's output/result.
-@@ -369,7 +390,7 @@ declare class Node extends EventDispatcher {
+@@ -469,7 +490,7 @@ declare class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {?Node} The output node.
       */
@@ -14606,7 +14609,7 @@ index d19ed5cc6..1b3b50030 100644
      /**
       * Represents the analyze stage which is the second step of the build process, see {@link Node#build} method.
       * This stage analyzes the node hierarchy and ensures descendent nodes are built.
-@@ -386,7 +407,7 @@ declare class Node extends EventDispatcher {
+@@ -486,7 +507,7 @@ declare class Node extends EventDispatcher {
       * @param {?string} [output] - Can be used to define the output type.
       * @return {?string} The generated shader string.
       */
@@ -14615,7 +14618,7 @@ index d19ed5cc6..1b3b50030 100644
      /**
       * The method can be implemented to update the node's internal state before it is used to render an object.
       * The {@link Node#updateBeforeType} property defines how often the update is executed.
-@@ -395,7 +416,7 @@ declare class Node extends EventDispatcher {
+@@ -495,7 +516,7 @@ declare class Node extends EventDispatcher {
       * @param {NodeFrame} frame - A reference to the current node frame.
       * @return {?boolean} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
       */
@@ -14624,7 +14627,7 @@ index d19ed5cc6..1b3b50030 100644
      /**
       * The method can be implemented to update the node's internal state after it was used to render an object.
       * The {@link Node#updateAfterType} property defines how often the update is executed.
-@@ -404,8 +425,8 @@ declare class Node extends EventDispatcher {
+@@ -504,8 +525,8 @@ declare class Node extends EventDispatcher {
       * @param {NodeFrame} frame - A reference to the current node frame.
       * @return {?boolean} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
       */
@@ -14635,7 +14638,7 @@ index d19ed5cc6..1b3b50030 100644
      /**
       * This method performs the build of a node. The behavior and return value depend on the current build stage:
       * - **setup**: Prepares the node and its children for the build process. This process can also create new nodes. Returns the node itself or a variant.
-@@ -422,28 +443,188 @@ declare class Node extends EventDispatcher {
+@@ -522,28 +543,188 @@ declare class Node extends EventDispatcher {
       *
       * @return {Generator<Object>} An iterable list of serialized child objects as JSON.
       */

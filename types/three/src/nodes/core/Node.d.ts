@@ -147,6 +147,14 @@ declare class NodeClass<TEventMap extends NodeClassEventMap = NodeClassEventMap>
      */
     parents: boolean;
     /**
+     * Whether this node can be assigned. It is generated as an expression,
+     * unless it is assigned, in which case it is declared as a variable where it was created.
+     *
+     * @type {boolean}
+     * @default false
+     */
+    assignable: boolean;
+    /**
      * This flag can be used for type testing.
      *
      * @type {boolean}
@@ -176,6 +184,99 @@ declare class NodeClass<TEventMap extends NodeClassEventMap = NodeClassEventMap>
      * @return {boolean} Whether temporary caching is allowed.
      */
     isCacheable(builder: NodeBuilder): boolean;
+    /**
+     * Makes this node assignable and adds it to the current stack,
+     * so it can be declared where it was created if it is assigned later.
+     * Only use it with nodes that are not shared, see {@link Node#assignable}.
+     *
+     * @return {Node} A reference to this node.
+     */
+    toAssignable(): this;
+    /**
+     * Checks if this node is assignable without a forced declaration.
+     *
+     * @param {NodeBuilder} builder - The node builder.
+     * @returns {boolean} Whether this node is assignable without a forced declaration.
+     */
+    isAssignable(builder: NodeBuilder): boolean;
+    /**
+     * Checks if this node is the target of an assignment.
+     *
+     * @param {NodeBuilder} builder - The node builder.
+     * @returns {boolean} Whether this node is assigned.
+     */
+    isAssign(builder: NodeBuilder): boolean;
+    /**
+     * Declares the assignable node where it is generated if it is created in a block, and
+     * decides if a value that cannot be cached must be evaluated once at its declaration.
+     *
+     * @private
+     * @param {NodeBuilder} builder - The current node builder.
+     * @param {Object} data - The node data.
+     * @param {Node} [valueNode=this] - The node that defines the value of the assignable node.
+     */
+    private _updateAssignable;
+    /**
+     * Whether `build()` declares this assignable node as a variable when it is assigned.
+     * Nodes that wrap an assignable value, like {@link VarNode}, declare it themselves.
+     *
+     * @private
+     * @return {boolean} Whether `build()` declares the assignable node.
+     */
+    private _declaresAssignable;
+    /**
+     * Declares a variable for this node in the current flow, initialized with the given snippet.
+     *
+     * @private
+     * @param {NodeBuilder} builder - The current node builder.
+     * @param {string} snippet - The initial value.
+     * @param {string} type - The variable type.
+     * @param {boolean} readOnly - Whether the variable is read-only.
+     * @param {string} property - The node data property that holds the variable.
+     * @return {string} The property name of the variable.
+     */
+    private _declareVariable;
+    /**
+     * Whether this assignable node must be declared as a variable, because it is assigned
+     * or must be evaluated once at its declaration.
+     *
+     * @private
+     * @param {NodeBuilder} builder - The current node builder.
+     * @param {Object} nodeData - The node data.
+     * @return {boolean} Whether the assignable node is a variable.
+     */
+    private _isVariable;
+    /**
+     * Generates an assignable node as a variable. The variable is declared the first
+     * time it is generated, which is its stack position, and then referenced by name.
+     *
+     * @private
+     * @param {NodeBuilder} builder - The current node builder.
+     * @param {Object} nodeData - The node data.
+     * @param {?string} output - The output type.
+     * @return {string} The generated shader string.
+     */
+    private _buildVariable;
+    /**
+     * A generated value is only visible in the block where it was declared and in its inner blocks.
+     * This method discards the generated value if it is not visible in the current block.
+     *
+     * @private
+     * @param {NodeBuilder} builder - The current node builder.
+     * @param {Object} nodeData - The node data.
+     */
+    private _checkFlowBlock;
+    /**
+     * Keeps the block where a value was generated, so it is only reused where it is visible.
+     * A global node is a declaration visible in any block, unless it emitted code in this block.
+     *
+     * @private
+     * @param {NodeBuilder} builder - The current node builder.
+     * @param {Object} nodeData - The node data.
+     * @param {boolean} isCached - Whether the value was generated before.
+     * @param {number} flowCodeLength - The length of the flow code before the value was generated.
+     */
+    private _setFlowBlock;
     /**
      * Set this property to `true` when the node should be regenerated.
      *
@@ -264,12 +365,11 @@ declare class NodeClass<TEventMap extends NodeClassEventMap = NodeClassEventMap>
      */
     isGlobal(builder: NodeBuilder): boolean;
     /**
-     * Generator function that can be used to iterate over the child nodes.
+     * Returns the child nodes of this node.
      *
-     * @generator
-     * @yields {Node} A child node.
+     * @return {Array<Node>} The child nodes.
      */
-    getChildren(): Generator<Node<unknown>, void, unknown>;
+    getChildren(): Array<Node>;
     /**
      * Calling this method dispatches the `dispose` event. This event can be used
      * to register event listeners for clean up tasks.
