@@ -18268,7 +18268,7 @@ index dbc311e14..d40f048a9 100644
 +
 +export default NodeLibrary;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeManager.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeManager.d.ts
-index dadca57c0..695671207 100644
+index fb8b21d9d..2681af797 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeManager.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeManager.d.ts
 @@ -1,4 +1,28 @@
@@ -18328,25 +18328,29 @@ index dadca57c0..695671207 100644
      /**
       * Returns a node builder state for the given compute node.
       *
-@@ -150,7 +174,7 @@ declare class NodeManager extends DataMap {
-      * @param {boolean} [useAsync=false] - Whether to use async build with yielding.
+@@ -151,7 +175,11 @@ declare class NodeManager extends DataMap {
+      * @param {Function} [yieldFn=yieldToMain] - The function used to yield to the main thread in an async build.
       * @return {NodeBuilderState|Promise<NodeBuilderState>} The node builder state (or Promise if async).
       */
--    getForCompute(computeNode: Node, useAsync?: boolean): NodeBuilderState | Promise<NodeBuilderState>;
-+    getForCompute(computeNode: ComputeNode, useAsync?: boolean): NodeBuilderState | Promise<NodeBuilderState>;
+-    getForCompute(computeNode: Node, useAsync?: boolean, yieldFn?: Function): NodeBuilderState | Promise<NodeBuilderState>;
++    getForCompute(
++        computeNode: ComputeNode,
++        useAsync?: boolean,
++        yieldFn?: () => Promise<void>,
++    ): NodeBuilderState | Promise<NodeBuilderState>;
      /**
       * Async version of getForCompute() that yields to main thread during build.
       * Use this in compileComputeAsync() to prevent blocking the main thread.
-@@ -158,7 +182,7 @@ declare class NodeManager extends DataMap {
-      * @param {Node} computeNode - The compute node.
+@@ -160,7 +188,7 @@ declare class NodeManager extends DataMap {
+      * @param {Function} [yieldFn=yieldToMain] - The function used to yield to the main thread.
       * @return {Promise<NodeBuilderState>} A promise that resolves to the node builder state.
       */
--    getForComputeAsync(computeNode: Node): Promise<NodeBuilderState>;
-+    getForComputeAsync(computeNode: ComputeNode): Promise<NodeBuilderState>;
+-    getForComputeAsync(computeNode: Node, yieldFn?: Function): Promise<NodeBuilderState>;
++    getForComputeAsync(computeNode: ComputeNode, yieldFn?: () => Promise<void>): Promise<NodeBuilderState>;
      /**
       * Creates a node builder state for the given node builder.
       *
-@@ -235,7 +259,7 @@ declare class NodeManager extends DataMap {
+@@ -237,7 +265,7 @@ declare class NodeManager extends DataMap {
       * @param {boolean} [forceUpdate=false] - Whether an update should be enforced or not.
       * @return {Node} The node representation.
       */
@@ -18355,7 +18359,7 @@ index dadca57c0..695671207 100644
      /**
       * If a scene fog is configured, this method makes sure to
       * represent the fog with a corresponding node-based implementation.
-@@ -261,7 +285,7 @@ declare class NodeManager extends DataMap {
+@@ -263,7 +291,7 @@ declare class NodeManager extends DataMap {
       * @param {?Node} [compute=null] - The compute node.
       * @return {NodeFrame} The node frame.
       */
@@ -18364,7 +18368,7 @@ index dadca57c0..695671207 100644
      /**
       * Returns a node frame configured for the given render object.
       *
-@@ -275,7 +299,7 @@ declare class NodeManager extends DataMap {
+@@ -277,7 +305,7 @@ declare class NodeManager extends DataMap {
       * @param {Node} computeNode - The compute node.
       * @return {NodeFrame} The node frame.
       */
@@ -18373,7 +18377,7 @@ index dadca57c0..695671207 100644
      /**
       * Returns the current output cache key.
       *
-@@ -317,21 +341,21 @@ declare class NodeManager extends DataMap {
+@@ -319,21 +347,21 @@ declare class NodeManager extends DataMap {
       *
       * @param {Node} computeNode - The compute node.
       */
@@ -18398,7 +18402,7 @@ index dadca57c0..695671207 100644
      /**
       * Triggers the call of `update()` methods
       * for all nodes of the given render object.
-@@ -347,7 +371,5 @@ declare class NodeManager extends DataMap {
+@@ -349,7 +377,5 @@ declare class NodeManager extends DataMap {
       */
      needsRefresh(renderObject: RenderObject): number;
  }
