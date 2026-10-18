@@ -83,6 +83,7 @@ export class GLTFParser {
         ktx2Loader: KTX2Loader;
         meshoptDecoder: /* MeshoptDecoder */ any;
         crossOrigin: string;
+        withCredentials: boolean;
         requestHeader: { [header: string]: string };
     };
 
