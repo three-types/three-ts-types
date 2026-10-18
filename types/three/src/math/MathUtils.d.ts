@@ -99,6 +99,22 @@ export function floorPowerOfTwo(value: number): number;
 
 export function setQuaternionFromProperEuler(q: Quaternion, a: number, b: number, c: number, order: string): void;
 
+/**
+ * Returns the factor used by {@link normalize} and {@link denormalize} for the given typed array,
+ * or `undefined` if the values are not scaled (float arrays) or the array type is not supported.
+ */
+export function getNormalizationScale(
+    array:
+        | Float32Array
+        | Uint32Array
+        | Uint16Array
+        | Uint8Array
+        | Uint8ClampedArray
+        | Int32Array
+        | Int16Array
+        | Int8Array,
+): number | undefined;
+
 export function denormalize(
     value: number,
     array:
