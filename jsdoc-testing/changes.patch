@@ -3174,7 +3174,7 @@ index 8df6f566e..c8c1ce55b 100644
 +    viewportDepth?: Node<'float'>;
 +}): Node<'float'>;
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/tsl/utils/SpecularHelpers.d.ts b/jsdoc-testing/jsdoc/examples/jsm/tsl/utils/SpecularHelpers.d.ts
-index 8dfe8a871..5369ca99b 100644
+index 07fefb964..5369ca99b 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/tsl/utils/SpecularHelpers.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/tsl/utils/SpecularHelpers.d.ts
 @@ -18,48 +18,3 @@ export const ENV_RAY_LENGTH: number;
@@ -3192,7 +3192,7 @@ index 8dfe8a871..5369ca99b 100644
 - * Specular dominant factor for parallax-corrected ray length.
 - * From REBLUR: A Hierarchical Recurrent Denoiser (NRD).
 - */
--export const getSpecularDominantFactor: any;
+-export const getSpecularDominantFactor: () => void;
 -/**
 - * Importance-samples the GGX/VNDF specular lobe for one pixel and returns the reflected
 - * ray direction plus the Monte-Carlo weight to apply to the gathered radiance, along with
@@ -3216,8 +3216,8 @@ index 8dfe8a871..5369ca99b 100644
 - *
 - * @see {@link https://github.com/gkjohnson/three-gpu-pathtracer}
 - */
--export const equirectUvToDir: any;
--export const equirectDirPdf: any;
+-export const equirectUvToDir: () => void;
+-export const equirectDirPdf: () => void;
 -/**
 - * MIS power heuristic with β = 2: `pdfA² / (pdfA² + pdfB²)`.
 - * Weights the contribution of the strategy that produced `pdfA` against the other strategy.
@@ -3225,7 +3225,7 @@ index 8dfe8a871..5369ca99b 100644
 - * @see Eric Veach, *Optimally Combining Sampling Techniques for Monte Carlo Rendering*
 - * @tsl
 - */
--export const misPowerHeuristic: any;
+-export const misPowerHeuristic: () => void;
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/webxr/WebGLXRFallback.d.ts b/jsdoc-testing/jsdoc/examples/jsm/webxr/WebGLXRFallback.d.ts
 index 113ff7df3..2b610bc4c 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/webxr/WebGLXRFallback.d.ts
@@ -15399,7 +15399,7 @@ index 5d342ff3a..7ac71b49b 100644
 +export declare const shaderStages: NodeShaderStage[];
 +export declare const vectorComponents: string[];
 diff --git a/jsdoc-testing/jsdoc/src/nodes/display/BlendModes.d.ts b/jsdoc-testing/jsdoc/src/nodes/display/BlendModes.d.ts
-index 243a98ae5..319c00215 100644
+index c7e0ef3d2..319c00215 100644
 --- a/jsdoc-testing/jsdoc/src/nodes/display/BlendModes.d.ts
 +++ b/jsdoc-testing/jsdoc/src/nodes/display/BlendModes.d.ts
 @@ -1,3 +1,10 @@
@@ -15417,43 +15417,43 @@ index 243a98ae5..319c00215 100644
   * @param {Node<vec3>} blend - The blend color. A white (#ffffff) blend color does not alter the base color.
   * @return {Node<vec3>} The result.
   */
--export const blendBurn: any;
+-export const blendBurn: () => void;
 +export const blendBurn: (base: ColorParameter, blend: ColorParameter) => Node<"vec3">;
  /**
   * Represents a "Color Dodge" blend mode.
   *
-@@ -25,7 +32,7 @@ export const blendBurn: any;
+@@ -25,7 +32,7 @@ export const blendBurn: () => void;
   * @param {Node<vec3>} blend - The blend color. A black (#000000) blend color does not alter the base color.
   * @return {Node<vec3>} The result.
   */
--export const blendDodge: any;
+-export const blendDodge: () => void;
 +export const blendDodge: (base: ColorParameter, blend: ColorParameter) => Node<"vec3">;
  /**
   * Represents a "Screen" blend mode.
   *
-@@ -39,7 +46,7 @@ export const blendDodge: any;
+@@ -39,7 +46,7 @@ export const blendDodge: () => void;
   * @param {Node<vec3>} blend - The blend color. A black (#000000) blend color does not alter the base color.
   * @return {Node<vec3>} The result.
   */
--export const blendScreen: any;
+-export const blendScreen: () => void;
 +export const blendScreen: (base: ColorParameter, blend: ColorParameter) => Node<"vec3">;
  /**
   * Represents a "Overlay" blend mode.
   *
-@@ -53,7 +60,7 @@ export const blendScreen: any;
+@@ -53,7 +60,7 @@ export const blendScreen: () => void;
   * @param {Node<vec3>} blend - The blend color
   * @return {Node<vec3>} The result.
   */
--export const blendOverlay: any;
+-export const blendOverlay: () => void;
 +export const blendOverlay: (base: ColorParameter, blend: ColorParameter) => Node<"vec3">;
  /**
   * This function blends two color based on their alpha values by replicating the behavior of `THREE.NormalBlending`.
   * It assumes both input colors have non-premultiplied alpha.
-@@ -64,4 +71,6 @@ export const blendOverlay: any;
+@@ -64,4 +71,6 @@ export const blendOverlay: () => void;
   * @param {Node<vec4>} blend - The blend color
   * @return {Node<vec4>} The result.
   */
--export const blendColor: any;
+-export const blendColor: () => void;
 +export const blendColor: (base: ColorParameter, blend: ColorParameter) => Node<"vec4">;
 +
 +export {};
