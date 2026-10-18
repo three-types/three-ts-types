@@ -1704,7 +1704,7 @@ export class ShaderNode<T = {}, R extends Node = Node> {
 }
 
 export function nodeObject<T>(obj: T): NodeObject<T>;
-export function nodeObjectIntent<T>(obj: T): NodeObject<T>;
+export function nodeObjectAssignable<T>(obj: T): NodeObject<T>;
 export function nodeObjects<T>(obj: T): NodeObjects<T>;
 
 // eslint-disable-next-line @definitelytyped/no-single-element-tuple-type
@@ -1730,16 +1730,16 @@ export function nodeImmutable<T>(
     ...params: ProxiedTuple<GetConstructors<T>>
 ): ConstructedNode<T>;
 
-export function nodeProxyIntent<T>(
+export function nodeProxyAssignable<T>(
     nodeClass: T,
 ): (...params: ProxiedTuple<GetConstructors<T>>) => ConstructedNode<T>;
 
-export function nodeProxyIntent<T, S extends GetPossibleScopes<T>>(
+export function nodeProxyAssignable<T, S extends GetPossibleScopes<T>>(
     nodeClass: T,
     scope: S,
 ): (...params: ProxiedTuple<RemoveTail<GetConstructorsByScope<T, S>>>) => ConstructedNode<T>;
 
-export function nodeProxyIntent<T, S extends GetPossibleScopes<T>>(
+export function nodeProxyAssignable<T, S extends GetPossibleScopes<T>>(
     nodeClass: T,
     scope: S,
     factor: unknown,
