@@ -550,6 +550,12 @@ export class Material<TEventMap extends MaterialEventMap = MaterialEventMap> ext
      */
     readonly isMaterial: boolean;
     /**
+     * The ID of the material.
+     *
+     * @remarks Note that ids are assigned in chronological order: 1, 2, 3, ..., incrementing by one for each new material.
+     */
+    readonly id: number;
+    /**
      * The UUID of the material.
      */
     readonly uuid: string;
