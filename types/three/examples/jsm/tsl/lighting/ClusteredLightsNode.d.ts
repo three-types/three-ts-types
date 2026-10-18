@@ -29,8 +29,21 @@ declare class ClusteredLightsNode extends LightsNode {
      */
     constructor(maxLights?: number, tileSize?: number, zSlices?: number, maxLightsPerCluster?: number);
 
+    /**
+     * Returns the number of lights in the fragment's cluster. Useful for debugging.
+     *
+     * @param {Node<int>} zSliceNode - The depth slice to inspect. A negative value selects the fragment's own cluster.
+     * @return {Node<int>} The light count.
+     */
     getClusterLightCount(zSliceNode: Node<"int">): Node<"int">;
-
+    /**
+     * Sets the size of the cluster grid. Must be called with the new drawing buffer
+     * size whenever the renderer is resized.
+     *
+     * @param {number} width - The drawing buffer width.
+     * @param {number} height - The drawing buffer height.
+     * @return {ClusteredLightsNode} A reference to this node.
+     */
     setSize(width: number, height: number): this;
 }
 

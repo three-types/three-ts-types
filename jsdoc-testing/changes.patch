@@ -2925,7 +2925,7 @@ index a697e603d..b4d90ca4e 100644
 +    intensity?: Node<'float'> | number,
 +) => Node<'vec4'>;
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/tsl/lighting/ClusteredLightsNode.d.ts b/jsdoc-testing/jsdoc/examples/jsm/tsl/lighting/ClusteredLightsNode.d.ts
-index 7f0ab02db..1257d8f69 100644
+index 0074f6874..56d491bff 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/tsl/lighting/ClusteredLightsNode.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/tsl/lighting/ClusteredLightsNode.d.ts
 @@ -1,16 +1,5 @@
@@ -2964,7 +2964,7 @@ index 7f0ab02db..1257d8f69 100644
      /**
       * Constructs a new clustered lights node.
       *
-@@ -33,48 +28,22 @@ declare class ClusteredLightsNode extends LightsNode {
+@@ -33,87 +28,14 @@ declare class ClusteredLightsNode extends LightsNode {
       * @param {number} [maxLightsPerCluster=64] - Per-cluster light-list capacity.
       */
      constructor(maxLights?: number, tileSize?: number, zSlices?: number, maxLightsPerCluster?: number);
@@ -2990,28 +2990,90 @@ index 7f0ab02db..1257d8f69 100644
 -    _cameraViewMatrix: import("three/tsl").UniformNode;
 -    _cameraProjectionMatrix: import("three/tsl").UniformNode;
 -    _gridDimensions: import("three/tsl").UniformNode;
--    customCacheKey(): any;
--    updateLightsTexture(camera: any): void;
--    updateBefore(frame: any): void;
--    setLights(lights: any): LightsNode;
--    getBlock(): any;
--    getTile(element: any): any;
--    getClusterLightCount(zSliceNode: any): void;
--    getLightData(index: any): {
--        position: any;
--        viewPosition: any;
--        distance: any;
--        color: any;
--        decay: any;
--    };
--    setupLights(builder: any, lightNodes: any): void;
--    getBufferFitSize(value: any): number;
--    setSize(width: any, height: any): this;
--    updateProgram(renderer: any): void;
--    create(width: any, height: any): void;
+-    /**
+-     * Updates the light data and the light ranges of the depth slices.
+-     *
+-     * @private
+-     * @param {Camera} camera - The camera.
+-     */
+-    private _updateLightsTexture;
+-    /**
+-     * Updates the light data and assigns the lights to the clusters.
+-     *
+-     * @param {NodeFrame} frame - A reference to the current node frame.
+-     */
+-    updateBefore(frame: NodeFrame): void;
+-    /**
+-     * Configures this node with an array of lights. Point lights without shadows
+-     * are clustered, all other lights use the default lighting.
+-     *
+-     * @param {Array<Light>} lights - An array of lights.
+-     * @return {ClusteredLightsNode} A reference to this node.
+-     */
+-    setLights(lights: Array<Light>): ClusteredLightsNode;
+-    /**
+-     * Returns the light index stored at the given slot of the fragment's cluster.
+-     *
+-     * @private
+-     * @param {number|Node<int>} element - The slot.
+-     * @return {Node<int>} The 1-based light index. `0` marks the end of the list.
+-     */
+-    private _getTile;
 +
+     /**
+      * Returns the number of lights in the fragment's cluster. Useful for debugging.
+      *
+      * @param {Node<int>} zSliceNode - The depth slice to inspect. A negative value selects the fragment's own cluster.
+      * @return {Node<int>} The light count.
+      */
+-    getClusterLightCount(zSliceNode: Node<any>): Node<any>;
+-    /**
+-     * Returns the data of the light at the given index.
+-     *
+-     * @private
+-     * @param {number|Node<int>} index - The light index.
+-     * @return {Object} The light's position, view position, distance, color and decay.
+-     */
+-    private _getLightData;
+-    /**
+-     * Sets up the default lights and the clustered point lights.
+-     *
+-     * @param {NodeBuilder} builder - A reference to the current node builder.
+-     * @param {Array<LightingNode>} lightNodes - An array of lighting nodes.
+-     */
+-    setupLights(builder: NodeBuilder, lightNodes: Array<LightingNode>): void;
+-    /**
+-     * Rounds the given size up to a multiple of the tile size.
+-     *
+-     * @private
+-     * @param {number} value - The size.
+-     * @return {number} The fitted size.
+-     */
+-    private _getBufferFitSize;
 +    getClusterLightCount(zSliceNode: Node<'int'>): Node<'int'>;
-+
+     /**
+      * Sets the size of the cluster grid. Must be called with the new drawing buffer
+      * size whenever the renderer is resized.
+@@ -122,23 +44,19 @@ declare class ClusteredLightsNode extends LightsNode {
+      * @param {number} height - The drawing buffer height.
+      * @return {ClusteredLightsNode} A reference to this node.
+      */
+-    setSize(width: number, height: number): ClusteredLightsNode;
+-    /**
+-     * Creates the cluster grid on first use and recreates it when the drawing buffer size changes.
+-     *
+-     * @private
+-     * @param {Renderer} renderer - The renderer.
+-     */
+-    private _updateProgram;
+-    /**
+-     * Creates the cluster grid, the light index storage and the compute node for the given size.
+-     *
+-     * @private
+-     * @param {number} width - The fitted width.
+-     * @param {number} height - The fitted height.
+-     */
+-    private _create;
 +    setSize(width: number, height: number): this;
  }
 -import { LightsNode } from 'three/webgpu';
