@@ -12,6 +12,6 @@ export function lightPosition(light: Light): UniformNode<"vec3", Vector3>;
 
 export function lightTargetPosition(light: Light): UniformNode<"vec3", Vector3>;
 
-export function lightViewPosition(light: Light): UniformNode<"vec3", Vector3>;
+export function lightViewPosition(light: Light): Node<"vec3">;
 
 export const lightTargetDirection: (light: Light) => Node<"vec3">;
