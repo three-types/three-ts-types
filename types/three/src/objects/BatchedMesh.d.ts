@@ -169,7 +169,7 @@ declare class BatchedMesh extends Mesh<BufferGeometry, Material> {
 
     /**
      * Get the range representing the subset of triangles related to the attached geometry, indicating the starting
-     * offset and count, or `null` if invalid.
+     * offset and count, or throws an error if invalid.
      *
      * Return an object of the form: { start: Integer, count: Integer }
      * @param geometryId The id of the geometry to get the range of.
@@ -178,7 +178,7 @@ declare class BatchedMesh extends Mesh<BufferGeometry, Material> {
     getGeometryRangeAt(
         geometryId: number,
         target?: BatchedMeshGeometryRange,
-    ): BatchedMeshGeometryRange | null;
+    ): BatchedMeshGeometryRange;
 
     /**
      * Get the geometryIndex of the defined instance.
