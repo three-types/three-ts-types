@@ -15084,10 +15084,10 @@ index 665a54528..9931b08b2 100644
  
      pointer.x = (event.clientX / window.innerWidth) * 2.0 - 1.0;
 diff --git a/examples-testing/examples/webgpu_compute_cloth.ts b/examples-testing/examples/webgpu_compute_cloth.ts
-index c18af53f2..7d92981fd 100644
+index 4ac747d71..fa8d2d44d 100644
 --- a/examples-testing/examples/webgpu_compute_cloth.ts
 +++ b/examples-testing/examples/webgpu_compute_cloth.ts
-@@ -23,7 +23,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+@@ -24,7 +24,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { UltraHDRLoader } from 'three/addons/loaders/UltraHDRLoader.js';
  import WebGPU from 'three/addons/capabilities/WebGPU.js';
  
@@ -15096,7 +15096,7 @@ index c18af53f2..7d92981fd 100644
  
  const clothWidth = 1;
  const clothHeight = 1;
-@@ -31,18 +31,41 @@ const clothNumSegmentsX = 30;
+@@ -32,18 +32,41 @@ const clothNumSegmentsX = 30;
  const clothNumSegmentsY = 30;
  const sphereRadius = 0.15;
  
@@ -15148,7 +15148,7 @@ index c18af53f2..7d92981fd 100644
  
  const timer = new THREE.Timer();
  timer.connect(document);
-@@ -98,7 +121,7 @@ async function init() {
+@@ -99,7 +122,7 @@ async function init() {
  
      setupCloth();
  
@@ -15157,7 +15157,7 @@ index c18af53f2..7d92981fd 100644
      gui.add(stiffnessUniform, 'value', 0.1, 0.5, 0.01).name('stiffness');
      gui.add(params, 'wireframe');
      gui.add(params, 'sphere');
-@@ -123,7 +146,7 @@ async function init() {
+@@ -124,7 +147,7 @@ async function init() {
  function setupVerletGeometry() {
      // this function sets up the geometry of the verlet system, a grid of vertices connected by springs
  
@@ -15166,7 +15166,7 @@ index c18af53f2..7d92981fd 100644
          const id = verletVertices.length;
          const vertex = {
              id,
-@@ -135,7 +158,7 @@ function setupVerletGeometry() {
+@@ -136,7 +159,7 @@ function setupVerletGeometry() {
          return vertex;
      };
  
@@ -15175,7 +15175,7 @@ index c18af53f2..7d92981fd 100644
          const id = verletSprings.length;
          const spring = {
              id,
-@@ -337,7 +360,7 @@ function setupWireframe() {
+@@ -338,7 +361,7 @@ function setupWireframe() {
      const springWireframeMaterial = new THREE.LineBasicNodeMaterial();
      springWireframeMaterial.positionNode = Fn(() => {
          const vertexIds = springVertexIdBuffer.element(instanceIndex);
@@ -15184,7 +15184,7 @@ index c18af53f2..7d92981fd 100644
          return vertexPositionBuffer.element(vertexId);
      })();
  
-@@ -370,7 +393,7 @@ function setupClothMesh() {
+@@ -371,7 +394,7 @@ function setupClothMesh() {
      const verletVertexIdArray = new Uint32Array(vertexCount * 4);
      const indices = [];
  
@@ -15193,7 +15193,7 @@ index c18af53f2..7d92981fd 100644
          return y * clothNumSegmentsX + x;
      };
  
-@@ -407,7 +430,7 @@ function setupClothMesh() {
+@@ -408,7 +431,7 @@ function setupClothMesh() {
  
      clothMaterial.positionNode = Fn(({ material }) => {
          // gather the position of the 4 verlet vertices and calculate the center position and normal from that
@@ -15202,7 +15202,7 @@ index c18af53f2..7d92981fd 100644
          const v0 = vertexPositionBuffer.element(vertexIds.x).toVar();
          const v1 = vertexPositionBuffer.element(vertexIds.y).toVar();
          const v2 = vertexPositionBuffer.element(vertexIds.z).toVar();
-@@ -424,7 +447,7 @@ function setupClothMesh() {
+@@ -425,7 +448,7 @@ function setupClothMesh() {
          const normal = cross(tangent, bitangent);
  
          // send the normalView from the vertex shader to the fragment shader
@@ -18057,6 +18057,49 @@ index de3fa7909..1d7a65696 100644
  
  init();
  
+diff --git a/examples-testing/examples/webgpu_loader_jpegxl.ts b/examples-testing/examples/webgpu_loader_jpegxl.ts
+index e3511c90c..69d729ca7 100644
+--- a/examples-testing/examples/webgpu_loader_jpegxl.ts
++++ b/examples-testing/examples/webgpu_loader_jpegxl.ts
+@@ -18,9 +18,9 @@ scene.background = new THREE.Color(0x17191e);
+ const camera = new THREE.OrthographicCamera(-4, 4, 2, -2, 0.1, 10);
+ camera.position.z = 2;
+ const geometry = new THREE.PlaneGeometry(2.8, 1.4);
+-const labels = [];
++const labels: { label: HTMLDivElement; x: number; y: number }[] = [];
+ 
+-const gui = renderer.inspector.createParameters('JPEG XL');
++const gui = (renderer.inspector as Inspector).createParameters('JPEG XL');
+ gui.add(renderer, 'toneMapping', {
+     Linear: THREE.LinearToneMapping,
+     Reinhard: THREE.ReinhardToneMapping,
+@@ -43,7 +43,7 @@ function animate() {
+     renderer.render(scene, camera);
+ }
+ 
+-async function addImage(loader, name, url, x) {
++async function addImage(loader: THREE.Loader<THREE.DataTexture>, name: string, url: string, x: number) {
+     const material = new THREE.MeshStandardNodeMaterial({ color: 0x000000, emissive: 0xffffff });
+     const mesh = new THREE.Mesh(geometry, material);
+     mesh.name = name + ' HDR';
+@@ -57,14 +57,15 @@ async function addImage(loader, name, url, x) {
+     } catch (error) {
+         material.emissive.set(0x252830);
+         material.toneMapped = false;
+-        addLabel('Not supported: ' + error.message.replace(/^\w+Loader: /, ''), x, 0).style.fontSize = '12px';
++        addLabel('Not supported: ' + (error as Error).message.replace(/^\w+Loader: /, ''), x, 0).style.fontSize =
++            '12px';
+         console.warn(name + ' HDR not supported:', error);
+     }
+ 
+     material.needsUpdate = true;
+ }
+ 
+-function addLabel(text, x, y) {
++function addLabel(text: string, x: number, y: number) {
+     const label = document.createElement('div');
+     label.className = 'lbl';
+     label.textContent = text;
 diff --git a/examples-testing/examples/webgpu_loader_materialx.ts b/examples-testing/examples/webgpu_loader_materialx.ts
 index 37a338ab8..429c3f4cd 100644
 --- a/examples-testing/examples/webgpu_loader_materialx.ts
