@@ -149,6 +149,7 @@ const files = [
     'src/nodes/accessors/BufferAttributeNode',
     'src/nodes/accessors/Instance',
     'src/nodes/accessors/Morph',
+    'src/nodes/accessors/ReferenceAttributeNode',
     'src/nodes/accessors/Skinning',
     'src/nodes/core/constants',
     'src/nodes/core/Node',
