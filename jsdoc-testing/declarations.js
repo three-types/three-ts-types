@@ -28,6 +28,7 @@ const files = [
     'examples/jsm/lights/SunLightNode',
     'examples/jsm/lights/SunLightShadow',
     'examples/jsm/lights/SunShadowNode',
+    'examples/jsm/loaders/JXLLoader',
     'examples/jsm/misc/Sculptor',
     'examples/jsm/misc/TileCreasedNormalsPlugin',
     'examples/jsm/tsl/display/ImportanceSampledEnvironment',
