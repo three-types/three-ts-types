@@ -53,6 +53,16 @@ jobs:
           cache: 'pnpm'
       - run: pnpm install
       - run: pnpm run format-check
+  # Generated JSDoc declarations emit `@private` members as `private _foo;`; they must be removed through jsdoc-testing/changes.patch.
+  check-private-members:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - run: |
+          if grep -rnE '^\s*private [A-Za-z_$][A-Za-z0-9_$]*;$' types/three; then
+            echo "::error::Remove the private members above (and their JSDoc) through jsdoc-testing/changes.patch."
+            exit 1
+          fi
   type-check:
     runs-on: ubuntu-latest
     steps:
