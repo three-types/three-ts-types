@@ -3,7 +3,7 @@ import { Node, TextureNode, UniformNode } from "three/webgpu";
 declare class Lut3DNode extends Node {
     inputNode: Node;
     lutNode: TextureNode;
-    size: UniformNode<"float", number>;
+    size: UniformNode<"float">;
     intensityNode: Node<"float">;
 
     constructor(inputNode: Node, lutNode: TextureNode, size: number, intensityNode: Node);

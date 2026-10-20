@@ -57,7 +57,7 @@ index d3c23f934..214d0cf95 100644
       * Splits the CSM frustum by the given array. The new CSM frustum are pushed into the given
       * target array.
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/generators/CityGenerator.d.ts b/jsdoc-testing/jsdoc/examples/jsm/generators/CityGenerator.d.ts
-index 99057b57e..cacc17fcc 100644
+index 99057b57e..9181260fa 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/generators/CityGenerator.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/generators/CityGenerator.d.ts
 @@ -1,3 +1,68 @@
@@ -175,7 +175,7 @@ index 99057b57e..cacc17fcc 100644
 -    seedNode: UniformNode<any>;
 -    generators: any[];
 -    towers: any[];
-+    seedNode: UniformNode<'uint', number>;
++    seedNode: UniformNode<'uint'>;
 +
 +    generators: SkyscraperGenerator[];
 +    towers: CityGeneratorTower[];
@@ -263,7 +263,7 @@ index 99057b57e..cacc17fcc 100644
 -import { MeshStandardNodeMaterial } from 'three/webgpu';
 +export function createRoadMaterial(layout: CityGeneratorLayout): MeshStandardNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/generators/ForestGenerator.d.ts b/jsdoc-testing/jsdoc/examples/jsm/generators/ForestGenerator.d.ts
-index 92a9ce34c..8bbd37808 100644
+index 92a9ce34c..1b9a23055 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/generators/ForestGenerator.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/generators/ForestGenerator.d.ts
 @@ -1,3 +1,25 @@
@@ -322,8 +322,8 @@ index 92a9ce34c..8bbd37808 100644
 +
 +    parameters: ForestGeneratorParameters;
 +
-+    from: UniformNode<'float', number>;
-+    to: UniformNode<'float', number>;
++    from: UniformNode<'float'>;
++    to: UniformNode<'float'>;
 +
      material: MeshStandardNodeMaterial;
      mesh: InstancedMesh | null;
@@ -371,7 +371,7 @@ index 92a9ce34c..8bbd37808 100644
 -import { Group } from 'three';
 +export function createForestMaterial(from: Node<'float'>, to: Node<'float'>, camPos: Node<'vec3'>): MeshStandardNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/generators/TerrainGenerator.d.ts b/jsdoc-testing/jsdoc/examples/jsm/generators/TerrainGenerator.d.ts
-index 098f88ace..fe1802017 100644
+index 098f88ace..4a6568e45 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/generators/TerrainGenerator.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/generators/TerrainGenerator.d.ts
 @@ -1,3 +1,22 @@
@@ -424,8 +424,8 @@ index 098f88ace..fe1802017 100644
 +
 +    parameters: TerrainGeneratorParameters;
 +
-+    minHeight: UniformNode<'float', number>;
-+    maxHeight: UniformNode<'float', number>;
++    minHeight: UniformNode<'float'>;
++    maxHeight: UniformNode<'float'>;
 +
      material: MeshStandardNodeMaterial;
      geometry: BufferGeometry | null;
@@ -1435,7 +1435,7 @@ index 83242b8cf..87c3ee971 100644
 -import { Data3DTexture } from 'three';
 -import { Scene } from 'three';
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/lighting/vxgi/VXGIVolume.d.ts b/jsdoc-testing/jsdoc/examples/jsm/lighting/vxgi/VXGIVolume.d.ts
-index 8cd7d530a..4f168b6ac 100644
+index 8cd7d530a..2b5dfc786 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/lighting/vxgi/VXGIVolume.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/lighting/vxgi/VXGIVolume.d.ts
 @@ -1,3 +1,15 @@
@@ -1459,7 +1459,7 @@ index 8cd7d530a..4f168b6ac 100644
       * @default 0
       */
 -    maxDistance: UniformNode<any>;
-+    maxDistance: UniformNode<"float", number>;
++    maxDistance: UniformNode<"float">;
      /**
       * Step size relative to the texel size of the sampled mip level.
       *
@@ -1467,7 +1467,7 @@ index 8cd7d530a..4f168b6ac 100644
       * @default 0.5
       */
 -    stepScale: UniformNode<any>;
-+    stepScale: UniformNode<"float", number>;
++    stepScale: UniformNode<"float">;
      /**
       * Aperture in degrees of the visibility cones traced towards lights that do not provide a
       * shadow map. Wider cones are cheaper but soften the injected shadows.
@@ -1476,7 +1476,7 @@ index 8cd7d530a..4f168b6ac 100644
       * @default 10
       */
 -    shadowConeAngle: UniformNode<any>;
-+    shadowConeAngle: UniformNode<"float", number>;
++    shadowConeAngle: UniformNode<"float">;
      /**
       * Aperture of the cones used for the cached bounces in degrees.
       *
@@ -1484,35 +1484,35 @@ index 8cd7d530a..4f168b6ac 100644
       * @default 60
       */
 -    bounceConeAngle: UniformNode<any>;
-+    bounceConeAngle: UniformNode<"float", number>;
++    bounceConeAngle: UniformNode<"float">;
      /**
       * The minimum corner of the volume.
       *
       * @type {UniformNode<vec3>}
       */
 -    boundsMinNode: UniformNode<any>;
-+    boundsMinNode: UniformNode<"vec3", Vector3>;
++    boundsMinNode: UniformNode<"vec3">;
      /**
       * The size of the volume.
       *
       * @type {UniformNode<vec3>}
       */
 -    volumeSizeNode: UniformNode<any>;
-+    volumeSizeNode: UniformNode<"vec3", Vector3>;
++    volumeSizeNode: UniformNode<"vec3">;
      /**
       * The size of a voxel.
       *
       * @type {UniformNode<float>}
       */
 -    voxelSizeNode: UniformNode<any>;
-+    voxelSizeNode: UniformNode<"float", number>;
++    voxelSizeNode: UniformNode<"float">;
      /**
       * The highest valid mip level of the voxel textures.
       *
       * @type {UniformNode<float>}
       */
 -    maxLevelNode: UniformNode<any>;
-+    maxLevelNode: UniformNode<"float", number>;
++    maxLevelNode: UniformNode<"float">;
      /**
       * The per-axis opacity of the scene (`xyz`) and the occupancy (`w`) as a mip chain.
       *
@@ -1559,7 +1559,7 @@ index 8cd7d530a..4f168b6ac 100644
 -    _shadowParams: import("three/tsl").UniformNode[];
 -    _lightsKey: string;
 -    _exclude: Set<any>;
-+    directionalWidthNode: UniformNode<"float", number>;
++    directionalWidthNode: UniformNode<"float">;
      /**
       * The effective maximum cone length as a node.
       *
@@ -2093,7 +2093,7 @@ index 3a794d7df..40bd78652 100644
       * Called by the tiles renderer when the plugin is unregistered or the
       * tiles renderer is disposed.
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/tsl/display/ImportanceSampledEnvironment.d.ts b/jsdoc-testing/jsdoc/examples/jsm/tsl/display/ImportanceSampledEnvironment.d.ts
-index 7c42baf58..b48e7a25f 100644
+index 7c42baf58..85440ceff 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/tsl/display/ImportanceSampledEnvironment.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/tsl/display/ImportanceSampledEnvironment.d.ts
 @@ -1,4 +1,5 @@
@@ -2115,7 +2115,7 @@ index 7c42baf58..b48e7a25f 100644
 -    _mapNode: import("three/tsl").TextureNode | null;
 -    _marginalNode: import("three/tsl").TextureNode | null;
 -    _conditionalNode: import("three/tsl").TextureNode | null;
-+    intensity: UniformNode<'float', number>;
++    intensity: UniformNode<'float'>;
      /**
       * @param {Texture} hdr - Equirectangular HDR environment map.
       */
@@ -2129,7 +2129,7 @@ index 7c42baf58..b48e7a25f 100644
 -        sampleWeight?: Node<any>;
 -    }): Node<vec3>;
 +    sampleReflect(params: {
-+        cameraWorldMatrix: UniformNode<'mat4', Matrix4>;
++        cameraWorldMatrix: UniformNode<'mat4'>;
 +        viewReflectDir: Node<'vec3'>;
 +        sampleWeight?: Node<'float'>;
 +    }): Node<'vec3'>;
@@ -2149,7 +2149,7 @@ index 7c42baf58..b48e7a25f 100644
 -        f0: Node<vec3>;
 -    }): Node<vec3>;
 +    sampleEnvironmentBRDF(params: {
-+        cameraWorldMatrix: UniformNode<'mat4', Matrix4>;
++        cameraWorldMatrix: UniformNode<'mat4'>;
 +        viewReflectDir: Node<'vec3'>;
 +        N: Node<'vec3'>;
 +        V: Node<'vec3'>;
@@ -2186,7 +2186,7 @@ index 7c42baf58..b48e7a25f 100644
 -    updateFrom(hdr: any): void;
 -    updateMapOnly(hdr: any): void;
 +    sampleEnvironmentMIS(params: {
-+        cameraWorldMatrix: UniformNode<'mat4', Matrix4>;
++        cameraWorldMatrix: UniformNode<'mat4'>;
 +        viewReflectDir: Node<'vec3'>;
 +        N: Node<'vec3'>;
 +        V: Node<'vec3'>;
@@ -2277,7 +2277,7 @@ index d15fa4427..cfa2eb3b1 100644
 +
 +export function oitPass(scene: Scene, camera: Camera, options?: PassNodeOptions): OITPassNode;
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/tsl/display/SSAONode.d.ts b/jsdoc-testing/jsdoc/examples/jsm/tsl/display/SSAONode.d.ts
-index 0f8db6fc4..10768a5e8 100644
+index 0f8db6fc4..8e1da0128 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/tsl/display/SSAONode.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/tsl/display/SSAONode.d.ts
 @@ -1,5 +1,5 @@
@@ -2325,21 +2325,21 @@ index 0f8db6fc4..10768a5e8 100644
       * @type {UniformNode<float>}
       */
 -    radius: UniformNode<any>;
-+    radius: UniformNode<'float', number>;
++    radius: UniformNode<'float'>;
      /**
       * The strength of the occlusion.
       *
       * @type {UniformNode<float>}
       */
 -    intensity: UniformNode<any>;
-+    intensity: UniformNode<'float', number>;
++    intensity: UniformNode<'float'>;
      /**
       * An angle bias that suppresses self-occlusion on near-flat surfaces.
       *
       * @type {UniformNode<float>}
       */
 -    bias: UniformNode<any>;
-+    bias: UniformNode<'float', number>;
++    bias: UniformNode<'float'>;
      /**
       * How many samples are used to estimate the occlusion. A higher value
       * results in a smoother result at a higher runtime cost.
@@ -2347,7 +2347,7 @@ index 0f8db6fc4..10768a5e8 100644
       * @type {UniformNode<float>}
       */
 -    samples: UniformNode<any>;
-+    samples: UniformNode<'float', number>;
++    samples: UniformNode<'float'>;
      /**
       * Whether the depth-aware blur that denoises the raw AO is applied or not.
       *
@@ -2356,7 +2356,7 @@ index 0f8db6fc4..10768a5e8 100644
       * @type {UniformNode<float>}
       */
 -    blurSharpness: UniformNode<any>;
-+    blurSharpness: UniformNode<'float', number>;
++    blurSharpness: UniformNode<'float'>;
      /**
       * The resolution of the effect. Set from the drawing buffer size and `resolutionScale`.
       *
@@ -2484,7 +2484,7 @@ index 0f8db6fc4..10768a5e8 100644
 +
 +export function ssao(depthNode: Node, normalNode: Node, camera: Camera): SSAONode;
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/tsl/display/SSRNode.d.ts b/jsdoc-testing/jsdoc/examples/jsm/tsl/display/SSRNode.d.ts
-index b9aceff9b..79efd30e3 100644
+index b9aceff9b..5f5bf08b6 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/tsl/display/SSRNode.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/tsl/display/SSRNode.d.ts
 @@ -1,6 +1,6 @@
@@ -2633,14 +2633,14 @@ index b9aceff9b..79efd30e3 100644
       * @type {UniformNode<float>}
       */
 -    maxDistance: UniformNode<any>;
-+    maxDistance: UniformNode<'float', number>;
++    maxDistance: UniformNode<'float'>;
      /**
       * Controls the cutoff between what counts as a possible reflection hit and what does not.
       *
       * @type {UniformNode<float>}
       */
 -    thickness: UniformNode<any>;
-+    thickness: UniformNode<'float', number>;
++    thickness: UniformNode<'float'>;
      /**
       * A multiplier for the overall reflection intensity. `1` leaves the
       * reflections unchanged, lower values dim them and higher values boost them.
@@ -2649,7 +2649,7 @@ index b9aceff9b..79efd30e3 100644
       * @default 1
       */
 -    intensity: UniformNode<any>;
-+    intensity: UniformNode<'float', number>;
++    intensity: UniformNode<'float'>;
      /**
       * Screen-edge fade width, in UV units. As a screen-space hit approaches a screen
       * border, the reflection is faded over this distance — either toward the environment
@@ -2670,7 +2670,7 @@ index b9aceff9b..79efd30e3 100644
 -     * @default false
 -     */
 -    _screenEdgeFadeBlack: boolean;
-+    screenEdgeFade: UniformNode<'float', number>;
++    screenEdgeFade: UniformNode<'float'>;
      /**
       * Absolute env luminance cap. HDR env samples above this are scaled down (hue preserved).
       *
@@ -2678,7 +2678,7 @@ index b9aceff9b..79efd30e3 100644
       * @default 10
       */
 -    maxLuminance: UniformNode<any>;
-+    maxLuminance: UniformNode<'float', number>;
++    maxLuminance: UniformNode<'float'>;
      /**
       * This parameter controls how detailed the raymarching process works.
       * The value ranges is `[0,1]` where `1` means best quality (the maximum number
@@ -2687,7 +2687,7 @@ index b9aceff9b..79efd30e3 100644
       * @type {UniformNode<float>}
       */
 -    quality: UniformNode<any>;
-+    quality: UniformNode<'float', number>;
++    quality: UniformNode<'float'>;
      /**
       * Mirror bias for the stochastic GGX sampling. Concentrates the reflected rays toward
       * the lobe's narrow (near-mirror) core, trading a small amount of bias for less noise.
@@ -2729,7 +2729,7 @@ index b9aceff9b..79efd30e3 100644
 -     * @default 2
 -     */
 -    _stepExponent: number;
-+    mirrorBias: UniformNode<'float', number>;
++    mirrorBias: UniformNode<'float'>;
      /**
       * HDR environment map for screen-space misses.
       *
@@ -2866,7 +2866,7 @@ index b9aceff9b..79efd30e3 100644
 -     */
 -    private _blurredTextureNode;
 -    set stepExponent(value: number);
-+    environmentIntensity: UniformNode<'float', number>;
++    environmentIntensity: UniformNode<'float'>;
      /**
       * Non-linear step distribution exponent (compile-time constant). See the backing
       * field for details. Assigning a new value recompiles the SSR material.
@@ -2964,7 +2964,7 @@ index b9aceff9b..79efd30e3 100644
 -     * @return {PassTextureNode}
 -     */
 -    setup(builder: NodeBuilder): PassTextureNode;
-+    get envMapIntensity(): UniformNode<'float', number> | null;
++    get envMapIntensity(): UniformNode<'float'> | null;
      getRenderTarget(): RenderTarget;
  }
 -import { Node } from 'three/webgpu';
@@ -3349,7 +3349,7 @@ index e49e7c2b6..0135575bb 100644
 -export const getGroundProjectedNormal: () => void;
 +export const getGroundProjectedNormal: (radiusNode: Node<'float'>, heightNode: Node<'float'>) => Node<'vec3'>;
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/tsl/utils/RNoise.d.ts b/jsdoc-testing/jsdoc/examples/jsm/tsl/utils/RNoise.d.ts
-index bf4cfffe4..6db70ce24 100644
+index bf4cfffe4..7ef719851 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/tsl/utils/RNoise.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/tsl/utils/RNoise.d.ts
 @@ -1,3 +1,5 @@
@@ -3363,7 +3363,7 @@ index bf4cfffe4..6db70ce24 100644
   * @param {number} [seed=0] - Added to the coordinate hash so each pass gets an independent R² phase.
   */
 -export function bindAnalyticNoise(resolution: UniformNode<Vector2>, seed?: number): () => void;
-+export function bindAnalyticNoise(resolution: UniformNode<'vec2', Vector2>, seed?: number): () => void;
++export function bindAnalyticNoise(resolution: UniformNode<'vec2'>, seed?: number): () => void;
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/tsl/utils/SoftParticles.d.ts b/jsdoc-testing/jsdoc/examples/jsm/tsl/utils/SoftParticles.d.ts
 index 8df6f566e..c8c1ce55b 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/tsl/utils/SoftParticles.d.ts
@@ -15610,7 +15610,7 @@ index 8f758a028..4218eb1db 100644
       * Whether this node is used more than once in context of other nodes.
       *
 diff --git a/jsdoc-testing/jsdoc/src/nodes/core/UniformNode.d.ts b/jsdoc-testing/jsdoc/src/nodes/core/UniformNode.d.ts
-index 780398f37..dbfdd00b4 100644
+index 780398f37..557ca3651 100644
 --- a/jsdoc-testing/jsdoc/src/nodes/core/UniformNode.d.ts
 +++ b/jsdoc-testing/jsdoc/src/nodes/core/UniformNode.d.ts
 @@ -1,11 +1,24 @@
@@ -15667,7 +15667,7 @@ index 780398f37..dbfdd00b4 100644
      /**
       * Returns the {@link UniformNode#groupNode}.
       *
-@@ -65,9 +78,82 @@ declare class UniformNode extends InputNode {
+@@ -65,9 +78,88 @@ declare class UniformNode extends InputNode {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {UniformNode} The node the shared uniform refers to.
       */
@@ -15694,10 +15694,16 @@ index 780398f37..dbfdd00b4 100644
 +     * @param {any} value - The value of this node. Usually a JS primitive or three.js object (vector, matrix, color, texture).
 +     * @param {?string} nodeType - The node type. If no explicit type is defined, the node tries to derive the type from its value.
 +     */
-+    new<TNodeType, TValue>(value: TValue, nodeType?: string | null): UniformNode<TNodeType, TValue>;
++    new<
++        TNodeType,
++        TValue = TNodeType extends keyof UniformValue ? UniformValue[TNodeType] : unknown,
++    >(value: TValue, nodeType?: string | null): UniformNode<TNodeType, TValue>;
 +};
 +
-+type UniformNode<TNodeType, TValue> = UniformNodeClass<TValue> & InputNode<TNodeType, TValue>;
++type UniformNode<
++    TNodeType,
++    TValue = TNodeType extends keyof UniformValue ? UniformValue[TNodeType] : unknown,
++> = UniformNodeClass<TValue> & InputNode<TNodeType, TValue>;
 +
 +export default UniformNode;
 +
@@ -15722,24 +15728,24 @@ index 780398f37..dbfdd00b4 100644
 +}
 +
 +interface Uniform {
-+    <const TNodeType extends keyof UniformValue>(type: TNodeType): UniformNode<TNodeType, UniformValue[TNodeType]>;
-+    (value: number, type?: "float"): UniformNode<"float", number>;
-+    (value: number, type: "int"): UniformNode<"int", number>;
-+    (value: number, type: "uint"): UniformNode<"uint", number>;
-+    (value: boolean, type?: "bool"): UniformNode<"bool", boolean>;
-+    (value: Vector2, type?: "vec2"): UniformNode<"vec2", Vector2>;
-+    (value: Vector2, type: "ivec2"): UniformNode<"ivec2", Vector2>;
-+    (value: Vector2, type: "uvec2"): UniformNode<"uvec2", Vector2>;
-+    (value: Vector3, type?: "vec3"): UniformNode<"vec3", Vector3>;
-+    (value: Vector3, type: "ivec3"): UniformNode<"ivec3", Vector3>;
-+    (value: Vector3, type: "uvec3"): UniformNode<"uvec3", Vector3>;
-+    (value: Vector4, type?: "vec4"): UniformNode<"vec4", Vector4>;
-+    (value: Vector4, type: "ivec4"): UniformNode<"ivec4", Vector4>;
-+    (value: Vector4, type: "uvec4"): UniformNode<"uvec4", Vector4>;
-+    (value: Matrix2, type?: "mat2"): UniformNode<"mat2", Matrix2>;
-+    (value: Matrix3, type?: "mat3"): UniformNode<"mat3", Matrix3>;
-+    (value: Matrix4, type?: "mat4"): UniformNode<"mat4", Matrix4>;
-+    (value: Color, type?: "color"): UniformNode<"color", Color>;
++    <const TNodeType extends keyof UniformValue>(type: TNodeType): UniformNode<TNodeType>;
++    (value: number, type?: "float"): UniformNode<"float">;
++    (value: number, type: "int"): UniformNode<"int">;
++    (value: number, type: "uint"): UniformNode<"uint">;
++    (value: boolean, type?: "bool"): UniformNode<"bool">;
++    (value: Vector2, type?: "vec2"): UniformNode<"vec2">;
++    (value: Vector2, type: "ivec2"): UniformNode<"ivec2">;
++    (value: Vector2, type: "uvec2"): UniformNode<"uvec2">;
++    (value: Vector3, type?: "vec3"): UniformNode<"vec3">;
++    (value: Vector3, type: "ivec3"): UniformNode<"ivec3">;
++    (value: Vector3, type: "uvec3"): UniformNode<"uvec3">;
++    (value: Vector4, type?: "vec4"): UniformNode<"vec4">;
++    (value: Vector4, type: "ivec4"): UniformNode<"ivec4">;
++    (value: Vector4, type: "uvec4"): UniformNode<"uvec4">;
++    (value: Matrix2, type?: "mat2"): UniformNode<"mat2">;
++    (value: Matrix3, type?: "mat3"): UniformNode<"mat3">;
++    (value: Matrix4, type?: "mat4"): UniformNode<"mat4">;
++    (value: Color, type?: "color"): UniformNode<"color">;
 +    <TNodeType, TValue>(value: InputNode<TNodeType, TValue>): UniformNode<TNodeType, TValue>;
 +    <TNodeType, TValue>(value: VarNode<TNodeType, ConstNode<TNodeType, TValue>>): UniformNode<TNodeType, TValue>;
 +}

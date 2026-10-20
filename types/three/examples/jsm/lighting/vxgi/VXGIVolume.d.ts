@@ -128,14 +128,14 @@ export class VXGIVolume {
      * @type {UniformNode<float>}
      * @default 0
      */
-    maxDistance: UniformNode<"float", number>;
+    maxDistance: UniformNode<"float">;
     /**
      * Step size relative to the texel size of the sampled mip level.
      *
      * @type {UniformNode<float>}
      * @default 0.5
      */
-    stepScale: UniformNode<"float", number>;
+    stepScale: UniformNode<"float">;
     /**
      * Aperture in degrees of the visibility cones traced towards lights that do not provide a
      * shadow map. Wider cones are cheaper but soften the injected shadows.
@@ -143,38 +143,38 @@ export class VXGIVolume {
      * @type {UniformNode<float>}
      * @default 10
      */
-    shadowConeAngle: UniformNode<"float", number>;
+    shadowConeAngle: UniformNode<"float">;
     /**
      * Aperture of the cones used for the cached bounces in degrees.
      *
      * @type {UniformNode<float>}
      * @default 60
      */
-    bounceConeAngle: UniformNode<"float", number>;
+    bounceConeAngle: UniformNode<"float">;
     /**
      * The minimum corner of the volume.
      *
      * @type {UniformNode<vec3>}
      */
-    boundsMinNode: UniformNode<"vec3", Vector3>;
+    boundsMinNode: UniformNode<"vec3">;
     /**
      * The size of the volume.
      *
      * @type {UniformNode<vec3>}
      */
-    volumeSizeNode: UniformNode<"vec3", Vector3>;
+    volumeSizeNode: UniformNode<"vec3">;
     /**
      * The size of a voxel.
      *
      * @type {UniformNode<float>}
      */
-    voxelSizeNode: UniformNode<"float", number>;
+    voxelSizeNode: UniformNode<"float">;
     /**
      * The highest valid mip level of the voxel textures.
      *
      * @type {UniformNode<float>}
      */
-    maxLevelNode: UniformNode<"float", number>;
+    maxLevelNode: UniformNode<"float">;
     /**
      * The per-axis opacity of the scene (`xyz`) and the occupancy (`w`) as a mip chain.
      *
@@ -223,7 +223,7 @@ export class VXGIVolume {
      *
      * @type {UniformNode<float>}
      */
-    directionalWidthNode: UniformNode<"float", number>;
+    directionalWidthNode: UniformNode<"float">;
     /**
      * The effective maximum cone length as a node.
      *

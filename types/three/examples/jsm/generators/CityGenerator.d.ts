@@ -88,7 +88,7 @@ export class CityGenerator {
      * The city seed shared by building and proxy materials. Pass this to
      * {@link createBuildingMaterial} to update the palette when rebuilding.
      */
-    seedNode: UniformNode<"uint", number>;
+    seedNode: UniformNode<"uint">;
 
     generators: SkyscraperGenerator[];
     towers: CityGeneratorTower[];
