@@ -18,10 +18,6 @@ export interface LightProbeGridBakeOptions {
      */
     bounces?: number | undefined;
     /**
-     * Directions integrated when projecting each cubemap to SH.
-     */
-    sampleCount?: number | undefined;
-    /**
      * Index of the first probe to bake.
      */
     start?: number | undefined;
@@ -168,7 +164,6 @@ export class LightProbeGrid extends Light {
      * @param {number} [options.near=0.1] - Near plane for the cube camera.
      * @param {number} [options.far=100] - Far plane for the cube camera.
      * @param {number} [options.bounces=0] - Additional bounce passes. Only available when baking the whole grid.
-     * @param {number} [options.sampleCount=512] - Directions integrated when projecting each cubemap to SH.
      * @param {number} [options.start=0] - Index of the first probe to bake.
      * @param {number} [options.count] - Number of probes to bake. Defaults to the remaining probes.
      * @param {number} [options.pass=0] - Starting pass. Zero captures direct light; later passes sample the previous pass. Ranged calls require `bounces: 0`.
