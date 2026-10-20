@@ -551,6 +551,10 @@ export class Material<TEventMap extends MaterialEventMap = MaterialEventMap> ext
      */
     readonly isMaterial: boolean;
     /**
+     * The ID of the material.
+     */
+    readonly id: number;
+    /**
      * The UUID of the material.
      */
     readonly uuid: string;
