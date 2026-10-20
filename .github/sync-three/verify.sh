@@ -17,6 +17,12 @@ cleanup() {
 }
 trap cleanup EXIT
 
+echo "== private members"
+if grep -rnE '^\s*private [A-Za-z_$][A-Za-z0-9_$]*;$' types/three; then
+    echo "verify.sh: remove the private members above (and their JSDoc) through jsdoc-testing/changes.patch." >&2
+    exit 1
+fi
+
 echo "== format-check"
 pnpm run format-check
 

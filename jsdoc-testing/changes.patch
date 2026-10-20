@@ -57,7 +57,7 @@ index d3c23f934..214d0cf95 100644
       * Splits the CSM frustum by the given array. The new CSM frustum are pushed into the given
       * target array.
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/generators/CityGenerator.d.ts b/jsdoc-testing/jsdoc/examples/jsm/generators/CityGenerator.d.ts
-index 99057b57e..cacc17fcc 100644
+index 99057b57e..9181260fa 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/generators/CityGenerator.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/generators/CityGenerator.d.ts
 @@ -1,3 +1,68 @@
@@ -175,7 +175,7 @@ index 99057b57e..cacc17fcc 100644
 -    seedNode: UniformNode<any>;
 -    generators: any[];
 -    towers: any[];
-+    seedNode: UniformNode<'uint', number>;
++    seedNode: UniformNode<'uint'>;
 +
 +    generators: SkyscraperGenerator[];
 +    towers: CityGeneratorTower[];
@@ -263,7 +263,7 @@ index 99057b57e..cacc17fcc 100644
 -import { MeshStandardNodeMaterial } from 'three/webgpu';
 +export function createRoadMaterial(layout: CityGeneratorLayout): MeshStandardNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/generators/ForestGenerator.d.ts b/jsdoc-testing/jsdoc/examples/jsm/generators/ForestGenerator.d.ts
-index 92a9ce34c..8bbd37808 100644
+index 92a9ce34c..1b9a23055 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/generators/ForestGenerator.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/generators/ForestGenerator.d.ts
 @@ -1,3 +1,25 @@
@@ -322,8 +322,8 @@ index 92a9ce34c..8bbd37808 100644
 +
 +    parameters: ForestGeneratorParameters;
 +
-+    from: UniformNode<'float', number>;
-+    to: UniformNode<'float', number>;
++    from: UniformNode<'float'>;
++    to: UniformNode<'float'>;
 +
      material: MeshStandardNodeMaterial;
      mesh: InstancedMesh | null;
@@ -371,7 +371,7 @@ index 92a9ce34c..8bbd37808 100644
 -import { Group } from 'three';
 +export function createForestMaterial(from: Node<'float'>, to: Node<'float'>, camPos: Node<'vec3'>): MeshStandardNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/generators/TerrainGenerator.d.ts b/jsdoc-testing/jsdoc/examples/jsm/generators/TerrainGenerator.d.ts
-index 098f88ace..fe1802017 100644
+index 098f88ace..4a6568e45 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/generators/TerrainGenerator.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/generators/TerrainGenerator.d.ts
 @@ -1,3 +1,22 @@
@@ -424,8 +424,8 @@ index 098f88ace..fe1802017 100644
 +
 +    parameters: TerrainGeneratorParameters;
 +
-+    minHeight: UniformNode<'float', number>;
-+    maxHeight: UniformNode<'float', number>;
++    minHeight: UniformNode<'float'>;
++    maxHeight: UniformNode<'float'>;
 +
      material: MeshStandardNodeMaterial;
      geometry: BufferGeometry | null;
@@ -1140,11 +1140,11 @@ index 1e007e460..a2de0b896 100644
 -import { BufferGeometry } from 'three';
 -import { Vector3 } from 'three';
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/lighting/ClusteredLighting.d.ts b/jsdoc-testing/jsdoc/examples/jsm/lighting/ClusteredLighting.d.ts
-index 66ac1de37..196e0702d 100644
+index e82b5711c..8131a4ece 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/lighting/ClusteredLighting.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/lighting/ClusteredLighting.d.ts
 @@ -1,3 +1,6 @@
-+import { Light, Lighting } from 'three/webgpu';
++import { Light, Lighting, LightsNode, Scene } from 'three/webgpu';
 +import ClusteredLightsNode from '../tsl/lighting/ClusteredLightsNode.js';
 +
  /**
@@ -1162,7 +1162,7 @@ index 66ac1de37..196e0702d 100644
      /**
       * Constructs a new clustered lighting system.
       *
-@@ -23,10 +31,7 @@ export class ClusteredLighting extends Lighting {
+@@ -23,25 +31,7 @@ export class ClusteredLighting extends Lighting {
       * @param {number} [maxLightsPerCluster=64] - Per-cluster light-list capacity.
       */
      constructor(maxLights?: number, tileSize?: number, zSlices?: number, maxLightsPerCluster?: number);
@@ -1170,24 +1170,45 @@ index 66ac1de37..196e0702d 100644
 -    tileSize: number;
 -    zSlices: number;
 -    maxLightsPerCluster: number;
+-    /**
+-     * The number of renders in progress per scene. A scene rendered inside one of its own
+-     * renders (e.g. by a reflector) has more than one.
+-     *
+-     * @private
+-     * @type {WeakMap<Scene, number>}
+-     */
+-    private _activeRenders;
+-    /**
+-     * The lights nodes of nested renders of the same scene, per scene and depth.
+-     *
+-     * @private
+-     * @type {WeakMap<Scene, Array<ClusteredLightsNode>>}
+-     */
+-    private _nestedNodes;
 +
      /**
       * Creates a new clustered lights node for the given array of lights.
       *
-@@ -36,7 +41,5 @@ export class ClusteredLighting extends Lighting {
+@@ -51,7 +41,7 @@ export class ClusteredLighting extends Lighting {
       * @param {Array<Light>} lights - The lights.
       * @return {ClusteredLightsNode} The clustered lights node.
       */
 -    createNode(lights?: Array<Light>): ClusteredLightsNode;
 +    createNode(lights?: Light[]): ClusteredLightsNode;
+     /**
+      * Returns the lights node of the given scene for the current render depth of that scene.
+      * A scene rendered inside one of its own renders uses another node, so it never modifies
+@@ -77,5 +67,3 @@ export class ClusteredLighting extends Lighting {
+      */
+     finishRender(scene: Scene): void;
  }
 -import { Lighting } from 'three/webgpu';
 -import ClusteredLightsNode from '../tsl/lighting/ClusteredLightsNode.js';
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/lighting/LightProbeGrid.d.ts b/jsdoc-testing/jsdoc/examples/jsm/lighting/LightProbeGrid.d.ts
-index 522d13858..57ebee155 100644
+index 9e75e3c13..66c1632da 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/lighting/LightProbeGrid.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/lighting/LightProbeGrid.d.ts
-@@ -1,3 +1,41 @@
+@@ -1,3 +1,37 @@
 +import { Box3, Data3DTexture, Light, Scene, Vector3, WebGPURenderer } from 'three/webgpu';
 +
 +export interface LightProbeGridBakeOptions {
@@ -1208,10 +1229,6 @@ index 522d13858..57ebee155 100644
 +     */
 +    bounces?: number | undefined;
 +    /**
-+     * Directions integrated when projecting each cubemap to SH.
-+     */
-+    sampleCount?: number | undefined;
-+    /**
 +     * Index of the first probe to bake.
 +     */
 +    start?: number | undefined;
@@ -1229,7 +1246,7 @@ index 522d13858..57ebee155 100644
  /**
   * A 3D grid of L2 Spherical Harmonic irradiance probes that provides
   * position-dependent diffuse global illumination.
-@@ -86,16 +124,6 @@ export class LightProbeGrid extends Light {
+@@ -86,16 +120,6 @@ export class LightProbeGrid extends Light {
       * @default null
       */
      texture: Data3DTexture | null;
@@ -1246,7 +1263,7 @@ index 522d13858..57ebee155 100644
      /**
       * Returns the world-space position of the probe at grid indices (ix, iy, iz).
       *
-@@ -138,53 +166,5 @@ export class LightProbeGrid extends Light {
+@@ -137,53 +161,5 @@ export class LightProbeGrid extends Light {
       * @param {number} [options.count] - Number of probes to bake. Defaults to the remaining probes.
       * @param {number} [options.pass=0] - Starting pass. Zero captures direct light; later passes sample the previous pass. Ranged calls require `bounces: 0`.
       */
@@ -1255,7 +1272,6 @@ index 522d13858..57ebee155 100644
 -        near?: number | undefined;
 -        far?: number | undefined;
 -        bounces?: number | undefined;
--        sampleCount?: number | undefined;
 -        start?: number | undefined;
 -        count?: number | undefined;
 -        pass?: number | undefined;
@@ -1272,7 +1288,8 @@ index 522d13858..57ebee155 100644
 -     */
 -    private _updateBounceGrid;
 -    /**
--     * Captures cubemaps and projects their SH coefficients into the batch target.
+-     * Captures the cube faces of probe batches in single passes and projects
+-     * their SH coefficients into the batch target, one row per probe in bake order.
 -     *
 -     * @private
 -     * @param {WebGPURenderer} renderer - The renderer.
@@ -1418,7 +1435,7 @@ index 83242b8cf..87c3ee971 100644
 -import { Data3DTexture } from 'three';
 -import { Scene } from 'three';
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/lighting/vxgi/VXGIVolume.d.ts b/jsdoc-testing/jsdoc/examples/jsm/lighting/vxgi/VXGIVolume.d.ts
-index 8cd7d530a..4f168b6ac 100644
+index 8cd7d530a..2b5dfc786 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/lighting/vxgi/VXGIVolume.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/lighting/vxgi/VXGIVolume.d.ts
 @@ -1,3 +1,15 @@
@@ -1442,7 +1459,7 @@ index 8cd7d530a..4f168b6ac 100644
       * @default 0
       */
 -    maxDistance: UniformNode<any>;
-+    maxDistance: UniformNode<"float", number>;
++    maxDistance: UniformNode<"float">;
      /**
       * Step size relative to the texel size of the sampled mip level.
       *
@@ -1450,7 +1467,7 @@ index 8cd7d530a..4f168b6ac 100644
       * @default 0.5
       */
 -    stepScale: UniformNode<any>;
-+    stepScale: UniformNode<"float", number>;
++    stepScale: UniformNode<"float">;
      /**
       * Aperture in degrees of the visibility cones traced towards lights that do not provide a
       * shadow map. Wider cones are cheaper but soften the injected shadows.
@@ -1459,7 +1476,7 @@ index 8cd7d530a..4f168b6ac 100644
       * @default 10
       */
 -    shadowConeAngle: UniformNode<any>;
-+    shadowConeAngle: UniformNode<"float", number>;
++    shadowConeAngle: UniformNode<"float">;
      /**
       * Aperture of the cones used for the cached bounces in degrees.
       *
@@ -1467,35 +1484,35 @@ index 8cd7d530a..4f168b6ac 100644
       * @default 60
       */
 -    bounceConeAngle: UniformNode<any>;
-+    bounceConeAngle: UniformNode<"float", number>;
++    bounceConeAngle: UniformNode<"float">;
      /**
       * The minimum corner of the volume.
       *
       * @type {UniformNode<vec3>}
       */
 -    boundsMinNode: UniformNode<any>;
-+    boundsMinNode: UniformNode<"vec3", Vector3>;
++    boundsMinNode: UniformNode<"vec3">;
      /**
       * The size of the volume.
       *
       * @type {UniformNode<vec3>}
       */
 -    volumeSizeNode: UniformNode<any>;
-+    volumeSizeNode: UniformNode<"vec3", Vector3>;
++    volumeSizeNode: UniformNode<"vec3">;
      /**
       * The size of a voxel.
       *
       * @type {UniformNode<float>}
       */
 -    voxelSizeNode: UniformNode<any>;
-+    voxelSizeNode: UniformNode<"float", number>;
++    voxelSizeNode: UniformNode<"float">;
      /**
       * The highest valid mip level of the voxel textures.
       *
       * @type {UniformNode<float>}
       */
 -    maxLevelNode: UniformNode<any>;
-+    maxLevelNode: UniformNode<"float", number>;
++    maxLevelNode: UniformNode<"float">;
      /**
       * The per-axis opacity of the scene (`xyz`) and the occupancy (`w`) as a mip chain.
       *
@@ -1542,7 +1559,7 @@ index 8cd7d530a..4f168b6ac 100644
 -    _shadowParams: import("three/tsl").UniformNode[];
 -    _lightsKey: string;
 -    _exclude: Set<any>;
-+    directionalWidthNode: UniformNode<"float", number>;
++    directionalWidthNode: UniformNode<"float">;
      /**
       * The effective maximum cone length as a node.
       *
@@ -1826,6 +1843,57 @@ index 70e1eeef4..2c646560f 100644
      vsmPass(): void;
  }
 -import { ShadowNode } from 'three/webgpu';
+diff --git a/jsdoc-testing/jsdoc/examples/jsm/loaders/JXLLoader.d.ts b/jsdoc-testing/jsdoc/examples/jsm/loaders/JXLLoader.d.ts
+index a28f46af3..f9b66a7ef 100644
+--- a/jsdoc-testing/jsdoc/examples/jsm/loaders/JXLLoader.d.ts
++++ b/jsdoc-testing/jsdoc/examples/jsm/loaders/JXLLoader.d.ts
+@@ -11,7 +11,7 @@
+  * @augments Loader
+  * @three_import import { JXLLoader } from 'three/addons/loaders/JXLLoader.js';
+  */
+-export class JXLLoader extends Loader {
++export class JXLLoader extends Loader<DataTexture> {
+     /**
+      * Loads a native HDR image into a half-float data texture.
+      * @param {string} url - Image URL.
+@@ -20,30 +20,25 @@ export class JXLLoader extends Loader {
+      * @param {Function} onError - Error callback.
+      * @return {DataTexture} Placeholder texture, populated after decoding.
+      */
+-    load(url: string, onLoad: (arg0: DataTexture) => any, onProgress: Function, onError: Function): DataTexture;
++    load(
++        url: string,
++        onLoad?: (data: DataTexture) => void,
++        onProgress?: (event: ProgressEvent) => void,
++        onError?: (err: unknown) => void,
++    ): DataTexture;
+     /**
+      * Decodes image bytes using the browser, preserving maximum HDR headroom.
+      * @param {ArrayBuffer} buffer - JPEG XL bytes.
+      * @param {function(DataTexture)} onLoad - Completion callback.
+      * @param {Function} onError - Error callback.
+      */
+-    parse(buffer: ArrayBuffer, onLoad: (arg0: DataTexture) => any, onError: Function): void;
++    parse(buffer: ArrayBuffer, onLoad: (data: DataTexture) => void, onError?: (err: unknown) => void): void;
+     /**
+      * Async version of {@link JXLLoader#parse}.
+      * @param {ArrayBuffer} buffer - JPEG XL bytes.
+      * @return {Promise<DataTexture>} Half-float texture in linear sRGB.
+      */
+     parseAsync(buffer: ArrayBuffer): Promise<DataTexture>;
+-    _applyData(texture: any, { data, width, height }: {
+-        data: any;
+-        width: any;
+-        height: any;
+-    }): void;
+-    _decode(buffer: any): Promise<{
+-        data: Uint16Array<any>;
+-        width: number;
+-        height: number;
+-    }>;
+ }
+ import { Loader } from 'three';
+ import { DataTexture } from 'three';
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/misc/Sculptor.d.ts b/jsdoc-testing/jsdoc/examples/jsm/misc/Sculptor.d.ts
 index e7ebf9e1b..87a1373d1 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/misc/Sculptor.d.ts
@@ -2025,7 +2093,7 @@ index 3a794d7df..40bd78652 100644
       * Called by the tiles renderer when the plugin is unregistered or the
       * tiles renderer is disposed.
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/tsl/display/ImportanceSampledEnvironment.d.ts b/jsdoc-testing/jsdoc/examples/jsm/tsl/display/ImportanceSampledEnvironment.d.ts
-index 7c42baf58..b48e7a25f 100644
+index 7c42baf58..85440ceff 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/tsl/display/ImportanceSampledEnvironment.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/tsl/display/ImportanceSampledEnvironment.d.ts
 @@ -1,4 +1,5 @@
@@ -2047,7 +2115,7 @@ index 7c42baf58..b48e7a25f 100644
 -    _mapNode: import("three/tsl").TextureNode | null;
 -    _marginalNode: import("three/tsl").TextureNode | null;
 -    _conditionalNode: import("three/tsl").TextureNode | null;
-+    intensity: UniformNode<'float', number>;
++    intensity: UniformNode<'float'>;
      /**
       * @param {Texture} hdr - Equirectangular HDR environment map.
       */
@@ -2061,7 +2129,7 @@ index 7c42baf58..b48e7a25f 100644
 -        sampleWeight?: Node<any>;
 -    }): Node<vec3>;
 +    sampleReflect(params: {
-+        cameraWorldMatrix: UniformNode<'mat4', Matrix4>;
++        cameraWorldMatrix: UniformNode<'mat4'>;
 +        viewReflectDir: Node<'vec3'>;
 +        sampleWeight?: Node<'float'>;
 +    }): Node<'vec3'>;
@@ -2081,7 +2149,7 @@ index 7c42baf58..b48e7a25f 100644
 -        f0: Node<vec3>;
 -    }): Node<vec3>;
 +    sampleEnvironmentBRDF(params: {
-+        cameraWorldMatrix: UniformNode<'mat4', Matrix4>;
++        cameraWorldMatrix: UniformNode<'mat4'>;
 +        viewReflectDir: Node<'vec3'>;
 +        N: Node<'vec3'>;
 +        V: Node<'vec3'>;
@@ -2118,7 +2186,7 @@ index 7c42baf58..b48e7a25f 100644
 -    updateFrom(hdr: any): void;
 -    updateMapOnly(hdr: any): void;
 +    sampleEnvironmentMIS(params: {
-+        cameraWorldMatrix: UniformNode<'mat4', Matrix4>;
++        cameraWorldMatrix: UniformNode<'mat4'>;
 +        viewReflectDir: Node<'vec3'>;
 +        N: Node<'vec3'>;
 +        V: Node<'vec3'>;
@@ -2209,7 +2277,7 @@ index d15fa4427..cfa2eb3b1 100644
 +
 +export function oitPass(scene: Scene, camera: Camera, options?: PassNodeOptions): OITPassNode;
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/tsl/display/SSAONode.d.ts b/jsdoc-testing/jsdoc/examples/jsm/tsl/display/SSAONode.d.ts
-index 0f8db6fc4..10768a5e8 100644
+index 0f8db6fc4..8e1da0128 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/tsl/display/SSAONode.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/tsl/display/SSAONode.d.ts
 @@ -1,5 +1,5 @@
@@ -2257,21 +2325,21 @@ index 0f8db6fc4..10768a5e8 100644
       * @type {UniformNode<float>}
       */
 -    radius: UniformNode<any>;
-+    radius: UniformNode<'float', number>;
++    radius: UniformNode<'float'>;
      /**
       * The strength of the occlusion.
       *
       * @type {UniformNode<float>}
       */
 -    intensity: UniformNode<any>;
-+    intensity: UniformNode<'float', number>;
++    intensity: UniformNode<'float'>;
      /**
       * An angle bias that suppresses self-occlusion on near-flat surfaces.
       *
       * @type {UniformNode<float>}
       */
 -    bias: UniformNode<any>;
-+    bias: UniformNode<'float', number>;
++    bias: UniformNode<'float'>;
      /**
       * How many samples are used to estimate the occlusion. A higher value
       * results in a smoother result at a higher runtime cost.
@@ -2279,7 +2347,7 @@ index 0f8db6fc4..10768a5e8 100644
       * @type {UniformNode<float>}
       */
 -    samples: UniformNode<any>;
-+    samples: UniformNode<'float', number>;
++    samples: UniformNode<'float'>;
      /**
       * Whether the depth-aware blur that denoises the raw AO is applied or not.
       *
@@ -2288,7 +2356,7 @@ index 0f8db6fc4..10768a5e8 100644
       * @type {UniformNode<float>}
       */
 -    blurSharpness: UniformNode<any>;
-+    blurSharpness: UniformNode<'float', number>;
++    blurSharpness: UniformNode<'float'>;
      /**
       * The resolution of the effect. Set from the drawing buffer size and `resolutionScale`.
       *
@@ -2416,7 +2484,7 @@ index 0f8db6fc4..10768a5e8 100644
 +
 +export function ssao(depthNode: Node, normalNode: Node, camera: Camera): SSAONode;
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/tsl/display/SSRNode.d.ts b/jsdoc-testing/jsdoc/examples/jsm/tsl/display/SSRNode.d.ts
-index b9aceff9b..79efd30e3 100644
+index b9aceff9b..5f5bf08b6 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/tsl/display/SSRNode.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/tsl/display/SSRNode.d.ts
 @@ -1,6 +1,6 @@
@@ -2565,14 +2633,14 @@ index b9aceff9b..79efd30e3 100644
       * @type {UniformNode<float>}
       */
 -    maxDistance: UniformNode<any>;
-+    maxDistance: UniformNode<'float', number>;
++    maxDistance: UniformNode<'float'>;
      /**
       * Controls the cutoff between what counts as a possible reflection hit and what does not.
       *
       * @type {UniformNode<float>}
       */
 -    thickness: UniformNode<any>;
-+    thickness: UniformNode<'float', number>;
++    thickness: UniformNode<'float'>;
      /**
       * A multiplier for the overall reflection intensity. `1` leaves the
       * reflections unchanged, lower values dim them and higher values boost them.
@@ -2581,7 +2649,7 @@ index b9aceff9b..79efd30e3 100644
       * @default 1
       */
 -    intensity: UniformNode<any>;
-+    intensity: UniformNode<'float', number>;
++    intensity: UniformNode<'float'>;
      /**
       * Screen-edge fade width, in UV units. As a screen-space hit approaches a screen
       * border, the reflection is faded over this distance — either toward the environment
@@ -2602,7 +2670,7 @@ index b9aceff9b..79efd30e3 100644
 -     * @default false
 -     */
 -    _screenEdgeFadeBlack: boolean;
-+    screenEdgeFade: UniformNode<'float', number>;
++    screenEdgeFade: UniformNode<'float'>;
      /**
       * Absolute env luminance cap. HDR env samples above this are scaled down (hue preserved).
       *
@@ -2610,7 +2678,7 @@ index b9aceff9b..79efd30e3 100644
       * @default 10
       */
 -    maxLuminance: UniformNode<any>;
-+    maxLuminance: UniformNode<'float', number>;
++    maxLuminance: UniformNode<'float'>;
      /**
       * This parameter controls how detailed the raymarching process works.
       * The value ranges is `[0,1]` where `1` means best quality (the maximum number
@@ -2619,7 +2687,7 @@ index b9aceff9b..79efd30e3 100644
       * @type {UniformNode<float>}
       */
 -    quality: UniformNode<any>;
-+    quality: UniformNode<'float', number>;
++    quality: UniformNode<'float'>;
      /**
       * Mirror bias for the stochastic GGX sampling. Concentrates the reflected rays toward
       * the lobe's narrow (near-mirror) core, trading a small amount of bias for less noise.
@@ -2661,7 +2729,7 @@ index b9aceff9b..79efd30e3 100644
 -     * @default 2
 -     */
 -    _stepExponent: number;
-+    mirrorBias: UniformNode<'float', number>;
++    mirrorBias: UniformNode<'float'>;
      /**
       * HDR environment map for screen-space misses.
       *
@@ -2798,7 +2866,7 @@ index b9aceff9b..79efd30e3 100644
 -     */
 -    private _blurredTextureNode;
 -    set stepExponent(value: number);
-+    environmentIntensity: UniformNode<'float', number>;
++    environmentIntensity: UniformNode<'float'>;
      /**
       * Non-linear step distribution exponent (compile-time constant). See the backing
       * field for details. Assigning a new value recompiles the SSR material.
@@ -2896,7 +2964,7 @@ index b9aceff9b..79efd30e3 100644
 -     * @return {PassTextureNode}
 -     */
 -    setup(builder: NodeBuilder): PassTextureNode;
-+    get envMapIntensity(): UniformNode<'float', number> | null;
++    get envMapIntensity(): UniformNode<'float'> | null;
      getRenderTarget(): RenderTarget;
  }
 -import { Node } from 'three/webgpu';
@@ -2926,7 +2994,7 @@ index a697e603d..b4d90ca4e 100644
 +    intensity?: Node<'float'> | number,
 +) => Node<'vec4'>;
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/tsl/lighting/ClusteredLightsNode.d.ts b/jsdoc-testing/jsdoc/examples/jsm/tsl/lighting/ClusteredLightsNode.d.ts
-index 0074f6874..56d491bff 100644
+index 74eeb693b..2437a2c84 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/tsl/lighting/ClusteredLightsNode.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/tsl/lighting/ClusteredLightsNode.d.ts
 @@ -1,16 +1,5 @@
@@ -2936,7 +3004,7 @@ index 0074f6874..56d491bff 100644
 - *
 - * @tsl
 - * @function
-- * @param {number} [maxLights=1024] - Maximum number of point lights.
+- * @param {number} [maxLights=1024] - Maximum number of point and spot lights.
 - * @param {number} [tileSize=32] - Screen tile size in pixels.
 - * @param {number} [zSlices=24] - Depth slice count.
 - * @param {number} [maxLightsPerCluster=64] - Per-cluster light-list capacity.
@@ -2965,10 +3033,18 @@ index 0074f6874..56d491bff 100644
      /**
       * Constructs a new clustered lights node.
       *
-@@ -33,87 +28,14 @@ declare class ClusteredLightsNode extends LightsNode {
+@@ -33,6 +28,7 @@ declare class ClusteredLightsNode extends LightsNode {
       * @param {number} [maxLightsPerCluster=64] - Per-cluster light-list capacity.
       */
      constructor(maxLights?: number, tileSize?: number, zSlices?: number, maxLightsPerCluster?: number);
++
+     /**
+      * This flag can be used for type testing.
+      *
+@@ -41,137 +37,14 @@ declare class ClusteredLightsNode extends LightsNode {
+      * @default true
+      */
+     readonly isClusteredLightsNode: boolean;
 -    materialLights: any[];
 -    clusteredLights: any[];
 -    maxLights: number;
@@ -2977,7 +3053,11 @@ index 0074f6874..56d491bff 100644
 -    maxLightsPerCluster: number;
 -    _chunksPerCluster: number;
 -    _bufferSize: Vector2 | null;
+-    _isWebGLBackend: boolean;
+-    _needsRebuild: boolean;
+-    _invocationsPerCluster: number;
 -    _lightIndexes: any;
+-    _renderer: any;
 -    _screenClusterIndex: any;
 -    _compute: any;
 -    _lightsTexture: DataTexture;
@@ -2999,19 +3079,57 @@ index 0074f6874..56d491bff 100644
 -     */
 -    private _updateLightsTexture;
 -    /**
+-     * Returns the normalized world-space direction pointing from the spot light's
+-     * target to the spot light.
+-     *
+-     * @private
+-     * @param {SpotLight} light - The spot light.
+-     * @param {Vector3} target - The target vector.
+-     * @return {Vector3} The direction.
+-     */
+-    private _getSpotDirection;
+-    /**
+-     * Returns the world-space center of the light's bounding sphere. For spot lights,
+-     * this is the center of the smallest sphere enclosing the cone.
+-     *
+-     * @private
+-     * @param {PointLight|SpotLight} light - The light.
+-     * @param {Vector3} target - The target vector.
+-     * @return {Vector3} The bounding sphere center.
+-     */
+-    private _getBoundingSphereCenter;
+-    /**
+-     * Returns the radius of the light's bounding sphere.
+-     *
+-     * @private
+-     * @param {PointLight|SpotLight} light - The light.
+-     * @return {number} The bounding sphere radius. `-1` if the light has no cutoff distance.
+-     */
+-    private _getBoundingSphereRadius;
+-    /**
 -     * Updates the light data and assigns the lights to the clusters.
 -     *
 -     * @param {NodeFrame} frame - A reference to the current node frame.
 -     */
 -    updateBefore(frame: NodeFrame): void;
 -    /**
--     * Configures this node with an array of lights. Point lights without shadows
--     * are clustered, all other lights use the default lighting.
+-     * Configures this node with an array of lights. Point and spot lights without
+-     * shadows are clustered (except lights with a `colorNode`, spot lights with a
+-     * projected `map` and light types with their own light node, like `IESSpotLight`
+-     * or `ProjectorLight`), all other lights use the default lighting.
 -     *
 -     * @param {Array<Light>} lights - An array of lights.
 -     * @return {ClusteredLightsNode} A reference to this node.
 -     */
 -    setLights(lights: Array<Light>): ClusteredLightsNode;
+-    /**
+-     * Returns `true` if the given light can be clustered.
+-     *
+-     * @private
+-     * @param {Light} light - The light.
+-     * @return {boolean} Whether the light is clustered or not.
+-     */
+-    private _isClusteredLight;
 -    /**
 -     * Returns the light index stored at the given slot of the fragment's cluster.
 -     *
@@ -3029,15 +3147,23 @@ index 0074f6874..56d491bff 100644
       */
 -    getClusterLightCount(zSliceNode: Node<any>): Node<any>;
 -    /**
--     * Returns the data of the light at the given index.
+-     * Returns the shading data of the light at the given index.
 -     *
 -     * @private
 -     * @param {number|Node<int>} index - The light index.
--     * @return {Object} The light's position, view position, distance, color and decay.
+-     * @return {Object} The light's view position, distance, color, decay, view-space spot direction and spot offset.
 -     */
 -    private _getLightData;
 -    /**
--     * Sets up the default lights and the clustered point lights.
+-     * Returns the culling data of the light at the given index.
+-     *
+-     * @private
+-     * @param {number|Node<int>} index - The light index.
+-     * @return {Object} The view-space center and the radius of the light's bounding sphere. A negative radius marks an unbounded light.
+-     */
+-    private _getLightBounds;
+-    /**
+-     * Sets up the default lights and the clustered point and spot lights.
 -     *
 -     * @param {NodeBuilder} builder - A reference to the current node builder.
 -     * @param {Array<LightingNode>} lightNodes - An array of lighting nodes.
@@ -3053,29 +3179,54 @@ index 0074f6874..56d491bff 100644
 -    private _getBufferFitSize;
 +    getClusterLightCount(zSliceNode: Node<'int'>): Node<'int'>;
      /**
-      * Sets the size of the cluster grid. Must be called with the new drawing buffer
-      * size whenever the renderer is resized.
-@@ -122,23 +44,19 @@ declare class ClusteredLightsNode extends LightsNode {
+      * Sets the size of the cluster grid. Must be called outside of rendering. Not required
+      * with {@link ClusteredLighting}, which fits the grid at the beginning of each render.
+@@ -180,7 +53,7 @@ declare class ClusteredLightsNode extends LightsNode {
       * @param {number} height - The drawing buffer height.
       * @return {ClusteredLightsNode} A reference to this node.
       */
 -    setSize(width: number, height: number): ClusteredLightsNode;
++    setSize(width: number, height: number): this;
+     /**
+      * Fits the cluster grid to the framebuffer of the render that is about to start. Called by
+      * {@link ClusteredLighting} before the render objects of the render are prepared. Since each
+@@ -188,40 +61,19 @@ declare class ClusteredLightsNode extends LightsNode {
+      * this point, so a rebuild can free the replaced resources immediately.
+      */
+     updateSize(): void;
 -    /**
--     * Creates the cluster grid on first use and recreates it when the drawing buffer size changes.
+-     * Creates the cluster grid on first use. While rendering, the grid is never rebuilt: the
+-     * replaced resources could still be used by a command buffer that was not submitted yet.
 -     *
 -     * @private
 -     * @param {Renderer} renderer - The renderer.
 -     */
--    private _updateProgram;
+-    private _initGrid;
 -    /**
--     * Creates the cluster grid, the light index storage and the compute node for the given size.
+-     * Fits the cluster grid to the framebuffer the renderer is rendering to.
+-     *
+-     * @private
+-     * @param {Renderer} renderer - The renderer.
+-     */
+-    private _fitToRenderer;
+-    /**
+-     * Resizes the cluster grid. The grid dimensions are uniforms, so resizing only updates
+-     * them and the compute count; the compute and the storage are rebuilt only when the
+-     * storage has to grow (or the backend changed).
 -     *
 -     * @private
 -     * @param {number} width - The fitted width.
 -     * @param {number} height - The fitted height.
 -     */
+-    private _resize;
+-    /**
+-     * Creates the light index storage, the compute node and the fragment cluster lookup.
+-     * The storage is allocated with headroom so that most resizes do not need a rebuild.
+-     *
+-     * @private
+-     * @param {number} clusterCount - The number of clusters of the current grid.
+-     */
 -    private _create;
-+    setSize(width: number, height: number): this;
  }
 -import { LightsNode } from 'three/webgpu';
 -import { Vector2 } from 'three/webgpu';
@@ -3084,8 +3235,9 @@ index 0074f6874..56d491bff 100644
 +/**
 + * TSL function that creates a clustered lights node.
 + *
++ * @tsl
 + * @function
-+ * @param {number} [maxLights=1024] - Maximum number of point lights.
++ * @param {number} [maxLights=1024] - Maximum number of point and spot lights.
 + * @param {number} [tileSize=32] - Screen tile size in pixels.
 + * @param {number} [zSlices=24] - Depth slice count.
 + * @param {number} [maxLightsPerCluster=64] - Per-cluster light-list capacity.
@@ -3197,7 +3349,7 @@ index e49e7c2b6..0135575bb 100644
 -export const getGroundProjectedNormal: () => void;
 +export const getGroundProjectedNormal: (radiusNode: Node<'float'>, heightNode: Node<'float'>) => Node<'vec3'>;
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/tsl/utils/RNoise.d.ts b/jsdoc-testing/jsdoc/examples/jsm/tsl/utils/RNoise.d.ts
-index bf4cfffe4..6db70ce24 100644
+index bf4cfffe4..7ef719851 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/tsl/utils/RNoise.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/tsl/utils/RNoise.d.ts
 @@ -1,3 +1,5 @@
@@ -3211,7 +3363,7 @@ index bf4cfffe4..6db70ce24 100644
   * @param {number} [seed=0] - Added to the coordinate hash so each pass gets an independent R² phase.
   */
 -export function bindAnalyticNoise(resolution: UniformNode<Vector2>, seed?: number): () => void;
-+export function bindAnalyticNoise(resolution: UniformNode<'vec2', Vector2>, seed?: number): () => void;
++export function bindAnalyticNoise(resolution: UniformNode<'vec2'>, seed?: number): () => void;
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/tsl/utils/SoftParticles.d.ts b/jsdoc-testing/jsdoc/examples/jsm/tsl/utils/SoftParticles.d.ts
 index 8df6f566e..c8c1ce55b 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/tsl/utils/SoftParticles.d.ts
@@ -6028,7 +6180,7 @@ index ef2ecb228..908ed53b0 100644
  }
 -import { Mesh } from '../objects/Mesh.js';
 diff --git a/jsdoc-testing/jsdoc/src/helpers/PolarGridHelper.d.ts b/jsdoc-testing/jsdoc/src/helpers/PolarGridHelper.d.ts
-index edaecda65..a9feb8722 100644
+index 49782ca30..15b82ad39 100644
 --- a/jsdoc-testing/jsdoc/src/helpers/PolarGridHelper.d.ts
 +++ b/jsdoc-testing/jsdoc/src/helpers/PolarGridHelper.d.ts
 @@ -1,3 +1,6 @@
@@ -7271,7 +7423,7 @@ index 3cb1a34d8..63489ffa1 100644
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface LineDashedMaterial extends LineDashedMaterialProperties {}
 diff --git a/jsdoc-testing/jsdoc/src/materials/Material.d.ts b/jsdoc-testing/jsdoc/src/materials/Material.d.ts
-index a559b6e84..14f8d16d8 100644
+index a559b6e84..491e7847f 100644
 --- a/jsdoc-testing/jsdoc/src/materials/Material.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/Material.d.ts
 @@ -1,41 +1,36 @@
@@ -7665,7 +7817,7 @@ index a559b6e84..14f8d16d8 100644
       * @default true
       */
      visible: boolean;
-@@ -381,36 +336,237 @@ export class Material extends EventDispatcher {
+@@ -381,36 +336,234 @@ export class Material extends EventDispatcher {
       * It is ignored when rendering to a render target or using post processing or when using
       * `WebGPURenderer`. In all these cases, all materials are honored by tone mapping.
       *
@@ -7738,7 +7890,8 @@ index a559b6e84..14f8d16d8 100644
 +
 +    iridescence?: number;
 +    iridescenceIOR?: number;
-+    iridescenceThicknessRange?: number;
++    iridescenceThicknessMinimum?: number;
++    iridescenceThicknessMaximum?: number;
 +    iridescenceMap?: string;
 +    iridescenceThicknessMap?: string;
 +
@@ -7893,10 +8046,6 @@ index a559b6e84..14f8d16d8 100644
 +     */
 +    readonly isMaterial: boolean;
 +    /**
-+     * The ID of the material.
-+     */
-+    readonly id: number;
-+    /**
 +     * The UUID of the material.
 +     */
 +    readonly uuid: string;
@@ -7918,7 +8067,7 @@ index a559b6e84..14f8d16d8 100644
      /**
       * An optional callback that is executed immediately before the material is used to render a 3D object.
       *
-@@ -423,7 +579,14 @@ export class Material extends EventDispatcher {
+@@ -423,7 +576,14 @@ export class Material extends EventDispatcher {
       * @param {Object3D} object - The 3D object.
       * @param {Object} group - The geometry group data.
       */
@@ -7934,7 +8083,7 @@ index a559b6e84..14f8d16d8 100644
      /**
       * An optional callback that is executed immediately before the shader
       * program is compiled. This function is called with the shader source code
-@@ -436,7 +599,7 @@ export class Material extends EventDispatcher {
+@@ -436,7 +596,7 @@ export class Material extends EventDispatcher {
       * @param {{vertexShader:string,fragmentShader:string,uniforms:Object}} shaderobject - The object holds the uniforms and the vertex and fragment shader source.
       * @param {WebGLRenderer} renderer - A reference to the renderer.
       */
@@ -7943,7 +8092,7 @@ index a559b6e84..14f8d16d8 100644
      /**
       * In case {@link Material#onBeforeCompile} is used, this callback can be used to identify
       * values of settings used in `onBeforeCompile()`, so three.js can reuse a cached
-@@ -454,7 +617,7 @@ export class Material extends EventDispatcher {
+@@ -454,7 +614,7 @@ export class Material extends EventDispatcher {
       *
       * @param {Object} [values] - The material values to set.
       */
@@ -7952,7 +8101,7 @@ index a559b6e84..14f8d16d8 100644
      /**
       * Serializes the material into JSON.
       *
-@@ -462,7 +625,7 @@ export class Material extends EventDispatcher {
+@@ -462,7 +622,7 @@ export class Material extends EventDispatcher {
       * @return {Object} A JSON object representing the serialized material.
       * @see {@link ObjectLoader#parse}
       */
@@ -7961,7 +8110,7 @@ index a559b6e84..14f8d16d8 100644
      /**
       * Deserializes the material from the given JSON.
       *
-@@ -470,22 +633,20 @@ export class Material extends EventDispatcher {
+@@ -470,22 +630,20 @@ export class Material extends EventDispatcher {
       * @param {Object<string,Texture>} textures - A dictionary holding textures referenced by the material.
       * @return {Material} A reference to this material.
       */
@@ -7987,7 +8136,7 @@ index a559b6e84..14f8d16d8 100644
      /**
       * Frees the GPU-related resources allocated by this instance. Call this
       * method whenever this instance is no longer used in your app.
-@@ -497,12 +658,11 @@ export class Material extends EventDispatcher {
+@@ -497,12 +655,11 @@ export class Material extends EventDispatcher {
       * Setting this property to `true` indicates the engine the material
       * needs to be recompiled.
       *
@@ -9261,7 +9410,7 @@ index 43151a763..18f1aca1f 100644
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface MeshPhongMaterial extends MeshPhongMaterialProperties {}
 diff --git a/jsdoc-testing/jsdoc/src/materials/MeshPhysicalMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/MeshPhysicalMaterial.d.ts
-index d66ccc5df..abb36caee 100644
+index 9985fd741..f9b03e1af 100644
 --- a/jsdoc-testing/jsdoc/src/materials/MeshPhysicalMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/MeshPhysicalMaterial.d.ts
 @@ -1,52 +1,15 @@
@@ -9363,7 +9512,7 @@ index d66ccc5df..abb36caee 100644
      /**
       * The red channel of this texture is multiplied against `iridescence`, for per-pixel
       * control over iridescence.
-@@ -142,7 +114,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -142,14 +114,12 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * Strength of the iridescence RGB color shift effect, represented by an index-of-refraction.
       * Between `1.0` to `2.333`.
       *
@@ -9371,19 +9520,22 @@ index d66ccc5df..abb36caee 100644
       * @default 1.3
       */
      iridescenceIOR: number;
-@@ -150,10 +121,9 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
-      *Array of exactly 2 elements, specifying minimum and maximum thickness of the iridescence layer.
-      Thickness of iridescence layer has an equivalent effect of the one `thickness` has on `ior`.
-      *
--     * @type {Array<number,number>}
-      * @default [100,400]
-      */
--    iridescenceThicknessRange: Array<number, number>;
-+    iridescenceThicknessRange: [number, number];
      /**
-      * A texture that defines the thickness of the iridescence layer, stored in the green channel.
-      * Minimum and maximum values of thickness are defined by `iridescenceThicknessRange` array:
-@@ -171,7 +141,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+      * The minimum thickness of the iridescence layer in nanometers.
+      *
+-     * @type {number}
+      * @default 100
+      */
+     iridescenceThicknessMinimum: number;
+@@ -157,7 +127,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+      * The maximum thickness of the iridescence layer in nanometers. If no
+      * `iridescenceThicknessMap` is defined, this value is used as the thickness.
+      *
+-     * @type {number}
+      * @default 400
+      */
+     iridescenceThicknessMaximum: number;
+@@ -179,7 +148,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
      /**
       * The sheen tint.
       *
@@ -9391,7 +9543,7 @@ index d66ccc5df..abb36caee 100644
       * @default (0,0,0)
       */
      sheenColor: Color;
-@@ -190,7 +159,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -198,7 +166,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
      /**
       * Roughness of the sheen layer, from `0.0` to `1.0`.
       *
@@ -9399,7 +9551,7 @@ index d66ccc5df..abb36caee 100644
       * @default 1
       */
      sheenRoughness: number;
-@@ -221,7 +189,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -229,7 +196,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * coordinate space of the mesh. If the value is `0` the material is
       * thin-walled. Otherwise the material is a volume boundary.
       *
@@ -9407,7 +9559,7 @@ index d66ccc5df..abb36caee 100644
       * @default 0
       */
      thickness: number;
-@@ -241,7 +208,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -249,7 +215,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * the medium before interacting with a particle. The value is given in world
       * space units, and must be greater than zero.
       *
@@ -9415,7 +9567,7 @@ index d66ccc5df..abb36caee 100644
       * @default Infinity
       */
      attenuationDistance: number;
-@@ -249,7 +215,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -257,7 +222,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * The color that white light turns into due to absorption when reaching the
       * attenuation distance.
       *
@@ -9423,7 +9575,7 @@ index d66ccc5df..abb36caee 100644
       * @default (1,1,1)
       */
      attenuationColor: Color;
-@@ -257,7 +222,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -265,7 +229,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * A float that scales the amount of specular reflection for non-metals only.
       * When set to zero, the model is effectively Lambertian. From `0.0` to `1.0`.
       *
@@ -9431,7 +9583,7 @@ index d66ccc5df..abb36caee 100644
       * @default 1
       */
      specularIntensity: number;
-@@ -275,7 +239,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -283,7 +246,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
      /**
       * Tints the specular reflection at normal incidence for non-metals only.
       *
@@ -9439,7 +9591,7 @@ index d66ccc5df..abb36caee 100644
       * @default (1,1,1)
       */
      specularColor: Color;
-@@ -291,19 +254,10 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -299,19 +261,10 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * @default null
       */
      specularColorMap: Texture | null;
@@ -9459,7 +9611,7 @@ index d66ccc5df..abb36caee 100644
       * @default 0
       */
      get anisotropy(): number;
-@@ -313,7 +267,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -321,7 +274,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * clear coat related properties to enable multilayer materials that have a
       * thin translucent layer over the base layer.
       *
@@ -9467,7 +9619,7 @@ index d66ccc5df..abb36caee 100644
       * @default 0
       */
      get clearcoat(): number;
-@@ -323,7 +276,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -331,7 +283,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * uses Lambertian diffuse reflection. Values above `0.0` use the EON
       * energy-preserving rough diffuse model.
       *
@@ -9475,7 +9627,7 @@ index d66ccc5df..abb36caee 100644
       * @default 0
       */
      get diffuseRoughness(): number;
-@@ -332,7 +284,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -340,7 +291,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * The intensity of the iridescence layer, simulating RGB color shift based on the angle between
       * the surface and the viewer, from `0.0` to `1.0`.
       *
@@ -9483,7 +9635,7 @@ index d66ccc5df..abb36caee 100644
       * @default 0
       */
      get iridescence(): number;
-@@ -342,7 +293,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -350,7 +300,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * through a relatively clear volume. Any value zero or larger is valid, the typical range of
       * realistic values is `[0, 1]`. This property can be only be used with transmissive objects.
       *
@@ -9491,7 +9643,7 @@ index d66ccc5df..abb36caee 100644
       * @default 0
       */
      get dispersion(): number;
-@@ -353,7 +303,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -361,7 +310,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * reflected about the surface normal, redirecting the specular lobe back
       * toward the light source.
       *
@@ -9499,7 +9651,7 @@ index d66ccc5df..abb36caee 100644
       * @default 0
       */
      get retroreflectivity(): number;
-@@ -361,7 +310,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -369,7 +317,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
      /**
       * The intensity of the sheen layer, from `0.0` to `1.0`.
       *
@@ -9507,7 +9659,7 @@ index d66ccc5df..abb36caee 100644
       * @default 0
       */
      get sheen(): number;
-@@ -375,12 +323,53 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -383,21 +330,61 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       *
       * When transmission is non-zero, `opacity` should be  set to `1`.
       *
@@ -9515,11 +9667,19 @@ index d66ccc5df..abb36caee 100644
       * @default 0
       */
      get transmission(): number;
+-    set iridescenceThicknessRange(value: Array<number, number>);
++    set iridescenceThicknessRange(value: [number, number]);
+     /**
+      * Array of exactly 2 elements, specifying minimum and maximum thickness of the iridescence layer.
+      *
+      * @deprecated since r187. Use {@link MeshPhysicalMaterial#iridescenceThicknessMinimum} and {@link MeshPhysicalMaterial#iridescenceThicknessMaximum} instead.
+-     * @type {Array<number,number>}
+      * @default [100,400]
+      */
+-    get iridescenceThicknessRange(): Array<number, number>;
 -    copy(source: any): this;
- }
--import { MeshStandardMaterial } from './MeshStandardMaterial.js';
--import { Vector2 } from '../math/Vector2.js';
--import { Color } from '../math/Color.js';
++    get iridescenceThicknessRange(): [number, number];
++}
 +
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface MeshPhysicalMaterialParameters
@@ -9562,7 +9722,10 @@ index d66ccc5df..abb36caee 100644
 +     */
 +    readonly isMeshPhysicalMaterial: boolean;
 +    setValues(values?: MeshPhysicalMaterialParameters): void;
-+}
+ }
+-import { MeshStandardMaterial } from './MeshStandardMaterial.js';
+-import { Vector2 } from '../math/Vector2.js';
+-import { Color } from '../math/Color.js';
 +
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface MeshPhysicalMaterial extends MeshPhysicalMaterialProperties {}
@@ -11197,11 +11360,12 @@ index 97d6b1cb4..3cf3c9eed 100644
 +
 +export default MeshBasicNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/MeshLambertNodeMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/MeshLambertNodeMaterial.d.ts
-index a5e110905..73429133e 100644
+index c488617fe..ea6f2073a 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/MeshLambertNodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/MeshLambertNodeMaterial.d.ts
-@@ -1,8 +1,19 @@
+@@ -1,8 +1,30 @@
 -export default MeshLambertNodeMaterial;
++import Node from "../../nodes/core/Node.js";
 +import NodeMaterial, { NodeMaterialNodeProperties } from './NodeMaterial.js';
 +import BasicEnvironmentNode from '../../nodes/lighting/BasicEnvironmentNode.js';
 +import PhongLightingModel from '../../nodes/functions/PhongLightingModel.js';
@@ -11209,8 +11373,18 @@ index a5e110905..73429133e 100644
 +import { MapColorPropertiesToColorRepresentations } from '../Material.js';
 +import { MeshLambertMaterialParameters, MeshLambertMaterialProperties } from '../MeshLambertMaterial.js';
 +
-+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface MeshLambertNodeMaterialNodeProperties extends NodeMaterialNodeProperties {
++    /**
++     * The emissive color of lambert materials is by default inferred from the `emissive`,
++     * `emissiveIntensity` and `emissiveMap` properties. This node property allows to
++     * overwrite the default and define the emissive color with a node instead.
++     *
++     * If you don't want to overwrite the emissive color but modify the existing
++     * value instead, use {@link materialEmissive}.
++     *
++     * @default null
++     */
++    emissiveNode: Node | null;
 +}
 +
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -11223,7 +11397,7 @@ index a5e110905..73429133e 100644
   */
  declare class MeshLambertNodeMaterial extends NodeMaterial {
      /**
-@@ -10,15 +21,14 @@ declare class MeshLambertNodeMaterial extends NodeMaterial {
+@@ -10,27 +32,14 @@ declare class MeshLambertNodeMaterial extends NodeMaterial {
       *
       * @param {Object} [parameters] - The configuration parameter.
       */
@@ -11237,11 +11411,23 @@ index a5e110905..73429133e 100644
       * @default true
       */
      readonly isMeshLambertNodeMaterial: boolean;
+-    /**
+-     * The emissive color of lambert materials is by default inferred from the `emissive`,
+-     * `emissiveIntensity` and `emissiveMap` properties. This node property allows to
+-     * overwrite the default and define the emissive color with a node instead.
+-     *
+-     * If you don't want to overwrite the emissive color but modify the existing
+-     * value instead, use {@link materialEmissive}.
+-     *
+-     * @type {?Node<vec3>}
+-     * @default null
+-     */
+-    emissiveNode: Node<vec3> | null;
 +    setValues(values?: MeshLambertNodeMaterialParameters): void;
      /**
       * Overwritten since this type of material uses {@link BasicEnvironmentNode}
       * to implement the default environment mapping.
-@@ -26,7 +36,7 @@ declare class MeshLambertNodeMaterial extends NodeMaterial {
+@@ -38,7 +47,7 @@ declare class MeshLambertNodeMaterial extends NodeMaterial {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {?BasicEnvironmentNode<vec3>} The environment node.
       */
@@ -11250,7 +11436,7 @@ index a5e110905..73429133e 100644
      /**
       * Setups the lighting model.
       *
-@@ -34,6 +44,8 @@ declare class MeshLambertNodeMaterial extends NodeMaterial {
+@@ -46,6 +55,8 @@ declare class MeshLambertNodeMaterial extends NodeMaterial {
       */
      setupLightingModel(): PhongLightingModel;
  }
@@ -11367,7 +11553,7 @@ index effc5951b..5ba479deb 100644
 +
 +export default MeshNormalNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/MeshPhongNodeMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/MeshPhongNodeMaterial.d.ts
-index 374eb470a..d2d224b90 100644
+index 8ff50c872..92f311aa7 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/MeshPhongNodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/MeshPhongNodeMaterial.d.ts
 @@ -1,24 +1,12 @@
@@ -11402,9 +11588,21 @@ index 374eb470a..d2d224b90 100644
 +
 +export interface MeshPhongNodeMaterialNodeProperties extends NodeMaterialNodeProperties {
      /**
+      * The emissive color of phong materials is by default inferred from the `emissive`,
+      * `emissiveIntensity` and `emissiveMap` properties. This node property allows to
+@@ -27,10 +15,9 @@ declare class MeshPhongNodeMaterial extends NodeMaterial {
+      * If you don't want to overwrite the emissive color but modify the existing
+      * value instead, use {@link materialEmissive}.
+      *
+-     * @type {?Node<vec3>}
+      * @default null
+      */
+-    emissiveNode: Node<vec3> | null;
++    emissiveNode: Node | null;
+     /**
       * The shininess of phong materials is by default inferred from the `shininess`
       * property. This node property allows to overwrite the default
-@@ -27,10 +15,9 @@ declare class MeshPhongNodeMaterial extends NodeMaterial {
+@@ -39,10 +26,9 @@ declare class MeshPhongNodeMaterial extends NodeMaterial {
       * If you don't want to overwrite the shininess but modify the existing
       * value instead, use {@link materialShininess}.
       *
@@ -11416,7 +11614,7 @@ index 374eb470a..d2d224b90 100644
      /**
       * The specular color of phong materials is by default inferred from the
       * `specular` property. This node property allows to overwrite the default
-@@ -39,10 +26,31 @@ declare class MeshPhongNodeMaterial extends NodeMaterial {
+@@ -51,10 +37,31 @@ declare class MeshPhongNodeMaterial extends NodeMaterial {
       * If you don't want to overwrite the specular color but modify the existing
       * value instead, use {@link materialSpecular}.
       *
@@ -11450,7 +11648,7 @@ index 374eb470a..d2d224b90 100644
      /**
       * Overwritten since this type of material uses {@link BasicEnvironmentNode}
       * to implement the default environment mapping.
-@@ -50,7 +58,7 @@ declare class MeshPhongNodeMaterial extends NodeMaterial {
+@@ -62,7 +69,7 @@ declare class MeshPhongNodeMaterial extends NodeMaterial {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {?BasicEnvironmentNode<vec3>} The environment node.
       */
@@ -11459,7 +11657,7 @@ index 374eb470a..d2d224b90 100644
      /**
       * Setups the lighting model.
       *
-@@ -58,6 +66,8 @@ declare class MeshPhongNodeMaterial extends NodeMaterial {
+@@ -70,6 +77,8 @@ declare class MeshPhongNodeMaterial extends NodeMaterial {
       */
      setupLightingModel(): PhongLightingModel;
  }
@@ -11472,7 +11670,7 @@ index 374eb470a..d2d224b90 100644
 +
 +export default MeshPhongNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/MeshPhysicalNodeMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/MeshPhysicalNodeMaterial.d.ts
-index df5884d09..d30b9975f 100644
+index 40d563d39..aec52848f 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/MeshPhysicalNodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/MeshPhysicalNodeMaterial.d.ts
 @@ -1,18 +1,10 @@
@@ -11595,8 +11793,8 @@ index df5884d09..d30b9975f 100644
 -    iridescenceIORNode: Node<any> | null;
 +    iridescenceIORNode: Node | null;
      /**
-      * The iridescence thickness of physical materials is by default inferred from the `iridescenceThicknessRange`
-      * and `iridescenceThicknessMap` properties. This node property allows to overwrite the default
+      * The iridescence thickness of physical materials is by default inferred from the `iridescenceThicknessMinimum`,
+      * `iridescenceThicknessMaximum` and `iridescenceThicknessMap` properties. This node property allows to overwrite the default
 @@ -117,10 +101,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
       * If you don't want to overwrite the iridescence thickness but modify the existing
       * value instead, use {@link materialIridescenceThickness}.
@@ -12108,18 +12306,29 @@ index f81035d5a..dd0366810 100644
 +
 +export default MeshStandardNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/MeshToonNodeMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/MeshToonNodeMaterial.d.ts
-index 1ffe1bd1b..85436d1fe 100644
+index fda2a3a25..9d352222f 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/MeshToonNodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/MeshToonNodeMaterial.d.ts
-@@ -1,8 +1,17 @@
+@@ -1,8 +1,28 @@
 -export default MeshToonNodeMaterial;
++import Node from "../../nodes/core/Node.js";
 +import NodeMaterial, { NodeMaterialNodeProperties } from './NodeMaterial.js';
 +import ToonLightingModel from '../../nodes/functions/ToonLightingModel.js';
 +import { MapColorPropertiesToColorRepresentations } from '../Material.js';
 +import { MeshToonMaterialParameters, MeshToonMaterialProperties } from '../MeshToonMaterial.js';
 +
-+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface MeshToonNodeMaterialNodeProperties extends NodeMaterialNodeProperties {
++    /**
++     * The emissive color of toon materials is by default inferred from the `emissive`,
++     * `emissiveIntensity` and `emissiveMap` properties. This node property allows to
++     * overwrite the default and define the emissive color with a node instead.
++     *
++     * If you don't want to overwrite the emissive color but modify the existing
++     * value instead, use {@link materialEmissive}.
++     *
++     * @default null
++     */
++    emissiveNode: Node | null;
 +}
 +
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -12132,7 +12341,7 @@ index 1ffe1bd1b..85436d1fe 100644
   */
  declare class MeshToonNodeMaterial extends NodeMaterial {
      /**
-@@ -10,15 +19,14 @@ declare class MeshToonNodeMaterial extends NodeMaterial {
+@@ -10,27 +30,14 @@ declare class MeshToonNodeMaterial extends NodeMaterial {
       *
       * @param {Object} [parameters] - The configuration parameter.
       */
@@ -12146,11 +12355,23 @@ index 1ffe1bd1b..85436d1fe 100644
       * @default true
       */
      readonly isMeshToonNodeMaterial: boolean;
+-    /**
+-     * The emissive color of toon materials is by default inferred from the `emissive`,
+-     * `emissiveIntensity` and `emissiveMap` properties. This node property allows to
+-     * overwrite the default and define the emissive color with a node instead.
+-     *
+-     * If you don't want to overwrite the emissive color but modify the existing
+-     * value instead, use {@link materialEmissive}.
+-     *
+-     * @type {?Node<vec3>}
+-     * @default null
+-     */
+-    emissiveNode: Node<vec3> | null;
 +    setValues(values?: MeshToonNodeMaterialParameters): void;
      /**
       * Setups the lighting model.
       *
-@@ -26,5 +34,8 @@ declare class MeshToonNodeMaterial extends NodeMaterial {
+@@ -38,5 +45,8 @@ declare class MeshToonNodeMaterial extends NodeMaterial {
       */
      setupLightingModel(): ToonLightingModel;
  }
@@ -12162,7 +12383,7 @@ index 1ffe1bd1b..85436d1fe 100644
 +
 +export default MeshToonNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/NodeMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/NodeMaterial.d.ts
-index 6389a9643..089bc1dd6 100644
+index 19d5c6403..13215a0c4 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/NodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/NodeMaterial.d.ts
 @@ -1,37 +1,24 @@
@@ -12330,7 +12551,7 @@ index 6389a9643..089bc1dd6 100644
 +    maskShadowNode: Node | null;
      /**
       * The local vertex positions are computed based on multiple factors like the
-      * attribute data, morphing or skinning. This node property allows to overwrite
+      * attribute data, morphing, skinning, instancing or batching. This node property
 @@ -188,10 +164,9 @@ declare class NodeMaterial extends Material {
       * material.positionNode = positionLocal.add( displace );
       * ```
@@ -13025,7 +13246,7 @@ index 8b5885c3c..6175b46ab 100644
 +
 +export default VolumeNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/manager/NodeMaterialObserver.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/manager/NodeMaterialObserver.d.ts
-index 3f21040e0..962926ab4 100644
+index 5ff1ed1e5..4c3c3fa76 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/manager/NodeMaterialObserver.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/manager/NodeMaterialObserver.d.ts
 @@ -1,4 +1,6 @@
@@ -13048,7 +13269,7 @@ index 3f21040e0..962926ab4 100644
 -     */
 -    renderObjects: WeakMap<RenderObject, Object>;
      /**
-      * Whether the material uses node objects or not.
+      * Whether the builder's context uses node objects or not.
       *
 @@ -35,7 +30,7 @@ declare class NodeMaterialObserver {
       *
@@ -13081,7 +13302,7 @@ index 3f21040e0..962926ab4 100644
      /**
       * Returns `true` if the current rendering produces motion vectors.
       *
-@@ -65,21 +45,6 @@ declare class NodeMaterialObserver {
+@@ -65,29 +45,6 @@ declare class NodeMaterialObserver {
       * @return {boolean} Whether the current rendering produces motion vectors or not.
       */
      needsVelocity(renderer: Renderer): boolean;
@@ -13093,6 +13314,14 @@ index 3f21040e0..962926ab4 100644
 -     */
 -    getRenderObjectData(renderObject: RenderObject): Object;
 -    /**
+-     * Returns the current output target of the given renderer. That is the active
+-     * render target or, if none is set, the output render target or the canvas target.
+-     *
+-     * @param {Renderer} renderer - The renderer.
+-     * @return {RenderTarget|CanvasTarget} The output target.
+-     */
+-    getOutputTarget(renderer: Renderer): RenderTarget | CanvasTarget;
+-    /**
 -     * Returns an attribute data structure holding the attributes versions for
 -     * monitoring.
 -     *
@@ -13101,10 +13330,10 @@ index 3f21040e0..962926ab4 100644
 -     */
 -    getAttributesData(attributes: Object): Object;
      /**
-      * Returns `true` if the node builder's material uses
-      * node properties.
-@@ -88,60 +53,6 @@ declare class NodeMaterialObserver {
-      * @return {boolean} Whether the node builder's material uses node properties or not.
+      * Returns `true` if the node builder's context (e.g. material, scene) uses node properties.
+      *
+@@ -95,76 +52,6 @@ declare class NodeMaterialObserver {
+      * @return {boolean} Whether the node builder's context uses node properties or not.
       */
      containsNode(builder: NodeBuilder): boolean;
 -    /**
@@ -13123,6 +13352,22 @@ index 3f21040e0..962926ab4 100644
 -     * @return {Object} An object for monitoring the texture.
 -     */
 -    getTextureData(texture: Texture): Object;
+-    /**
+-     * Returns a data structure holding the uv transformation of the given
+-     * texture for monitoring.
+-     *
+-     * @param {Texture} texture - The texture.
+-     * @return {Object} An object for monitoring the uv transformation.
+-     */
+-    getTextureTransformData(texture: Texture): Object;
+-    /**
+-     * Returns `true` if the uv transformation of the given texture has not changed.
+-     *
+-     * @param {Object} transformData - The monitored uv transformation.
+-     * @param {Texture} texture - The texture.
+-     * @return {boolean} Whether the uv transformation has not changed or not.
+-     */
+-    equalsTextureTransform(transformData: Object, texture: Texture): boolean;
 -    /**
 -     * Returns a material data structure holding the material property values for
 -     * monitoring.
@@ -13997,10 +14242,10 @@ index f483ad0da..5a38f1bc3 100644
 -export const batch: () => void;
 +export const batch: (batchMesh: BatchedMesh) => void;
 diff --git a/jsdoc-testing/jsdoc/src/nodes/accessors/BufferAttributeNode.d.ts b/jsdoc-testing/jsdoc/src/nodes/accessors/BufferAttributeNode.d.ts
-index 60775a2a1..2ed041bfc 100644
+index 697acb7f2..2f1943118 100644
 --- a/jsdoc-testing/jsdoc/src/nodes/accessors/BufferAttributeNode.d.ts
 +++ b/jsdoc-testing/jsdoc/src/nodes/accessors/BufferAttributeNode.d.ts
-@@ -1,8 +1,11 @@
+@@ -1,8 +1,12 @@
 -export default BufferAttributeNode;
 -export function bufferAttribute(array: BufferAttribute | InterleavedBuffer | TypedArray, type?: string | null, stride?: number, offset?: number): BufferAttributeNode | Node;
 -export function dynamicBufferAttribute(array: BufferAttribute | InterleavedBuffer | TypedArray, type?: string | null, stride?: number, offset?: number): BufferAttributeNode | Node;
@@ -14013,20 +14258,21 @@ index 60775a2a1..2ed041bfc 100644
 +import { Usage } from "../../constants.js";
 +import { InterleavedBufferAttribute } from '../../core/InterleavedBufferAttribute.js';
 +import Node from '../core/Node.js';
++import { Object3D } from '../../core/Object3D.js';
 +
  /**
   * In earlier `three.js` versions it was only possible to define attribute data
   * on geometry level. With `BufferAttributeNode`, it is also possible to do this
-@@ -25,7 +28,7 @@ export function instancedDynamicBufferAttribute(array: BufferAttribute | Interle
+@@ -25,7 +29,7 @@ export function instancedDynamicBufferAttribute(array: BufferAttribute | Interle
   * ```
   * @augments InputNode
   */
 -declare class BufferAttributeNode extends InputNode {
-+declare class BufferAttributeNodeClass extends InputNode<unknown, TypedArray | InterleavedBuffer | BufferAttribute> {
++declare class BufferAttributeNodeClass extends InputNode<unknown, TypedArray | InterleavedBuffer | InterleavedBufferAttribute | BufferAttribute> {
      /**
       * Constructs a new buffer attribute node.
       *
-@@ -71,7 +74,7 @@ declare class BufferAttributeNode extends InputNode {
+@@ -71,7 +75,7 @@ declare class BufferAttributeNode extends InputNode {
       * @type {number}
       * @default StaticDrawUsage
       */
@@ -14035,7 +14281,7 @@ index 60775a2a1..2ed041bfc 100644
      /**
       * Whether the attribute is instanced or not.
       *
-@@ -85,7 +88,7 @@ declare class BufferAttributeNode extends InputNode {
+@@ -85,7 +89,7 @@ declare class BufferAttributeNode extends InputNode {
       * @type {?BufferAttribute}
       * @default null
       */
@@ -14044,7 +14290,7 @@ index 60775a2a1..2ed041bfc 100644
      /**
       * This method is overwritten since the attribute data might be shared
       * and thus the hash should be shared as well.
-@@ -109,7 +112,7 @@ declare class BufferAttributeNode extends InputNode {
+@@ -109,7 +113,7 @@ declare class BufferAttributeNode extends InputNode {
       *
       * @param {NodeBuilder} builder - The current node builder.
       */
@@ -14053,7 +14299,7 @@ index 60775a2a1..2ed041bfc 100644
      /**
       * Generates the code snippet of the buffer attribute node.
       *
-@@ -130,14 +133,110 @@ declare class BufferAttributeNode extends InputNode {
+@@ -130,14 +134,14 @@ declare class BufferAttributeNode extends InputNode {
       * @param {number} value - The usage to set.
       * @return {BufferAttributeNode} A reference to this node.
       */
@@ -14067,19 +14313,28 @@ index 60775a2a1..2ed041bfc 100644
       */
 -    setInstanced(value: boolean): BufferAttributeNode;
 +    setInstanced(value: boolean): this;
+     /**
+      * Returns the buffer attribute to bind when rendering the given object. Nodes that
+      * bind attributes of the rendered object, like {@link ReferenceAttributeNode}, overwrite it.
+@@ -145,8 +149,103 @@ declare class BufferAttributeNode extends InputNode {
+      * @param {Object3D} object - The rendered object.
+      * @return {?(BufferAttribute|InterleavedBufferAttribute)} The buffer attribute.
+      */
+-    getObjectAttribute(): (BufferAttribute | InterleavedBufferAttribute) | null;
++    getObjectAttribute(object: Object3D): (BufferAttribute | InterleavedBufferAttribute) | null;
 +}
 +
 +declare const BufferAttributeNode: {
 +    /**
 +     * Constructs a new buffer attribute node.
 +     *
-+     * @param {BufferAttribute|InterleavedBuffer|TypedArray} value - The attribute data.
++     * @param {BufferAttribute|InterleavedBufferAttribute|InterleavedBuffer|TypedArray} value - The attribute data.
 +     * @param {?string} [bufferType=null] - The buffer type (e.g. `'vec3'`).
 +     * @param {number} [bufferStride=0] - The buffer stride.
 +     * @param {number} [bufferOffset=0] - The buffer offset.
 +     */
 +    new<TNodeType>(
-+        value: TypedArray | InterleavedBuffer | BufferAttribute,
++        value: TypedArray | InterleavedBuffer | InterleavedBufferAttribute | BufferAttribute,
 +        bufferType?: string | null,
 +        bufferStride?: number,
 +        bufferOffset?: number,
@@ -14087,7 +14342,7 @@ index 60775a2a1..2ed041bfc 100644
 +};
 +
 +type BufferAttributeNode<TNodeType> =
-+    & InputNode<TNodeType, TypedArray | InterleavedBuffer | BufferAttribute>
++    & InputNode<TNodeType, TypedArray | InterleavedBuffer | InterleavedBufferAttribute | BufferAttribute>
 +    & BufferAttributeNodeClass;
 +
 +export default BufferAttributeNode;
@@ -14103,7 +14358,7 @@ index 60775a2a1..2ed041bfc 100644
 + * @returns {BufferAttributeNode|Node}
 + */
 +export declare const bufferAttribute: <TNodeType>(
-+    array: BufferAttribute | InterleavedBuffer | TypedArray,
++    array: BufferAttribute | InterleavedBufferAttribute | InterleavedBuffer | TypedArray,
 +    type?: TNodeType | null,
 +    stride?: number,
 +    offset?: number,
@@ -14121,7 +14376,7 @@ index 60775a2a1..2ed041bfc 100644
 + * @returns {BufferAttributeNode|Node}
 + */
 +export declare const dynamicBufferAttribute: <TNodeType>(
-+    array: BufferAttribute | InterleavedBuffer | TypedArray,
++    array: BufferAttribute | InterleavedBufferAttribute | InterleavedBuffer | TypedArray,
 +    type?: TNodeType | null,
 +    stride?: number,
 +    offset?: number,
@@ -14138,7 +14393,7 @@ index 60775a2a1..2ed041bfc 100644
 + * @returns {BufferAttributeNode|Node}
 + */
 +export declare const instancedBufferAttribute: <TNodeType>(
-+    array: BufferAttribute | InterleavedBuffer | TypedArray,
++    array: BufferAttribute | InterleavedBufferAttribute | InterleavedBuffer | TypedArray,
 +    type?: TNodeType | null,
 +    stride?: number,
 +    offset?: number,
@@ -14155,7 +14410,7 @@ index 60775a2a1..2ed041bfc 100644
 + * @returns {BufferAttributeNode|Node}
 + */
 +export declare const instancedDynamicBufferAttribute: <TNodeType>(
-+    array: BufferAttribute | InterleavedBuffer | TypedArray,
++    array: BufferAttribute | InterleavedBufferAttribute | InterleavedBuffer | TypedArray,
 +    type?: TNodeType | null,
 +    stride?: number,
 +    offset?: number,
@@ -14168,8 +14423,9 @@ index 60775a2a1..2ed041bfc 100644
  }
 -import { InterleavedBuffer } from '../../core/InterleavedBuffer.js';
 -import InputNode from '../core/InputNode.js';
+-import { InterleavedBufferAttribute } from '../../core/InterleavedBufferAttribute.js';
 diff --git a/jsdoc-testing/jsdoc/src/nodes/accessors/Instance.d.ts b/jsdoc-testing/jsdoc/src/nodes/accessors/Instance.d.ts
-index 7976840f6..9d072858e 100644
+index 92c45bf2b..210c2dae0 100644
 --- a/jsdoc-testing/jsdoc/src/nodes/accessors/Instance.d.ts
 +++ b/jsdoc-testing/jsdoc/src/nodes/accessors/Instance.d.ts
 @@ -1,9 +1,14 @@
@@ -14197,7 +14453,7 @@ index 7976840f6..9d072858e 100644
  /**
   * TSL wrapper for applying instanced mesh rendering setup.
   *
-@@ -21,4 +26,4 @@ export const instance: () => void;
+@@ -24,4 +29,4 @@ export const instance: () => void;
   * @function
   * @param {InstancedMesh} instancedMesh - The instanced mesh.
   */
@@ -14219,6 +14475,68 @@ index 1713b3af4..362b62ebd 100644
   */
 -export const morphReference: () => void;
 +export const morphReference: (mesh: Mesh) => void;
+diff --git a/jsdoc-testing/jsdoc/src/nodes/accessors/ReferenceAttributeNode.d.ts b/jsdoc-testing/jsdoc/src/nodes/accessors/ReferenceAttributeNode.d.ts
+index 378de18e3..62ffb9d4e 100644
+--- a/jsdoc-testing/jsdoc/src/nodes/accessors/ReferenceAttributeNode.d.ts
++++ b/jsdoc-testing/jsdoc/src/nodes/accessors/ReferenceAttributeNode.d.ts
+@@ -1,5 +1,9 @@
+-export default ReferenceAttributeNode;
+-export function referenceAttribute(name: string, type?: string | null, object?: Object | null): ReferenceAttributeNode;
++import Node from '../core/Node.js';
++import NodeBuilder from '../core/NodeBuilder.js';
++import { BufferAttribute } from '../../core/BufferAttribute.js';
++import { InterleavedBufferAttribute } from '../../core/InterleavedBufferAttribute.js';
++import { Object3D } from '../../core/Object3D.js';
++
+ /**
+  * This node binds a buffer attribute that is a property of the rendered object, like the
+  * matrices of an instanced mesh. Unlike {@link BufferAttributeNode}, the attribute isn't part
+@@ -20,7 +24,7 @@ declare class ReferenceAttributeNode extends Node {
+      * @param {?string} [nodeType=null] - The node type. Inferred from the attribute if not set.
+      * @param {?Object} [object=null] - The object the property belongs to. The rendered object if not set.
+      */
+-    constructor(property: string, nodeType?: string | null, object?: Object | null);
++    constructor(property: string, nodeType?: string | null, object?: object | null);
+     /**
+      * The name of the property the node refers to.
+      *
+@@ -40,14 +44,14 @@ declare class ReferenceAttributeNode extends Node {
+      * @type {?Object}
+      * @default null
+      */
+-    object: Object | null;
++    object: object | null;
+     /**
+      * Returns the value of the referred property of the given object.
+      *
+      * @param {Object} object - The object.
+      * @return {?(BufferAttribute|InterleavedBufferAttribute)} The value of the referred property.
+      */
+-    getValueFromReference(object: Object): (BufferAttribute | InterleavedBufferAttribute) | null;
++    getValueFromReference(object: object): (BufferAttribute | InterleavedBufferAttribute) | null;
+     /**
+      * Returns the attribute the node binds when rendering the given object.
+      *
+@@ -70,5 +74,17 @@ declare class ReferenceAttributeNode extends Node {
+      */
+     setup(builder: NodeBuilder): Node;
+ }
+-import Node from '../core/Node.js';
+-import { InterleavedBufferAttribute } from '../../core/InterleavedBufferAttribute.js';
++
++export default ReferenceAttributeNode;
++
++/**
++ * TSL function for creating a reference attribute node.
++ *
++ * @tsl
++ * @function
++ * @param {string} name - The name of the property the node refers to.
++ * @param {?string} [type=null] - The node type. Inferred from the attribute if not set.
++ * @param {?Object} [object=null] - The object the property belongs to. The rendered object if not set.
++ * @returns {ReferenceAttributeNode}
++ */
++export const referenceAttribute: (name: string, type?: string | null, object?: object | null) => ReferenceAttributeNode;
 diff --git a/jsdoc-testing/jsdoc/src/nodes/accessors/Skinning.d.ts b/jsdoc-testing/jsdoc/src/nodes/accessors/Skinning.d.ts
 index ca4dd3dff..a65e1ccc8 100644
 --- a/jsdoc-testing/jsdoc/src/nodes/accessors/Skinning.d.ts
@@ -14247,7 +14565,7 @@ index ca4dd3dff..a65e1ccc8 100644
 -export const computeSkinning: () => void;
 +export const computeSkinning: (skinnedMesh: SkinnedMesh, toPosition?: Node<'vec3'> | Vector3 | null) => void;
 diff --git a/jsdoc-testing/jsdoc/src/nodes/core/Node.d.ts b/jsdoc-testing/jsdoc/src/nodes/core/Node.d.ts
-index d19ed5cc6..1b3b50030 100644
+index cd80f209a..99ba2f97a 100644
 --- a/jsdoc-testing/jsdoc/src/nodes/core/Node.d.ts
 +++ b/jsdoc-testing/jsdoc/src/nodes/core/Node.d.ts
 @@ -1,10 +1,85 @@
@@ -14363,7 +14681,7 @@ index d19ed5cc6..1b3b50030 100644
      /**
       * The version of the node. The version automatically is increased when {@link Node#needsUpdate} is set to `true`.
       *
-@@ -79,31 +154,6 @@ declare class Node extends EventDispatcher {
+@@ -87,31 +162,6 @@ declare class Node extends EventDispatcher {
       * @default true
       */
      readonly isNode: boolean;
@@ -14395,16 +14713,103 @@ index d19ed5cc6..1b3b50030 100644
      /**
       * The unique ID of the node.
       *
-@@ -125,7 +175,7 @@ declare class Node extends EventDispatcher {
+@@ -133,7 +183,7 @@ declare class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {boolean} Whether temporary caching is allowed.
       */
 -    isCacheable(): boolean;
 +    isCacheable(builder: NodeBuilder): boolean;
      /**
+      * Makes this node assignable and adds it to the current stack,
+      * so it can be declared where it was created if it is assigned later.
+@@ -141,7 +191,7 @@ declare class Node extends EventDispatcher {
+      *
+      * @return {Node} A reference to this node.
+      */
+-    toAssignable(): Node;
++    toAssignable(): this;
+     /**
+      * Checks if this node is assignable without a forced declaration.
+      *
+@@ -156,77 +206,6 @@ declare class Node extends EventDispatcher {
+      * @returns {boolean} Whether this node is assigned.
+      */
+     isAssign(builder: NodeBuilder): boolean;
+-    /**
+-     * Declares the assignable node where it is generated if it is created in a block, and
+-     * decides if a value that cannot be cached must be evaluated once at its declaration.
+-     *
+-     * @private
+-     * @param {NodeBuilder} builder - The current node builder.
+-     * @param {Object} data - The node data.
+-     * @param {Node} [valueNode=this] - The node that defines the value of the assignable node.
+-     */
+-    private _updateAssignable;
+-    /**
+-     * Whether `build()` declares this assignable node as a variable when it is assigned.
+-     * Nodes that wrap an assignable value, like {@link VarNode}, declare it themselves.
+-     *
+-     * @private
+-     * @return {boolean} Whether `build()` declares the assignable node.
+-     */
+-    private _declaresAssignable;
+-    /**
+-     * Declares a variable for this node in the current flow, initialized with the given snippet.
+-     *
+-     * @private
+-     * @param {NodeBuilder} builder - The current node builder.
+-     * @param {string} snippet - The initial value.
+-     * @param {string} type - The variable type.
+-     * @param {boolean} readOnly - Whether the variable is read-only.
+-     * @param {string} property - The node data property that holds the variable.
+-     * @return {string} The property name of the variable.
+-     */
+-    private _declareVariable;
+-    /**
+-     * Whether this assignable node must be declared as a variable, because it is assigned
+-     * or must be evaluated once at its declaration.
+-     *
+-     * @private
+-     * @param {NodeBuilder} builder - The current node builder.
+-     * @param {Object} nodeData - The node data.
+-     * @return {boolean} Whether the assignable node is a variable.
+-     */
+-    private _isVariable;
+-    /**
+-     * Generates an assignable node as a variable. The variable is declared the first
+-     * time it is generated, which is its stack position, and then referenced by name.
+-     *
+-     * @private
+-     * @param {NodeBuilder} builder - The current node builder.
+-     * @param {Object} nodeData - The node data.
+-     * @param {?string} output - The output type.
+-     * @return {string} The generated shader string.
+-     */
+-    private _buildVariable;
+-    /**
+-     * A generated value is only visible in the block where it was declared and in its inner blocks.
+-     * This method discards the generated value if it is not visible in the current block.
+-     *
+-     * @private
+-     * @param {NodeBuilder} builder - The current node builder.
+-     * @param {Object} nodeData - The node data.
+-     */
+-    private _checkFlowBlock;
+-    /**
+-     * Keeps the block where a value was generated, so it is only reused where it is visible.
+-     * A global node is a declaration visible in any block, unless it emitted code in this block.
+-     *
+-     * @private
+-     * @param {NodeBuilder} builder - The current node builder.
+-     * @param {Object} nodeData - The node data.
+-     * @param {boolean} isCached - Whether the value was generated before.
+-     * @param {number} flowCodeLength - The length of the flow code before the value was generated.
+-     */
+-    private _setFlowBlock;
+     /**
       * Set this property to `true` when the node should be regenerated.
       *
-@@ -147,7 +197,7 @@ declare class Node extends EventDispatcher {
+@@ -248,7 +227,7 @@ declare class Node extends EventDispatcher {
       * @type {string}
       * @readonly
       */
@@ -14413,7 +14818,7 @@ index d19ed5cc6..1b3b50030 100644
      /**
       * Convenient method for defining {@link Node#update}.
       *
-@@ -155,7 +205,7 @@ declare class Node extends EventDispatcher {
+@@ -256,7 +235,7 @@ declare class Node extends EventDispatcher {
       * @param {string} updateType - The update type.
       * @return {Node} A reference to this node.
       */
@@ -14422,7 +14827,7 @@ index d19ed5cc6..1b3b50030 100644
      /**
       * The method can be implemented to update the node's internal state when it is used to render an object.
       * The {@link Node#updateType} property defines how often the update is executed.
-@@ -164,7 +214,7 @@ declare class Node extends EventDispatcher {
+@@ -265,7 +244,7 @@ declare class Node extends EventDispatcher {
       * @param {NodeFrame} frame - A reference to the current node frame.
       * @return {?boolean} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
       */
@@ -14431,7 +14836,7 @@ index d19ed5cc6..1b3b50030 100644
      /**
       * Convenient method for defining {@link Node#update}. Similar to {@link Node#onUpdate}, but
       * this method automatically sets the update type to `FRAME`.
-@@ -172,7 +222,7 @@ declare class Node extends EventDispatcher {
+@@ -273,7 +252,7 @@ declare class Node extends EventDispatcher {
       * @param {Function} callback - The update method.
       * @return {Node} A reference to this node.
       */
@@ -14440,7 +14845,7 @@ index d19ed5cc6..1b3b50030 100644
      /**
       * Convenient method for defining {@link Node#update}. Similar to {@link Node#onUpdate}, but
       * this method automatically sets the update type to `RENDER`.
-@@ -180,7 +230,7 @@ declare class Node extends EventDispatcher {
+@@ -281,7 +260,7 @@ declare class Node extends EventDispatcher {
       * @param {Function} callback - The update method.
       * @return {Node} A reference to this node.
       */
@@ -14449,7 +14854,7 @@ index d19ed5cc6..1b3b50030 100644
      /**
       * Convenient method for defining {@link Node#update}. Similar to {@link Node#onUpdate}, but
       * this method automatically sets the update type to `OBJECT`.
-@@ -188,14 +238,14 @@ declare class Node extends EventDispatcher {
+@@ -289,14 +268,14 @@ declare class Node extends EventDispatcher {
       * @param {Function} callback - The update method.
       * @return {Node} A reference to this node.
       */
@@ -14466,7 +14871,7 @@ index d19ed5cc6..1b3b50030 100644
      /**
       * Nodes might refer to other objects like materials. This method allows to dynamically update the reference
       * to such objects based on a given state (e.g. the current node frame or builder).
-@@ -203,7 +253,7 @@ declare class Node extends EventDispatcher {
+@@ -304,7 +283,7 @@ declare class Node extends EventDispatcher {
       * @param {any} state - This method can be invocated in different contexts so `state` can refer to any object type.
       * @return {any} The updated reference.
       */
@@ -14475,22 +14880,16 @@ index d19ed5cc6..1b3b50030 100644
      /**
       * By default this method returns the value of the {@link Node#global} flag. This method
       * can be overwritten in derived classes if an analytical way is required to determine the
-@@ -212,39 +262,25 @@ declare class Node extends EventDispatcher {
+@@ -313,7 +292,7 @@ declare class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {boolean} Whether this node is global or not.
       */
 -    isGlobal(): boolean;
 +    isGlobal(builder: NodeBuilder): boolean;
      /**
-      * Generator function that can be used to iterate over the child nodes.
+      * Returns the child nodes of this node.
       *
-      * @generator
-      * @yields {Node} A child node.
-      */
--    getChildren(): Generator<any, void, unknown>;
-+    getChildren(): Generator<Node<unknown>, void, unknown>;
-     /**
-      * Calling this method dispatches the `dispose` event. This event can be used
+@@ -325,26 +304,12 @@ declare class Node extends EventDispatcher {
       * to register event listeners for clean up tasks.
       */
      dispose(): void;
@@ -14518,7 +14917,7 @@ index d19ed5cc6..1b3b50030 100644
      /**
       * Returns the cache key for this node.
       *
-@@ -264,7 +300,7 @@ declare class Node extends EventDispatcher {
+@@ -364,7 +329,7 @@ declare class Node extends EventDispatcher {
       *
       * @return {Node} A reference to this node.
       */
@@ -14527,7 +14926,7 @@ index d19ed5cc6..1b3b50030 100644
      /**
       * Returns the hash of the node which is used to identify the node. By default it's
       * the {@link Node#uuid} however derived node classes might have to overwrite this method
-@@ -273,43 +309,28 @@ declare class Node extends EventDispatcher {
+@@ -373,43 +338,28 @@ declare class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {string} The hash.
       */
@@ -14575,7 +14974,7 @@ index d19ed5cc6..1b3b50030 100644
      /**
       * Certain types are composed of multiple elements. For example a `vec3`
       * is composed of three `float` values. This method returns the type of
-@@ -326,7 +347,7 @@ declare class Node extends EventDispatcher {
+@@ -426,7 +376,7 @@ declare class Node extends EventDispatcher {
       * @param {string} name - The name of the member.
       * @return {string} The type of the node.
       */
@@ -14584,7 +14983,7 @@ index d19ed5cc6..1b3b50030 100644
      /**
       * Returns the node's type.
       *
-@@ -360,7 +381,7 @@ declare class Node extends EventDispatcher {
+@@ -460,7 +410,7 @@ declare class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {?number} The number of elements in the node array.
       */
@@ -14593,7 +14992,7 @@ index d19ed5cc6..1b3b50030 100644
      /**
       * Represents the setup stage which is the first step of the build process, see {@link Node#build} method.
       * This method is often overwritten in derived modules to prepare the node which is used as a node's output/result.
-@@ -369,7 +390,7 @@ declare class Node extends EventDispatcher {
+@@ -469,7 +419,7 @@ declare class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {?Node} The output node.
       */
@@ -14602,7 +15001,7 @@ index d19ed5cc6..1b3b50030 100644
      /**
       * Represents the analyze stage which is the second step of the build process, see {@link Node#build} method.
       * This stage analyzes the node hierarchy and ensures descendent nodes are built.
-@@ -386,7 +407,7 @@ declare class Node extends EventDispatcher {
+@@ -486,7 +436,7 @@ declare class Node extends EventDispatcher {
       * @param {?string} [output] - Can be used to define the output type.
       * @return {?string} The generated shader string.
       */
@@ -14611,7 +15010,7 @@ index d19ed5cc6..1b3b50030 100644
      /**
       * The method can be implemented to update the node's internal state before it is used to render an object.
       * The {@link Node#updateBeforeType} property defines how often the update is executed.
-@@ -395,7 +416,7 @@ declare class Node extends EventDispatcher {
+@@ -495,7 +445,7 @@ declare class Node extends EventDispatcher {
       * @param {NodeFrame} frame - A reference to the current node frame.
       * @return {?boolean} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
       */
@@ -14620,7 +15019,7 @@ index d19ed5cc6..1b3b50030 100644
      /**
       * The method can be implemented to update the node's internal state after it was used to render an object.
       * The {@link Node#updateAfterType} property defines how often the update is executed.
-@@ -404,8 +425,8 @@ declare class Node extends EventDispatcher {
+@@ -504,8 +454,8 @@ declare class Node extends EventDispatcher {
       * @param {NodeFrame} frame - A reference to the current node frame.
       * @return {?boolean} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
       */
@@ -14631,7 +15030,7 @@ index d19ed5cc6..1b3b50030 100644
      /**
       * This method performs the build of a node. The behavior and return value depend on the current build stage:
       * - **setup**: Prepares the node and its children for the build process. This process can also create new nodes. Returns the node itself or a variant.
-@@ -422,28 +443,188 @@ declare class Node extends EventDispatcher {
+@@ -522,28 +472,188 @@ declare class Node extends EventDispatcher {
       *
       * @return {Generator<Object>} An iterable list of serialized child objects as JSON.
       */
@@ -14659,9 +15058,7 @@ index d19ed5cc6..1b3b50030 100644
       */
 -    toJSON(meta: Object | null): Object;
 +    toJSON(meta?: NodeJSONMeta | string): NodeJSONOutputData;
- }
--declare namespace Node {
--    let captureStackTrace: boolean;
++}
 +
 +declare const Node: {
 +    new<TNodeType>(nodeType?: TNodeType | null): Node<TNodeType>;
@@ -14677,10 +15074,12 @@ index d19ed5cc6..1b3b50030 100644
 +
 +export interface NodeElements {
  }
--import { EventDispatcher } from '../../core/EventDispatcher.js';
+-declare namespace Node {
+-    let captureStackTrace: boolean;
 +
 +export interface NodeExtensions<TNodeType> {
-+}
+ }
+-import { EventDispatcher } from '../../core/EventDispatcher.js';
 +
 +export type NumType = "float" | "int" | "uint";
 +export type IntegerType = "int" | "uint";
@@ -15015,114 +15414,112 @@ index 587fb0896..2333f0550 100644
 +
 +export default NodeVarying;
 diff --git a/jsdoc-testing/jsdoc/src/nodes/core/OverrideContextNode.d.ts b/jsdoc-testing/jsdoc/src/nodes/core/OverrideContextNode.d.ts
-index dadc1807e..469b6efea 100644
+index db9bdc1ec..63831e68e 100644
 --- a/jsdoc-testing/jsdoc/src/nodes/core/OverrideContextNode.d.ts
 +++ b/jsdoc-testing/jsdoc/src/nodes/core/OverrideContextNode.d.ts
-@@ -1,36 +1,7 @@
--/**
-- * TSL function for creating an `OverrideContextNode` to override a single target node.
-- *
-- * ```js
-- * material.contextNode = overrideNode( positionLocal, ( builder ) => positionLocal.add( vec3( 1, 0, 0 ) ) );
-- * ```
-- *
-- * @tsl
-- * @function
-- * @param {Node} targetNode - The target node that should be overridden.
-- * @param {Function|Node|null} [callback=null] - A callback function returning the overriding node (which receives the builder as its argument), or the overriding node itself.
-- * @param {Node|null} [flowNode=null] - The node whose context should be modified.
-- * @return {OverrideContextNode} The created override context node.
-- */
--export function overrideNode(targetNode: Node, callback?: Function | Node | null, flowNode?: Node | null): OverrideContextNode;
--/**
-- * TSL function for creating an `OverrideContextNode` to override multiple target nodes.
-- *
-- * ```js
-- * material.contextNode = overrideNodes( [
-- * 	[ positionView, customPositionView ],
-- * 	[ positionViewDirection, ( builder ) => customPositionViewDirection ]
-- * ] );
-- * ```
-- *
-- * @tsl
-- * @function
-- * @param {Map<Node, (Function|Node)>|Array<Array<Node|Function|Node>>} overrides - The overrides mapping target nodes to callback functions or overriding nodes.
-- * @param {Node|null} [flowNode=null] - The node whose context should be modified.
-- * @return {OverrideContextNode} The created override context node.
-- */
--export function overrideNodes(overrides: Map<Node, (Function | Node)> | Array<Array<Node | Function | Node>>, flowNode?: Node | null): OverrideContextNode;
--export default OverrideContextNode;
+@@ -1,3 +1,45 @@
++import { NodeShaderStage } from './constants.js';
 +import ContextNode from './ContextNode.js';
 +import Node from './Node.js';
 +import NodeBuilder from './NodeBuilder.js';
 +
- /**
-  * A specialized context node designed to override specific target nodes within a
-  * node sub-graph or flow. This allows replacing specific inputs (e.g., normal
-@@ -47,14 +18,14 @@ export default OverrideContextNode;
-  *
-  * @augments ContextNode
-  */
--declare class OverrideContextNode extends ContextNode {
++/**
++ * A specialized context node designed to override specific target nodes within a
++ * node sub-graph or flow. This allows replacing specific inputs (e.g., normal
++ * and position vectors) dynamically during compilation for a specific flow node,
++ * without having to reconstruct or duplicate the source nodes.
++ *
++ * ```js
++ * // Method chaining example:
++ * node.overrideNode( positionLocal, () => positionLocal.add( vec3( 1, 0, 0 ) ) );
++ *
++ * // Context assignment example:
++ * material.contextNode = overrideNode( positionLocal, () => positionLocal.add( vec3( 1, 0, 0 ) ) );
++ * ```
++ *
++ * @augments ContextNode
++ */
 +declare class OverrideContextNode extends ContextNode<unknown> {
-     /**
-      * Constructs a new override context node.
-      *
-      * @param {Map<Node, Function>} overrideNodes - A map mapping target nodes to their respective override callback functions.
-      * @param {Node|null} [flowNode=null] - The node whose context should be modified.
-      */
--    constructor(overrideNodes: Map<Node, Function>, flowNode?: Node | null);
-+    constructor(overrideNodes: Map<Node, (nodeBuilder: NodeBuilder) => Node>, flowNode?: Node | null);
-     /**
-      * This flag can be used for type testing.
-      *
-@@ -64,4 +35,45 @@ declare class OverrideContextNode extends ContextNode {
-      */
-     readonly isOverrideContextNode: boolean;
- }
--import ContextNode from './ContextNode.js';
++    /**
++     * Constructs a new override context node.
++     *
++     * @param {Map<Node, Function>} overrideNodes - A map mapping target nodes to their respective override callback functions.
++     * @param {Node|null} [flowNode=null] - The node whose context should be modified.
++     * @param {?string} [shaderStage=null] - The shader stage the overrides apply to, all stages by default.
++     */
++    constructor(overrideNodes: Map<Node, (nodeBuilder: NodeBuilder) => Node>, flowNode?: Node | null, shaderStage?: NodeShaderStage | null);
++    /**
++     * This flag can be used for type testing.
++     *
++     * @type {boolean}
++     * @readonly
++     * @default true
++     */
++    readonly isOverrideContextNode: boolean;
++}
 +
 +export default OverrideContextNode;
 +
-+/**
-+ * TSL function for creating an `OverrideContextNode` to override a single target node.
-+ *
-+ * ```js
-+ * material.contextNode = overrideNode( positionLocal, ( builder ) => positionLocal.add( vec3( 1, 0, 0 ) ) );
-+ * ```
-+ *
-+ * @tsl
-+ * @function
-+ * @param {Node} targetNode - The target node that should be overridden.
-+ * @param {Function|Node|null} [callback=null] - A callback function returning the overriding node (which receives the builder as its argument), or the overriding node itself.
-+ * @param {Node|null} [flowNode=null] - The node whose context should be modified.
-+ * @return {OverrideContextNode} The created override context node.
-+ */
+ /**
+  * TSL function for creating an `OverrideContextNode` to override a single target node.
+  *
+@@ -12,7 +54,8 @@
+  * @param {Node|null} [flowNode=null] - The node whose context should be modified.
+  * @return {OverrideContextNode} The created override context node.
+  */
+-export function overrideNode(targetNode: Node, callback?: Function | Node | null, flowNode?: Node | null): OverrideContextNode;
 +export function overrideNode(targetNode: Node, callback?: ((nodeBuilder: NodeBuilder) => Node) | Node | null, flowNode?: Node | null): OverrideContextNode;
 +
-+/**
-+ * TSL function for creating an `OverrideContextNode` to override multiple target nodes.
-+ *
-+ * ```js
-+ * material.contextNode = overrideNodes( [
-+ * 	[ positionView, customPositionView ],
-+ * 	[ positionViewDirection, ( builder ) => customPositionViewDirection ]
-+ * ] );
-+ * ```
-+ *
-+ * @tsl
-+ * @function
-+ * @param {Map<Node, (Function|Node)>|Array<Array<Node|Function|Node>>} overrides - The overrides mapping target nodes to callback functions or overriding nodes.
-+ * @param {Node|null} [flowNode=null] - The node whose context should be modified.
-+ * @return {OverrideContextNode} The created override context node.
-+ */
-+export function overrideNodes(overrides: Map<Node, ((nodeBuilder: NodeBuilder) => Node) | Node | null> | Array<[Node, ((nodeBuilder: NodeBuilder) => Node) | Node | null]>, flowNode?: Node | null): OverrideContextNode;
+ /**
+  * TSL function for creating an `OverrideContextNode` to override multiple target nodes.
+  *
+@@ -31,40 +74,10 @@ export function overrideNode(targetNode: Node, callback?: Function | Node | null
+  * all varyings of the context are evaluated in the fragment stage, e.g. if the surface is reconstructed per fragment.
+  * @return {OverrideContextNode} The created override context node.
+  */
+-export function overrideNodes(overrides: Map<Node, (Function | Node)> | Array<Array<Node | Function | Node>>, flowNode?: Node | null, shaderStage?: string | null): OverrideContextNode;
+-export default OverrideContextNode;
+-/**
+- * A specialized context node designed to override specific target nodes within a
+- * node sub-graph or flow. This allows replacing specific inputs (e.g., normal
+- * and position vectors) dynamically during compilation for a specific flow node,
+- * without having to reconstruct or duplicate the source nodes.
+- *
+- * ```js
+- * // Method chaining example:
+- * node.overrideNode( positionLocal, () => positionLocal.add( vec3( 1, 0, 0 ) ) );
+- *
+- * // Context assignment example:
+- * material.contextNode = overrideNode( positionLocal, () => positionLocal.add( vec3( 1, 0, 0 ) ) );
+- * ```
+- *
+- * @augments ContextNode
+- */
+-declare class OverrideContextNode extends ContextNode {
+-    /**
+-     * Constructs a new override context node.
+-     *
+-     * @param {Map<Node, Function>} overrideNodes - A map mapping target nodes to their respective override callback functions.
+-     * @param {Node|null} [flowNode=null] - The node whose context should be modified.
+-     * @param {?string} [shaderStage=null] - The shader stage the overrides apply to, all stages by default.
+-     */
+-    constructor(overrideNodes: Map<Node, Function>, flowNode?: Node | null, shaderStage?: string | null);
+-    /**
+-     * This flag can be used for type testing.
+-     *
+-     * @type {boolean}
+-     * @readonly
+-     * @default true
+-     */
+-    readonly isOverrideContextNode: boolean;
++export function overrideNodes(overrides: Map<Node, ((nodeBuilder: NodeBuilder) => Node) | Node | null> | Array<[Node, ((nodeBuilder: NodeBuilder) => Node) | Node | null]>, flowNode?: Node | null, shaderStage?: NodeShaderStage | null): OverrideContextNode;
 +
 +declare module "./Node.js" {
 +    interface NodeElements {
-+        overrideNodes: (overrides: Map<Node, ((nodeBuilder: NodeBuilder) => Node) | Node | null> | Array<[Node, ((nodeBuilder: NodeBuilder) => Node) | Node | null]>) => OverrideContextNode;
++        overrideNodes: (overrides: Map<Node, ((nodeBuilder: NodeBuilder) => Node) | Node | null> | Array<[Node, ((nodeBuilder: NodeBuilder) => Node) | Node | null]>, shaderStage?: NodeShaderStage | null) => OverrideContextNode;
 +    }
-+}
+ }
+-import ContextNode from './ContextNode.js';
 diff --git a/jsdoc-testing/jsdoc/src/nodes/core/StructType.d.ts b/jsdoc-testing/jsdoc/src/nodes/core/StructType.d.ts
 index af08042f6..0190410e1 100644
 --- a/jsdoc-testing/jsdoc/src/nodes/core/StructType.d.ts
@@ -15213,7 +15610,7 @@ index 8f758a028..4218eb1db 100644
       * Whether this node is used more than once in context of other nodes.
       *
 diff --git a/jsdoc-testing/jsdoc/src/nodes/core/UniformNode.d.ts b/jsdoc-testing/jsdoc/src/nodes/core/UniformNode.d.ts
-index 780398f37..dbfdd00b4 100644
+index 780398f37..557ca3651 100644
 --- a/jsdoc-testing/jsdoc/src/nodes/core/UniformNode.d.ts
 +++ b/jsdoc-testing/jsdoc/src/nodes/core/UniformNode.d.ts
 @@ -1,11 +1,24 @@
@@ -15270,7 +15667,7 @@ index 780398f37..dbfdd00b4 100644
      /**
       * Returns the {@link UniformNode#groupNode}.
       *
-@@ -65,9 +78,82 @@ declare class UniformNode extends InputNode {
+@@ -65,9 +78,88 @@ declare class UniformNode extends InputNode {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {UniformNode} The node the shared uniform refers to.
       */
@@ -15297,10 +15694,16 @@ index 780398f37..dbfdd00b4 100644
 +     * @param {any} value - The value of this node. Usually a JS primitive or three.js object (vector, matrix, color, texture).
 +     * @param {?string} nodeType - The node type. If no explicit type is defined, the node tries to derive the type from its value.
 +     */
-+    new<TNodeType, TValue>(value: TValue, nodeType?: string | null): UniformNode<TNodeType, TValue>;
++    new<
++        TNodeType,
++        TValue = TNodeType extends keyof UniformValue ? UniformValue[TNodeType] : unknown,
++    >(value: TValue, nodeType?: string | null): UniformNode<TNodeType, TValue>;
 +};
 +
-+type UniformNode<TNodeType, TValue> = UniformNodeClass<TValue> & InputNode<TNodeType, TValue>;
++type UniformNode<
++    TNodeType,
++    TValue = TNodeType extends keyof UniformValue ? UniformValue[TNodeType] : unknown,
++> = UniformNodeClass<TValue> & InputNode<TNodeType, TValue>;
 +
 +export default UniformNode;
 +
@@ -15325,24 +15728,24 @@ index 780398f37..dbfdd00b4 100644
 +}
 +
 +interface Uniform {
-+    <const TNodeType extends keyof UniformValue>(type: TNodeType): UniformNode<TNodeType, UniformValue[TNodeType]>;
-+    (value: number, type?: "float"): UniformNode<"float", number>;
-+    (value: number, type: "int"): UniformNode<"int", number>;
-+    (value: number, type: "uint"): UniformNode<"uint", number>;
-+    (value: boolean, type?: "bool"): UniformNode<"bool", boolean>;
-+    (value: Vector2, type?: "vec2"): UniformNode<"vec2", Vector2>;
-+    (value: Vector2, type: "ivec2"): UniformNode<"ivec2", Vector2>;
-+    (value: Vector2, type: "uvec2"): UniformNode<"uvec2", Vector2>;
-+    (value: Vector3, type?: "vec3"): UniformNode<"vec3", Vector3>;
-+    (value: Vector3, type: "ivec3"): UniformNode<"ivec3", Vector3>;
-+    (value: Vector3, type: "uvec3"): UniformNode<"uvec3", Vector3>;
-+    (value: Vector4, type?: "vec4"): UniformNode<"vec4", Vector4>;
-+    (value: Vector4, type: "ivec4"): UniformNode<"ivec4", Vector4>;
-+    (value: Vector4, type: "uvec4"): UniformNode<"uvec4", Vector4>;
-+    (value: Matrix2, type?: "mat2"): UniformNode<"mat2", Matrix2>;
-+    (value: Matrix3, type?: "mat3"): UniformNode<"mat3", Matrix3>;
-+    (value: Matrix4, type?: "mat4"): UniformNode<"mat4", Matrix4>;
-+    (value: Color, type?: "color"): UniformNode<"color", Color>;
++    <const TNodeType extends keyof UniformValue>(type: TNodeType): UniformNode<TNodeType>;
++    (value: number, type?: "float"): UniformNode<"float">;
++    (value: number, type: "int"): UniformNode<"int">;
++    (value: number, type: "uint"): UniformNode<"uint">;
++    (value: boolean, type?: "bool"): UniformNode<"bool">;
++    (value: Vector2, type?: "vec2"): UniformNode<"vec2">;
++    (value: Vector2, type: "ivec2"): UniformNode<"ivec2">;
++    (value: Vector2, type: "uvec2"): UniformNode<"uvec2">;
++    (value: Vector3, type?: "vec3"): UniformNode<"vec3">;
++    (value: Vector3, type: "ivec3"): UniformNode<"ivec3">;
++    (value: Vector3, type: "uvec3"): UniformNode<"uvec3">;
++    (value: Vector4, type?: "vec4"): UniformNode<"vec4">;
++    (value: Vector4, type: "ivec4"): UniformNode<"ivec4">;
++    (value: Vector4, type: "uvec4"): UniformNode<"uvec4">;
++    (value: Matrix2, type?: "mat2"): UniformNode<"mat2">;
++    (value: Matrix3, type?: "mat3"): UniformNode<"mat3">;
++    (value: Matrix4, type?: "mat4"): UniformNode<"mat4">;
++    (value: Color, type?: "color"): UniformNode<"color">;
 +    <TNodeType, TValue>(value: InputNode<TNodeType, TValue>): UniformNode<TNodeType, TValue>;
 +    <TNodeType, TValue>(value: VarNode<TNodeType, ConstNode<TNodeType, TValue>>): UniformNode<TNodeType, TValue>;
 +}
@@ -15955,6 +16358,50 @@ index 0bc37ff1c..22902cb59 100644
 -import { Plane } from '../../math/Plane.js';
 +
 +export default ClippingContext;
+diff --git a/jsdoc-testing/jsdoc/src/renderers/common/ComputePipeline.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/ComputePipeline.d.ts
+index 9341fac42..2ffead8f6 100644
+--- a/jsdoc-testing/jsdoc/src/renderers/common/ComputePipeline.d.ts
++++ b/jsdoc-testing/jsdoc/src/renderers/common/ComputePipeline.d.ts
+@@ -1,4 +1,6 @@
+-export default ComputePipeline;
++import NodeAttribute from '../../nodes/core/NodeAttribute.js';
++import Pipeline from './Pipeline.js';
++
+ /**
+  * Class for representing compute pipelines.
+  *
+@@ -14,7 +16,7 @@ declare class ComputePipeline extends Pipeline {
+      * @param {?Array<Object>} [transforms=null] - The transforms (only relevant for WebGL 2 which uses Transform Feedback).
+      * @param {?Array<Object>} [attributes=null] - The attributes (only relevant for WebGL 2 which uses Transform Feedback).
+      */
+-    constructor(cacheKey: string, computeProgram: ProgrammableStage, transforms?: Array<Object> | null, attributes?: Array<Object> | null);
++    constructor(cacheKey: string, computeProgram: ProgrammableStage, transforms?: unknown[] | null, attributes?: NodeAttribute[] | null);
+     /**
+      * The pipeline's compute shader.
+      *
+@@ -26,13 +28,13 @@ declare class ComputePipeline extends Pipeline {
+      *
+      * @type {?Array<Object>}
+      */
+-    transforms: Array<Object> | null;
++    transforms: unknown[] | null;
+     /**
+      * The attributes (only relevant for WebGL 2 which uses Transform Feedback).
+      *
+      * @type {?Array<Object>}
+      */
+-    attributes: Array<Object> | null;
++    attributes: NodeAttribute[] | null;
+     /**
+      * This flag can be used for type testing.
+      *
+@@ -42,4 +44,5 @@ declare class ComputePipeline extends Pipeline {
+      */
+     readonly isComputePipeline: boolean;
+ }
+-import Pipeline from './Pipeline.js';
++
++export default ComputePipeline;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/Constants.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/Constants.d.ts
 index 0561bfadb..93988f36e 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/Constants.d.ts
@@ -16164,7 +16611,7 @@ index 8155740ab..bc7ea9656 100644
 +
 +export default Info;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/InspectorBase.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/InspectorBase.d.ts
-index 58e08658c..f488aa3ae 100644
+index 25b2e5e94..80e23a83d 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/InspectorBase.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/common/InspectorBase.d.ts
 @@ -1,23 +1,28 @@
@@ -16184,7 +16631,7 @@ index 58e08658c..f488aa3ae 100644
 +}
 +
  /**
-  * InspectorBase is the base class for all inspectors.
+  * InspectorBase is the base class for all inspectors. Can only be used with {@link WebGPURenderer}.
 - *
 - * @augments EventDispatcher
   */
@@ -16192,7 +16639,7 @@ index 58e08658c..f488aa3ae 100644
 -    /**
 -     * The renderer associated with this inspector.
 -     *
--     * @type {WebGLRenderer}
+-     * @type {Renderer}
 -     * @private
 -     */
 -    private _renderer;
@@ -16208,7 +16655,7 @@ index 58e08658c..f488aa3ae 100644
      /**
       * Indicates whether the inspector is running.
       *
-@@ -37,20 +42,20 @@ declare class InspectorBase extends EventDispatcher {
+@@ -37,7 +42,7 @@ declare class InspectorBase extends EventDispatcher {
       *
       * @return {Object} The node frame.
       */
@@ -16217,21 +16664,6 @@ index 58e08658c..f488aa3ae 100644
      /**
       * Sets the renderer for this inspector.
       *
-      * @param {WebGLRenderer} renderer - The renderer to associate with this inspector.
-      * @return {InspectorBase} This inspector instance.
-      */
--    setRenderer(renderer: WebGLRenderer): InspectorBase;
-+    setRenderer(renderer: Renderer): InspectorBase;
-     /**
-      * Returns the renderer associated with this inspector.
-      *
-      * @return {WebGLRenderer} The associated renderer.
-      */
--    getRenderer(): WebGLRenderer;
-+    getRenderer(): Renderer;
-     /**
-      * Called when a frame begins.
-      */
 @@ -64,28 +69,28 @@ declare class InspectorBase extends EventDispatcher {
       *
       * @param {Node} node - The node to inspect.
@@ -16267,7 +16699,7 @@ index 58e08658c..f488aa3ae 100644
       *
 @@ -94,29 +99,30 @@ declare class InspectorBase extends EventDispatcher {
       * @param {Camera} camera - The camera being used for rendering.
-      * @param {?WebGLRenderTarget} renderTarget - The render target, if any.
+      * @param {?RenderTarget} renderTarget - The render target, if any.
       */
 -    beginRender(): void;
 +    beginRender(uid: string, scene: Scene, camera: Camera, renderTarget: RenderTarget): void;
@@ -16302,7 +16734,7 @@ index 58e08658c..f488aa3ae 100644
 +
 +export default InspectorBase;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/Lighting.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/Lighting.d.ts
-index ae4011fdf..a3c28b01f 100644
+index 2146b4760..b3e00150f 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/Lighting.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/common/Lighting.d.ts
 @@ -1,4 +1,7 @@
@@ -16314,7 +16746,7 @@ index ae4011fdf..a3c28b01f 100644
  /**
   * This renderer module manages the lights nodes which are unique
   * per scene + camera + lighting combination.
-@@ -16,20 +19,6 @@ declare class Lighting {
+@@ -16,36 +19,6 @@ declare class Lighting {
       * @default true
       */
      enabled: boolean;
@@ -16332,37 +16764,57 @@ index ae4011fdf..a3c28b01f 100644
 -     * @type {WeakMap<Scene, LightsNode>}
 -     */
 -    private _lightsNodeMap;
+-    /**
+-     * Weak references to the lights nodes created by this lighting manager, so they
+-     * can be disposed with {@link Lighting#dispose} without keeping scenes alive.
+-     *
+-     * @private
+-     * @type {Set<WeakRef<LightsNode>>}
+-     */
+-    private _tracked;
+-    /**
+-     * Removes weak references from `_tracked` when their lights node has been
+-     * garbage collected without an explicit `dispose()`.
+-     *
+-     * @private
+-     * @type {FinalizationRegistry}
+-     */
+-    private _registry;
      /**
       * Creates a new lights node for the given array of lights.
       *
-@@ -62,4 +51,5 @@ declare class Lighting {
+@@ -60,14 +33,6 @@ declare class Lighting {
+      * @return {LightsNode} The lights node.
       */
-     finishRender(scene: Scene): void;
+     getNode(scene: Scene): LightsNode;
+-    /**
+-     * Tracks the given lights node so it is disposed with {@link Lighting#dispose}.
+-     * Subclasses creating additional lights nodes should track them as well.
+-     *
+-     * @private
+-     * @param {LightsNode} node - The lights node.
+-     */
+-    private _track;
+     /**
+      * Saves the current lights of the scene's lights node so they can be restored
+      * in {@link Lighting#finishRender}. Must be paired with a `finishRender()` call
+@@ -92,4 +57,5 @@ declare class Lighting {
+      */
+     dispose(): void;
  }
 -import { LightsNode } from '../../nodes/Nodes.js';
 +
 +export default Lighting;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/ProgrammableStage.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/ProgrammableStage.d.ts
-index 5fdbd4d68..ed7bc5700 100644
+index d15500787..90d1a53d8 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/ProgrammableStage.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/common/ProgrammableStage.d.ts
-@@ -1,4 +1,5 @@
+@@ -1,4 +1,3 @@
 -export default ProgrammableStage;
-+import NodeAttribute from '../../nodes/core/NodeAttribute.js';
-+
  /**
   * Class for representing programmable stages which are vertex,
   * fragment or compute shaders. Unlike fixed-function states (like blending),
-@@ -16,7 +17,7 @@ declare class ProgrammableStage {
-      * @param {?Array<Object>} [transforms=null] - The transforms (only relevant for compute stages with WebGL 2 which uses Transform Feedback).
-      * @param {?Array<Object>} [attributes=null] - The attributes (only relevant for compute stages with WebGL 2 which uses Transform Feedback).
-      */
--    constructor(code: string, stage: ("vertex" | "fragment" | "compute"), name: string, transforms?: Array<Object> | null, attributes?: Array<Object> | null);
-+    constructor(code: string, stage: ("vertex" | "fragment" | "compute"), name: string, transforms?: unknown[] | null, attributes?: NodeAttribute[] | null);
-     /**
-      * The id of the programmable stage.
-      *
-@@ -34,7 +35,7 @@ declare class ProgrammableStage {
+@@ -32,7 +31,7 @@ declare class ProgrammableStage {
       *
       * @type {string}
       */
@@ -16371,23 +16823,7 @@ index 5fdbd4d68..ed7bc5700 100644
      /**
       * The name of the stage.
       * This is used for debugging purposes.
-@@ -47,13 +48,13 @@ declare class ProgrammableStage {
-      *
-      * @type {?Array<Object>}
-      */
--    transforms: Array<Object> | null;
-+    transforms: unknown[] | null;
-     /**
-      * The attributes (only relevant for compute stages with WebGL 2 which uses Transform Feedback).
-      *
-      * @type {?Array<Object>}
-      */
--    attributes: Array<Object> | null;
-+    attributes: NodeAttribute[] | null;
-     /**
-      * How often the programmable stage is currently in use.
-      *
-@@ -62,3 +63,5 @@ declare class ProgrammableStage {
+@@ -48,3 +47,5 @@ declare class ProgrammableStage {
       */
      usedTimes: number;
  }
@@ -18077,12 +18513,14 @@ index 72d0bdec9..3be417290 100644
 +
 +export default XRManager;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeBuilderState.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeBuilderState.d.ts
-index af3e23934..2b66ae129 100644
+index 4ebb00582..2abd8fbba 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeBuilderState.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeBuilderState.d.ts
-@@ -1,4 +1,8 @@
+@@ -1,4 +1,10 @@
 -export default NodeBuilderState;
 +import BindGroup from '../BindGroup.js';
++import Bindings from '../Bindings.js';
++import RenderContext from '../RenderContext.js';
 +import NodeAttribute from '../../../nodes/core/NodeAttribute.js';
 +import NodeMaterialObserver from '../../../materials/nodes/manager/NodeMaterialObserver.js';
 +import Node from '../../../nodes/core/Node.js';
@@ -18090,7 +18528,7 @@ index af3e23934..2b66ae129 100644
  /**
   * This module represents the state of a node builder after it was
   * used to build the nodes for a render object. The state holds the
-@@ -24,7 +28,7 @@ declare class NodeBuilderState {
+@@ -24,7 +30,7 @@ declare class NodeBuilderState {
       * @param {boolean} hardwareClipping - Whether the built material uses hardware clipping or not.
       * @param {Array<Object>} transforms - An array with transform attribute objects. Only relevant when using compute shaders with WebGL 2.
       */
@@ -18099,7 +18537,7 @@ index af3e23934..2b66ae129 100644
      /**
       * The native vertex shader code.
       *
-@@ -49,39 +53,39 @@ declare class NodeBuilderState {
+@@ -49,39 +55,39 @@ declare class NodeBuilderState {
       *
       * @type {Array<Object>}
       */
@@ -18145,12 +18583,12 @@ index af3e23934..2b66ae129 100644
      /**
       * A node material observer.
       *
-@@ -107,6 +111,7 @@ declare class NodeBuilderState {
-      *
+@@ -109,6 +115,7 @@ declare class NodeBuilderState {
+      * @param {RenderContext} renderContext - The render context.
       * @return {Array<BindGroup>} A array of bind groups.
       */
--    createBindings(): Array<BindGroup>;
-+    createBindings(): BindGroup[];
+-    createBindings(bindings: Bindings, renderContext: RenderContext): Array<BindGroup>;
++    createBindings(bindings: Bindings, renderContext: RenderContext): BindGroup[];
  }
 -import BindGroup from '../BindGroup.js';
 +
@@ -18261,7 +18699,7 @@ index dbc311e14..d40f048a9 100644
 +
 +export default NodeLibrary;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeManager.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeManager.d.ts
-index dadca57c0..695671207 100644
+index fb8b21d9d..2681af797 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeManager.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeManager.d.ts
 @@ -1,4 +1,28 @@
@@ -18321,25 +18759,29 @@ index dadca57c0..695671207 100644
      /**
       * Returns a node builder state for the given compute node.
       *
-@@ -150,7 +174,7 @@ declare class NodeManager extends DataMap {
-      * @param {boolean} [useAsync=false] - Whether to use async build with yielding.
+@@ -151,7 +175,11 @@ declare class NodeManager extends DataMap {
+      * @param {Function} [yieldFn=yieldToMain] - The function used to yield to the main thread in an async build.
       * @return {NodeBuilderState|Promise<NodeBuilderState>} The node builder state (or Promise if async).
       */
--    getForCompute(computeNode: Node, useAsync?: boolean): NodeBuilderState | Promise<NodeBuilderState>;
-+    getForCompute(computeNode: ComputeNode, useAsync?: boolean): NodeBuilderState | Promise<NodeBuilderState>;
+-    getForCompute(computeNode: Node, useAsync?: boolean, yieldFn?: Function): NodeBuilderState | Promise<NodeBuilderState>;
++    getForCompute(
++        computeNode: ComputeNode,
++        useAsync?: boolean,
++        yieldFn?: () => Promise<void>,
++    ): NodeBuilderState | Promise<NodeBuilderState>;
      /**
       * Async version of getForCompute() that yields to main thread during build.
       * Use this in compileComputeAsync() to prevent blocking the main thread.
-@@ -158,7 +182,7 @@ declare class NodeManager extends DataMap {
-      * @param {Node} computeNode - The compute node.
+@@ -160,7 +188,7 @@ declare class NodeManager extends DataMap {
+      * @param {Function} [yieldFn=yieldToMain] - The function used to yield to the main thread.
       * @return {Promise<NodeBuilderState>} A promise that resolves to the node builder state.
       */
--    getForComputeAsync(computeNode: Node): Promise<NodeBuilderState>;
-+    getForComputeAsync(computeNode: ComputeNode): Promise<NodeBuilderState>;
+-    getForComputeAsync(computeNode: Node, yieldFn?: Function): Promise<NodeBuilderState>;
++    getForComputeAsync(computeNode: ComputeNode, yieldFn?: () => Promise<void>): Promise<NodeBuilderState>;
      /**
       * Creates a node builder state for the given node builder.
       *
-@@ -235,7 +259,7 @@ declare class NodeManager extends DataMap {
+@@ -237,7 +265,7 @@ declare class NodeManager extends DataMap {
       * @param {boolean} [forceUpdate=false] - Whether an update should be enforced or not.
       * @return {Node} The node representation.
       */
@@ -18348,7 +18790,7 @@ index dadca57c0..695671207 100644
      /**
       * If a scene fog is configured, this method makes sure to
       * represent the fog with a corresponding node-based implementation.
-@@ -261,7 +285,7 @@ declare class NodeManager extends DataMap {
+@@ -263,7 +291,7 @@ declare class NodeManager extends DataMap {
       * @param {?Node} [compute=null] - The compute node.
       * @return {NodeFrame} The node frame.
       */
@@ -18357,7 +18799,7 @@ index dadca57c0..695671207 100644
      /**
       * Returns a node frame configured for the given render object.
       *
-@@ -275,7 +299,7 @@ declare class NodeManager extends DataMap {
+@@ -277,7 +305,7 @@ declare class NodeManager extends DataMap {
       * @param {Node} computeNode - The compute node.
       * @return {NodeFrame} The node frame.
       */
@@ -18366,7 +18808,7 @@ index dadca57c0..695671207 100644
      /**
       * Returns the current output cache key.
       *
-@@ -317,21 +341,21 @@ declare class NodeManager extends DataMap {
+@@ -319,21 +347,21 @@ declare class NodeManager extends DataMap {
       *
       * @param {Node} computeNode - The compute node.
       */
@@ -18391,7 +18833,7 @@ index dadca57c0..695671207 100644
      /**
       * Triggers the call of `update()` methods
       * for all nodes of the given render object.
-@@ -347,7 +371,5 @@ declare class NodeManager extends DataMap {
+@@ -349,7 +377,5 @@ declare class NodeManager extends DataMap {
       */
      needsRefresh(renderObject: RenderObject): number;
  }

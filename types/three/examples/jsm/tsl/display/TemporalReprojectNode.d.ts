@@ -29,10 +29,10 @@ declare class TemporalReprojectNode extends Node<"vec4"> {
 
     maxVelocityLength: number;
 
-    maxFrames: UniformNode<"float", number>;
-    hitPointReprojection: UniformNode<"bool", boolean>;
-    clampIntensity: UniformNode<"float", number>;
-    flickerSuppression: UniformNode<"float", number>;
+    maxFrames: UniformNode<"float">;
+    hitPointReprojection: UniformNode<"bool">;
+    clampIntensity: UniformNode<"float">;
+    flickerSuppression: UniformNode<"float">;
 
     constructor(
         beautyNode: Node<"vec4">,

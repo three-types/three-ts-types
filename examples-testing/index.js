@@ -33,6 +33,7 @@ const exceptionList = [
     'webgl_loader_texture_ktx2',
     'webgl_loader_texture_lottie',
     'webgl_loader_texture_pvrtc',
+    'webgl_loader_vdb',
     'webgl_materials_channels',
     'webgl_materials_matcap',
     'webgl_materials_normalmap',

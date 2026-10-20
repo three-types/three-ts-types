@@ -3,10 +3,10 @@ import { Camera, DirectionalLight, Node, PointLight, TextureNode, UniformNode } 
 declare class GodraysNode extends Node<"vec4"> {
     depthNode: TextureNode;
 
-    raymarchSteps: UniformNode<"uint", number>;
-    density: UniformNode<"float", number>;
-    maxDensity: UniformNode<"float", number>;
-    distanceAttenuation: UniformNode<"float", number>;
+    raymarchSteps: UniformNode<"uint">;
+    density: UniformNode<"float">;
+    maxDensity: UniformNode<"float">;
+    distanceAttenuation: UniformNode<"float">;
     resolutionScale: number;
 
     constructor(depthNode: TextureNode, camera: Camera, light: DirectionalLight | PointLight);

@@ -132,13 +132,13 @@ declare class SSRNode extends Node<"vec4"> {
      *
      * @type {UniformNode<float>}
      */
-    maxDistance: UniformNode<"float", number>;
+    maxDistance: UniformNode<"float">;
     /**
      * Controls the cutoff between what counts as a possible reflection hit and what does not.
      *
      * @type {UniformNode<float>}
      */
-    thickness: UniformNode<"float", number>;
+    thickness: UniformNode<"float">;
     /**
      * A multiplier for the overall reflection intensity. `1` leaves the
      * reflections unchanged, lower values dim them and higher values boost them.
@@ -146,7 +146,7 @@ declare class SSRNode extends Node<"vec4"> {
      * @type {UniformNode<float>}
      * @default 1
      */
-    intensity: UniformNode<"float", number>;
+    intensity: UniformNode<"float">;
     /**
      * Screen-edge fade width, in UV units. As a screen-space hit approaches a screen
      * border, the reflection is faded over this distance — either toward the environment
@@ -156,14 +156,14 @@ declare class SSRNode extends Node<"vec4"> {
      * @type {UniformNode<float>}
      * @default 0.2
      */
-    screenEdgeFade: UniformNode<"float", number>;
+    screenEdgeFade: UniformNode<"float">;
     /**
      * Absolute env luminance cap. HDR env samples above this are scaled down (hue preserved).
      *
      * @type {UniformNode<float>}
      * @default 10
      */
-    maxLuminance: UniformNode<"float", number>;
+    maxLuminance: UniformNode<"float">;
     /**
      * This parameter controls how detailed the raymarching process works.
      * The value ranges is `[0,1]` where `1` means best quality (the maximum number
@@ -175,7 +175,7 @@ declare class SSRNode extends Node<"vec4"> {
      *
      * @type {UniformNode<float>}
      */
-    quality: UniformNode<"float", number>;
+    quality: UniformNode<"float">;
     /**
      * Mirror bias for the stochastic GGX sampling. Concentrates the reflected rays toward
      * the lobe's narrow (near-mirror) core, trading a small amount of bias for less noise.
@@ -184,7 +184,7 @@ declare class SSRNode extends Node<"vec4"> {
      * @type {UniformNode<float>}
      * @default 0.5
      */
-    mirrorBias: UniformNode<"float", number>;
+    mirrorBias: UniformNode<"float">;
     /**
      * HDR environment map for screen-space misses.
      *
@@ -216,7 +216,7 @@ declare class SSRNode extends Node<"vec4"> {
      * @type {UniformNode<float>}
      * @default Math.PI
      */
-    environmentIntensity: UniformNode<"float", number>;
+    environmentIntensity: UniformNode<"float">;
     /**
      * Non-linear step distribution exponent (compile-time constant). See the backing
      * field for details. Assigning a new value recompiles the SSR material.
@@ -301,7 +301,7 @@ declare class SSRNode extends Node<"vec4"> {
      *
      * @type {?UniformNode<float>}
      */
-    get envMapIntensity(): UniformNode<"float", number> | null;
+    get envMapIntensity(): UniformNode<"float"> | null;
     getRenderTarget(): RenderTarget;
 }
 

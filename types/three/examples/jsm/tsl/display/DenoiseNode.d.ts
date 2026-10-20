@@ -7,11 +7,11 @@ declare class DenoiseNode extends Node {
 
     noiseNode: Node;
 
-    lumaPhi: UniformNode<"float", number>;
-    depthPhi: UniformNode<"float", number>;
-    normalPhi: UniformNode<"float", number>;
-    radius: UniformNode<"float", number>;
-    index: UniformNode<"float", number>;
+    lumaPhi: UniformNode<"float">;
+    depthPhi: UniformNode<"float">;
+    normalPhi: UniformNode<"float">;
+    radius: UniformNode<"float">;
+    index: UniformNode<"float">;
 
     constructor(textureNode: Node, depthNode: Node, normalNode: Node, noiseNode: Node, camera: Camera);
 }
