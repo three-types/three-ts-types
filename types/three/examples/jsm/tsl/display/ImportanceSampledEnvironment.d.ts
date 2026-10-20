@@ -11,7 +11,7 @@ declare class ImportanceSampledEnvironment {
      * @param {boolean} [importanceSampling=false] - When `true`, builds luminance CDF tables and enables MIS env sampling.
      */
     constructor(importanceSampling?: boolean);
-    intensity: UniformNode<"float", number>;
+    intensity: UniformNode<"float">;
     /**
      * @param {Texture} hdr - Equirectangular HDR environment map.
      */
@@ -27,7 +27,7 @@ declare class ImportanceSampledEnvironment {
      * @return {Node<vec3>}
      */
     sampleReflect(params: {
-        cameraWorldMatrix: UniformNode<"mat4", Matrix4>;
+        cameraWorldMatrix: UniformNode<"mat4">;
         viewReflectDir: Node<"vec3">;
         sampleWeight?: Node<"float">;
     }): Node<"vec3">;
@@ -44,7 +44,7 @@ declare class ImportanceSampledEnvironment {
      * @return {Node<vec3>}
      */
     sampleEnvironmentBRDF(params: {
-        cameraWorldMatrix: UniformNode<"mat4", Matrix4>;
+        cameraWorldMatrix: UniformNode<"mat4">;
         viewReflectDir: Node<"vec3">;
         N: Node<"vec3">;
         V: Node<"vec3">;
@@ -70,7 +70,7 @@ declare class ImportanceSampledEnvironment {
      * @return {Node<vec3>}
      */
     sampleEnvironmentMIS(params: {
-        cameraWorldMatrix: UniformNode<"mat4", Matrix4>;
+        cameraWorldMatrix: UniformNode<"mat4">;
         viewReflectDir: Node<"vec3">;
         N: Node<"vec3">;
         V: Node<"vec3">;

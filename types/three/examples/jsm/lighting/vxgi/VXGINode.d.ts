@@ -32,15 +32,15 @@ declare class VXGINodeInterface {
      */
     volume: VXGIVolume;
 
-    coneCount: UniformNode<"uint", number>;
-    coneAngle: UniformNode<"float", number>;
-    giIntensity: UniformNode<"float", number>;
-    aoIntensity: UniformNode<"float", number>;
-    aoMinVisibility: UniformNode<"float", number>;
-    aoDistance: UniformNode<"float", number>;
-    normalOffset: UniformNode<"float", number>;
-    debug: UniformNode<"int", number>;
-    debugLevel: UniformNode<"float", number>;
+    coneCount: UniformNode<"uint">;
+    coneAngle: UniformNode<"float">;
+    giIntensity: UniformNode<"float">;
+    aoIntensity: UniformNode<"float">;
+    aoMinVisibility: UniformNode<"float">;
+    aoDistance: UniformNode<"float">;
+    normalOffset: UniformNode<"float">;
+    debug: UniformNode<"int">;
+    debugLevel: UniformNode<"float">;
 
     /**
      * Whether to use temporal filtering or not. Setting this property to `true` requires the

@@ -37,12 +37,12 @@ declare class WaterNode extends Node<"vec4"> {
     normalMap1: TextureNode;
     flowMap: TextureNode;
 
-    color: UniformNode<"color", Color>;
-    flowDirection: UniformNode<"vec2", Vector2>;
-    flowSpeed: UniformNode<"float", number>;
-    reflectivity: UniformNode<"float", number>;
-    scale: UniformNode<"float", number>;
-    flowConfig: UniformNode<"vec3", Vector3>;
+    color: UniformNode<"color">;
+    flowDirection: UniformNode<"vec2">;
+    flowSpeed: UniformNode<"float">;
+    reflectivity: UniformNode<"float">;
+    scale: UniformNode<"float">;
+    flowConfig: UniformNode<"vec3">;
 
     constructor(options: WaterMeshOptions, waterBody: WaterMesh);
 

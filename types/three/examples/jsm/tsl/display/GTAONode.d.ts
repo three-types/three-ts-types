@@ -6,18 +6,18 @@ declare class GTAONode extends Node<"float"> {
 
     resolutionScale: number;
 
-    radius: UniformNode<"float", number>;
-    thickness: UniformNode<"float", number>;
+    radius: UniformNode<"float">;
+    thickness: UniformNode<"float">;
     /**
      * @deprecated since r186. The new distance model "Quadratic Ray Stepping" does not need it anymore.
      */
-    distanceExponent: UniformNode<"float", number>;
+    distanceExponent: UniformNode<"float">;
     /**
      * @deprecated since r186. The new distance model "Quadratic Ray Stepping" does not need it anymore.
      */
-    distanceFallOff: UniformNode<"float", number>;
-    scale: UniformNode<"float", number>;
-    samples: UniformNode<"float", number>;
+    distanceFallOff: UniformNode<"float">;
+    scale: UniformNode<"float">;
+    samples: UniformNode<"float">;
 
     useTemporalFiltering: boolean;
 
