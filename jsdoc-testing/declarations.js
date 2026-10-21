@@ -43,6 +43,7 @@ const files = [
     'examples/jsm/tsl/utils/RNoise',
     'examples/jsm/tsl/utils/SoftParticles',
     'examples/jsm/tsl/utils/SpecularHelpers',
+    'examples/jsm/utils/unwrapUVs',
     'examples/jsm/webxr/WebGLXRFallback',
     'src/animation/tracks/BooleanKeyframeTrack',
     'src/animation/tracks/ColorKeyframeTrack',
