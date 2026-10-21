@@ -283,6 +283,7 @@ export * from "./utils/ShadowMapViewer.js";
 export * as SkeletonUtils from "./utils/SkeletonUtils.js";
 export * as SortUtils from "./utils/SortUtils.js";
 export * from "./utils/UVsDebug.js";
+export * from "./utils/unwrapUVs.js";
 export * from "./utils/WebGLTextureUtils.js";
 export * from "./utils/WorkerPool.js";
 
