@@ -13312,7 +13312,7 @@ index 8b5885c3c..6175b46ab 100644
 +
 +export default VolumeNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/manager/NodeMaterialObserver.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/manager/NodeMaterialObserver.d.ts
-index 2cf3f4f39..4c3c3fa76 100644
+index 3df4a6901..4c3c3fa76 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/manager/NodeMaterialObserver.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/manager/NodeMaterialObserver.d.ts
 @@ -1,4 +1,6 @@
@@ -13368,7 +13368,7 @@ index 2cf3f4f39..4c3c3fa76 100644
      /**
       * Returns `true` if the current rendering produces motion vectors.
       *
-@@ -65,29 +45,6 @@ declare class NodeMaterialObserver {
+@@ -65,38 +45,6 @@ declare class NodeMaterialObserver {
       * @return {boolean} Whether the current rendering produces motion vectors or not.
       */
      needsVelocity(renderer: Renderer): boolean;
@@ -13388,6 +13388,15 @@ index 2cf3f4f39..4c3c3fa76 100644
 -     */
 -    getOutputTarget(renderer: Renderer): RenderTarget | CanvasTarget;
 -    /**
+-     * Returns an output target data structure holding the size of the given output
+-     * target for monitoring. Its version is incremented whenever a size change is observed.
+-     *
+-     * @param {RenderTarget|CanvasTarget} outputTarget - The output target.
+-     * @param {RenderContext} renderContext - The render context.
+-     * @return {Object} An object for monitoring the output target size.
+-     */
+-    getOutputTargetData(outputTarget: RenderTarget | CanvasTarget, renderContext: RenderContext): Object;
+-    /**
 -     * Returns an attribute data structure holding the attributes versions for
 -     * monitoring.
 -     *
@@ -13398,7 +13407,7 @@ index 2cf3f4f39..4c3c3fa76 100644
      /**
       * Returns `true` if the node builder's context (e.g. material, scene) uses node properties.
       *
-@@ -95,85 +52,6 @@ declare class NodeMaterialObserver {
+@@ -104,85 +52,6 @@ declare class NodeMaterialObserver {
       * @return {boolean} Whether the node builder's context uses node properties or not.
       */
      containsNode(builder: NodeBuilder): boolean;
