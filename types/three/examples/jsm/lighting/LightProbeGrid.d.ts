@@ -160,7 +160,7 @@ export class LightProbeGrid extends Light {
      * @param {WebGPURenderer} renderer - The renderer.
      * @param {Scene} scene - The scene to render.
      * @param {Object} [options] - Bake options.
-     * @param {number} [options.cubemapSize=8] - Resolution of each cubemap face.
+     * @param {number} [options.cubemapSize=8] - Resolution of each cubemap face. Must be a multiple of 4.
      * @param {number} [options.near=0.1] - Near plane for the cube camera.
      * @param {number} [options.far=100] - Far plane for the cube camera.
      * @param {number} [options.bounces=0] - Additional bounce passes. Only available when baking the whole grid.
