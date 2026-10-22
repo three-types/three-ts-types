@@ -1435,7 +1435,7 @@ index 83242b8cf..87c3ee971 100644
 -import { Data3DTexture } from 'three';
 -import { Scene } from 'three';
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/lighting/vxgi/VXGIVolume.d.ts b/jsdoc-testing/jsdoc/examples/jsm/lighting/vxgi/VXGIVolume.d.ts
-index 8cd7d530a..2b5dfc786 100644
+index 914ca6ad0..f2a861d99 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/lighting/vxgi/VXGIVolume.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/lighting/vxgi/VXGIVolume.d.ts
 @@ -1,3 +1,15 @@
@@ -1454,7 +1454,7 @@ index 8cd7d530a..2b5dfc786 100644
  /**
   * Holds the voxel representation of a scene for {@link VXGINode}: an anisotropic opacity
   * mip chain, a direct radiance volume and a radiance volume with cached bounces.
-@@ -116,14 +128,14 @@ export class VXGIVolume {
+@@ -120,14 +132,14 @@ export class VXGIVolume {
       * @type {UniformNode<float>}
       * @default 0
       */
@@ -1471,7 +1471,7 @@ index 8cd7d530a..2b5dfc786 100644
      /**
       * Aperture in degrees of the visibility cones traced towards lights that do not provide a
       * shadow map. Wider cones are cheaper but soften the injected shadows.
-@@ -131,38 +143,38 @@ export class VXGIVolume {
+@@ -135,38 +147,38 @@ export class VXGIVolume {
       * @type {UniformNode<float>}
       * @default 10
       */
@@ -1516,7 +1516,7 @@ index 8cd7d530a..2b5dfc786 100644
      /**
       * The per-axis opacity of the scene (`xyz`) and the occupancy (`w`) as a mip chain.
       *
-@@ -211,51 +223,13 @@ export class VXGIVolume {
+@@ -215,52 +227,13 @@ export class VXGIVolume {
       *
       * @type {UniformNode<float>}
       */
@@ -1535,6 +1535,7 @@ index 8cd7d530a..2b5dfc786 100644
 -    _directional: boolean;
 -    _occupancyAttribute: StorageBufferAttribute | null;
 -    _triangleIdAttribute: StorageBufferAttribute | null;
+-    _solidAttribute: StorageBufferAttribute | null;
 -    _triangleAttribute: StorageBufferAttribute | null;
 -    _trianglesNode: import("three/tsl").StorageBufferNode | null;
 -    _triangleCount: number;
@@ -1570,7 +1571,7 @@ index 8cd7d530a..2b5dfc786 100644
      /**
       * Updates the volume if required. Voxelizes the scene when `needsUpdate` is set and re-injects
       * lighting when `lightingNeedsUpdate` is set or a light has changed.
-@@ -268,59 +242,4 @@ export class VXGIVolume {
+@@ -273,59 +246,4 @@ export class VXGIVolume {
       * Frees internal resources.
       */
      dispose(): void;
