@@ -16863,30 +16863,32 @@ index 60fe6ccc9..c29cde36b 100644
              prefix + 'px' + postfix,
              prefix + 'nx' + postfix,
 diff --git a/examples-testing/examples/webgpu_lightprobes.ts b/examples-testing/examples/webgpu_lightprobes.ts
-index 1afef5fde..ad104d91c 100644
+index 054679b15..e3dc67d6f 100644
 --- a/examples-testing/examples/webgpu_lightprobes.ts
 +++ b/examples-testing/examples/webgpu_lightprobes.ts
-@@ -5,8 +5,8 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
+@@ -5,9 +5,9 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
  import { LightProbeGrid } from 'three/addons/lighting/LightProbeGrid.js';
  import { LightProbeGridHelper } from 'three/addons/helpers/LightProbeGridHelper.js';
  
 -let camera, scene, renderer, controls;
+-let pendingBake = null;
 -let probes, probesHelper;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, controls: OrbitControls;
++let pendingBake: (() => Promise<void>) | null = null;
 +let probes: LightProbeGrid, probesHelper: LightProbeGridHelper;
  
  init();
  
-@@ -125,7 +125,7 @@ async function init() {
+@@ -126,7 +126,7 @@ async function init() {
  
      // Bake light probe volume
  
 -    async function bake(resolution) {
 +    async function bake(resolution: number) {
+         light.intensity = params.lightIntensity;
+ 
          if (probes) {
-             scene.remove(probes);
-             probes.dispose();
-@@ -159,7 +159,7 @@ async function init() {
+@@ -175,7 +175,7 @@ async function init() {
  
      // GUI
  
@@ -16896,32 +16898,34 @@ index 1afef5fde..ad104d91c 100644
          .name('GI')
          .onChange(value => {
 diff --git a/examples-testing/examples/webgpu_lightprobes_complex.ts b/examples-testing/examples/webgpu_lightprobes_complex.ts
-index 944b5fc7c..2759ac0fa 100644
+index 1190dbe02..3fd35f3f3 100644
 --- a/examples-testing/examples/webgpu_lightprobes_complex.ts
 +++ b/examples-testing/examples/webgpu_lightprobes_complex.ts
-@@ -5,9 +5,9 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
+@@ -5,10 +5,10 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
  import { LightProbeGrid } from 'three/addons/lighting/LightProbeGrid.js';
  import { LightProbeGridHelper } from 'three/addons/helpers/LightProbeGridHelper.js';
  
 -let camera, scene, renderer, controls;
+-let pendingBake = null;
 -let probesLeft, probesRight;
 -let probesHelperLeft, probesHelperRight;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, controls: OrbitControls;
++let pendingBake: (() => Promise<void>) | null = null;
 +let probesLeft: LightProbeGrid, probesRight: LightProbeGrid;
 +let probesHelperLeft: LightProbeGridHelper, probesHelperRight: LightProbeGridHelper;
  
  init();
  
-@@ -218,7 +218,7 @@ async function init() {
-         resolution: 6,
+@@ -221,7 +221,7 @@ async function init() {
+         lightIntensity: 30,
      };
  
 -    async function bake(resolution) {
 +    async function bake(resolution: number) {
-         // Remove both volumes before baking to prevent feedback
+         warmLight.intensity = params.lightIntensity;
+         coolLight.intensity = params.lightIntensity;
  
-         if (probesLeft) {
-@@ -275,7 +275,7 @@ async function init() {
+@@ -300,7 +300,7 @@ async function init() {
  
      // GUI
  
