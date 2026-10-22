@@ -20,6 +20,8 @@ import {
  * along the axis, averaging across it), radiance is stored opacity-premultiplied and indirect bounces
  * are cached in the volume via cone tracing. Only direct lights are injected.
  * Voxelization uses conservative rasterization along the dominant triangle axis in a compute shader.
+ * The interiors of closed meshes are filled, so cones starting inside an object (e.g. near contact
+ * points) are blocked.
  *
  * Direct light is injected per voxel instead of splatting photons from a light-view map as in the
  * paper: the shadow maps rendered by the renderer are the light-view maps, and every occupied voxel
@@ -35,6 +37,8 @@ import {
  * - {@link https://research.nvidia.com/publication/2011-09_interactive-indirect-illumination-using-voxel-cone-tracing}:
  *   Crassin et al., Interactive Indirect Illumination Using Voxel Cone Tracing, Pacific Graphics 2011.
  * - {@link https://developer.nvidia.com/content/basics-gpu-voxelization}: Basics of GPU voxelization.
+ * - {@link https://doi.org/10.1145/1882261.1866201}: Schwarz and Seidel, Fast Parallel Surface and Solid
+ *   Voxelization on GPUs, ACM Transactions on Graphics 2010.
  *
  * Note: This class can only be used with `WebGPURenderer` and a WebGPU backend.
  *
