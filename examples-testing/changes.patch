@@ -16788,21 +16788,26 @@ index ab4e49677..d5662716d 100644
          light.color.setHSL(h, s, l);
          light.position.set(x, y, z);
 diff --git a/examples-testing/examples/webgpu_lightmap_baking.ts b/examples-testing/examples/webgpu_lightmap_baking.ts
-index 3e87f473a..3ba63dc22 100644
+index 3ce11765e..acabf3033 100644
 --- a/examples-testing/examples/webgpu_lightmap_baking.ts
 +++ b/examples-testing/examples/webgpu_lightmap_baking.ts
-@@ -9,11 +9,24 @@ import { VXGIVolume } from 'three/addons/lighting/vxgi/VXGIVolume.js';
+@@ -9,7 +9,8 @@ import { VXGIVolume } from 'three/addons/lighting/vxgi/VXGIVolume.js';
  import { vxgiIrradiance } from 'three/addons/lighting/vxgi/VXGIIrradiance.js';
  import { lightProbeGridIrradiance } from 'three/addons/tsl/lighting/LightProbeGridNode.js';
  import { traa } from 'three/addons/tsl/display/TRAANode.js';
 -import { unwrapUVs } from 'three/addons/utils/unwrapUVs.js';
--
++import { unwrapUVs, UnwrapUVsResult } from 'three/addons/utils/unwrapUVs.js';
++import TRAANode from 'three/addons/tsl/display/TRAANode.js';
+ 
+ import WebGPU from 'three/addons/capabilities/WebGPU.js';
+ 
+@@ -19,9 +20,21 @@ if (WebGPU.isAvailable() === false) {
+     throw new Error('No WebGPU support');
+ }
+ 
 -let camera, scene, renderer, controls, renderPipeline;
 -let light, meshes, materials, atlas, status;
 -let source, lightMapper, bakedPass, livePass, liveOutput;
-+import { unwrapUVs, UnwrapUVsResult } from 'three/addons/utils/unwrapUVs.js';
-+import TRAANode from 'three/addons/tsl/display/TRAANode.js';
-+
 +let camera: THREE.PerspectiveCamera,
 +    scene: THREE.Scene,
 +    renderer: THREE.WebGPURenderer,
@@ -16821,7 +16826,7 @@ index 3e87f473a..3ba63dc22 100644
  let needsBake = true;
  
  // shifts the per-pixel cone noise of the live view every frame, like the light map samples
-@@ -30,7 +43,7 @@ const params = {
+@@ -37,7 +50,7 @@ const params = {
  // light probes are deterministic and only need a few samples to antialias the light map,
  // the VXGI cones are rotated per sample and converge over more samples
  
@@ -16830,17 +16835,7 @@ index 3e87f473a..3ba63dc22 100644
  
  init();
  
-@@ -136,7 +149,8 @@ async function init() {
-     document.body.appendChild(renderer.domElement);
- 
-     await renderer.init();
--    if (renderer.backend.isWebGPUBackend !== true) throw new Error('This example requires WebGPU.');
-+    if ((renderer.backend as { isWebGPUBackend?: boolean }).isWebGPUBackend !== true)
-+        throw new Error('This example requires WebGPU.');
- 
-     // Controls
- 
-@@ -146,9 +160,12 @@ async function init() {
+@@ -146,9 +159,12 @@ function init() {
  
      // Light map UVs
  
@@ -16855,7 +16850,7 @@ index 3e87f473a..3ba63dc22 100644
  
      // "Baked GI" shows the light map while it accumulates,
      // "Live GI" evaluates the raw irradiance per pixel every frame
-@@ -156,11 +173,11 @@ async function init() {
+@@ -156,11 +172,11 @@ function init() {
      renderPipeline = new THREE.RenderPipeline(renderer);
      bakedPass = pass(scene, camera);
  
@@ -16869,7 +16864,7 @@ index 3e87f473a..3ba63dc22 100644
      gui.add(params, 'output', ['Baked GI', 'Live GI']).name('Output').onChange(setOutput);
      gui.add(params, 'algorithm', ['Light Probe', 'VXGI']).name('GI Algorithm').onChange(requestBake);
      gui.add(params, 'resolution', [256, 1024, 2048, 4096]).name('Light Map Resolution').onChange(requestBake);
-@@ -188,19 +205,24 @@ function bake() {
+@@ -185,19 +201,24 @@ function bake() {
  
      if (atlas.resolution !== params.resolution) {
          const geometries = new Set(meshes.map(mesh => mesh.geometry));
@@ -16896,8 +16891,8 @@ index 3e87f473a..3ba63dc22 100644
 +            lightProbeGridIrradiance(probes, position, normal);
          source = probes;
      } else {
-         const volume = new VXGIVolume(256);
-@@ -249,7 +271,7 @@ function setOutput() {
+         const volume = new VXGIVolume();
+@@ -246,7 +267,7 @@ function setOutput() {
  
      for (const material of materials) material.lightMapIntensity = live ? 0 : 1;
  
