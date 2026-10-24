@@ -3,6 +3,7 @@ import { CoordinateSystem } from "../constants.js";
 import { Object3D } from "../core/Object3D.js";
 import { Sprite } from "../objects/Sprite.js";
 import { Box3 } from "./Box3.js";
+import { Frustum } from "./Frustum.js";
 import { Sphere } from "./Sphere.js";
 import { Vector3 } from "./Vector3.js";
 
@@ -91,4 +92,3 @@ export class FrustumArray {
      */
     clone(): FrustumArray;
 }
-import { Frustum } from "./Frustum.js";
