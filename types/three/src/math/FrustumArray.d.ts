@@ -26,6 +26,13 @@ export class FrustumArray {
      */
     setFromArrayCamera(cameraArray: ArrayCamera): FrustumArray;
     /**
+     * Returns the cached frustum for the sub-camera at the given index.
+     *
+     * @param {number} index - The sub-camera index.
+     * @return {Frustum|undefined} The cached frustum.
+     */
+    getFrustum(index: number): Frustum | undefined;
+    /**
      * Returns `true` if the 3D object's bounding sphere is intersecting any cached frustum.
      *
      * {@link FrustumArray#setFromArrayCamera} must be called once per render before this method.
@@ -84,3 +91,4 @@ export class FrustumArray {
      */
     clone(): FrustumArray;
 }
+import { Frustum } from "./Frustum.js";
