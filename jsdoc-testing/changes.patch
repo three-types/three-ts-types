@@ -13782,22 +13782,23 @@ index b1c152106..f8b310764 100644
  }
 -import { Vector3 } from './Vector3.js';
 diff --git a/jsdoc-testing/jsdoc/src/math/FrustumArray.d.ts b/jsdoc-testing/jsdoc/src/math/FrustumArray.d.ts
-index 182934d39..f43fdfa66 100644
+index 182934d39..e6735f564 100644
 --- a/jsdoc-testing/jsdoc/src/math/FrustumArray.d.ts
 +++ b/jsdoc-testing/jsdoc/src/math/FrustumArray.d.ts
-@@ -1,3 +1,11 @@
+@@ -1,3 +1,12 @@
 +import { CoordinateSystem } from "../constants.js";
 +import { ArrayCamera } from '../cameras/ArrayCamera.js';
 +import { Object3D } from '../core/Object3D.js';
 +import { Sprite } from '../objects/Sprite.js';
 +import { Sphere } from './Sphere.js';
 +import { Box3 } from './Box3.js';
++import { Frustum } from './Frustum.js';
 +import { Vector3 } from './Vector3.js';
 +
  /**
   * FrustumArray is used to determine if an object is visible in at least one camera
   * from an array of cameras. This is particularly useful for multi-view renderers.
-@@ -9,25 +17,7 @@ export class FrustumArray {
+@@ -9,25 +18,7 @@ export class FrustumArray {
       * @type {WebGLCoordinateSystem|WebGPUCoordinateSystem}
       * @default WebGLCoordinateSystem
       */
@@ -13824,7 +13825,7 @@ index 182934d39..f43fdfa66 100644
      /**
       * Computes and caches a frustum for each camera of the given array camera.
       *
-@@ -93,7 +83,7 @@ export class FrustumArray {
+@@ -93,7 +84,7 @@ export class FrustumArray {
       * @param {FrustumArray} source - The frustum array to copy.
       * @return {FrustumArray} A reference to this frustum array.
       */
@@ -13833,6 +13834,11 @@ index 182934d39..f43fdfa66 100644
      /**
       * Returns a new frustum array with copied values from this instance.
       *
+@@ -101,4 +92,3 @@ export class FrustumArray {
+      */
+     clone(): FrustumArray;
+ }
+-import { Frustum } from './Frustum.js';
 diff --git a/jsdoc-testing/jsdoc/src/math/Interpolant.d.ts b/jsdoc-testing/jsdoc/src/math/Interpolant.d.ts
 index 561415c0e..fc34356ac 100644
 --- a/jsdoc-testing/jsdoc/src/math/Interpolant.d.ts
