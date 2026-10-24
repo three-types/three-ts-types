@@ -36,14 +36,22 @@ is_relevant() {
         | grep -E '^(src/|examples/jsm/|examples/[^/]+\.html$|examples/files\.json$)' >/dev/null
 }
 
+# Reuses the branch's open PR if an earlier run already opened one. Extra args go to gh pr create.
+open_pr() {
+    local branch=$1 subject=$2 sha=$3 url
+    shift 3
+    url=$(gh pr list -R "$REPO" --head "$branch" --state open --json url --jq '.[0].url')
+    if [ -z "$url" ]; then
+        url=$(gh pr create -R "$REPO" --base master --head "$branch" --title "$subject" \
+            --body "https://github.com/mrdoob/three.js/commit/$sha" "$@")
+    fi
+    echo "$url"
+}
+
 fail_pr() {
     local branch=$1 subject=$2 sha=$3 reason=$4 result_file=$5 url
     push -f origin "$branch"
-    url=$(gh pr list -R "$REPO" --head "$branch" --state open --json url --jq '.[0].url')
-    if [ -z "$url" ]; then
-        url=$(gh pr create -R "$REPO" --base master --head "$branch" --draft --title "$subject" \
-            --body "https://github.com/mrdoob/three.js/commit/$sha")
-    fi
+    url=$(open_pr "$branch" "$subject" "$sha" --draft)
     gh label create "$FAILED_LABEL" -R "$REPO" --color d93f0b --force >/dev/null
     gh pr edit "$url" -R "$REPO" --add-label "$FAILED_LABEL"
     {
@@ -160,8 +168,7 @@ while :; do
     fi
 
     push -f origin "$branch"
-    url=$(gh pr create -R "$REPO" --base master --head "$branch" --title "$subject" \
-        --body "https://github.com/mrdoob/three.js/commit/$sha")
+    url=$(open_pr "$branch" "$subject" "$sha")
     log "Opened $url"
 
     # Checks take a moment to register after the PR is opened.
@@ -173,8 +180,20 @@ while :; do
         fail_pr "$branch" "$subject" "$sha" "CI failed" "$result_file"
     fi
 
-    # master requires a code owner review, which the admin token bypasses.
-    gh pr merge "$url" -R "$REPO" --squash --admin --delete-branch
+    # master requires a code owner review, which the admin token bypasses. The GitHub API
+    # occasionally fails transiently here, so retry before handing the PR to a human.
+    merged=false
+    for attempt in 1 2 3; do
+        if gh pr merge "$url" -R "$REPO" --squash --admin --delete-branch; then
+            merged=true
+            break
+        fi
+        [ "$(gh pr view "$url" -R "$REPO" --json state --jq .state 2>/dev/null)" = MERGED ] && merged=true && break
+        sleep $((attempt * 30))
+    done
+    if ! $merged; then
+        fail_pr "$branch" "$subject" "$sha" "merging failed" "$result_file"
+    fi
     mark_triaged "$sha"
     log "Merged $url"
 done
