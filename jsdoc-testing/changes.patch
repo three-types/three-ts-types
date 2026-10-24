@@ -5242,7 +5242,7 @@ index 03307384c..16d00404d 100644
  }
 -import { Audio } from './Audio.js';
 diff --git a/jsdoc-testing/jsdoc/src/cameras/ArrayCamera.d.ts b/jsdoc-testing/jsdoc/src/cameras/ArrayCamera.d.ts
-index d1dd98d30..cd3a97d10 100644
+index 716729b6a..33dcfc918 100644
 --- a/jsdoc-testing/jsdoc/src/cameras/ArrayCamera.d.ts
 +++ b/jsdoc-testing/jsdoc/src/cameras/ArrayCamera.d.ts
 @@ -1,3 +1,5 @@
@@ -5260,7 +5260,7 @@ index d1dd98d30..cd3a97d10 100644
   */
  export class ArrayCamera extends PerspectiveCamera {
      /**
-@@ -15,28 +15,21 @@ export class ArrayCamera extends PerspectiveCamera {
+@@ -15,29 +15,23 @@ export class ArrayCamera extends PerspectiveCamera {
       *
       * @param {Array<PerspectiveCamera>} [array=[]] - An array of perspective sub cameras.
       */
@@ -5289,6 +5289,17 @@ index d1dd98d30..cd3a97d10 100644
       */
 -    cameras: Array<PerspectiveCamera>;
 +    cameras: PerspectiveCamera[];
+     /**
+      * Whether 3D objects are frustum culled per sub camera or not.
+      *
+@@ -45,9 +39,7 @@ export class ArrayCamera extends PerspectiveCamera {
+      * enabled when the frustums of the sub cameras barely overlap. The property has
+      * no effect with multiview rendering.
+      *
+-     * @type {boolean}
+      * @default false
+      */
+     perCameraFrustumCulled: boolean;
  }
 -import { PerspectiveCamera } from './PerspectiveCamera.js';
 diff --git a/jsdoc-testing/jsdoc/src/cameras/Camera.d.ts b/jsdoc-testing/jsdoc/src/cameras/Camera.d.ts
@@ -13771,22 +13782,23 @@ index b1c152106..f8b310764 100644
  }
 -import { Vector3 } from './Vector3.js';
 diff --git a/jsdoc-testing/jsdoc/src/math/FrustumArray.d.ts b/jsdoc-testing/jsdoc/src/math/FrustumArray.d.ts
-index 09dd15ad3..95bcb779a 100644
+index 182934d39..1490fb864 100644
 --- a/jsdoc-testing/jsdoc/src/math/FrustumArray.d.ts
 +++ b/jsdoc-testing/jsdoc/src/math/FrustumArray.d.ts
-@@ -1,3 +1,11 @@
+@@ -1,3 +1,12 @@
 +import { CoordinateSystem } from "../constants.js";
 +import { ArrayCamera } from '../cameras/ArrayCamera.js';
 +import { Object3D } from '../core/Object3D.js';
 +import { Sprite } from '../objects/Sprite.js';
 +import { Sphere } from './Sphere.js';
 +import { Box3 } from './Box3.js';
++import { Frustum } from './Frustum.js';
 +import { Vector3 } from './Vector3.js';
 +
  /**
   * FrustumArray is used to determine if an object is visible in at least one camera
   * from an array of cameras. This is particularly useful for multi-view renderers.
-@@ -9,25 +17,7 @@ export class FrustumArray {
+@@ -9,25 +18,7 @@ export class FrustumArray {
       * @type {WebGLCoordinateSystem|WebGPUCoordinateSystem}
       * @default WebGLCoordinateSystem
       */
@@ -13813,7 +13825,7 @@ index 09dd15ad3..95bcb779a 100644
      /**
       * Computes and caches a frustum for each camera of the given array camera.
       *
-@@ -86,7 +76,7 @@ export class FrustumArray {
+@@ -93,7 +84,7 @@ export class FrustumArray {
       * @param {FrustumArray} source - The frustum array to copy.
       * @return {FrustumArray} A reference to this frustum array.
       */
