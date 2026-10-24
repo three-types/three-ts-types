@@ -16788,7 +16788,7 @@ index ab4e49677..d5662716d 100644
          light.color.setHSL(h, s, l);
          light.position.set(x, y, z);
 diff --git a/examples-testing/examples/webgpu_lightmap_baking.ts b/examples-testing/examples/webgpu_lightmap_baking.ts
-index 3ce11765e..acabf3033 100644
+index d4cd5003d..2f8c6ff60 100644
 --- a/examples-testing/examples/webgpu_lightmap_baking.ts
 +++ b/examples-testing/examples/webgpu_lightmap_baking.ts
 @@ -9,7 +9,8 @@ import { VXGIVolume } from 'three/addons/lighting/vxgi/VXGIVolume.js';
@@ -16835,7 +16835,7 @@ index 3ce11765e..acabf3033 100644
  
  init();
  
-@@ -146,9 +159,12 @@ function init() {
+@@ -149,9 +162,12 @@ async function init() {
  
      // Light map UVs
  
@@ -16850,7 +16850,7 @@ index 3ce11765e..acabf3033 100644
  
      // "Baked GI" shows the light map while it accumulates,
      // "Live GI" evaluates the raw irradiance per pixel every frame
-@@ -156,11 +172,11 @@ function init() {
+@@ -159,11 +175,11 @@ async function init() {
      renderPipeline = new THREE.RenderPipeline(renderer);
      bakedPass = pass(scene, camera);
  
@@ -16864,7 +16864,7 @@ index 3ce11765e..acabf3033 100644
      gui.add(params, 'output', ['Baked GI', 'Live GI']).name('Output').onChange(setOutput);
      gui.add(params, 'algorithm', ['Light Probe', 'VXGI']).name('GI Algorithm').onChange(requestBake);
      gui.add(params, 'resolution', [256, 1024, 2048, 4096]).name('Light Map Resolution').onChange(requestBake);
-@@ -185,19 +201,24 @@ function bake() {
+@@ -188,19 +204,24 @@ function bake() {
  
      if (atlas.resolution !== params.resolution) {
          const geometries = new Set(meshes.map(mesh => mesh.geometry));
@@ -16892,7 +16892,7 @@ index 3ce11765e..acabf3033 100644
          source = probes;
      } else {
          const volume = new VXGIVolume();
-@@ -246,7 +267,7 @@ function setOutput() {
+@@ -249,7 +270,7 @@ function setOutput() {
  
      for (const material of materials) material.lightMapIntensity = live ? 0 : 1;
  
