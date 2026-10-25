@@ -1,6 +1,6 @@
 import { ShaderMaterial, Texture, WebGLRenderTarget } from "three";
 
-import { FullScreenQuad, Pass } from "./Pass.js";
+import { Pass } from "./Pass.js";
 
 export class SMAAPass extends Pass {
     constructor();
@@ -14,7 +14,6 @@ export class SMAAPass extends Pass {
     materialWeights: ShaderMaterial;
     uniformsBlend: object;
     materialBlend: ShaderMaterial;
-    fsQuad: FullScreenQuad;
 
     getAreaTexture(): string;
     getSearchTexture(): string;

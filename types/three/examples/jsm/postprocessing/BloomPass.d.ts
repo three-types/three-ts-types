@@ -1,6 +1,6 @@
 import { ShaderMaterial, WebGLRenderTarget } from "three";
 
-import { FullScreenQuad, Pass } from "./Pass.js";
+import { Pass } from "./Pass.js";
 
 export class BloomPass extends Pass {
     constructor(strength?: number, kernelSize?: number, sigma?: number);
@@ -10,5 +10,4 @@ export class BloomPass extends Pass {
     materialCopy: ShaderMaterial;
     convolutionUniforms: object;
     materialConvolution: ShaderMaterial;
-    fsQuad: FullScreenQuad;
 }

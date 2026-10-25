@@ -12,7 +12,7 @@ import {
     WebGLRenderTarget,
 } from "three";
 
-import { FullScreenQuad, Pass } from "./Pass.js";
+import { Pass } from "./Pass.js";
 
 export class OutlinePass extends Pass {
     constructor(resolution: Vector2, scene: Scene, camera: Camera, selectedObjects?: Object3D[]);
@@ -48,7 +48,6 @@ export class OutlinePass extends Pass {
     materialCopy: ShaderMaterial;
     oldClearColor: Color;
     oldClearAlpha: number;
-    fsQuad: FullScreenQuad;
     tempPulseColor1: Color;
     tempPulseColor2: Color;
     textureMatrix: Matrix4;

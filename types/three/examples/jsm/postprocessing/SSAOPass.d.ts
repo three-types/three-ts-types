@@ -12,7 +12,7 @@ import {
     WebGLRenderTarget,
 } from "three";
 
-import { FullScreenQuad, Pass } from "./Pass.js";
+import { Pass } from "./Pass.js";
 
 export enum SSAOPassOUTPUT {
     Default,
@@ -43,7 +43,6 @@ export class SSAOPass extends Pass {
     blurMaterial: ShaderMaterial;
     depthRenderMaterial: ShaderMaterial;
     copyMaterial: ShaderMaterial;
-    fsQuad: FullScreenQuad;
     originalClearColor: Color;
 
     static OUTPUT: typeof SSAOPassOUTPUT;

@@ -13,7 +13,7 @@ import {
     WebGLRenderTarget,
 } from "three";
 
-import { FullScreenQuad, Pass } from "./Pass.js";
+import { Pass } from "./Pass.js";
 
 export class GTAOPass extends Pass {
     width: number;
@@ -46,7 +46,6 @@ export class GTAOPass extends Pass {
 
     blendMaterial: ShaderMaterial;
 
-    fsQuad: FullScreenQuad;
 
     originalClearColor: Color;
 

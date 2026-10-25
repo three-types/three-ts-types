@@ -1,6 +1,6 @@
 import { Camera, ColorRepresentation, Scene, ShaderMaterial, WebGLRenderTarget } from "three";
 
-import { FullScreenQuad, Pass } from "./Pass.js";
+import { Pass } from "./Pass.js";
 
 export class SSAARenderPass extends Pass {
     scene: Scene;
@@ -18,7 +18,6 @@ export class SSAARenderPass extends Pass {
 
     copyMaterial: ShaderMaterial;
 
-    fsQuad: FullScreenQuad;
 
     sampleRenderTarget?: WebGLRenderTarget | undefined;
 
