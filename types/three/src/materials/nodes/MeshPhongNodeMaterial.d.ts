@@ -1,24 +1,12 @@
-export default MeshPhongNodeMaterial;
-/**
- * Node material version of {@link MeshPhongMaterial}.
- *
- * @augments NodeMaterial
- */
-declare class MeshPhongNodeMaterial extends NodeMaterial {
-    /**
-     * Constructs a new mesh lambert node material.
-     *
-     * @param {Object} [parameters] - The configuration parameter.
-     */
-    constructor(parameters?: Object);
-    /**
-     * This flag can be used for type testing.
-     *
-     * @type {boolean}
-     * @readonly
-     * @default true
-     */
-    readonly isMeshPhongNodeMaterial: boolean;
+import Node from "../../nodes/core/Node.js";
+import NodeBuilder from "../../nodes/core/NodeBuilder.js";
+import PhongLightingModel from "../../nodes/functions/PhongLightingModel.js";
+import BasicEnvironmentNode from "../../nodes/lighting/BasicEnvironmentNode.js";
+import { MapColorPropertiesToColorRepresentations } from "../Material.js";
+import { MeshPhongMaterialParameters, MeshPhongMaterialProperties } from "../MeshPhongMaterial.js";
+import NodeMaterial, { NodeMaterialNodeProperties } from "./NodeMaterial.js";
+
+export interface MeshPhongNodeMaterialNodeProperties extends NodeMaterialNodeProperties {
     /**
      * The emissive color of phong materials is by default inferred from the `emissive`,
      * `emissiveIntensity` and `emissiveMap` properties. This node property allows to
@@ -27,10 +15,9 @@ declare class MeshPhongNodeMaterial extends NodeMaterial {
      * If you don't want to overwrite the emissive color but modify the existing
      * value instead, use {@link materialEmissive}.
      *
-     * @type {?Node<vec3>}
      * @default null
      */
-    emissiveNode: Node<vec3> | null;
+    emissiveNode: Node | null;
     /**
      * The shininess of phong materials is by default inferred from the `shininess`
      * property. This node property allows to overwrite the default
@@ -39,10 +26,9 @@ declare class MeshPhongNodeMaterial extends NodeMaterial {
      * If you don't want to overwrite the shininess but modify the existing
      * value instead, use {@link materialShininess}.
      *
-     * @type {?Node<float>}
      * @default null
      */
-    shininessNode: Node<any> | null;
+    shininessNode: Node | null;
     /**
      * The specular color of phong materials is by default inferred from the
      * `specular` property. This node property allows to overwrite the default
@@ -51,10 +37,35 @@ declare class MeshPhongNodeMaterial extends NodeMaterial {
      * If you don't want to overwrite the specular color but modify the existing
      * value instead, use {@link materialSpecular}.
      *
-     * @type {?Node<vec3>}
      * @default null
      */
-    specularNode: Node<vec3> | null;
+    specularNode: Node | null;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface MeshPhongNodeMaterialParameters
+    extends
+        Partial<MapColorPropertiesToColorRepresentations<MeshPhongNodeMaterialNodeProperties>>,
+        MeshPhongMaterialParameters
+{}
+
+/**
+ * Node material version of {@link MeshPhongMaterial}.
+ */
+declare class MeshPhongNodeMaterial extends NodeMaterial {
+    /**
+     * Constructs a new mesh lambert node material.
+     *
+     * @param {Object} [parameters] - The configuration parameter.
+     */
+    constructor(parameters?: MeshPhongNodeMaterialParameters);
+    /**
+     * This flag can be used for type testing.
+     *
+     * @default true
+     */
+    readonly isMeshPhongNodeMaterial: boolean;
+    setValues(values?: MeshPhongNodeMaterialParameters): void;
     /**
      * Overwritten since this type of material uses {@link BasicEnvironmentNode}
      * to implement the default environment mapping.
@@ -62,7 +73,7 @@ declare class MeshPhongNodeMaterial extends NodeMaterial {
      * @param {NodeBuilder} builder - The current node builder.
      * @return {?BasicEnvironmentNode<vec3>} The environment node.
      */
-    setupEnvironment(builder: NodeBuilder): BasicEnvironmentNode<vec3> | null;
+    setupEnvironment(builder: NodeBuilder): BasicEnvironmentNode | null;
     /**
      * Setups the lighting model.
      *
@@ -70,6 +81,8 @@ declare class MeshPhongNodeMaterial extends NodeMaterial {
      */
     setupLightingModel(): PhongLightingModel;
 }
-import PhongLightingModel from "../../nodes/functions/PhongLightingModel.js";
-import BasicEnvironmentNode from "../../nodes/lighting/BasicEnvironmentNode.js";
-import NodeMaterial from "./NodeMaterial.js";
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface MeshPhongNodeMaterial extends MeshPhongNodeMaterialNodeProperties, MeshPhongMaterialProperties {}
+
+export default MeshPhongNodeMaterial;

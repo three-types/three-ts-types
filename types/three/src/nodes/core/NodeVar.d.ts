@@ -1,4 +1,3 @@
-export default NodeVar;
 /**
  * {@link NodeBuilder} is going to create instances of this class during the build process
  * of nodes. They represent the final shader variables that are going to be generated
@@ -56,3 +55,5 @@ declare class NodeVar {
      */
     count: number | null;
 }
+
+export default NodeVar;

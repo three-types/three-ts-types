@@ -1,3 +1,5 @@
+import { PerspectiveCamera } from "./PerspectiveCamera.js";
+
 /**
  * A special type of camera that uses two perspective cameras with
  * stereoscopic projection. Can be used for rendering stereo effects
@@ -8,15 +10,11 @@ export class StereoCamera {
     /**
      * The type property is used for detecting the object type
      * in context of serialization/deserialization.
-     *
-     * @type {string}
-     * @readonly
      */
     readonly type: string;
     /**
      * The aspect.
      *
-     * @type {number}
      * @default 1
      */
     aspect: number;
@@ -24,33 +22,19 @@ export class StereoCamera {
      * The eye separation which represents the distance
      * between the left and right camera.
      *
-     * @type {number}
      * @default 0.064
      */
     eyeSep: number;
     /**
      * The camera representing the left eye. This is added to layer `1` so objects to be
      * rendered by the left camera must also be added to this layer.
-     *
-     * @type {PerspectiveCamera}
      */
     cameraL: PerspectiveCamera;
     /**
      * The camera representing the right eye. This is added to layer `2` so objects to be
      * rendered by the right camera must also be added to this layer.
-     *
-     * @type {PerspectiveCamera}
      */
     cameraR: PerspectiveCamera;
-    _cache: {
-        focus: null;
-        fov: null;
-        aspect: null;
-        near: null;
-        far: null;
-        zoom: null;
-        eyeSep: null;
-    };
     /**
      * Updates the stereo camera based on the given perspective camera.
      *
@@ -58,4 +42,3 @@ export class StereoCamera {
      */
     update(camera: PerspectiveCamera): void;
 }
-import { PerspectiveCamera } from "./PerspectiveCamera.js";

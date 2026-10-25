@@ -1,23 +1,29 @@
-export default InspectorBase;
+import { Camera } from "../../cameras/Camera.js";
+import { EventDispatcher } from "../../core/EventDispatcher.js";
+import { RenderTarget } from "../../core/RenderTarget.js";
+import Node from "../../nodes/core/Node.js";
+import NodeFrame from "../../nodes/core/NodeFrame.js";
+import ComputeNode from "../../nodes/gpgpu/ComputeNode.js";
+import { Scene } from "../../scenes/Scene.js";
+import { Texture } from "../../textures/Texture.js";
+import Renderer from "./Renderer.js";
+
+export interface InspectorBaseEventMap {
+    dispose: {};
+}
+
 /**
  * InspectorBase is the base class for all inspectors. Can only be used with {@link WebGPURenderer}.
- *
- * @augments EventDispatcher
  */
-declare class InspectorBase extends EventDispatcher {
-    /**
-     * The renderer associated with this inspector.
-     *
-     * @type {Renderer}
-     * @private
-     */
-    private _renderer;
+declare class InspectorBase<TEventMap extends InspectorBaseEventMap = InspectorBaseEventMap>
+    extends EventDispatcher<TEventMap>
+{
     /**
      * The current frame being processed.
      *
      * @type {Object}
      */
-    currentFrame: Object;
+    currentFrame: unknown;
     /**
      * Indicates whether the inspector is running.
      *
@@ -37,7 +43,7 @@ declare class InspectorBase extends EventDispatcher {
      *
      * @return {Object} The node frame.
      */
-    get nodeFrame(): Object;
+    get nodeFrame(): NodeFrame;
     /**
      * Sets the renderer for this inspector.
      *
@@ -64,28 +70,28 @@ declare class InspectorBase extends EventDispatcher {
      *
      * @param {Node} node - The node to inspect.
      */
-    inspect(): void;
+    inspect(node: Node): void;
     /**
      * When a compute operation is performed.
      *
      * @param {ComputeNode} computeNode - The compute node being executed.
      * @param {number|Array<number>} dispatchSizeOrCount - The dispatch size or count.
      */
-    computeAsync(): void;
+    computeAsync(computeNode: ComputeNode, dispatchSizeOrCount: number | number[]): void;
     /**
      * Called when a compute operation begins.
      *
      * @param {string} uid - A unique identifier for the render context.
      * @param {ComputeNode} computeNode - The compute node being executed.
      */
-    beginCompute(): void;
+    beginCompute(uid: string, computeNode: ComputeNode): void;
     /**
      * Called when a compute operation ends.
      *
      * @param {string} uid - A unique identifier for the render context.
      * @param {ComputeNode} computeNode - The compute node being executed.
      */
-    finishCompute(): void;
+    finishCompute(uid: string): void;
     /**
      * Called when a render operation begins.
      *
@@ -94,29 +100,30 @@ declare class InspectorBase extends EventDispatcher {
      * @param {Camera} camera - The camera being used for rendering.
      * @param {?RenderTarget} renderTarget - The render target, if any.
      */
-    beginRender(): void;
+    beginRender(uid: string, scene: Scene, camera: Camera, renderTarget: RenderTarget): void;
     /**
      * Called when an animation loop ends.
      *
      * @param {string} uid - A unique identifier for the render context.
      */
-    finishRender(): void;
+    finishRender(uid: string): void;
     /**
      * Called when a texture copy operation is performed.
      *
      * @param {Texture} srcTexture - The source texture.
      * @param {Texture} dstTexture - The destination texture.
      */
-    copyTextureToTexture(): void;
+    copyTextureToTexture(srcTexture: Texture, dstTexture: Texture): void;
     /**
      * Called when a framebuffer copy operation is performed.
      *
      * @param {Texture} framebufferTexture - The texture associated with the framebuffer.
      */
-    copyFramebufferToTexture(): void;
+    copyFramebufferToTexture(framebufferTexture: Texture): void;
     /**
      * Frees all internal resources of the inspector.
      */
     dispose(): void;
 }
-import { EventDispatcher } from "../../core/EventDispatcher.js";
+
+export default InspectorBase;

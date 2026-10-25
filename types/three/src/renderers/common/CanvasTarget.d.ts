@@ -1,10 +1,22 @@
-export default CanvasTarget;
+import { EventDispatcher } from "../../core/EventDispatcher.js";
+import { Vector2 } from "../../math/Vector2.js";
+import { Vector4 } from "../../math/Vector4.js";
+import { DepthTexture } from "../../textures/DepthTexture.js";
+import { FramebufferTexture } from "../../textures/FramebufferTexture.js";
+
+export interface CanvasTargetEventMap {
+    resize: {};
+    dispose: {};
+}
+
 /**
  * CanvasTarget is a class that represents the final output destination of the renderer.
  *
  * @augments EventDispatcher
  */
-declare class CanvasTarget extends EventDispatcher {
+declare class CanvasTarget<TEventMap extends CanvasTargetEventMap = CanvasTargetEventMap>
+    extends EventDispatcher<TEventMap>
+{
     /**
      * Constructs a new CanvasTarget.
      *
@@ -19,49 +31,6 @@ declare class CanvasTarget extends EventDispatcher {
      * @type {HTMLCanvasElement|OffscreenCanvas}
      */
     domElement: HTMLCanvasElement | OffscreenCanvas;
-    /**
-     * The renderer's pixel ratio.
-     *
-     * @private
-     * @type {number}
-     * @default 1
-     */
-    private _pixelRatio;
-    /**
-     * The width of the renderer's default framebuffer in logical pixel unit.
-     *
-     * @private
-     * @type {number}
-     */
-    private _width;
-    /**
-     * The height of the renderer's default framebuffer in logical pixel unit.
-     *
-     * @private
-     * @type {number}
-     */
-    private _height;
-    /**
-     * The viewport of the renderer in logical pixel unit.
-     *
-     * @private
-     * @type {Vector4}
-     */
-    private _viewport;
-    /**
-     * The scissor rectangle of the renderer in logical pixel unit.
-     *
-     * @private
-     * @type {Vector4}
-     */
-    private _scissor;
-    /**
-     * Whether the scissor test should be enabled or not.
-     *
-     * @private
-     * @type {boolean}
-     */
-    private _scissorTest;
     /**
      * The color texture of the default framebuffer.
      *
@@ -131,6 +100,10 @@ declare class CanvasTarget extends EventDispatcher {
     getScissor(target: Vector4): Vector4;
     /**
      * Defines the scissor rectangle.
+     */
+    setScissor(x: Vector4): void;
+    /**
+     * Defines the scissor rectangle.
      *
      * @param {number | Vector4} x - The horizontal coordinate for the lower left corner of the box in logical pixel unit.
      * Instead of passing four arguments, the method also works with a single four-dimensional vector.
@@ -138,7 +111,7 @@ declare class CanvasTarget extends EventDispatcher {
      * @param {number} width - The width of the scissor box in logical pixel unit.
      * @param {number} height - The height of the scissor box in logical pixel unit.
      */
-    setScissor(x: number | Vector4, y: number, width: number, height: number): void;
+    setScissor(x: number, y: number, width: number, height: number): void;
     /**
      * Returns the scissor test value.
      *
@@ -160,6 +133,10 @@ declare class CanvasTarget extends EventDispatcher {
     getViewport(target: Vector4): Vector4;
     /**
      * Defines the viewport.
+     */
+    setViewport(x: Vector4): void;
+    /**
+     * Defines the viewport.
      *
      * @param {number | Vector4} x - The horizontal coordinate for the lower left corner of the viewport origin in logical pixel unit.
      * @param {number} y - The vertical coordinate for the lower left corner of the viewport origin  in logical pixel unit.
@@ -168,20 +145,7 @@ declare class CanvasTarget extends EventDispatcher {
      * @param {number} minDepth - The minimum depth value of the viewport. WebGPU only.
      * @param {number} maxDepth - The maximum depth value of the viewport. WebGPU only.
      */
-    setViewport(
-        x: number | Vector4,
-        y: number,
-        width: number,
-        height: number,
-        minDepth?: number,
-        maxDepth?: number,
-    ): void;
-    /**
-     * Dispatches the resize event.
-     *
-     * @private
-     */
-    private _dispatchResize;
+    setViewport(x: number, y: number, width: number, height: number, minDepth?: number, maxDepth?: number): void;
     /**
      * Frees the GPU-related resources allocated by this instance. Call this
      * method whenever this instance is no longer used in your app.
@@ -190,7 +154,5 @@ declare class CanvasTarget extends EventDispatcher {
      */
     dispose(): void;
 }
-import { EventDispatcher } from "../../core/EventDispatcher.js";
-import { Vector4 } from "../../math/Vector4.js";
-import { DepthTexture } from "../../textures/DepthTexture.js";
-import { FramebufferTexture } from "../../textures/FramebufferTexture.js";
+
+export default CanvasTarget;

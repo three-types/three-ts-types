@@ -1,3 +1,8 @@
+import { Object3D } from "../core/Object3D.js";
+import { SpotLight } from "../lights/SpotLight.js";
+import { ColorRepresentation } from "../math/Color.js";
+import { LineSegments } from "../objects/LineSegments.js";
+
 /**
  * This displays a cone shaped helper object for a {@link SpotLight}.
  *
@@ -12,8 +17,6 @@
  * const spotLightHelper = new THREE.SpotLightHelper( spotLight );
  * scene.add( spotLightHelper );
  * ```
- *
- * @augments Object3D
  */
 export class SpotLightHelper extends Object3D {
     /**
@@ -23,21 +26,16 @@ export class SpotLightHelper extends Object3D {
      * @param {number|Color|string} [color] - The helper's color. If not set, the helper will take
      * the color of the light.
      */
-    constructor(light: HemisphereLight, color?: number | Color | string);
+    constructor(light: SpotLight, color?: ColorRepresentation);
     /**
      * The light being visualized.
-     *
-     * @type {SpotLight}
      */
     light: SpotLight;
     /**
      * The color parameter passed in the constructor.
      * If not set, the helper will take the color of the light.
-     *
-     * @type {number|Color|string}
      */
-    color: number | Color | string;
-    type: string;
+    color: ColorRepresentation | undefined;
     cone: LineSegments;
     /**
      * Updates the helper to match the position and direction of the
@@ -45,5 +43,3 @@ export class SpotLightHelper extends Object3D {
      */
     update(): void;
 }
-import { Object3D } from "../core/Object3D.js";
-import { LineSegments } from "../objects/LineSegments.js";

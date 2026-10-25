@@ -1,3 +1,7 @@
+import { DepthTexture, Node, NodeBuilder, NodeFrame, RenderTarget, ShadowNode } from "three/webgpu";
+import { SunLight } from "./SunLight.js";
+import { SunLightShadow } from "./SunLightShadow.js";
+
 export function sunShadow(light: SunLight, shadow?: SunLightShadow | null): SunShadowNode;
 /**
  * Represents the cascaded shadow map of a {@link SunLight}.
@@ -6,26 +10,16 @@ export function sunShadow(light: SunLight, shadow?: SunLightShadow | null): SunS
  * into the viewports of a single shadow map atlas. Each fragment walks the
  * cascades back to front, blending across the fade bands between them.
  *
- * @augments ShadowNode
  * @three_import import { sunShadow } from 'three/addons/lights/SunShadowNode.js';
  */
 export class SunShadowNode extends ShadowNode {
     /**
-     * The size of the shadow map atlas.
+     * Constructs a new sun shadow node.
      *
-     * @type {Vector2}
-     * @private
+     * @param {SunLight} light - The shadow casting sun light.
+     * @param {?SunLightShadow} [shadow=null] - An optional sun light shadow.
      */
-    private _atlasSize;
-    /**
-     * Shadow filters read their texel offsets from `mapSize`, so they must
-     * be given the atlas size rather than the cascade map size. This proxy
-     * stands in for the shadow when the filter function is set up.
-     *
-     * @type {Object}
-     * @private
-     */
-    private _filterShadow;
+    constructor(light: SunLight, shadow?: SunLightShadow | null);
     /**
      * Overwrites the default implementation to size the render target as the cascade atlas.
      *
@@ -33,16 +27,23 @@ export class SunShadowNode extends ShadowNode {
      * @param {NodeBuilder} builder - A reference to the current node builder.
      * @return {Object} An object containing the shadow map and depth texture.
      */
-    setupRenderTarget(shadow: SunLightShadow, builder: NodeBuilder): Object;
+    setupRenderTarget(shadow: SunLightShadow, builder: NodeBuilder): {
+        shadowMap: RenderTarget;
+        depthTexture: DepthTexture;
+    };
     /**
-     * Builds the per-fragment cascade blending.
+     * Sets up the atlas render target and shadow output node.
      *
-     * @private
      * @param {NodeBuilder} builder - A reference to the current node builder.
-     * @param {Function} filterFn - The shadow filtering function.
-     * @return {Node<float>} The shadow value node.
+     * @return {Node<float>} The shadow output node.
      */
-    private _setupCascades;
+    setupShadow(builder: NodeBuilder): Node<"float">;
+    /**
+     * Renders the two cascades into the viewports of the shadow map atlas.
+     *
+     * @param {NodeFrame} frame - A reference to the current node frame.
+     */
+    renderShadow(frame: NodeFrame): void;
     /**
      * Overwritten as a no-op since VSM is not supported for cascaded shadow maps.
      *
@@ -50,4 +51,3 @@ export class SunShadowNode extends ShadowNode {
      */
     vsmPass(): void;
 }
-import { ShadowNode } from "three/webgpu";

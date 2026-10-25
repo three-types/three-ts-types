@@ -1,3 +1,10 @@
+import { Color } from "../../math/Color.js";
+import { Vector3 } from "../../math/Vector3.js";
+import { Vector4 } from "../../math/Vector4.js";
+import Node from "../core/Node.js";
+
+type ColorParameter = Node<"float"> | number | Node<"vec3"> | Vector3 | Node<"color"> | Color | Node<"vec4"> | Vector4;
+
 /**
  * Represents a "Color Burn" blend mode.
  *
@@ -11,7 +18,7 @@
  * @param {Node<vec3>} blend - The blend color. A white (#ffffff) blend color does not alter the base color.
  * @return {Node<vec3>} The result.
  */
-export const blendBurn: () => void;
+export const blendBurn: (base: ColorParameter, blend: ColorParameter) => Node<"vec3">;
 /**
  * Represents a "Color Dodge" blend mode.
  *
@@ -25,7 +32,7 @@ export const blendBurn: () => void;
  * @param {Node<vec3>} blend - The blend color. A black (#000000) blend color does not alter the base color.
  * @return {Node<vec3>} The result.
  */
-export const blendDodge: () => void;
+export const blendDodge: (base: ColorParameter, blend: ColorParameter) => Node<"vec3">;
 /**
  * Represents a "Screen" blend mode.
  *
@@ -39,7 +46,7 @@ export const blendDodge: () => void;
  * @param {Node<vec3>} blend - The blend color. A black (#000000) blend color does not alter the base color.
  * @return {Node<vec3>} The result.
  */
-export const blendScreen: () => void;
+export const blendScreen: (base: ColorParameter, blend: ColorParameter) => Node<"vec3">;
 /**
  * Represents a "Overlay" blend mode.
  *
@@ -53,7 +60,7 @@ export const blendScreen: () => void;
  * @param {Node<vec3>} blend - The blend color
  * @return {Node<vec3>} The result.
  */
-export const blendOverlay: () => void;
+export const blendOverlay: (base: ColorParameter, blend: ColorParameter) => Node<"vec3">;
 /**
  * This function blends two color based on their alpha values by replicating the behavior of `THREE.NormalBlending`.
  * It assumes both input colors have non-premultiplied alpha.
@@ -64,4 +71,6 @@ export const blendOverlay: () => void;
  * @param {Node<vec4>} blend - The blend color
  * @return {Node<vec4>} The result.
  */
-export const blendColor: () => void;
+export const blendColor: (base: ColorParameter, blend: ColorParameter) => Node<"vec4">;
+
+export {};

@@ -1,24 +1,73 @@
+import { AnimationBlendMode } from "../constants.js";
+import { EventDispatcher } from "../core/EventDispatcher.js";
+import { Object3D } from "../core/Object3D.js";
+import { LinearInterpolant } from "../math/interpolants/LinearInterpolant.js";
+import { AnimationAction } from "./AnimationAction.js";
+import { AnimationClip } from "./AnimationClip.js";
+import { AnimationObjectGroup } from "./AnimationObjectGroup.js";
+import { PropertyMixer } from "./PropertyMixer.js";
+
+export interface AnimationMixerEventMap {
+    loop: { action: AnimationAction; loopDelta: number };
+    finished: { action: AnimationAction; direction: number };
+}
+
+export interface MixerControlInterpolant extends LinearInterpolant {
+    __cacheIndex: number;
+}
+
+export interface AnimationMixerStats {
+    actions: {
+        readonly total: number;
+        readonly inUse: number;
+    };
+    bindings: {
+        readonly total: number;
+        readonly inUse: number;
+    };
+    controlInterpolants: {
+        readonly total: number;
+        readonly inUse: number;
+    };
+}
+
 /**
  * `AnimationMixer` is a player for animations on a particular object in
  * the scene. When multiple objects in the scene are animated independently,
  * one `AnimationMixer` may be used for each object.
  */
-export class AnimationMixer extends EventDispatcher {
+export class AnimationMixer<TEventMap extends AnimationMixerEventMap = AnimationMixerEventMap>
+    extends EventDispatcher<TEventMap>
+{
     /**
      * Constructs a new animation mixer.
      *
      * @param {Object3D} root - The object whose animations shall be played by this mixer.
      */
-    constructor(root: Object3D);
-    _root: Object3D;
-    _accuIndex: number;
+    constructor(root: Object3D | AnimationObjectGroup);
     /**
      * The global mixer time (in seconds; starting with `0` on the mixer's creation).
      *
-     * @type {number}
      * @default 0
      */
     time: number;
+    protected _root: Object3D | AnimationObjectGroup;
+    protected _actions: AnimationAction[];
+    protected _nActiveActions: number;
+    protected _bindings: PropertyMixer[];
+    protected _nActiveBindings: number;
+    protected _controlInterpolants: MixerControlInterpolant[];
+    protected _nActiveControlInterpolants: number;
+    protected _bindingsByRootAndName: {
+        [rootUuid: string]: { [trackName: string]: PropertyMixer };
+    };
+    protected _actionsByClip: {
+        [clipUuid: string]: {
+            knownActions: AnimationAction[];
+            actionByRoot: { [rootUuid: string]: AnimationAction };
+        };
+    };
+    protected _accuIndex: number;
     /**
      * A scaling factor for the global time.
      *
@@ -26,48 +75,13 @@ export class AnimationMixer extends EventDispatcher {
      * possibility to pause/unpause all actions that are controlled by this
      * mixer.
      *
-     * @type {number}
      * @default 1
      */
     timeScale: number;
-    _bindAction(action: any, prototypeAction: any): void;
-    _activateAction(action: any): void;
-    _deactivateAction(action: any): void;
-    _initMemoryManager(): void;
-    _actions: any[] | undefined;
-    _nActiveActions: number | undefined;
-    _actionsByClip: {} | undefined;
-    _bindings: any[] | undefined;
-    _nActiveBindings: number | undefined;
-    _bindingsByRootAndName: {} | undefined;
-    _controlInterpolants: any[] | undefined;
-    _nActiveControlInterpolants: number | undefined;
-    stats: {
-        actions: {
-            readonly total: number;
-            readonly inUse: number | undefined;
-        };
-        bindings: {
-            readonly total: number;
-            readonly inUse: number | undefined;
-        };
-        controlInterpolants: {
-            readonly total: number;
-            readonly inUse: number | undefined;
-        };
-    } | undefined;
-    _isActiveAction(action: any): boolean;
-    _addInactiveAction(action: any, clipUuid: any, rootUuid: any): void;
-    _removeInactiveAction(action: any): void;
-    _removeInactiveBindingsForAction(action: any): void;
-    _lendAction(action: any): void;
-    _takeBackAction(action: any): void;
-    _addInactiveBinding(binding: any, rootUuid: any, trackName: any): void;
-    _removeInactiveBinding(binding: any): void;
-    _lendBinding(binding: any): void;
-    _takeBackBinding(binding: any): void;
-    _lendControlInterpolant(): any;
-    _takeBackControlInterpolant(interpolant: any): void;
+    /**
+     * The AnimationMixer stats track the actions of the mixer.
+     */
+    stats: AnimationMixerStats;
     /**
      * Returns an instance of {@link AnimationAction} for the passed clip.
      *
@@ -81,9 +95,14 @@ export class AnimationMixer extends EventDispatcher {
      * @return {?AnimationAction} The animation action.
      */
     clipAction(
+        clip: AnimationClip,
+        optionalRoot?: Object3D | AnimationObjectGroup,
+        blendMode?: AnimationBlendMode,
+    ): AnimationAction;
+    clipAction(
         clip: AnimationClip | string,
-        optionalRoot?: Object3D,
-        blendMode?: number | AdditiveAnimationBlendMode,
+        optionalRoot?: Object3D | AnimationObjectGroup,
+        blendMode?: AnimationBlendMode,
     ): AnimationAction | null;
     /**
      * Returns an existing animation action for the passed clip.
@@ -92,7 +111,10 @@ export class AnimationMixer extends EventDispatcher {
      * @param {Object3D} [optionalRoot] - An alternative root object.
      * @return {?AnimationAction} The animation action. Returns `null` if no action was found.
      */
-    existingAction(clip: AnimationClip | string, optionalRoot?: Object3D): AnimationAction | null;
+    existingAction(
+        clip: AnimationClip | string,
+        optionalRoot?: Object3D | AnimationObjectGroup,
+    ): AnimationAction | null;
     /**
      * Deactivates all previously scheduled actions on this mixer.
      *
@@ -124,7 +146,7 @@ export class AnimationMixer extends EventDispatcher {
      *
      * @return {Object3D} The mixer's root object.
      */
-    getRoot(): Object3D;
+    getRoot(): Object3D | AnimationObjectGroup;
     /**
      * Deallocates all memory resources for a clip. Before using this method make
      * sure to call {@link AnimationAction#stop} for all related actions.
@@ -140,7 +162,7 @@ export class AnimationMixer extends EventDispatcher {
      *
      * @param {Object3D} root - The root object to uncache.
      */
-    uncacheRoot(root: Object3D): void;
+    uncacheRoot(root: Object3D | AnimationObjectGroup): void;
     /**
      * Deallocates all memory resources for an action. The action is identified by the
      * given clip and an optional root object. Before using this method make
@@ -149,8 +171,5 @@ export class AnimationMixer extends EventDispatcher {
      * @param {AnimationClip|string} clip - An animation clip or alternatively the name of the animation clip.
      * @param {Object3D} [optionalRoot] - An alternative root object.
      */
-    uncacheAction(clip: AnimationClip | string, optionalRoot?: Object3D): void;
+    uncacheAction(clip: AnimationClip | string, optionalRoot?: Object3D | AnimationObjectGroup): void;
 }
-import { EventDispatcher } from "../core/EventDispatcher.js";
-import { AnimationAction } from "./AnimationAction.js";
-import { AnimationClip } from "./AnimationClip.js";

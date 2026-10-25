@@ -1,4 +1,6 @@
-export default NodeVarying;
+import { InterpolationSamplingMode, InterpolationSamplingType } from "../../constants.js";
+import NodeVar from "./NodeVar.js";
+
 /**
  * {@link NodeBuilder} is going to create instances of this class during the build process
  * of nodes. They represent the final shader varyings that are going to be generated
@@ -16,7 +18,12 @@ declare class NodeVarying extends NodeVar {
      * @param {?string} interpolationType - The interpolation type of the varying.
      * @param {?string} interpolationSampling - The interpolation sampling type of the varying.
      */
-    constructor(name: string, type: string, interpolationType?: string | null, interpolationSampling?: string | null);
+    constructor(
+        name: string,
+        type: string,
+        interpolationType?: InterpolationSamplingType | null,
+        interpolationSampling?: InterpolationSamplingMode | null,
+    );
     /**
      * Whether this varying requires interpolation or not. This property can be used
      * to check if the varying can be optimized for a variable.
@@ -39,13 +46,14 @@ declare class NodeVarying extends NodeVar {
      * @type {?string}
      * @default null
      */
-    interpolationType: string | null;
+    interpolationType: InterpolationSamplingType | null;
     /**
      * The interpolation sampling type of varying data.
      *
      * @type {?string}
      * @default null
      */
-    interpolationSampling: string | null;
+    interpolationSampling: InterpolationSamplingMode | null;
 }
-import NodeVar from "./NodeVar.js";
+
+export default NodeVarying;

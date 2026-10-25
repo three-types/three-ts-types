@@ -1,3 +1,6 @@
+import { ColorRepresentation } from "../math/Color.js";
+import { Light } from "./Light.js";
+
 /**
  * This class emits light uniformly across the face a rectangular plane.
  * This light type can be used to simulate light sources such as bright
@@ -20,8 +23,6 @@
  * rectLight.lookAt( 0, 0, 0 );
  * scene.add( rectLight )
  * ```
- *
- * @augments Light
  */
 export class RectAreaLight extends Light {
     /**
@@ -32,26 +33,22 @@ export class RectAreaLight extends Light {
      * @param {number} [width=10] - The width of the light.
      * @param {number} [height=10] - The height of the light.
      */
-    constructor(color?: number | Color | string, intensity?: number, width?: number, height?: number);
+    constructor(color?: ColorRepresentation, intensity?: number, width?: number, height?: number);
     /**
      * This flag can be used for type testing.
      *
-     * @type {boolean}
-     * @readonly
      * @default true
      */
     readonly isRectAreaLight: boolean;
     /**
      * The width of the light.
      *
-     * @type {number}
      * @default 10
      */
     width: number;
     /**
      * The height of the light.
      *
-     * @type {number}
      * @default 10
      */
     height: number;
@@ -59,10 +56,7 @@ export class RectAreaLight extends Light {
     /**
      * The light's power. Power is the luminous power of the light measured in lumens (lm).
      * Changing the power will also change the light's intensity.
-     *
-     * @type {number}
      */
     get power(): number;
-    copy(source: any): this;
+    copy(source: RectAreaLight): this;
 }
-import { Light } from "./Light.js";

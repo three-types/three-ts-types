@@ -1,11 +1,6 @@
-export default SSRNode;
-export function ssr(
-    colorNode: Node<any>,
-    depthNode: Node<any>,
-    normalNode: Node<any>,
-    options?: SSRNodeOptions,
-): SSRNode;
-export type SSRNodeOptions = {
+import { Camera, Node, RenderTarget, Texture, TextureNode, UniformNode } from "three/webgpu";
+
+export interface SSRNodeOptions {
     /**
      * - When `false`, traces a single mirror reflection and softens roughness with a blur pass (first-generation SSR). When `true`, varies the reflection direction per pixel with stochastic GGX rays (second-generation SSR); higher quality on rough/glossy surfaces but noisier, so it expects a temporal/spatial denoiser downstream.
      */
@@ -13,11 +8,11 @@ export type SSRNodeOptions = {
     /**
      * - Per-pixel metalness. Drives GGX reflection sampling and, with `reflectNonMetals=false`, the non-metal early-out.
      */
-    metalnessNode?: Node<any>;
+    metalnessNode?: Node<"float"> | undefined;
     /**
      * - Per-pixel roughness. Drives GGX sampling and the blur mip selection.
      */
-    roughnessNode?: Node<any>;
+    roughnessNode?: Node<"float"> | undefined;
     /**
      * - Only used when `stochastic=false`. When `false`, non-metallic surfaces are discarded for a noticeable performance gain; set `true` to also reflect dielectrics (e.g. marble, polished wood, plastic).
      */
@@ -25,7 +20,7 @@ export type SSRNodeOptions = {
     /**
      * - Equirectangular HDR environment map with CPU-side `image.data` (e.g. from RGBELoader). Not compatible with PMREM / `scene.environment` cubemaps.
      */
-    environmentNode?: Texture;
+    environmentNode?: Texture | undefined;
     /**
      * - When `true`, precomputes env-luminance CDF tables and uses MIS for environment misses. Build-time only.
      */
@@ -33,7 +28,7 @@ export type SSRNodeOptions = {
     /**
      * - Scene diffuse / base color. Defaults to `vec3(1)` in the shader when omitted.
      */
-    diffuseNode?: Node | undefined;
+    diffuseNode?: Node<"vec4"> | undefined;
     /**
      * - Sub-step binary-search refinement of detected hits. Compile-time constant (baked into the shader at construction).
      */
@@ -41,20 +36,9 @@ export type SSRNodeOptions = {
     /**
      * - Camera the scene is rendered with. Inferred from the color pass when omitted.
      */
-    camera?: Camera;
-};
-/**
- * @typedef {Object} SSRNodeOptions
- * @property {boolean} [stochastic=false] - When `false`, traces a single mirror reflection and softens roughness with a blur pass (first-generation SSR). When `true`, varies the reflection direction per pixel with stochastic GGX rays (second-generation SSR); higher quality on rough/glossy surfaces but noisier, so it expects a temporal/spatial denoiser downstream.
- * @property {Node<float>} [metalnessNode=null] - Per-pixel metalness. Drives GGX reflection sampling and, with `reflectNonMetals=false`, the non-metal early-out.
- * @property {Node<float>} [roughnessNode=null] - Per-pixel roughness. Drives GGX sampling and the blur mip selection.
- * @property {boolean} [reflectNonMetals=false] - Only used when `stochastic=false`. When `false`, non-metallic surfaces are discarded for a noticeable performance gain; set `true` to also reflect dielectrics (e.g. marble, polished wood, plastic).
- * @property {Texture} [environmentNode=null] - Equirectangular HDR environment map with CPU-side `image.data` (e.g. from RGBELoader). Not compatible with PMREM / `scene.environment` cubemaps.
- * @property {boolean} [envImportanceSampling=false] - When `true`, precomputes env-luminance CDF tables and uses MIS for environment misses. Build-time only.
- * @property {Node} [diffuseNode=null] - Scene diffuse / base color. Defaults to `vec3(1)` in the shader when omitted.
- * @property {boolean} [binaryRefine=false] - Sub-step binary-search refinement of detected hits. Compile-time constant (baked into the shader at construction).
- * @property {Camera} [camera=null] - Camera the scene is rendered with. Inferred from the color pass when omitted.
- */
+    camera?: Camera | undefined;
+}
+
 /**
  * Post processing node for computing screen space reflections (SSR).
  *
@@ -63,7 +47,7 @@ export type SSRNodeOptions = {
  * @augments Node
  * @three_import import { ssr } from 'three/addons/tsl/display/SSRNode.js';
  */
-declare class SSRNode extends Node {
+declare class SSRNode extends Node<"vec4"> {
     /**
      * Constructs a new SSR node.
      *
@@ -72,7 +56,12 @@ declare class SSRNode extends Node {
      * @param {Node<vec3>} normalNode - A node that represents the beauty pass's normals.
      * @param {SSRNodeOptions} [options] - Optional inputs for material and environment data.
      */
-    constructor(colorNode: Node<any>, depthNode: Node<any>, normalNode: Node<any>, options?: SSRNodeOptions);
+    constructor(
+        colorNode: Node<"vec4">,
+        depthNode: Node<"float"> | Node<"vec4">,
+        normalNode: Node<"vec3">,
+        options?: SSRNodeOptions,
+    );
     /**
      * When `true`, the reflection direction is varied per pixel with stochastic GGX rays
      * (second-generation SSR). When `false`, a single mirror reflection is traced and
@@ -93,50 +82,40 @@ declare class SSRNode extends Node {
      *
      * @type {Node<vec4>}
      */
-    colorNode: Node<any>;
+    colorNode: Node<"vec4">;
     /**
      * A node that represents the scene's diffuse color (typically the MRT `diffuseColor` attachment).
      * When `null`, the shader uses `vec3(1)`.
      *
      * @type {?Node<vec4>}
      */
-    diffuseNode: Node<any> | null;
+    diffuseNode: Node<"vec4"> | null;
     /**
      * A node that represents the beauty pass's depth.
      *
      * @type {Node<float>}
      */
-    depthNode: Node<any>;
+    depthNode: Node<"float"> | Node<"vec4">;
     /**
      * A node that represents the beauty pass's normals.
      *
      * @type {Node<vec3>}
      */
-    normalNode: Node<any>;
+    normalNode: Node<"vec3">;
     /**
      * Per-pixel metalness, used to drive the GGX reflection sampling and the non-metal
      * early-out. When `null`, the shader treats surfaces as non-metallic.
      *
      * @type {?Node<float>}
      */
-    metalnessNode: Node<any> | null;
+    metalnessNode: Node<"float"> | null;
     /**
      * Per-pixel roughness, used to drive the GGX reflection sampling and the blur mip
      * selection. When `null`, the shader treats surfaces as fully smooth.
      *
      * @type {?Node<float>}
      */
-    roughnessNode: Node<any> | null;
-    /**
-     * Only used when {@link SSRNode#stochastic} is `false`. When `false`, non-metallic
-     * surfaces are discarded for a noticeable performance gain; set `true` to also
-     * reflect dielectrics. Baked into the shader as a compile-time constant; assigning a
-     * new value recompiles the SSR material.
-     *
-     * @type {boolean}
-     * @default false
-     */
-    _reflectNonMetals: boolean;
+    roughnessNode: Node<"float"> | null;
     /**
      * The resolution scale. Valid values are in the range
      * `[0,1]`. `1` means best quality but also results in
@@ -153,13 +132,13 @@ declare class SSRNode extends Node {
      *
      * @type {UniformNode<float>}
      */
-    maxDistance: UniformNode<any>;
+    maxDistance: UniformNode<"float">;
     /**
      * Controls the cutoff between what counts as a possible reflection hit and what does not.
      *
      * @type {UniformNode<float>}
      */
-    thickness: UniformNode<any>;
+    thickness: UniformNode<"float">;
     /**
      * A multiplier for the overall reflection intensity. `1` leaves the
      * reflections unchanged, lower values dim them and higher values boost them.
@@ -167,7 +146,7 @@ declare class SSRNode extends Node {
      * @type {UniformNode<float>}
      * @default 1
      */
-    intensity: UniformNode<any>;
+    intensity: UniformNode<"float">;
     /**
      * Screen-edge fade width, in UV units. As a screen-space hit approaches a screen
      * border, the reflection is faded over this distance — either toward the environment
@@ -177,26 +156,14 @@ declare class SSRNode extends Node {
      * @type {UniformNode<float>}
      * @default 0.2
      */
-    screenEdgeFade: UniformNode<any>;
-    /**
-     * When `true`, SSR fades to zero near screen borders instead of blending toward
-     * the environment map. Hits are faded by the reflection sample UV; misses are
-     * faded by the surface pixel UV.
-     *
-     * Baked into the shader as a compile-time constant so the unused fade branch is
-     * eliminated; assigning a new value recompiles the SSR material.
-     *
-     * @type {boolean}
-     * @default false
-     */
-    _screenEdgeFadeBlack: boolean;
+    screenEdgeFade: UniformNode<"float">;
     /**
      * Absolute env luminance cap. HDR env samples above this are scaled down (hue preserved).
      *
      * @type {UniformNode<float>}
      * @default 10
      */
-    maxLuminance: UniformNode<any>;
+    maxLuminance: UniformNode<"float">;
     /**
      * This parameter controls how detailed the raymarching process works.
      * The value ranges is `[0,1]` where `1` means best quality (the maximum number
@@ -208,7 +175,7 @@ declare class SSRNode extends Node {
      *
      * @type {UniformNode<float>}
      */
-    quality: UniformNode<any>;
+    quality: UniformNode<"float">;
     /**
      * Mirror bias for the stochastic GGX sampling. Concentrates the reflected rays toward
      * the lobe's narrow (near-mirror) core, trading a small amount of bias for less noise.
@@ -217,40 +184,7 @@ declare class SSRNode extends Node {
      * @type {UniformNode<float>}
      * @default 0.5
      */
-    mirrorBias: UniformNode<any>;
-    /**
-     * The quality of the blur. Must be an integer in the range `[1,3]`.
-     *
-     * Baked into the blur shader as a compile-time constant so the `(size*2+1)²`
-     * sample loop unrolls; assigning a new value recompiles the blur material.
-     *
-     * @type {number}
-     * @default 2
-     */
-    _blurQuality: number;
-    /**
-     * Enables sub-step binary-search refinement of a detected hit. When on, a coarse
-     * crossing is bisected toward the exact intersection (sharper hits, less step
-     * aliasing) at the cost of extra depth samples. Baked into the shader as a
-     * compile-time constant; assigning a new value rebuilds the SSR material.
-     *
-     * @type {boolean}
-     * @default false
-     */
-    _binaryRefine: boolean;
-    /**
-     * Non-linear step distribution exponent. `1` = uniform steps; `> 1` concentrates
-     * samples near the ray origin — where most short-range reflections are missed — and
-     * spaces them out toward maxDistance, as `s = (i / steps) ^ stepExponent`.
-     *
-     * Baked into the shader as a compile-time constant so `pow()` folds to a few
-     * multiplies; assigning a new value recompiles the SSR material. Only used by the
-     * stochastic reflection path.
-     *
-     * @type {number}
-     * @default 2
-     */
-    _stepExponent: number;
+    mirrorBias: UniformNode<"float">;
     /**
      * HDR environment map for screen-space misses.
      *
@@ -268,7 +202,7 @@ declare class SSRNode extends Node {
      *
      * @type {?Node<vec2>}
      */
-    velocityTexture: Node<any> | null;
+    velocityTexture: Node<"vec2"> | Node<"vec4"> | null;
     /**
      * The camera the scene is rendered with.
      *
@@ -276,126 +210,13 @@ declare class SSRNode extends Node {
      */
     camera: Camera;
     /**
-     * The spread of the blur. Automatically set when generating mips.
-     *
-     * @private
-     * @type {UniformNode<int>}
-     */
-    private _blurSpread;
-    /**
-     * Represents the projection matrix of the scene's camera.
-     *
-     * @private
-     * @type {UniformNode<mat4>}
-     */
-    private _cameraProjectionMatrix;
-    /**
-     * Represents the inverse projection matrix of the scene's camera.
-     *
-     * @private
-     * @type {UniformNode<mat4>}
-     */
-    private _cameraProjectionMatrixInverse;
-    /**
-     * Represents the near value of the scene's camera.
-     *
-     * @private
-     * @type {ReferenceNode<float>}
-     */
-    private _cameraNear;
-    /**
-     * Represents the far value of the scene's camera.
-     *
-     * @private
-     * @type {ReferenceNode<float>}
-     */
-    private _cameraFar;
-    _cameraWorldMatrix: import("three/tsl").UniformNode;
-    _cameraWorldPosition: import("three/tsl").UniformNode;
-    _cameraViewMatrix: import("three/tsl").UniformNode;
-    _cameraViewMatrixInverse: import("three/tsl").UniformNode;
-    /**
-     * The resolution of the pass.
-     *
-     * @private
-     * @type {UniformNode<vec2>}
-     */
-    private _resolution;
-    _noiseIndex: import("three/tsl").UniformNode;
-    /**
-     * CDF-backed environment sampler. Created when {@link setEnvMap} is called.
-     *
-     * @private
-     * @type {?ImportanceSampledEnvironment}
-     */
-    private _importanceEnvironment;
-    /**
      * Intensity multiplier applied to environment-map reflections on screen-space
      * misses and at screen edges. Defaults to π to match the former hardcoded multiplier.
      *
      * @type {UniformNode<float>}
      * @default Math.PI
      */
-    environmentIntensity: UniformNode<any>;
-    /**
-     * The render target the SSR is rendered into.
-     *
-     * @private
-     * @type {RenderTarget}
-     */
-    private _ssrRenderTarget;
-    /**
-     * The render target for the blurred SSR reflections.
-     *
-     * @private
-     * @type {RenderTarget}
-     */
-    private _blurRenderTarget;
-    /**
-     * The material that is used to render the effect.
-     *
-     * @private
-     * @type {NodeMaterial}
-     */
-    private _ssrMaterial;
-    /**
-     * The SSR fragment `Fn` and its shared context, captured in {@link SSRNode#setup}.
-     * Re-invoking the `Fn` produces a fresh node graph, which is how the baked
-     * compile-time constants are re-applied when they change (see {@link SSRNode#_buildSSRMaterial}).
-     *
-     * @private
-     */
-    private _ssrFn;
-    _sharedContext: any;
-    /**
-     * The blur material.
-     *
-     * @private
-     * @type {NodeMaterial}
-     */
-    private _blurMaterial;
-    /**
-     * The copy material.
-     *
-     * @private
-     * @type {NodeMaterial}
-     */
-    private _copyMaterial;
-    /**
-     * The result of the effect is represented as a separate texture node.
-     *
-     * @private
-     * @type {PassTextureNode}
-     */
-    private _textureNode;
-    /**
-     * Holds the blurred SSR reflections.
-     *
-     * @private
-     * @type {?PassTextureNode}
-     */
-    private _blurredTextureNode;
-    set stepExponent(value: number);
+    environmentIntensity: UniformNode<"float">;
     /**
      * Non-linear step distribution exponent (compile-time constant). See the backing
      * field for details. Assigning a new value recompiles the SSR material.
@@ -403,7 +224,7 @@ declare class SSRNode extends Node {
      * @type {number}
      */
     get stepExponent(): number;
-    set blurQuality(value: number);
+    set stepExponent(value: number);
     /**
      * Blur kernel size (compile-time constant). Assigning a new value recompiles the
      * blur material.
@@ -411,14 +232,7 @@ declare class SSRNode extends Node {
      * @type {number}
      */
     get blurQuality(): number;
-    /**
-     * Builds (or rebuilds) the blur material's node graph, baking the current
-     * {@link SSRNode#blurQuality} as the kernel size so the sample loop unrolls.
-     *
-     * @private
-     */
-    private _buildBlurMaterial;
-    set screenEdgeFadeBlack(value: boolean);
+    set blurQuality(value: number);
     /**
      * Whether SSR fades to black near screen borders (compile-time constant). Assigning
      * a new value recompiles the SSR material.
@@ -426,7 +240,7 @@ declare class SSRNode extends Node {
      * @type {boolean}
      */
     get screenEdgeFadeBlack(): boolean;
-    set binaryRefine(value: boolean);
+    set screenEdgeFadeBlack(value: boolean);
     /**
      * Whether sub-step binary-search hit refinement is enabled (compile-time constant).
      * Assigning a new value rebuilds the SSR material.
@@ -434,7 +248,7 @@ declare class SSRNode extends Node {
      * @type {boolean}
      */
     get binaryRefine(): boolean;
-    set reflectNonMetals(value: boolean);
+    set binaryRefine(value: boolean);
     /**
      * Whether dielectrics are reflected in the non-stochastic path (compile-time constant).
      * Assigning a new value rebuilds the SSR material.
@@ -442,21 +256,13 @@ declare class SSRNode extends Node {
      * @type {boolean}
      */
     get reflectNonMetals(): boolean;
-    /**
-     * Rebuilds the SSR material's node graph by re-invoking the fragment `Fn`, which
-     * re-bakes the compile-time constants ({@link SSRNode#binaryRefine},
-     * {@link SSRNode#stepExponent}, {@link SSRNode#screenEdgeFadeBlack}) at their current
-     * values. A no-op until {@link SSRNode#setup} has captured the `Fn`.
-     *
-     * @private
-     */
-    private _buildSSRMaterial;
+    set reflectNonMetals(value: boolean);
     /**
      * Returns the result of the effect as a texture node.
      *
      * @return {PassTextureNode} A texture node that represents the result of the effect.
      */
-    getTextureNode(): PassTextureNode;
+    getTextureNode(): TextureNode;
     /**
      * Sets the size of the effect.
      *
@@ -474,7 +280,10 @@ declare class SSRNode extends Node {
      * @param {Texture} history
      * @param {Node<vec2>} velocity
      */
-    setHistory(history: Texture, velocity: Node<any>): void;
+    setHistory(
+        history: Texture | { getRenderTarget(): { texture: Texture } },
+        velocity: Node<"vec2"> | Node<"vec4">,
+    ): void;
     /**
      * Sets the environment map for importance-sampled env lighting when
      * screen-space rays miss. Call this whenever the scene's env map changes.
@@ -492,21 +301,15 @@ declare class SSRNode extends Node {
      *
      * @type {?UniformNode<float>}
      */
-    get envMapIntensity(): UniformNode<any> | null;
-    /**
-     * This method is used to render the effect once per frame.
-     *
-     * @param {NodeFrame} frame - The current node frame.
-     */
-    updateBefore(frame: NodeFrame): void;
-    /**
-     * This method is used to setup the effect's TSL code.
-     *
-     * @param {NodeBuilder} builder - The current node builder.
-     * @return {PassTextureNode}
-     */
-    setup(builder: NodeBuilder): PassTextureNode;
+    get envMapIntensity(): UniformNode<"float"> | null;
     getRenderTarget(): RenderTarget;
 }
-import { Node } from "three/webgpu";
-import { RenderTarget } from "three/webgpu";
+
+export default SSRNode;
+
+export function ssr(
+    colorNode: Node<"vec4">,
+    depthNode: Node<"float"> | Node<"vec4">,
+    normalNode: Node<"vec3">,
+    options?: SSRNodeOptions,
+): SSRNode;

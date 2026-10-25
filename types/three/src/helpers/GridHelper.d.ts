@@ -1,3 +1,8 @@
+import { BufferGeometry } from "../core/BufferGeometry.js";
+import { LineBasicMaterial } from "../materials/LineBasicMaterial.js";
+import { ColorRepresentation } from "../math/Color.js";
+import { LineSegments } from "../objects/LineSegments.js";
+
 /**
  * The helper is an object to define grids. Grids are two-dimensional
  * arrays of lines.
@@ -9,10 +14,8 @@
  * const gridHelper = new THREE.GridHelper( size, divisions );
  * scene.add( gridHelper );
  * ```
- *
- * @augments LineSegments
  */
-export class GridHelper extends LineSegments {
+export class GridHelper extends LineSegments<BufferGeometry, LineBasicMaterial> {
     /**
      * Constructs a new grid helper.
      *
@@ -21,7 +24,5 @@ export class GridHelper extends LineSegments {
      * @param {number|Color|string} [color1=0x444444] - The color of the center line.
      * @param {number|Color|string} [color2=0x888888] - The color of the lines of the grid.
      */
-    constructor(size?: number, divisions?: number, color1?: number | Color | string, color2?: number | Color | string);
+    constructor(size?: number, divisions?: number, color1?: ColorRepresentation, color2?: ColorRepresentation);
 }
-import { Color } from "../math/Color.js";
-import { LineSegments } from "../objects/LineSegments.js";

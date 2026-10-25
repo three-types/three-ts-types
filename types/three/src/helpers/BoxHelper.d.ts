@@ -1,3 +1,10 @@
+import { BufferGeometry } from "../core/BufferGeometry.js";
+import { Object3D } from "../core/Object3D.js";
+import { LineBasicMaterial } from "../materials/LineBasicMaterial.js";
+import { Box3 } from "../math/Box3.js";
+import { ColorRepresentation } from "../math/Color.js";
+import { LineSegments } from "../objects/LineSegments.js";
+
 /**
  * Helper object to graphically show the world-axis-aligned bounding box
  * around an object. The actual bounding box is handled with {@link Box3},
@@ -12,14 +19,17 @@
  * const box = new THREE.BoxHelper( object, 0xffff00 );
  * scene.add( box );
  * ```
- *
- * @augments LineSegments
  */
-export class BoxHelper extends LineSegments {
+export class BoxHelper extends LineSegments<BufferGeometry, LineBasicMaterial> {
+    /**
+     * Constructs a new box helper.
+     *
+     * @param {Object3D} [object] - The 3D object to show the world-axis-aligned bounding box.
+     * @param {number|Color|string} [color=0xffff00] - The box's color.
+     */
+    constructor(object: Object3D, color?: ColorRepresentation);
     /**
      * The 3D object being visualized.
-     *
-     * @type {Object3D}
      */
     object: Object3D;
     /**
@@ -34,6 +44,5 @@ export class BoxHelper extends LineSegments {
      * @return {BoxHelper} A reference to this instance.
      */
     setFromObject(object: Object3D): BoxHelper;
-    copy(source: any, recursive: any): this;
+    copy(source: BoxHelper, recursive?: boolean): this;
 }
-import { LineSegments } from "../objects/LineSegments.js";

@@ -1,52 +1,11 @@
-/**
- * A material for rendering point primitives.
- *
- * Materials define the appearance of renderable 3D objects.
- *
- * ```js
- * const vertices = [];
- *
- * for ( let i = 0; i < 10000; i ++ ) {
- * 	const x = THREE.MathUtils.randFloatSpread( 2000 );
- * 	const y = THREE.MathUtils.randFloatSpread( 2000 );
- * 	const z = THREE.MathUtils.randFloatSpread( 2000 );
- *
- * 	vertices.push( x, y, z );
- * }
- *
- * const geometry = new THREE.BufferGeometry();
- * geometry.setAttribute( 'position', new THREE.Float32BufferAttribute( vertices, 3 ) );
- * const material = new THREE.PointsMaterial( { color: 0x888888 } );
- * const points = new THREE.Points( geometry, material );
- * scene.add( points );
- * ```
- *
- * @augments Material
- */
-export class PointsMaterial extends Material {
-    /**
-     * Constructs a new points material.
-     *
-     * @param {Object} [parameters] - An object with one or more properties
-     * defining the material's appearance. Any property of the material
-     * (including any property from inherited materials) can be passed
-     * in here. Color values can be passed any type of value accepted
-     * by {@link Color#set}.
-     */
-    constructor(parameters?: Object);
-    /**
-     * This flag can be used for type testing.
-     *
-     * @type {boolean}
-     * @readonly
-     * @default true
-     */
-    readonly isPointsMaterial: boolean;
-    type: string;
+import { Color } from "../math/Color.js";
+import { Texture } from "../textures/Texture.js";
+import { MapColorPropertiesToColorRepresentations, Material, MaterialProperties } from "./Material.js";
+
+export interface PointsMaterialProperties extends MaterialProperties {
     /**
      * Color of the material.
      *
-     * @type {Color}
      * @default (1,1,1)
      */
     color: Color;
@@ -85,25 +44,70 @@ export class PointsMaterial extends Material {
      *
      * Might be capped if the value exceeds hardware dependent parameters like [gl.ALIASED_POINT_SIZE_RANGE](https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getParamete).
      *
-     * @type {number}
      * @default 1
      */
     size: number;
     /**
      * Specifies whether size of individual points is attenuated by the camera depth (perspective camera only).
      *
-     * @type {boolean}
      * @default true
      */
     sizeAttenuation: boolean;
     /**
      * Whether the material is affected by fog or not.
      *
-     * @type {boolean}
      * @default true
      */
     fog: boolean;
-    copy(source: any): this;
 }
-import { Color } from "../math/Color.js";
-import { Material } from "./Material.js";
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface PointsMaterialParameters
+    extends Partial<MapColorPropertiesToColorRepresentations<PointsMaterialProperties>>
+{}
+
+/**
+ * A material for rendering point primitives.
+ *
+ * Materials define the appearance of renderable 3D objects.
+ *
+ * ```js
+ * const vertices = [];
+ *
+ * for ( let i = 0; i < 10000; i ++ ) {
+ * 	const x = THREE.MathUtils.randFloatSpread( 2000 );
+ * 	const y = THREE.MathUtils.randFloatSpread( 2000 );
+ * 	const z = THREE.MathUtils.randFloatSpread( 2000 );
+ *
+ * 	vertices.push( x, y, z );
+ * }
+ *
+ * const geometry = new THREE.BufferGeometry();
+ * geometry.setAttribute( 'position', new THREE.Float32BufferAttribute( vertices, 3 ) );
+ * const material = new THREE.PointsMaterial( { color: 0x888888 } );
+ * const points = new THREE.Points( geometry, material );
+ * scene.add( points );
+ * ```
+ */
+export class PointsMaterial extends Material {
+    /**
+     * Constructs a new points material.
+     *
+     * @param {Object} [parameters] - An object with one or more properties
+     * defining the material's appearance. Any property of the material
+     * (including any property from inherited materials) can be passed
+     * in here. Color values can be passed any type of value accepted
+     * by {@link Color#set}.
+     */
+    constructor(parameters?: PointsMaterialParameters);
+    /**
+     * This flag can be used for type testing.
+     *
+     * @default true
+     */
+    readonly isPointsMaterial: boolean;
+    setValues(values?: PointsMaterialParameters): void;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface PointsMaterial extends PointsMaterialProperties {}

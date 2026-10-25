@@ -1,3 +1,12 @@
+import { ArrayCamera } from "../cameras/ArrayCamera.js";
+import { CoordinateSystem } from "../constants.js";
+import { Object3D } from "../core/Object3D.js";
+import { Sprite } from "../objects/Sprite.js";
+import { Box3 } from "./Box3.js";
+import { Frustum } from "./Frustum.js";
+import { Sphere } from "./Sphere.js";
+import { Vector3 } from "./Vector3.js";
+
 /**
  * FrustumArray is used to determine if an object is visible in at least one camera
  * from an array of cameras. This is particularly useful for multi-view renderers.
@@ -9,25 +18,7 @@ export class FrustumArray {
      * @type {WebGLCoordinateSystem|WebGPUCoordinateSystem}
      * @default WebGLCoordinateSystem
      */
-    coordinateSystem: number | WebGPUCoordinateSystem;
-    /**
-     * A pool of frustum instances. It may hold more entries than are
-     * currently in use; surplus instances are kept for reuse to avoid
-     * reallocating when array cameras of different lengths are rendered.
-     *
-     * @private
-     * @type {Array<Frustum>}
-     */
-    private _frustums;
-    /**
-     * The number of frustums in {@link FrustumArray#_frustums} that are currently
-     * in use.
-     *
-     * @private
-     * @type {number}
-     * @default 0
-     */
-    private _count;
+    coordinateSystem: CoordinateSystem;
     /**
      * Computes and caches a frustum for each camera of the given array camera.
      *
@@ -93,7 +84,7 @@ export class FrustumArray {
      * @param {FrustumArray} source - The frustum array to copy.
      * @return {FrustumArray} A reference to this frustum array.
      */
-    copy(source: FrustumArray): FrustumArray;
+    copy(source: FrustumArray): this;
     /**
      * Returns a new frustum array with copied values from this instance.
      *
@@ -101,4 +92,3 @@ export class FrustumArray {
      */
     clone(): FrustumArray;
 }
-import { Frustum } from "./Frustum.js";

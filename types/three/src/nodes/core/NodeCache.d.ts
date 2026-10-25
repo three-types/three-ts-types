@@ -1,4 +1,5 @@
-export default NodeCache;
+import Node from "./Node.js";
+
 /**
  * This utility class is used in {@link NodeBuilder} as an internal
  * cache data structure for node data.
@@ -22,7 +23,7 @@ declare class NodeCache {
      *
      * @type {WeakMap<Node, Object>}
      */
-    nodesData: WeakMap<Node, Object>;
+    nodesData: WeakMap<Node, unknown>;
     /**
      * Reference to a parent node cache.
      *
@@ -36,12 +37,14 @@ declare class NodeCache {
      * @param {Node} node - The node.
      * @return {?Object} The data for the node.
      */
-    getData(node: Node): Object | null;
+    getData(node: Node): unknown;
     /**
      * Sets the data for a given node.
      *
      * @param {Node} node - The node.
      * @param {Object} data - The data that should be cached.
      */
-    setData(node: Node, data: Object): void;
+    setData(node: Node, data: unknown): void;
 }
+
+export default NodeCache;

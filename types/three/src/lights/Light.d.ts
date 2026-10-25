@@ -1,48 +1,50 @@
+import { JSONMeta, Object3D, Object3DJSON } from "../core/Object3D.js";
+import { Color, ColorRepresentation } from "../math/Color.js";
+import AnalyticLightNode from "../nodes/lighting/AnalyticLightNode.js";
+
+export interface LightJSON extends Object3DJSON {
+    color: number;
+    intensity: number;
+}
+
 /**
  * Abstract base class for lights - all other light types inherit the
  * properties and methods described here.
- *
- * @abstract
- * @augments Object3D
  */
-export class Light extends Object3D {
+export abstract class Light extends Object3D {
     /**
      * Registers the node class that `WebGPURenderer` uses to shade lights of this type.
      *
      * @param {AnalyticLightNode.constructor} lightNodeClass - The light node class.
      */
-    static registerNode(lightNodeClass: AnalyticLightNode.constructor): void;
+    static registerNode<TLight extends Light>(this: {
+        new(...args: any[]): TLight;
+    }, lightNodeClass: {
+        new(light: TLight): AnalyticLightNode<TLight>;
+    }): void;
     /**
      * Constructs a new light.
      *
      * @param {(number|Color|string)} [color=0xffffff] - The light's color.
      * @param {number} [intensity=1] - The light's strength/intensity.
      */
-    constructor(color?: number | Color | string, intensity?: number);
+    constructor(color?: ColorRepresentation, intensity?: number);
     /**
      * This flag can be used for type testing.
      *
-     * @type {boolean}
-     * @readonly
      * @default true
      */
     readonly isLight: boolean;
-    type: string;
     /**
      * The light's color.
-     *
-     * @type {Color}
      */
     color: Color;
     /**
      * The light's intensity.
      *
-     * @type {number}
      * @default 1
      */
     intensity: number;
-    copy(source: any, recursive: any): this;
-    toJSON(meta: any): Object;
+    copy(source: Light, recursive?: boolean): this;
+    toJSON(meta?: JSONMeta): LightJSON;
 }
-import { Object3D } from "../core/Object3D.js";
-import { Color } from "../math/Color.js";

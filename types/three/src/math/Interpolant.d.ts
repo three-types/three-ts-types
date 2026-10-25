@@ -1,3 +1,5 @@
+import { TypedArray } from "../core/BufferAttribute.js";
+
 /**
  * Abstract base class of interpolants over parametric samples.
  *
@@ -17,7 +19,7 @@
  *
  * @abstract
  */
-export class Interpolant {
+export abstract class Interpolant<TSettings = {}> {
     /**
      * Constructs a new interpolant.
      *
@@ -39,14 +41,6 @@ export class Interpolant {
      */
     parameterPositions: TypedArray;
     /**
-     * A cache index.
-     *
-     * @private
-     * @type {number}
-     * @default 0
-     */
-    private _cachedIndex;
-    /**
      * The result buffer.
      *
      * @type {TypedArray}
@@ -63,20 +57,20 @@ export class Interpolant {
      *
      * @type {TypedArray}
      */
-    valueSize: TypedArray;
+    valueSize: number;
     /**
      * The interpolation settings.
      *
      * @type {?Object}
      * @default null
      */
-    settings: Object | null;
+    settings: TSettings | null;
     /**
      * The default settings object.
      *
      * @type {Object}
      */
-    DefaultSettings_: Object;
+    DefaultSettings_: TSettings;
     /**
      * Evaluate the interpolant at position `t`.
      *
@@ -89,7 +83,7 @@ export class Interpolant {
      *
      * @return {Object} The interpolation settings.
      */
-    getSettings_(): Object;
+    getSettings_(): unknown;
     /**
      * Copies a sample value to the result buffer.
      *
@@ -107,7 +101,7 @@ export class Interpolant {
      * @param {number} t1 - The next interpolation factor.
      * @return {TypedArray} The result buffer.
      */
-    interpolate_(): TypedArray;
+    abstract interpolate_(i1: number, t0: number, t: number, t1: number): TypedArray;
     /**
      * Optional method that is executed when the interval has changed.
      *
@@ -115,5 +109,5 @@ export class Interpolant {
      * @param {number} t0 - The previous interpolation factor.
      * @param {number} t - The current interpolation factor.
      */
-    intervalChanged_(): void;
+    intervalChanged_(i1: number, t0: number, t: number): void;
 }

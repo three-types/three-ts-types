@@ -1,4 +1,5 @@
-export default NodeAttribute;
+import Node from "./Node.js";
+
 /**
  * {@link NodeBuilder} is going to create instances of this class during the build process
  * of nodes. They represent the final shader attributes that are going to be generated
@@ -42,3 +43,5 @@ declare class NodeAttribute {
      */
     node: Node | null;
 }
+
+export default NodeAttribute;

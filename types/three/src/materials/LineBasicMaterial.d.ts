@@ -1,38 +1,11 @@
-/**
- * A material for rendering line primitives.
- *
- * Materials define the appearance of renderable 3D objects.
- *
- * ```js
- * const material = new THREE.LineBasicMaterial( { color: 0xffffff } );
- * ```
- *
- * @augments Material
- */
-export class LineBasicMaterial extends Material {
-    /**
-     * Constructs a new line basic material.
-     *
-     * @param {Object} [parameters] - An object with one or more properties
-     * defining the material's appearance. Any property of the material
-     * (including any property from inherited materials) can be passed
-     * in here. Color values can be passed any type of value accepted
-     * by {@link Color#set}.
-     */
-    constructor(parameters?: Object);
-    /**
-     * This flag can be used for type testing.
-     *
-     * @type {boolean}
-     * @readonly
-     * @default true
-     */
-    readonly isLineBasicMaterial: boolean;
-    type: string;
+import { Color } from "../math/Color.js";
+import { Texture } from "../textures/Texture.js";
+import { MapColorPropertiesToColorRepresentations, Material, MaterialProperties } from "./Material.js";
+
+export interface LineBasicMaterialProperties extends MaterialProperties {
     /**
      * Color of the material.
      *
-     * @type {Color}
      * @default (1,1,1)
      */
     color: Color;
@@ -55,7 +28,6 @@ export class LineBasicMaterial extends Material {
      * ignore this setting and always render line primitives with a
      * width of one pixel.
      *
-     * @type {number}
      * @default 1
      */
     linewidth: number;
@@ -64,7 +36,6 @@ export class LineBasicMaterial extends Material {
      *
      * Can only be used with {@link SVGRenderer}.
      *
-     * @type {('butt'|'round'|'square')}
      * @default 'round'
      */
     linecap: "butt" | "round" | "square";
@@ -73,18 +44,50 @@ export class LineBasicMaterial extends Material {
      *
      * Can only be used with {@link SVGRenderer}.
      *
-     * @type {('round'|'bevel'|'miter')}
      * @default 'round'
      */
     linejoin: "round" | "bevel" | "miter";
     /**
      * Whether the material is affected by fog or not.
      *
-     * @type {boolean}
      * @default true
      */
     fog: boolean;
-    copy(source: any): this;
 }
-import { Color } from "../math/Color.js";
-import { Material } from "./Material.js";
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface LineBasicMaterialParameters
+    extends Partial<MapColorPropertiesToColorRepresentations<LineBasicMaterialProperties>>
+{}
+
+/**
+ * A material for rendering line primitives.
+ *
+ * Materials define the appearance of renderable 3D objects.
+ *
+ * ```js
+ * const material = new THREE.LineBasicMaterial( { color: 0xffffff } );
+ * ```
+ */
+export class LineBasicMaterial extends Material {
+    /**
+     * Constructs a new line basic material.
+     *
+     * @param {Object} [parameters] - An object with one or more properties
+     * defining the material's appearance. Any property of the material
+     * (including any property from inherited materials) can be passed
+     * in here. Color values can be passed any type of value accepted
+     * by {@link Color#set}.
+     */
+    constructor(parameters?: LineBasicMaterialParameters);
+    /**
+     * This flag can be used for type testing.
+     *
+     * @default true
+     */
+    readonly isLineBasicMaterial: boolean;
+    setValues(values?: LineBasicMaterialParameters): void;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface LineBasicMaterial extends LineBasicMaterialProperties {}

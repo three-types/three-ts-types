@@ -1,3 +1,29 @@
+import { Color, Material, Mesh, MeshStandardNodeMaterial, Node } from "three/webgpu";
+
+export interface SkyscraperGeneratorDefaultParameters {
+    seed: number;
+    totalHeight: number;
+    floorHeight: number;
+    bayWidth: number;
+    stringCourseEvery: number;
+    chamferWidth: number;
+    chamferCornerX: number;
+    chamferCornerZ: number;
+    setbackDepth: number;
+    acChance: number;
+}
+
+export interface SkyscraperGeneratorParameters extends SkyscraperGeneratorDefaultParameters {
+    footprint: { width: number; depth: number };
+    tierFractions: { base: number; crown: number };
+    pierWidth: number;
+    pierDepth: number;
+    windowReveal: number;
+    stringCourseHeight: number;
+    archBayWidthRatio: number;
+    archRise: number;
+}
+
 /**
  * Generates intricate, tripartite "Beaux-Arts / Neo-Gothic" terracotta
  * skyscrapers from a small set of parameters.
@@ -19,29 +45,21 @@
  * ```
  */
 export class SkyscraperGenerator {
-    constructor(parameters?: {}, material?: null);
-    parameters: {};
-    material: any;
+    constructor(parameters?: Partial<SkyscraperGeneratorParameters>, material?: Material);
+
+    parameters: Partial<SkyscraperGeneratorParameters>;
+    material: Material;
+
     mesh: Mesh | null;
-    setParameters(parameters: any): this;
+
+    setParameters(parameters: Partial<SkyscraperGeneratorParameters>): this;
     build(): Mesh;
     rebuild(): Mesh;
     dispose(): void;
+
+    static defaults: SkyscraperGeneratorDefaultParameters;
 }
-export namespace SkyscraperGenerator {
-    namespace defaults {
-        let seed: number;
-        let totalHeight: number;
-        let floorHeight: number;
-        let bayWidth: number;
-        let stringCourseEvery: number;
-        let chamferWidth: number;
-        let chamferCornerX: number;
-        let chamferCornerZ: number;
-        let setbackDepth: number;
-        let acChance: number;
-    }
-}
+
 /**
  * The facade material: a single MeshStandardNodeMaterial that reads the baked
  * per-vertex `partId` and reproduces every zone — procedural terracotta brickwork
@@ -52,14 +70,14 @@ export namespace SkyscraperGenerator {
  * masonry colour as a TSL node: pass a `uniform( Color )` for a single tower, or a
  * per-fragment palette pick for a city, so the same material dresses both.
  */
-export function createSkyscraperMaterial(buildingBase?: any): MeshStandardNodeMaterial;
+export function createSkyscraperMaterial(buildingBase?: Node<"color"> | Color): MeshStandardNodeMaterial;
+
 /**
  * The NYC masonry palette every tower is dressed from ( hex colours ): limestone-dominant
  * with terracotta accents. Shared by the single-tower example and {@link CityGenerator}'s
  * building material so both stay in sync.
  */
 export const buildingPalette: number[];
+
 /** Picks one {@link buildingPalette} colour ( a hex number ) for a tower from its seed. */
-export function pickBuildingColor(seed: any): number;
-import { Mesh } from "three";
-import { MeshStandardNodeMaterial } from "three/webgpu";
+export function pickBuildingColor(seed: number): number;
