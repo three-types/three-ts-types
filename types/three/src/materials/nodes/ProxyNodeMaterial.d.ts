@@ -1,7 +1,3 @@
-import NodeBuilder from "../../nodes/core/NodeBuilder.js";
-import { Material } from "../Material.js";
-import NodeMaterial from "./NodeMaterial.js";
-
 export default ProxyNodeMaterial;
 /**
  * A material instance that reuses the shader of a node material with its own properties.
@@ -28,6 +24,8 @@ declare class ProxyNodeMaterial extends Material {
      * @throws {TypeError} When the given material is not a node material.
      */
     constructor(nodeMaterial: NodeMaterial);
+    userData: {};
+    type: string;
     /**
      * This flag can be used for type testing.
      *
@@ -49,6 +47,14 @@ declare class ProxyNodeMaterial extends Material {
      * @param {NodeBuilder} builder - The current node builder.
      */
     build(builder: NodeBuilder): void;
+    set version(value: number);
+    /**
+     * The version of the node material. Setting `needsUpdate` on the node material
+     * updates all its instances, while setting it on an instance has no effect.
+     *
+     * @type {number}
+     */
+    get version(): number;
     /**
      * Copies the values of the given proxy node material to this instance.
      * Object values such as colors are shared with the source, except in `userData`.
@@ -59,11 +65,12 @@ declare class ProxyNodeMaterial extends Material {
      * @param {ProxyNodeMaterial} source - The material to copy.
      * @return {ProxyNodeMaterial} A reference to this instance.
      */
-    copy(source: ProxyNodeMaterial): this;
+    copy(source: ProxyNodeMaterial): ProxyNodeMaterial;
     /**
      * Returns a new proxy node material that shares the same node material.
      *
      * @return {ProxyNodeMaterial} A clone of this instance.
      */
-    clone(): this;
+    clone(): ProxyNodeMaterial;
 }
+import { Material } from "../Material.js";

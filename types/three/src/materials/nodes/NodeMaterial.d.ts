@@ -1,24 +1,37 @@
-import ClippingNode from "../../nodes/accessors/ClippingNode.js";
-import ContextNode from "../../nodes/core/ContextNode.js";
-import LightingModel from "../../nodes/core/LightingModel.js";
-import MRTNode from "../../nodes/core/MRTNode.js";
-import Node from "../../nodes/core/Node.js";
-import NodeBuilder from "../../nodes/core/NodeBuilder.js";
-import LightingNode from "../../nodes/lighting/LightingNode.js";
-import LightsNode from "../../nodes/lighting/LightsNode.js";
-import { MapColorPropertiesToColorRepresentations, Material, MaterialParameters } from "../Material.js";
-import NodeMaterialObserver from "./manager/NodeMaterialObserver.js";
-
-export interface NodeMaterialNodeProperties {
+export default NodeMaterial;
+/**
+ * Base class for all node materials.
+ *
+ * @augments Material
+ */
+declare class NodeMaterial extends Material {
+    static get type(): string;
+    set type(_value: string);
+    /**
+     * Represents the type of the node material.
+     *
+     * @type {string}
+     */
+    get type(): string;
+    /**
+     * This flag can be used for type testing.
+     *
+     * @type {boolean}
+     * @readonly
+     * @default true
+     */
+    readonly isNodeMaterial: boolean;
     /**
      * Whether this material is affected by fog or not.
      *
+     * @type {boolean}
      * @default true
      */
     fog: boolean;
     /**
      * Whether this material is affected by lights or not.
      *
+     * @type {boolean}
      * @default false
      */
     lights: boolean;
@@ -35,6 +48,7 @@ export interface NodeMaterialNodeProperties {
      * material.lightsNode = customLightsNode;
      * ```
      *
+     * @type {?LightsNode}
      * @default null
      */
     lightsNode: LightsNode | null;
@@ -48,9 +62,10 @@ export interface NodeMaterialNodeProperties {
      * material.envNode = pmremTexture( renderTarget.texture );
      * ```
      *
+     * @type {?Node<vec3>}
      * @default null
      */
-    envNode: Node | null;
+    envNode: Node<any> | null;
     /**
      * The lighting of node materials might be influenced by ambient occlusion.
      * The default AO is inferred from an ambient occlusion map assigned to `aoMap`
@@ -60,9 +75,10 @@ export interface NodeMaterialNodeProperties {
      * If you don't want to overwrite the diffuse color but modify the existing
      * values instead, use {@link materialAO}.
      *
+     * @type {?Node<float>}
      * @default null
      */
-    aoNode: Node | null;
+    aoNode: Node<any> | null;
     /**
      * The diffuse color of node materials is by default inferred from the
      * `color` and `map` properties. This node property allows to overwrite the default
@@ -79,9 +95,10 @@ export interface NodeMaterialNodeProperties {
      * material.colorNode = materialColor.mul( color( 0xff0000 ) ); // give diffuse colors a red tint
      * ```
      *
+     * @type {?Node<vec3>}
      * @default null
      */
-    colorNode: Node<"float"> | Node<"vec2"> | Node<"vec3"> | Node<"vec4"> | Node<"color"> | null;
+    colorNode: Node<any> | null;
     /**
      * The normals of node materials are by default inferred from the `normalMap`/`normalScale`
      * or `bumpMap`/`bumpScale` properties. This node property allows to overwrite the default
@@ -90,9 +107,10 @@ export interface NodeMaterialNodeProperties {
      * If you don't want to overwrite the normals but modify the existing values instead,
      * use {@link materialNormal}.
      *
+     * @type {?Node<vec3>}
      * @default null
      */
-    normalNode: Node | null;
+    normalNode: Node<any> | null;
     /**
      * The opacity of node materials is by default inferred from the `opacity`
      * and `alphaMap` properties. This node property allows to overwrite the default
@@ -101,9 +119,10 @@ export interface NodeMaterialNodeProperties {
      * If you don't want to overwrite the opacity but modify the existing
      * value instead, use {@link materialOpacity}.
      *
+     * @type {?Node<float>}
      * @default null
      */
-    opacityNode: Node | null;
+    opacityNode: Node<any> | null;
     /**
      * This node can be used to implement a variety of filter-like effects. The idea is
      * to store the current rendering into a texture e.g. via `viewportSharedTexture()`, use it
@@ -120,15 +139,17 @@ export interface NodeMaterialNodeProperties {
      *
      * Backdrop computations are part of the lighting so only lit materials can use this property.
      *
+     * @type {?Node<vec3>}
      * @default null
      */
-    backdropNode: Node | null;
+    backdropNode: Node<any> | null;
     /**
      * This node allows to modulate the influence of `backdropNode` to the outgoing light.
      *
+     * @type {?Node<float>}
      * @default null
      */
-    backdropAlphaNode: Node | null;
+    backdropAlphaNode: Node<any> | null;
     /**
      * The alpha test of node materials is by default inferred from the `alphaTest`
      * property. This node property allows to overwrite the default and define the
@@ -137,21 +158,24 @@ export interface NodeMaterialNodeProperties {
      * If you don't want to overwrite the alpha test but modify the existing
      * value instead, use {@link materialAlphaTest}.
      *
+     * @type {?Node<float>}
      * @default null
      */
-    alphaTestNode: Node | null;
+    alphaTestNode: Node<any> | null;
     /**
      * Discards the fragment if the mask value is `false`.
      *
+     * @type {?Node<bool>}
      * @default null
      */
-    maskNode: Node | null;
+    maskNode: Node<any> | null;
     /**
      * This node can be used to implement a shadow mask for the material.
      *
+     * @type {?Node<bool>}
      * @default null
      */
-    maskShadowNode: Node | null;
+    maskShadowNode: Node<any> | null;
     /**
      * The local vertex positions are computed based on multiple factors like the
      * attribute data, morphing, skinning, instancing or batching. This node property
@@ -164,9 +188,10 @@ export interface NodeMaterialNodeProperties {
      * material.positionNode = positionLocal.add( displace );
      * ```
      *
+     * @type {?Node<vec3>}
      * @default null
      */
-    positionNode: Node | null;
+    positionNode: Node<any> | null;
     /**
      * This node property is intended for logic which modifies geometry data once or per animation step.
      * Apps usually place such logic randomly in initialization routines or in the animation loop.
@@ -178,30 +203,34 @@ export interface NodeMaterialNodeProperties {
      * simulation would be implemented as compute shaders and managed inside a `Fn` function. This function is
      * eventually assigned to `geometryNode`.
      *
+     * @type {?Function}
      * @default null
      */
-    geometryNode: Node | null;
+    geometryNode: Function | null;
     /**
      * Allows to overwrite depth values in the fragment shader.
      *
+     * @type {?Node<float>}
      * @default null
      */
-    depthNode: Node | null;
+    depthNode: Node<any> | null;
     /**
      * Allows to overwrite the position used for shadow map rendering which
      * is by default {@link positionWorld}, the vertex position
      * in world space.
      *
+     * @type {?Node<float>}
      * @default null
      */
-    receivedShadowPositionNode: Node | null;
+    receivedShadowPositionNode: Node<any> | null;
     /**
      * Allows to overwrite the geometry position used for shadow map projection which
      * is by default {@link positionLocal}, the vertex position in local space.
      *
+     * @type {?Node<float>}
      * @default null
      */
-    castShadowPositionNode: Node | null;
+    castShadowPositionNode: Node<any> | null;
     /**
      * This node can be used to influence how an object using this node material
      * receive shadows.
@@ -214,9 +243,10 @@ export interface NodeMaterialNodeProperties {
      * 	return shadow.mix( color( 0xff0000 ), 1 ); // modify shadow color
      * } );
      *
+     * @type {?(Function|FunctionNode<vec4>)}
      * @default null
      */
-    receivedShadowNode: (() => Node) | null;
+    receivedShadowNode: (Function | FunctionNode<any>) | null;
     /**
      * This node can be used to influence how an object using this node material
      * casts shadows. To apply a color to shadows, you can simply do:
@@ -236,9 +266,10 @@ export interface NodeMaterialNodeProperties {
      * } )();
      *  ```
      *
+     * @type {?Node<vec4>}
      * @default null
      */
-    castShadowNode: Node | null;
+    castShadowNode: Node<any> | null;
     /**
      * This node can be used to overwrite the final output of the material.
      *
@@ -246,15 +277,17 @@ export interface NodeMaterialNodeProperties {
      * (diffuse color, lighting, etc.) is still evaluated; assigning a node
      * only replaces the resulting output color.
      *
+     * @type {?Node<vec4>}
      * @default null
      */
-    outputNode: Node | null;
+    outputNode: Node<any> | null;
     /**
      * MRT configuration is done on renderer or pass level. This node allows to
      * overwrite what values are written into MRT targets on material level. This
      * can be useful for implementing selective FX features that should only affect
      * specific objects.
      *
+     * @type {?MRTNode}
      * @default null
      */
     mrtNode: MRTNode | null;
@@ -263,42 +296,33 @@ export interface NodeMaterialNodeProperties {
      * the fragment shader. Assigning a node will replace the built-in material
      * logic used in the fragment stage.
      *
+     * @type {?Node<vec4>}
      * @default null
      */
-    fragmentNode: Node | null;
+    fragmentNode: Node<any> | null;
     /**
      * This node property can be used if you need complete freedom in implementing
      * the vertex shader. Assigning a node will replace the built-in material logic
      * used in the vertex stage.
      *
+     * @type {?Node<vec4>}
      * @default null
      */
-    vertexNode: Node | null;
+    vertexNode: Node<any> | null;
     /**
      * This node can be used as a global context management component for this material.
      *
+     * @type {?ContextNode}
      * @default null
      */
-    contextNode: ContextNode<unknown> | null;
-}
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface NodeMaterialParameters
-    extends Partial<MapColorPropertiesToColorRepresentations<NodeMaterialNodeProperties>>, MaterialParameters
-{}
-
-/**
- * Base class for all node materials.
- */
-declare class NodeMaterial extends Material {
-    static get type(): string;
+    contextNode: ContextNode | null;
     /**
-     * This flag can be used for type testing.
+     * Returns an array of child nodes for this material.
      *
-     * @default true
+     * @private
+     * @returns {Array<{property: string, childNode: Node}>}
      */
-    readonly isNodeMaterial: boolean;
-    setValues(values?: NodeMaterialParameters): void;
+    private _getNodeChildren;
     /**
      * Builds this material with the given node builder.
      *
@@ -344,28 +368,28 @@ declare class NodeMaterial extends Material {
      * @param {NodeBuilder} builder - The current node builder.
      * @return {Node<vec3>} The position in view space.
      */
-    setupPositionView(builder: NodeBuilder): Node;
+    setupPositionView(): Node<any>;
     /**
      * Setups the position in clip space.
      *
      * @param {NodeBuilder} builder - The current node builder.
      * @return {Node<vec4>} The position in view space.
      */
-    setupModelViewProjection(): Node;
+    setupModelViewProjection(): Node<any>;
     /**
      * Setups the logic for the vertex stage.
      *
      * @param {NodeBuilder} builder - The current node builder.
      * @return {Node<vec4>} The position in clip space.
      */
-    setupVertex(builder: NodeBuilder): Node;
+    setupVertex(builder: NodeBuilder): Node<any>;
     /**
      * Setups the computation of the position in local space.
      *
      * @param {NodeBuilder} builder - The current node builder.
      * @return {Node<vec3>} The position in local space.
      */
-    setupPosition(builder: NodeBuilder): Node;
+    setupPosition(builder: NodeBuilder): Node<any>;
     /**
      * Setups the computation of the material's diffuse color.
      *
@@ -379,40 +403,40 @@ declare class NodeMaterial extends Material {
      * @abstract
      * @param {NodeBuilder} builder - The current node builder.
      */
-    setupVariants(builder: NodeBuilder): void;
+    setupVariants(): void;
     /**
      * Setups the outgoing light node variable
      *
      * @return {Node<vec3>} The outgoing light node.
      */
-    setupOutgoingLight(): Node;
+    setupOutgoingLight(): Node<any>;
     /**
      * Setups the normal node from the material.
      *
      * @return {Node<vec3>} The normal node.
      */
-    setupNormal(): Node;
+    setupNormal(): Node<any>;
     /**
      * Setups the environment node from the material.
      *
      * @param {NodeBuilder} builder - The current node builder.
      * @return {Node<vec4>} The environment node.
      */
-    setupEnvironment(builder: NodeBuilder): Node | null;
+    setupEnvironment(): Node<any>;
     /**
      * Setups the light map node from the material.
      *
      * @param {NodeBuilder} builder - The current node builder.
      * @return {Node<vec3>} The light map node.
      */
-    setupLightMap(builder: NodeBuilder): Node;
+    setupLightMap(builder: NodeBuilder): Node<any>;
     /**
      * Setups the lights node based on the scene, environment and material.
      *
      * @param {NodeBuilder} builder - The current node builder.
      * @return {LightingNode<Array>} The lights node.
      */
-    setupMaterialLightings(builder: NodeBuilder): LightingNode[];
+    setupMaterialLightings(builder: NodeBuilder): LightingNode<any[]>;
     /**
      * Setups the ambient occlusion node from the material.
      *
@@ -435,7 +459,7 @@ declare class NodeMaterial extends Material {
      * @param {NodeBuilder} builder - The current node builder.
      * @return {Node<vec3>} The outgoing light node.
      */
-    setupLighting(builder: NodeBuilder): Node;
+    setupLighting(builder: NodeBuilder): Node<any>;
     /**
      * Setup the fog.
      *
@@ -443,7 +467,7 @@ declare class NodeMaterial extends Material {
      * @param {Node<vec4>} outputNode - The existing output node.
      * @return {Node<vec4>} The output node.
      */
-    setupFog(builder: NodeBuilder, outputNode: Node): Node;
+    setupFog(builder: NodeBuilder, outputNode: Node<any>): Node<any>;
     /**
      * Setups premultiplied alpha.
      *
@@ -451,7 +475,7 @@ declare class NodeMaterial extends Material {
      * @param {Node<vec4>} outputNode - The existing output node.
      * @return {Node<vec4>} The output node.
      */
-    setupPremultipliedAlpha(builder: NodeBuilder, outputNode: Node): Node;
+    setupPremultipliedAlpha(builder: NodeBuilder, outputNode: Node<any>): Node<any>;
     /**
      * Setups the output node.
      *
@@ -479,7 +503,7 @@ declare class NodeMaterial extends Material {
      * @param {Node<vec4>} outputNode - The existing output node.
      * @return {Node<vec4>} The output node.
      */
-    setupOutput(builder: NodeBuilder, outputNode: Node): Node;
+    setupOutput(builder: NodeBuilder, outputNode: Node<any>): Node<any>;
     /**
      * Most classic material types have a node pendant e.g. for `MeshBasicMaterial`
      * there is `MeshBasicNodeMaterial`. This utility method is intended for
@@ -494,10 +518,7 @@ declare class NodeMaterial extends Material {
      * @param {Material} source - The material to copy.
      * @return {NodeMaterial} A reference to this node material.
      */
-    copy(source: Material): this;
+    copy(source: Material): NodeMaterial;
 }
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface NodeMaterial extends NodeMaterialNodeProperties {}
-
-export default NodeMaterial;
+import { Material } from "../Material.js";
+import NodeMaterialObserver from "./manager/NodeMaterialObserver.js";

@@ -1,7 +1,3 @@
-import { Vector2 } from "../../math/Vector2.js";
-import { Vector3 } from "../../math/Vector3.js";
-import Node from "../core/Node.js";
-
 /**
  * TSL function for creating an equirect uv node.
  *
@@ -18,7 +14,7 @@ import Node from "../core/Node.js";
  * @param {?Node<vec3>} [direction=positionWorldDirection] - A direction vector for sampling which is by default `positionWorldDirection`.
  * @returns {Node<vec2>}
  */
-export const equirectUV: (direction?: Node<"vec3"> | Vector3) => Node<"vec2">;
+export const equirectUV: () => void;
 /**
  * TSL function for creating an equirect direction node.
  *
@@ -30,4 +26,4 @@ export const equirectUV: (direction?: Node<"vec3"> | Vector3) => Node<"vec2">;
  * @param {?Node<vec2>} [uv=UV()] - The equirectangular UV coordinates.
  * @returns {Node<vec3>} The computed direction vector.
  */
-export const equirectDirection: (uv?: Node<"vec2"> | Vector2) => Node<"vec3">;
+export const equirectDirection: () => void;

@@ -1,7 +1,3 @@
-import { AnalyticLightNode, Node } from "three/webgpu";
-import { SunLight } from "./SunLight.js";
-import { SunShadowNode } from "./SunShadowNode.js";
-
 /**
  * Module for representing sun lights as nodes. Register it with {@link SunLight}
  * to use the light with `WebGPURenderer`:
@@ -9,9 +5,10 @@ import { SunShadowNode } from "./SunShadowNode.js";
  * SunLight.registerNode( SunLightNode );
  * ```
  *
+ * @augments AnalyticLightNode
  * @three_import import { SunLightNode } from 'three/addons/lights/SunLightNode.js';
  */
-export class SunLightNode extends AnalyticLightNode<SunLight> {
+export class SunLightNode extends AnalyticLightNode {
     /**
      * Overwritten to setup the cascaded shadows of sun lights.
      *
@@ -19,7 +16,8 @@ export class SunLightNode extends AnalyticLightNode<SunLight> {
      */
     setupShadowNode(): SunShadowNode;
     setupDirect(): {
-        lightDirection: Node<"vec3">;
-        lightColor: Node;
+        lightDirection: any;
+        lightColor: import("three/tsl").Node;
     };
 }
+import { AnalyticLightNode } from "three/webgpu";

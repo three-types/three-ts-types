@@ -1,15 +1,3 @@
-import {
-    Box3,
-    Layers,
-    Node,
-    Renderer,
-    Scene,
-    Storage3DTexture,
-    Texture3DNode,
-    UniformNode,
-    Vector3,
-} from "three/webgpu";
-
 /**
  * Holds the voxel representation of a scene for {@link VXGINode}: an anisotropic opacity
  * mip chain, a direct radiance volume and a radiance volume with cached bounces.
@@ -132,14 +120,14 @@ export class VXGIVolume {
      * @type {UniformNode<float>}
      * @default 0
      */
-    maxDistance: UniformNode<"float">;
+    maxDistance: UniformNode<any>;
     /**
      * Step size relative to the texel size of the sampled mip level.
      *
      * @type {UniformNode<float>}
      * @default 0.5
      */
-    stepScale: UniformNode<"float">;
+    stepScale: UniformNode<any>;
     /**
      * Aperture in degrees of the visibility cones traced towards lights that do not provide a
      * shadow map. Wider cones are cheaper but soften the injected shadows.
@@ -147,38 +135,38 @@ export class VXGIVolume {
      * @type {UniformNode<float>}
      * @default 10
      */
-    shadowConeAngle: UniformNode<"float">;
+    shadowConeAngle: UniformNode<any>;
     /**
      * Aperture of the cones used for the cached bounces in degrees.
      *
      * @type {UniformNode<float>}
      * @default 60
      */
-    bounceConeAngle: UniformNode<"float">;
+    bounceConeAngle: UniformNode<any>;
     /**
      * The minimum corner of the volume.
      *
      * @type {UniformNode<vec3>}
      */
-    boundsMinNode: UniformNode<"vec3">;
+    boundsMinNode: UniformNode<any>;
     /**
      * The size of the volume.
      *
      * @type {UniformNode<vec3>}
      */
-    volumeSizeNode: UniformNode<"vec3">;
+    volumeSizeNode: UniformNode<any>;
     /**
      * The size of a voxel.
      *
      * @type {UniformNode<float>}
      */
-    voxelSizeNode: UniformNode<"float">;
+    voxelSizeNode: UniformNode<any>;
     /**
      * The highest valid mip level of the voxel textures.
      *
      * @type {UniformNode<float>}
      */
-    maxLevelNode: UniformNode<"float">;
+    maxLevelNode: UniformNode<any>;
     /**
      * The per-axis opacity of the scene (`xyz`) and the occupancy (`w`) as a mip chain.
      *
@@ -227,13 +215,52 @@ export class VXGIVolume {
      *
      * @type {UniformNode<float>}
      */
-    directionalWidthNode: UniformNode<"float">;
+    directionalWidthNode: UniformNode<any>;
+    _traceDistance: any;
+    _allocated: boolean;
+    _gridSize: Vector3;
+    _levels: number;
+    _voxelCount: number;
+    _gridSizeNode: import("three/tsl").UniformNode[];
+    _voxelCountNode: import("three/tsl").UniformNode;
+    _pingPongTexture: Storage3DTexture | null;
+    _directTexture: Storage3DTexture | null;
+    _pingPongDirectionalTexture: Storage3DTexture | null;
+    _normalTexture: Storage3DTexture | null;
+    _directional: boolean;
+    _occupancyAttribute: StorageBufferAttribute | null;
+    _triangleIdAttribute: StorageBufferAttribute | null;
+    _solidAttribute: StorageBufferAttribute | null;
+    _triangleAttribute: StorageBufferAttribute | null;
+    _trianglesNode: import("three/tsl").StorageBufferNode | null;
+    _triangleCount: number;
+    _triangleCountNode: import("three/tsl").UniformNode;
+    _kernels: {
+        clear: any;
+        voxelize: any;
+        resolve: any;
+        opacityMips: never[];
+        radianceMips: never[][];
+        inject: null[];
+        injectKey: null[];
+        bounce: null[];
+    } | null;
+    _lightsArray: Vector4[];
+    _lightsNode: import("three/tsl").UniformArrayNode;
+    _lightCountNode: import("three/tsl").UniformNode;
+    _lightKey: string;
+    _lightTypes: any[];
+    _lightShadows: any[];
+    _shadowMatrices: import("three/tsl").UniformNode[];
+    _shadowParams: import("three/tsl").UniformNode[];
+    _lightsKey: string;
+    _exclude: Set<any>;
     /**
      * The effective maximum cone length as a node.
      *
      * @type {Node<float>}
      */
-    get traceDistanceNode(): Node<"float">;
+    get traceDistanceNode(): Node<any>;
     /**
      * Updates the volume if required. Voxelizes the scene when `needsUpdate` is set and re-injects
      * lighting when `lightingNeedsUpdate` is set or a light has changed.
@@ -246,4 +273,59 @@ export class VXGIVolume {
      * Frees internal resources.
      */
     dispose(): void;
+    _voxelize(renderer: any, scene: any): void;
+    _allocateGrid(gridSize: any, levels: any): void;
+    _createTexture(name: any, type: any, mipmaps: any, x: any, y: any, z: any): Storage3DTexture;
+    _disposeGrid(): void;
+    _collectLights(renderer: any, scene: any): string;
+    _updateLighting(renderer: any): void;
+    _getRadianceTexture(index: any): Storage3DTexture | null;
+    _getDirectionalTexture(index: any): Storage3DTexture | null;
+    _getKernels(): {
+        clear: any;
+        voxelize: any;
+        resolve: any;
+        opacityMips: never[];
+        radianceMips: never[][];
+        inject: null[];
+        injectKey: null[];
+        bounce: null[];
+    };
+    _disposeKernels(): void;
+    _getLevelSize(level: any): number[];
+    /**
+     * Returns the 3D coordinates of the given linear voxel index.
+     *
+     * @private
+     */
+    private _coords;
+    _createClearKernel(): any;
+    _createVoxelizeKernel(): any;
+    _createResolveKernel(): any;
+    _createOpacityMipKernel(level: any): any;
+    _createRadianceMipKernel(radianceTexture: any, level: any): any;
+    /**
+     * Creates the kernel that filters the six direction blocks of the directional texture at a
+     * level from the next finer level: along the direction's axis the two finer voxels are
+     * composited front to back with the front voxel's opacity along that axis, across the axis
+     * they are averaged. Level 1 is filtered from the isotropic finest level, where a voxel only
+     * contributes to the directions its surface faces against.
+     *
+     * @private
+     */
+    private _createDirectionalKernel;
+    /**
+     * Emits the code for reading the surface data of the given voxel.
+     *
+     * @private
+     */
+    private _surface;
+    _createInjectKernel(renderer: any, index: any): any;
+    _createBounceKernel(index: any): any;
 }
+import { Box3 } from "three/webgpu";
+import { Layers } from "three/webgpu";
+import { Storage3DTexture } from "three/webgpu";
+import { Vector3 } from "three/webgpu";
+import { StorageBufferAttribute } from "three/webgpu";
+import { Vector4 } from "three/webgpu";

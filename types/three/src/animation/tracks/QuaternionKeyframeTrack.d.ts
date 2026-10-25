@@ -1,8 +1,7 @@
-import { InterpolationModes } from "../../constants.js";
-import { KeyframeTrack } from "../KeyframeTrack.js";
-
 /**
  * A track for Quaternion keyframe values.
+ *
+ * @augments KeyframeTrack
  */
 export class QuaternionKeyframeTrack extends KeyframeTrack {
     /**
@@ -13,5 +12,12 @@ export class QuaternionKeyframeTrack extends KeyframeTrack {
      * @param {Array<number>} values - A list of keyframe values.
      * @param {(InterpolateLinear|InterpolateDiscrete|InterpolateSmooth)} [interpolation] - The interpolation type.
      */
-    constructor(name: string, times: ArrayLike<number>, values: ArrayLike<number>, interpolation?: InterpolationModes);
+    constructor(
+        name: string,
+        times: Array<number>,
+        values: Array<number>,
+        interpolation?: InterpolateLinear | InterpolateDiscrete | InterpolateSmooth,
+    );
+    InterpolantFactoryMethodSmooth: any;
 }
+import { KeyframeTrack } from "../KeyframeTrack.js";

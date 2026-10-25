@@ -1,5 +1,4 @@
-import WebGLBackend from "../WebGLBackend.js";
-
+export default WebGLCapabilities;
 /**
  * A WebGL 2 backend utility module for managing the device's capabilities.
  *
@@ -47,5 +46,3 @@ declare class WebGLCapabilities {
      */
     getUniformBufferLimit(): number;
 }
-
-export default WebGLCapabilities;

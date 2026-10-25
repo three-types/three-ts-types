@@ -1,6 +1,3 @@
-import { Node } from "three/webgpu";
-import { VXGIVolume } from "./VXGIVolume.js";
-
 /**
  * Creates a world-space diffuse irradiance sampler for a prepared {@link VXGIVolume}.
  * Call `volume.update( renderer, scene )` before baking. The sampler traces cosine-weighted
@@ -17,4 +14,4 @@ import { VXGIVolume } from "./VXGIVolume.js";
  */
 export function vxgiIrradiance(volume: VXGIVolume, { coneCount }?: {
     coneCount?: number | undefined;
-}): (position: Node<"vec3">, normal: Node<"vec3">, sample?: Node<"float">) => Node<"vec3">;
+}): (arg0: Node<vec3>, arg1: Node<vec3>, arg2: Node<any> | null) => Node<vec3>;

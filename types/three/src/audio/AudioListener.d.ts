@@ -1,5 +1,3 @@
-import { Object3D } from "../core/Object3D.js";
-
 /**
  * The class represents a virtual listener of the all positional and non-positional audio effects
  * in the scene. A three.js application usually creates a single listener. It is a mandatory
@@ -7,14 +5,23 @@ import { Object3D } from "../core/Object3D.js";
  *
  * In most cases, the listener object is a child of the camera. So the 3D transformation of the
  * camera represents the 3D transformation of the listener.
+ *
+ * @augments Object3D
  */
 export class AudioListener extends Object3D {
+    type: string;
     /**
      * The native audio context.
+     *
+     * @type {AudioContext}
+     * @readonly
      */
     readonly context: AudioContext;
     /**
      * The gain node used for volume control.
+     *
+     * @type {GainNode}
+     * @readonly
      */
     readonly gain: GainNode;
     /**
@@ -22,15 +29,20 @@ export class AudioListener extends Object3D {
      *
      * Defined via {@link AudioListener#setFilter}.
      *
+     * @type {?AudioNode}
      * @default null
+     * @readonly
      */
     readonly filter: AudioNode | null;
     /**
      * Time delta values required for `linearRampToValueAtTime()` usage.
      *
+     * @type {number}
      * @default 0
+     * @readonly
      */
     readonly timeDelta: number;
+    _timer: Timer;
     /**
      * Returns the listener's input node.
      *
@@ -44,7 +56,7 @@ export class AudioListener extends Object3D {
      *
      * @return {AudioListener} A reference to this listener.
      */
-    removeFilter(): this;
+    removeFilter(): AudioListener;
     /**
      * Returns the current set filter.
      *
@@ -57,7 +69,7 @@ export class AudioListener extends Object3D {
      * @param {AudioNode} value - The filter to set.
      * @return {AudioListener} A reference to this listener.
      */
-    setFilter(value: AudioNode): this;
+    setFilter(value: AudioNode): AudioListener;
     /**
      * Returns the applications master volume.
      *
@@ -71,5 +83,9 @@ export class AudioListener extends Object3D {
      * @param {number} value - The master volume to set.
      * @return {AudioListener} A reference to this listener.
      */
-    setMasterVolume(value: number): this;
+    setMasterVolume(value: number): AudioListener;
+    updateMatrixWorld(force: any): void;
 }
+import { Object3D } from "../core/Object3D.js";
+import { Timer } from "../core/Timer.js";
+import { AudioContext } from "./AudioContext.js";

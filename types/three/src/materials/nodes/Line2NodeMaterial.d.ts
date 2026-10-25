@@ -1,9 +1,25 @@
-import Node from "../../nodes/core/Node.js";
-import { LineDashedMaterialParameters, LineDashedMaterialProperties } from "../LineDashedMaterial.js";
-import { MapColorPropertiesToColorRepresentations } from "../Material.js";
-import NodeMaterial, { NodeMaterialNodeProperties } from "./NodeMaterial.js";
-
-export interface Line2NodeMaterialNodeProperties extends NodeMaterialNodeProperties {
+export default Line2NodeMaterial;
+/**
+ * This node material can be used to render lines with a size larger than one
+ * by representing them as instanced meshes.
+ *
+ * @augments NodeMaterial
+ */
+declare class Line2NodeMaterial extends NodeMaterial {
+    /**
+     * Constructs a new node material for wide line rendering.
+     *
+     * @param {Object} [parameters={}] - The configuration parameter.
+     */
+    constructor(parameters?: Object);
+    /**
+     * This flag can be used for type testing.
+     *
+     * @type {boolean}
+     * @readonly
+     * @default true
+     */
+    readonly isLine2NodeMaterial: boolean;
     /**
      * The dash offset.
      *
@@ -17,36 +33,39 @@ export interface Line2NodeMaterialNodeProperties extends NodeMaterialNodePropert
      * @type {?Node<float>}
      * @default null
      */
-    offsetNode: Node | null;
+    offsetNode: Node<any> | null;
     /**
      * Defines the dash scale.
      *
      * @type {?Node<float>}
      * @default null
      */
-    dashScaleNode: Node | null;
+    dashScaleNode: Node<any> | null;
     /**
      * Defines the dash size.
      *
      * @type {?Node<float>}
      * @default null
      */
-    dashSizeNode: Node | null;
+    dashSizeNode: Node<any> | null;
     /**
      * Defines the gap size.
      *
      * @type {?Node<float>}
      * @default null
      */
-    gapSizeNode: Node | null;
-    set lineColorNode(value: Node | null);
+    gapSizeNode: Node<any> | null;
+    _useDash: any;
+    _useAlphaToCoverage: boolean;
+    _useWorldUnits: boolean;
+    set lineColorNode(value: Node<any> | null);
     /**
      * Defines the lines color.
      *
      * @deprecated since r185. Use {@link NodeMaterial#colorNode} instead.
      * @type {?Node<vec3>}
      */
-    get lineColorNode(): Node | null;
+    get lineColorNode(): Node<any> | null;
     set worldUnits(value: boolean);
     /**
      * Whether the lines should sized in world units or not.
@@ -60,43 +79,9 @@ export interface Line2NodeMaterialNodeProperties extends NodeMaterialNodePropert
     /**
      * Whether the lines should be dashed or not.
      *
+     * @type {boolean}
      * @default false
      */
     get dashed(): boolean;
 }
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface Line2NodeMaterialParameters
-    extends
-        Partial<MapColorPropertiesToColorRepresentations<Line2NodeMaterialNodeProperties>>,
-        LineDashedMaterialParameters
-{}
-
-/**
- * This node material can be used to render lines with a size larger than one
- * by representing them as instanced meshes.
- *
- * @augments NodeMaterial
- */
-declare class Line2NodeMaterial extends NodeMaterial {
-    /**
-     * Constructs a new node material for wide line rendering.
-     *
-     * @param {Object} [parameters={}] - The configuration parameter.
-     */
-    constructor(parameters?: Line2NodeMaterialParameters);
-    /**
-     * This flag can be used for type testing.
-     *
-     * @type {boolean}
-     * @readonly
-     * @default true
-     */
-    readonly isLine2NodeMaterial: boolean;
-    setValues(values?: Line2NodeMaterialParameters): void;
-}
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface Line2NodeMaterial extends Line2NodeMaterialNodeProperties, LineDashedMaterialProperties {}
-
-export default Line2NodeMaterial;
+import NodeMaterial from "./NodeMaterial.js";

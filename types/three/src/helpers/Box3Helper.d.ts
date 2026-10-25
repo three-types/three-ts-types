@@ -1,7 +1,3 @@
-import { Box3 } from "../math/Box3.js";
-import { ColorRepresentation } from "../math/Color.js";
-import { LineSegments } from "../objects/LineSegments.js";
-
 /**
  * A helper object to visualize an instance of {@link Box3}.
  *
@@ -12,6 +8,8 @@ import { LineSegments } from "../objects/LineSegments.js";
  * const helper = new THREE.Box3Helper( box, 0xffff00 );
  * scene.add( helper )
  * ```
+ *
+ * @augments LineSegments
  */
 export class Box3Helper extends LineSegments {
     /**
@@ -20,9 +18,13 @@ export class Box3Helper extends LineSegments {
      * @param {Box3} box - The box to visualize.
      * @param {number|Color|string} [color=0xffff00] - The box's color.
      */
-    constructor(box: Box3, color?: ColorRepresentation);
+    constructor(box: Box3, color?: number | Color | string);
     /**
      * The box being visualized.
+     *
+     * @type {Box3}
      */
     box: Box3;
+    updateMatrixWorld(force: any): void;
 }
+import { LineSegments } from "../objects/LineSegments.js";

@@ -1,12 +1,3 @@
-import { InterpolationEndingModes } from "../../constants.js";
-import { TypedArray } from "../../core/BufferAttribute.js";
-import { Interpolant } from "../Interpolant.js";
-
-export interface CubicInterpolantSettings {
-    endingStart: InterpolationEndingModes;
-    endingEnd: InterpolationEndingModes;
-}
-
 /**
  * Fast and simple cubic spline interpolant.
  *
@@ -16,7 +7,16 @@ export interface CubicInterpolantSettings {
  *
  * @augments Interpolant
  */
-export class CubicInterpolant extends Interpolant<CubicInterpolantSettings> {
-    intervalChanged_(i1: number, t0: number, t1: number): void;
-    interpolate_(i1: number, t0: number, t: number, t1: number): TypedArray;
+export class CubicInterpolant extends Interpolant {
+    _weightPrev: number;
+    _offsetPrev: number;
+    _weightNext: number;
+    _offsetNext: number;
+    DefaultSettings_: {
+        endingStart: number;
+        endingEnd: number;
+    };
+    intervalChanged_(i1: any, t0: any, t1: any): void;
+    interpolate_(i1: any, t0: any, t: any, t1: any): TypedArray;
 }
+import { Interpolant } from "../Interpolant.js";

@@ -1,27 +1,3 @@
-import { InterpolationModes } from "../constants.js";
-import { TypedArray, TypedArrayConstructor } from "../core/BufferAttribute.js";
-import { BezierInterpolant } from "../math/interpolants/BezierInterpolant.js";
-import { CubicInterpolant } from "../math/interpolants/CubicInterpolant.js";
-import { DiscreteInterpolant } from "../math/interpolants/DiscreteInterpolant.js";
-import { LinearInterpolant } from "../math/interpolants/LinearInterpolant.js";
-
-export interface KeyframeTrackSettings {
-    inTangents: TypedArray | number[];
-    outTangents: TypedArray | number[];
-}
-
-export interface KeyframeTrackJSON {
-    name: string;
-    times: number[];
-    values: number[];
-    interpolation?: InterpolationModes;
-    type: string;
-    settings?: {
-        inTangents: number[];
-        outTangents: number[];
-    };
-}
-
 /**
  * Represents a timed sequence of keyframes, which are composed of lists of
  * times and related values, and which are used to animate a specific property
@@ -35,7 +11,7 @@ export class KeyframeTrack {
      * @param {KeyframeTrack} track - The keyframe track to serialize.
      * @return {Object} The serialized keyframe track as JSON.
      */
-    static toJSON(track: KeyframeTrack): KeyframeTrackJSON;
+    static toJSON(track: KeyframeTrack): Object;
     /**
      * Constructs a new keyframe track.
      *
@@ -46,29 +22,30 @@ export class KeyframeTrack {
      */
     constructor(
         name: string,
-        times: ArrayLike<number>,
-        values: ArrayLike<number | string | boolean>,
-        interpolation?: InterpolationModes,
+        times: Array<number>,
+        values: Array<number | string | boolean>,
+        interpolation?: number | number | number | number,
     );
     /**
      * The track's name can refer to morph targets or bones or
      * possibly other values within an animated object. See {@link PropertyBinding#parseTrackName}
      * for the forms of strings that can be parsed for property binding.
+     *
+     * @type {string}
      */
     name: string;
     /**
      * The keyframe times.
+     *
+     * @type {Float32Array}
      */
     times: Float32Array;
     /**
      * The keyframe values.
+     *
+     * @type {Float32Array}
      */
     values: Float32Array;
-    /**
-     * The interpolation settings. Holds the Bezier tangent data which is
-     * required when using `InterpolateBezier` as the interpolation type.
-     */
-    settings?: KeyframeTrackSettings;
     /**
      * Factory method for creating a new discrete interpolant.
      *
@@ -112,13 +89,17 @@ export class KeyframeTrack {
      * @param {(InterpolateLinear|InterpolateDiscrete|InterpolateSmooth|InterpolateBezier)} interpolation - The interpolation type.
      * @return {KeyframeTrack} A reference to this keyframe track.
      */
-    setInterpolation(interpolation: InterpolationModes): KeyframeTrack;
+    setInterpolation(interpolation: number | number | number | number): KeyframeTrack;
+    createInterpolant:
+        | ((result?: TypedArray) => LinearInterpolant)
+        | ((result?: TypedArray) => CubicInterpolant)
+        | undefined;
     /**
      * Returns the current interpolation type.
      *
      * @return {(InterpolateLinear|InterpolateDiscrete|InterpolateSmooth|InterpolateBezier)} The interpolation type.
      */
-    getInterpolation(): InterpolationModes;
+    getInterpolation(): number | number | number | number;
     /**
      * Returns the value size.
      *
@@ -163,35 +144,43 @@ export class KeyframeTrack {
      *
      * @return {KeyframeTrack} A reference to this keyframe track.
      */
-    optimize(): this;
+    optimize(): KeyframeTrack;
     /**
      * Returns a new keyframe track with copied values from this instance.
      *
      * @return {KeyframeTrack} A clone of this instance.
      */
-    clone(): this;
+    clone(): KeyframeTrack;
     /**
      * The value type name.
      *
+     * @type {string}
      * @default ''
      */
     ValueTypeName: string;
     /**
      * The time buffer type of this keyframe track.
      *
+     * @type {TypedArray|Array}
      * @default Float32Array.constructor
      */
-    TimeBufferType: TypedArrayConstructor | ArrayConstructor;
+    TimeBufferType: TypedArray | any[];
     /**
      * The value buffer type of this keyframe track.
      *
+     * @type {TypedArray|Array}
      * @default Float32Array.constructor
      */
-    ValueBufferType: TypedArrayConstructor | ArrayConstructor;
+    ValueBufferType: TypedArray | any[];
     /**
      * The default interpolation type of this keyframe track.
      *
+     * @type {(InterpolateLinear|InterpolateDiscrete|InterpolateSmooth|InterpolateBezier)}
      * @default InterpolateLinear
      */
-    DefaultInterpolation: InterpolationModes;
+    DefaultInterpolation: number | number | number | number;
 }
+import { BezierInterpolant } from "../math/interpolants/BezierInterpolant.js";
+import { CubicInterpolant } from "../math/interpolants/CubicInterpolant.js";
+import { DiscreteInterpolant } from "../math/interpolants/DiscreteInterpolant.js";
+import { LinearInterpolant } from "../math/interpolants/LinearInterpolant.js";

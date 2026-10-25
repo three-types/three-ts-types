@@ -1,20 +1,8 @@
-import { MapColorPropertiesToColorRepresentations } from "../Material.js";
-import { MeshNormalMaterialParameters, MeshNormalMaterialProperties } from "../MeshNormalMaterial.js";
-import NodeMaterial, { NodeMaterialNodeProperties } from "./NodeMaterial.js";
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface MeshNormalNodeMaterialNodeProperties extends NodeMaterialNodeProperties {
-}
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface MeshNormalNodeMaterialParameters
-    extends
-        Partial<MapColorPropertiesToColorRepresentations<MeshNormalNodeMaterialNodeProperties>>,
-        MeshNormalMaterialParameters
-{}
-
+export default MeshNormalNodeMaterial;
 /**
  * Node material version of {@link MeshNormalMaterial}.
+ *
+ * @augments NodeMaterial
  */
 declare class MeshNormalNodeMaterial extends NodeMaterial {
     /**
@@ -22,20 +10,19 @@ declare class MeshNormalNodeMaterial extends NodeMaterial {
      *
      * @param {Object} [parameters] - The configuration parameter.
      */
-    constructor(parameters?: MeshNormalNodeMaterialParameters);
+    constructor(parameters?: Object);
     /**
      * This flag can be used for type testing.
+     *
+     * @type {boolean}
+     * @readonly
+     * @default true
      */
     readonly isMeshNormalNodeMaterial: boolean;
-    setValues(values?: MeshNormalNodeMaterialParameters): void;
     /**
      * Overwrites the default implementation by computing the diffuse color
      * based on the normal data.
      */
     setupDiffuseColor(): void;
 }
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface MeshNormalNodeMaterial extends MeshNormalNodeMaterialNodeProperties, MeshNormalMaterialProperties {}
-
-export default MeshNormalNodeMaterial;
+import NodeMaterial from "./NodeMaterial.js";

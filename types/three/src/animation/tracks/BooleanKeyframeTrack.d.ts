@@ -1,7 +1,7 @@
-import { KeyframeTrack } from "../KeyframeTrack.js";
-
 /**
  * A track for boolean keyframe values.
+ *
+ * @augments KeyframeTrack
  */
 export class BooleanKeyframeTrack extends KeyframeTrack {
     /**
@@ -14,5 +14,15 @@ export class BooleanKeyframeTrack extends KeyframeTrack {
      * @param {Array<number>} times - A list of keyframe times.
      * @param {Array<boolean>} values - A list of keyframe values.
      */
-    constructor(name: string, times: ArrayLike<number>, values: ArrayLike<boolean>);
+    constructor(name: string, times: Array<number>, values: Array<boolean>);
+    /**
+     * The default interpolation type of this keyframe track.
+     *
+     * @type {(InterpolateLinear|InterpolateDiscrete|InterpolateSmooth)}
+     * @default InterpolateDiscrete
+     */
+    DefaultInterpolation: InterpolateLinear | number | InterpolateSmooth;
+    InterpolantFactoryMethodLinear: any;
+    InterpolantFactoryMethodSmooth: any;
 }
+import { KeyframeTrack } from "../KeyframeTrack.js";

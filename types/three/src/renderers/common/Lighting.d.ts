@@ -1,7 +1,4 @@
-import { Light } from "../../lights/Light.js";
-import { LightsNode } from "../../nodes/Nodes.js";
-import { Scene } from "../../scenes/Scene.js";
-
+export default Lighting;
 /**
  * This renderer module manages the lights nodes which are unique
  * per scene + camera + lighting combination.
@@ -20,6 +17,36 @@ declare class Lighting {
      */
     enabled: boolean;
     /**
+     * A stack of light arrays saved per render via {@link Lighting#beginRender}.
+     *
+     * @private
+     * @type {Array<Array<Light>>}
+     */
+    private _cache;
+    /**
+     * A map of lights nodes per scene.
+     *
+     * @private
+     * @type {WeakMap<Scene, LightsNode>}
+     */
+    private _lightsNodeMap;
+    /**
+     * Weak references to the lights nodes created by this lighting manager, so they
+     * can be disposed with {@link Lighting#dispose} without keeping scenes alive.
+     *
+     * @private
+     * @type {Set<WeakRef<LightsNode>>}
+     */
+    private _tracked;
+    /**
+     * Removes weak references from `_tracked` when their lights node has been
+     * garbage collected without an explicit `dispose()`.
+     *
+     * @private
+     * @type {FinalizationRegistry}
+     */
+    private _registry;
+    /**
      * Creates a new lights node for the given array of lights.
      *
      * @param {Array<Light>} lights - The render object.
@@ -33,6 +60,14 @@ declare class Lighting {
      * @return {LightsNode} The lights node.
      */
     getNode(scene: Scene): LightsNode;
+    /**
+     * Tracks the given lights node so it is disposed with {@link Lighting#dispose}.
+     * Subclasses creating additional lights nodes should track them as well.
+     *
+     * @private
+     * @param {LightsNode} node - The lights node.
+     */
+    private _track;
     /**
      * Saves the current lights of the scene's lights node so they can be restored
      * in {@link Lighting#finishRender}. Must be paired with a `finishRender()` call
@@ -57,5 +92,4 @@ declare class Lighting {
      */
     dispose(): void;
 }
-
-export default Lighting;
+import { LightsNode } from "../../nodes/Nodes.js";

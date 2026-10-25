@@ -1,5 +1,3 @@
-import { TypedArray } from "../core/BufferAttribute.js";
-
 /**
  * Abstract base class of interpolants over parametric samples.
  *
@@ -19,7 +17,7 @@ import { TypedArray } from "../core/BufferAttribute.js";
  *
  * @abstract
  */
-export abstract class Interpolant<TSettings = {}> {
+export class Interpolant {
     /**
      * Constructs a new interpolant.
      *
@@ -41,6 +39,14 @@ export abstract class Interpolant<TSettings = {}> {
      */
     parameterPositions: TypedArray;
     /**
+     * A cache index.
+     *
+     * @private
+     * @type {number}
+     * @default 0
+     */
+    private _cachedIndex;
+    /**
      * The result buffer.
      *
      * @type {TypedArray}
@@ -57,20 +63,20 @@ export abstract class Interpolant<TSettings = {}> {
      *
      * @type {TypedArray}
      */
-    valueSize: number;
+    valueSize: TypedArray;
     /**
      * The interpolation settings.
      *
      * @type {?Object}
      * @default null
      */
-    settings: TSettings | null;
+    settings: Object | null;
     /**
      * The default settings object.
      *
      * @type {Object}
      */
-    DefaultSettings_: TSettings;
+    DefaultSettings_: Object;
     /**
      * Evaluate the interpolant at position `t`.
      *
@@ -83,7 +89,7 @@ export abstract class Interpolant<TSettings = {}> {
      *
      * @return {Object} The interpolation settings.
      */
-    getSettings_(): unknown;
+    getSettings_(): Object;
     /**
      * Copies a sample value to the result buffer.
      *
@@ -101,7 +107,7 @@ export abstract class Interpolant<TSettings = {}> {
      * @param {number} t1 - The next interpolation factor.
      * @return {TypedArray} The result buffer.
      */
-    abstract interpolate_(i1: number, t0: number, t: number, t1: number): TypedArray;
+    interpolate_(): TypedArray;
     /**
      * Optional method that is executed when the interval has changed.
      *
@@ -109,5 +115,5 @@ export abstract class Interpolant<TSettings = {}> {
      * @param {number} t0 - The previous interpolation factor.
      * @param {number} t - The current interpolation factor.
      */
-    intervalChanged_(i1: number, t0: number, t: number): void;
+    intervalChanged_(): void;
 }

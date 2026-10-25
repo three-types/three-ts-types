@@ -1,44 +1,27 @@
-import { Camera } from "../cameras/Camera.js";
-import { TextureDataType } from "../constants.js";
-import { Object3DJSONObject } from "../core/Object3D.js";
-import { RenderTarget } from "../core/RenderTarget.js";
-import { Frustum } from "../math/Frustum.js";
-import { Matrix4 } from "../math/Matrix4.js";
-import { Vector2, Vector2Tuple } from "../math/Vector2.js";
-import { Vector4 } from "../math/Vector4.js";
-import Node from "../nodes/core/Node.js";
-import { Light } from "./Light.js";
-
-export interface LightShadowJSON {
-    intensity?: number;
-    bias?: number;
-    normalBias?: number;
-    radius?: number;
-    blurSamples?: number;
-    mapSize?: Vector2Tuple;
-
-    camera: Omit<Object3DJSONObject, "matrix">;
-}
-
 /**
  * Abstract base class for light shadow classes. These classes
  * represent the shadow configuration for different light types.
+ *
+ * @abstract
  */
-export abstract class LightShadow<TCamera extends Camera = Camera> {
+export class LightShadow {
     /**
      * Constructs a new light shadow.
      *
      * @param {Camera} camera - The light's view of the world.
      */
-    constructor(camera: TCamera);
+    constructor(camera: Camera);
     /**
      * The light's view of the world.
+     *
+     * @type {Camera}
      */
-    camera: TCamera;
+    camera: Camera;
     /**
      * The intensity of the shadow. The default is `1`.
      * Valid values are in the range `[0, 1]`.
      *
+     * @type {number}
      * @default 1
      */
     intensity: number;
@@ -49,6 +32,7 @@ export abstract class LightShadow<TCamera extends Camera = Camera> {
      * The default is `0`. Very tiny adjustments here (in the order of `0.0001`)
      * may help reduce artifacts in shadows.
      *
+     * @type {number}
      * @default 0
      */
     bias: number;
@@ -57,15 +41,17 @@ export abstract class LightShadow<TCamera extends Camera = Camera> {
      *
      * If a bias node is defined, `bias` has no effect.
      *
+     * @type {?Node<float>}
      * @default null
      */
-    biasNode: Node<"float"> | null;
+    biasNode: Node<float> | null;
     /**
      * Defines how much the position used to query the shadow map is offset along
      * the object normal. The default is `0`. Increasing this value can be used to
      * reduce shadow acne especially in large scenes where light shines onto
      * geometry at a shallow angle. The cost is that shadows may appear distorted.
      *
+     * @type {number}
      * @default 0
      */
     normalBias: number;
@@ -77,12 +63,14 @@ export abstract class LightShadow<TCamera extends Camera = Camera> {
      *
      * The property has no effect when the shadow map type is `BasicShadowMap`.
      *
+     * @type {number}
      * @default 1
      */
     radius: number;
     /**
      * The amount of samples to use when blurring a VSM shadow map.
      *
+     * @type {number}
      * @default 8
      */
     blurSamples: number;
@@ -90,19 +78,22 @@ export abstract class LightShadow<TCamera extends Camera = Camera> {
      * Defines the width and height of the shadow map. Higher values give better quality
      * shadows at the cost of computation time. Values must be powers of two.
      *
+     * @type {Vector2}
      * @default (512,512)
      */
     mapSize: Vector2;
     /**
      * The type of shadow texture. The default is `UnsignedByteType`.
      *
+     * @type {number}
      * @default UnsignedByteType
      */
-    mapType: TextureDataType;
+    mapType: number;
     /**
      * The depth map generated using the internal camera; a location beyond a
      * pixel's depth is in shadow. Computed internally during rendering.
      *
+     * @type {?RenderTarget}
      * @default null
      */
     map: RenderTarget | null;
@@ -111,18 +102,22 @@ export abstract class LightShadow<TCamera extends Camera = Camera> {
      * calculated based on the distribution of depths. Computed internally during
      * rendering.
      *
+     * @type {?RenderTarget}
      * @default null
      */
     mapPass: RenderTarget | null;
     /**
      * Model to shadow camera space, to compute location and depth in shadow map.
      * This is computed internally during rendering.
+     *
+     * @type {Matrix4}
      */
     matrix: Matrix4;
     /**
      * Enables automatic updates of the light's shadow. If you do not require dynamic
      * lighting / shadows, you may set this to `false`.
      *
+     * @type {boolean}
      * @default true
      */
     autoUpdate: boolean;
@@ -131,9 +126,14 @@ export abstract class LightShadow<TCamera extends Camera = Camera> {
      * If you have set {@link LightShadow#autoUpdate} to `false`, you will need to
      * set this property to `true` and then make a render call to update the light's shadow.
      *
+     * @type {boolean}
      * @default false
      */
     needsUpdate: boolean;
+    _frustum: Frustum;
+    _frameExtents: Vector2;
+    _viewportCount: number;
+    _viewports: Vector4[];
     /**
      * Used internally by the renderer to get the number of viewports that need
      * to be rendered for this shadow.
@@ -147,7 +147,7 @@ export abstract class LightShadow<TCamera extends Camera = Camera> {
      * @param {number} [viewportIndex=0] - The viewport index.
      * @return {Camera} The shadow camera.
      */
-    getCamera(viewportIndex?: number): TCamera;
+    getCamera(): Camera;
     /**
      * Gets the shadow cameras frustum. Used internally by the renderer to cull objects.
      *
@@ -160,6 +160,16 @@ export abstract class LightShadow<TCamera extends Camera = Camera> {
      * @param {Light} light - The light for which the shadow is being rendered.
      */
     updateMatrices(light: Light): void;
+    /**
+     * Updates a shadow projection matrix and its corresponding frustum.
+     *
+     * @private
+     * @param {Camera} shadowCamera - The shadow camera.
+     * @param {Matrix4} shadowMatrix - The target shadow matrix.
+     * @param {Frustum} frustum - The target frustum.
+     * @param {Vector4} [viewport] - The viewport within the shadow atlas.
+     */
+    private _updateMatrix;
     /**
      * Returns a viewport definition for the given viewport index.
      *
@@ -184,18 +194,22 @@ export abstract class LightShadow<TCamera extends Camera = Camera> {
      * @param {LightShadow} source - The light shadow to copy.
      * @return {LightShadow} A reference to this light shadow instance.
      */
-    copy(source: LightShadow): this;
+    copy(source: LightShadow): LightShadow;
     /**
      * Returns a new light shadow instance with copied values from this instance.
      *
      * @return {LightShadow} A clone of this instance.
      */
-    clone(): this;
+    clone(): LightShadow;
     /**
      * Serializes the light shadow into JSON.
      *
      * @return {Object} A JSON object representing the serialized light shadow.
      * @see {@link ObjectLoader#parse}
      */
-    toJSON(): LightShadowJSON;
+    toJSON(): Object;
 }
+import { Frustum } from "../math/Frustum.js";
+import { Matrix4 } from "../math/Matrix4.js";
+import { Vector2 } from "../math/Vector2.js";
+import { Vector4 } from "../math/Vector4.js";

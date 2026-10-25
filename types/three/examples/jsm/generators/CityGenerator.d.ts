@@ -1,68 +1,3 @@
-import { Group, InstancedMesh, Material, MeshStandardNodeMaterial, Node, UniformNode } from "three/webgpu";
-import { BenchGenerator } from "./city/BenchGenerator.js";
-import { CarGenerator } from "./city/CarGenerator.js";
-import { HydrantGenerator } from "./city/HydrantGenerator.js";
-import { PersonGenerator } from "./city/PersonGenerator.js";
-import { SidewalkGenerator } from "./city/SidewalkGenerator.js";
-import { SkyscraperGenerator } from "./city/SkyscraperGenerator.js";
-import { StreetlightGenerator } from "./city/StreetlightGenerator.js";
-import { StreetTreeGenerator } from "./city/StreetTreeGenerator.js";
-import { TrafficlightGenerator } from "./city/TrafficlightGenerator.js";
-import { TrashcanGenerator } from "./city/TrashcanGenerator.js";
-
-export interface CityGeneratorParameters {
-    seed: number;
-    street: number;
-    lot: number;
-    lotsX: number;
-    lotsZ: number;
-    blocksX: number;
-    blocksZ: number;
-    curbHeight: number;
-    curbRadius: number;
-    sidewalkWidth: number;
-}
-
-export interface CityGeneratorLayout {
-    street: number;
-    lot: number;
-    lotsX: number;
-    lotsZ: number;
-    blocksX: number;
-    blocksZ: number;
-    blockW: number;
-    blockD: number;
-    sidewalkWidth: number;
-    innerLotX: number;
-    innerLotZ: number;
-    cityW: number;
-    cityD: number;
-}
-
-export interface CityGeneratorMaterials {
-    building?: Material | undefined;
-}
-
-export interface CityGeneratorFurniture {
-    streetlight: StreetlightGenerator;
-    trafficlight: TrafficlightGenerator;
-    trashcan: TrashcanGenerator;
-    bench: BenchGenerator;
-    hydrant: HydrantGenerator;
-    tree: StreetTreeGenerator;
-    car: CarGenerator;
-    person: PersonGenerator;
-}
-
-export interface CityGeneratorTower {
-    x: number;
-    y: number;
-    z: number;
-    w: number;
-    h: number;
-    d: number;
-}
-
 /**
  * Lays out a grid of city blocks and fills each lot with a {@link SkyscraperGenerator}
  * tower of its own seed, height and footprint, optionally on raised sidewalk
@@ -79,25 +14,56 @@ export interface CityGeneratorTower {
  * ```
  */
 export class CityGenerator {
-    constructor(parameters?: Partial<CityGeneratorParameters>);
-
-    parameters: CityGeneratorParameters;
-    layout: CityGeneratorLayout;
-
+    constructor(parameters?: {});
+    parameters: {
+        seed: number;
+        street: number;
+        lot: number;
+        lotsX: number;
+        lotsZ: number;
+        blocksX: number;
+        blocksZ: number;
+        curbHeight: number;
+        curbRadius: number;
+        sidewalkWidth: number;
+    };
+    layout: {
+        street: any;
+        lot: any;
+        lotsX: any;
+        lotsZ: any;
+        blocksX: any;
+        blocksZ: any;
+        blockW: number;
+        blockD: number;
+        sidewalkWidth: any;
+        innerLotX: number;
+        innerLotZ: number;
+        cityW: number;
+        cityD: number;
+    };
     /**
      * The city seed shared by building and proxy materials. Pass this to
      * {@link createBuildingMaterial} to update the palette when rebuilding.
+     *
+     * @type {UniformNode<uint>}
      */
-    seedNode: UniformNode<"uint">;
-
-    generators: SkyscraperGenerator[];
-    towers: CityGeneratorTower[];
+    seedNode: UniformNode<any>;
+    generators: any[];
+    towers: any[];
     sidewalk: SidewalkGenerator;
-    furniture: CityGeneratorFurniture;
+    furniture: {
+        streetlight: StreetlightGenerator;
+        trafficlight: TrafficlightGenerator;
+        trashcan: TrashcanGenerator;
+        bench: BenchGenerator;
+        hydrant: HydrantGenerator;
+        tree: StreetTreeGenerator;
+        car: CarGenerator;
+        person: PersonGenerator;
+    };
     group: Group | null;
-
-    build(materials?: CityGeneratorMaterials): Group;
-
+    build(materials?: {}): Group;
     /**
      * Builds a lightweight stand-in for the city: one instanced box per tower,
      * sized to match, in a single draw call. Intended for cheap global-illumination
@@ -105,27 +71,50 @@ export class CityGenerator {
      * boxes still cast the same street shadows and bounce the same warm fill.
      *
      * Call after {@link CityGenerator#build}, which records the tower boxes.
+     *
+     * @return {InstancedMesh} The proxy mesh.
      */
     buildProxy(): InstancedMesh;
-
-    buildFurniture(random: () => number): Group;
-
+    buildFurniture(random: any): Group;
     dispose(): void;
-
-    static defaults: CityGeneratorParameters;
 }
-
+export namespace CityGenerator {
+    namespace defaults {
+        let seed: number;
+        let street: number;
+        let lot: number;
+        let lotsX: number;
+        let lotsZ: number;
+        let blocksX: number;
+        let blocksZ: number;
+        let curbHeight: number;
+        let curbRadius: number;
+        let sidewalkWidth: number;
+    }
+}
 /**
  * The shared material every tower in a {@link CityGenerator} is dressed with: the per-lot
  * {@link buildingColorNode} resolved once per vertex on a skyscraper material.
+ *
+ * @param {Object} layout - The city layout.
+ * @param {number|Node<uint>} [seed=0] - A fixed seed, or {@link CityGenerator#seedNode} for a changing city.
+ * @return {MeshStandardNodeMaterial} The building material.
  */
-export function createBuildingMaterial(
-    layout: CityGeneratorLayout,
-    seed?: number | Node<"uint">,
-): MeshStandardNodeMaterial;
-
+export function createBuildingMaterial(layout: Object, seed?: number | Node<any>): MeshStandardNodeMaterial;
 /**
  * The road surface: wet asphalt with lane lines and crosswalks aligned to a
  * {@link CityGenerator} layout. Apply it to a ground plane sized to the city.
  */
-export function createRoadMaterial(layout: CityGeneratorLayout): MeshStandardNodeMaterial;
+export function createRoadMaterial(layout: any): MeshStandardNodeMaterial;
+import { Group } from "three";
+import { InstancedMesh } from "three";
+import { MeshStandardNodeMaterial } from "three/webgpu";
+import { BenchGenerator } from "./city/BenchGenerator.js";
+import { CarGenerator } from "./city/CarGenerator.js";
+import { HydrantGenerator } from "./city/HydrantGenerator.js";
+import { PersonGenerator } from "./city/PersonGenerator.js";
+import { SidewalkGenerator } from "./city/SidewalkGenerator.js";
+import { StreetlightGenerator } from "./city/StreetlightGenerator.js";
+import { StreetTreeGenerator } from "./city/StreetTreeGenerator.js";
+import { TrafficlightGenerator } from "./city/TrafficlightGenerator.js";
+import { TrashcanGenerator } from "./city/TrashcanGenerator.js";

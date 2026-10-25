@@ -1,11 +1,3 @@
-import { InstancedMeshGenerator } from "./InstancedMeshGenerator.js";
-
-export interface StreetlightGeneratorParameters {
-    height: number;
-    reach: number;
-    radius: number;
-}
-
 /**
  * A NYC cobra-head streetlight: a tall tapered mast standing at the curb with a
  * curved arm reaching out over the roadway to a drop luminaire. Built once and
@@ -21,8 +13,14 @@ export interface StreetlightGeneratorParameters {
  * scene.add( lights.build( placements ) ); // placements: Matrix4[]
  * ```
  */
-export class StreetlightGenerator extends InstancedMeshGenerator<StreetlightGeneratorParameters> {
-    constructor(parameters?: Partial<StreetlightGeneratorParameters>);
-
-    static defaults: StreetlightGeneratorParameters;
+export class StreetlightGenerator extends InstancedMeshGenerator {
+    constructor(parameters?: {});
 }
+export namespace StreetlightGenerator {
+    namespace defaults {
+        let height: number;
+        let reach: number;
+        let radius: number;
+    }
+}
+import { InstancedMeshGenerator } from "./InstancedMeshGenerator.js";

@@ -1,10 +1,3 @@
-import { ColorRepresentation, JSONMeta, Light, LightJSON, LightShadowJSON } from "three";
-import { SunLightShadow } from "./SunLightShadow.js";
-
-export interface SunLightJSON extends LightJSON {
-    shadow: LightShadowJSON;
-}
-
 /**
  * A sun-like light that gets emitted in a specific direction, with rays that
  * are all parallel, and casts Cascaded Shadow Maps (CSM) via {@link SunLightShadow},
@@ -33,6 +26,7 @@ export interface SunLightJSON extends LightJSON {
  * SunLight.registerNode( SunLightNode );
  * ```
  *
+ * @augments Light
  * @three_import import { SunLight } from 'three/addons/lights/SunLight.js';
  */
 export class SunLight extends Light {
@@ -42,17 +36,22 @@ export class SunLight extends Light {
      * @param {(number|Color|string)} [color=0xffffff] - The light's color.
      * @param {number} [intensity=1] - The light's strength/intensity.
      */
-    constructor(color?: ColorRepresentation, intensity?: number);
+    constructor(color?: number | Color | string, intensity?: number);
     /**
      * This flag can be used for type testing.
      *
+     * @type {boolean}
+     * @readonly
      * @default true
      */
     readonly isSunLight: boolean;
     /**
      * This property holds the light's shadow configuration.
+     *
+     * @type {SunLightShadow}
      */
     shadow: SunLightShadow;
-    copy(source: SunLight): this;
-    toJSON(meta?: JSONMeta): SunLightJSON;
+    copy(source: any): this;
 }
+import { Light } from "three";
+import { SunLightShadow } from "./SunLightShadow.js";

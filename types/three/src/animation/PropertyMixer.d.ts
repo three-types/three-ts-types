@@ -1,5 +1,3 @@
-import { PropertyBinding } from "./PropertyBinding.js";
-
 /**
  * Buffered scene graph property that allows weighted accumulation; used internally.
  */
@@ -14,34 +12,48 @@ export class PropertyMixer {
     constructor(binding: PropertyBinding, typeName: string, valueSize: number);
     /**
      * The property binding.
+     *
+     * @type {PropertyBinding}
      */
     binding: PropertyBinding;
     /**
      * The keyframe track value size.
+     *
+     * @type {number}
      */
     valueSize: number;
-    buffer: Float64Array | unknown[];
+    buffer: any[] | Float64Array<ArrayBuffer>;
+    _workIndex: number | undefined;
+    _mixBufferRegion: (buffer: any, dstOffset: any, srcOffset: any, t: any, stride: any) => void;
+    _mixBufferRegionAdditive: (buffer: any, dstOffset: any, srcOffset: any, t: any, stride: any) => void;
+    _setIdentity: () => void;
+    _origIndex: number;
+    _addIndex: number;
     /**
      * Accumulated weight of the property binding.
      *
+     * @type {number}
      * @default 0
      */
     cumulativeWeight: number;
     /**
      * Accumulated additive weight of the property binding.
      *
+     * @type {number}
      * @default 0
      */
     cumulativeWeightAdditive: number;
     /**
      * Number of active keyframe tracks currently using this property binding.
      *
+     * @type {number}
      * @default 0
      */
     useCount: number;
     /**
      * Number of keyframe tracks referencing this property binding.
      *
+     * @type {number}
      * @default 0
      */
     referenceCount: number;
@@ -72,4 +84,12 @@ export class PropertyMixer {
      * Applies the state previously taken via {@link PropertyMixer#saveOriginalState} to the binding.
      */
     restoreOriginalState(): void;
+    _setAdditiveIdentityNumeric(): void;
+    _setAdditiveIdentityQuaternion(): void;
+    _setAdditiveIdentityOther(): void;
+    _select(buffer: any, dstOffset: any, srcOffset: any, t: any, stride: any): void;
+    _slerp(buffer: any, dstOffset: any, srcOffset: any, t: any): void;
+    _slerpAdditive(buffer: any, dstOffset: any, srcOffset: any, t: any, stride: any): void;
+    _lerp(buffer: any, dstOffset: any, srcOffset: any, t: any, stride: any): void;
+    _lerpAdditive(buffer: any, dstOffset: any, srcOffset: any, t: any, stride: any): void;
 }

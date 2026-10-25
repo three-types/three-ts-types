@@ -1,10 +1,3 @@
-import { InstancedMeshGenerator } from "./InstancedMeshGenerator.js";
-
-export interface HydrantGeneratorParameters {
-    radius: number;
-    height: number;
-}
-
 /**
  * A classic cast-iron fire hydrant: a stout barrel on a flared footing, capped by a
  * domed bonnet and a hex operating nut, with two side outlet nozzles and a larger
@@ -20,8 +13,13 @@ export interface HydrantGeneratorParameters {
  * scene.add( hydrants.build( placements ) ); // placements: Matrix4[]
  * ```
  */
-export class HydrantGenerator extends InstancedMeshGenerator<HydrantGeneratorParameters> {
-    constructor(parameters?: Partial<HydrantGeneratorParameters>);
-
-    static defaults: HydrantGeneratorParameters;
+export class HydrantGenerator extends InstancedMeshGenerator {
+    constructor(parameters?: {});
 }
+export namespace HydrantGenerator {
+    namespace defaults {
+        let radius: number;
+        let height: number;
+    }
+}
+import { InstancedMeshGenerator } from "./InstancedMeshGenerator.js";
