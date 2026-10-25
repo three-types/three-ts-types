@@ -124,7 +124,6 @@ export class LightProbeGrid extends Light {
      * sub-volumes stacked along Z.
      *
      * @type {?Data3DTexture}
-     * @default null
      */
     texture: Data3DTexture | null;
     /**
