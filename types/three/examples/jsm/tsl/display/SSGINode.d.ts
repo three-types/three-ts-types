@@ -5,6 +5,8 @@ declare class SSGINode extends Node<"vec4"> {
     depthNode: Node;
     normalNode: Node;
 
+    resolutionScale: number;
+
     sliceCount: UniformNode<"uint">;
     stepCount: UniformNode<"uint">;
     aoIntensity: UniformNode<"float">;
