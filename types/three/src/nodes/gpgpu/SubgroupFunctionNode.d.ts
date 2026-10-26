@@ -95,4 +95,4 @@ export const subgroupShuffle: (v: Node, id: Node) => Node;
 export const subgroupShuffleXor: (v: Node, mask: Node) => Node;
 export const subgroupShuffleUp: (v: Node, delta: Node) => Node;
 export const subgroupShuffleDown: (v: Node, delta: Node) => Node;
-export const quadBroadcast: (e: Node) => Node;
+export const quadBroadcast: (e: Node, id: Node) => Node;
