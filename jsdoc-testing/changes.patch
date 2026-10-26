@@ -6776,10 +6776,10 @@ index 8a03aa8cf..234390948 100644
 -import { Light } from './Light.js';
 -import { SphericalHarmonics3 } from '../math/SphericalHarmonics3.js';
 diff --git a/jsdoc-testing/jsdoc/src/lights/LightShadow.d.ts b/jsdoc-testing/jsdoc/src/lights/LightShadow.d.ts
-index 71e500048..7d22e7e56 100644
+index 71e500048..f504b394a 100644
 --- a/jsdoc-testing/jsdoc/src/lights/LightShadow.d.ts
 +++ b/jsdoc-testing/jsdoc/src/lights/LightShadow.d.ts
-@@ -1,27 +1,44 @@
+@@ -1,27 +1,45 @@
 +import { Vector2, Vector2Tuple } from "../math/Vector2.js";
 +import { Matrix4 } from '../math/Matrix4.js';
 +import { Frustum } from '../math/Frustum.js';
@@ -6798,6 +6798,7 @@ index 71e500048..7d22e7e56 100644
 +    radius?: number;
 +    blurSamples?: number;
 +    mapSize?: Vector2Tuple;
++    mapType?: TextureDataType;
 +
 +    camera: Omit<Object3DJSONObject, "matrix">;
 +}
@@ -6832,7 +6833,7 @@ index 71e500048..7d22e7e56 100644
       * @default 1
       */
      intensity: number;
-@@ -32,7 +49,6 @@ export class LightShadow {
+@@ -32,7 +50,6 @@ export class LightShadow {
       * The default is `0`. Very tiny adjustments here (in the order of `0.0001`)
       * may help reduce artifacts in shadows.
       *
@@ -6840,7 +6841,7 @@ index 71e500048..7d22e7e56 100644
       * @default 0
       */
      bias: number;
-@@ -41,17 +57,15 @@ export class LightShadow {
+@@ -41,17 +58,15 @@ export class LightShadow {
       *
       * If a bias node is defined, `bias` has no effect.
       *
@@ -6859,7 +6860,7 @@ index 71e500048..7d22e7e56 100644
       * @default 0
       */
      normalBias: number;
-@@ -63,14 +77,12 @@ export class LightShadow {
+@@ -63,14 +78,12 @@ export class LightShadow {
       *
       * The property has no effect when the shadow map type is `BasicShadowMap`.
       *
@@ -6874,7 +6875,7 @@ index 71e500048..7d22e7e56 100644
       * @default 8
       */
      blurSamples: number;
-@@ -78,22 +90,19 @@ export class LightShadow {
+@@ -78,22 +91,19 @@ export class LightShadow {
       * Defines the width and height of the shadow map. Higher values give better quality
       * shadows at the cost of computation time. Values must be powers of two.
       *
@@ -6898,7 +6899,7 @@ index 71e500048..7d22e7e56 100644
       * @default null
       */
      map: RenderTarget | null;
-@@ -102,22 +111,18 @@ export class LightShadow {
+@@ -102,22 +112,18 @@ export class LightShadow {
       * calculated based on the distribution of depths. Computed internally during
       * rendering.
       *
@@ -6921,7 +6922,7 @@ index 71e500048..7d22e7e56 100644
       * @default true
       */
      autoUpdate: boolean;
-@@ -126,14 +131,9 @@ export class LightShadow {
+@@ -126,14 +132,9 @@ export class LightShadow {
       * If you have set {@link LightShadow#autoUpdate} to `false`, you will need to
       * set this property to `true` and then make a render call to update the light's shadow.
       *
@@ -6936,7 +6937,7 @@ index 71e500048..7d22e7e56 100644
      /**
       * Used internally by the renderer to get the number of viewports that need
       * to be rendered for this shadow.
-@@ -147,7 +147,7 @@ export class LightShadow {
+@@ -147,7 +148,7 @@ export class LightShadow {
       * @param {number} [viewportIndex=0] - The viewport index.
       * @return {Camera} The shadow camera.
       */
@@ -6945,7 +6946,7 @@ index 71e500048..7d22e7e56 100644
      /**
       * Gets the shadow cameras frustum. Used internally by the renderer to cull objects.
       *
-@@ -160,16 +160,6 @@ export class LightShadow {
+@@ -160,16 +161,6 @@ export class LightShadow {
       * @param {Light} light - The light for which the shadow is being rendered.
       */
      updateMatrices(light: Light): void;
@@ -6962,7 +6963,7 @@ index 71e500048..7d22e7e56 100644
      /**
       * Returns a viewport definition for the given viewport index.
       *
-@@ -194,22 +184,18 @@ export class LightShadow {
+@@ -194,22 +185,18 @@ export class LightShadow {
       * @param {LightShadow} source - The light shadow to copy.
       * @return {LightShadow} A reference to this light shadow instance.
       */
