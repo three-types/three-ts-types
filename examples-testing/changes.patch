@@ -15772,10 +15772,10 @@ index 5c411fa69..9bc80d895 100644
          const posY = instanceIndex.div(width);
          const indexUV = ivec2(int(posX), int(posY));
 diff --git a/examples-testing/examples/webgpu_cubemap_adjustments.ts b/examples-testing/examples/webgpu_cubemap_adjustments.ts
-index 2e886d824..1161f02f6 100644
+index ef9ad83ed..48e544df7 100644
 --- a/examples-testing/examples/webgpu_cubemap_adjustments.ts
 +++ b/examples-testing/examples/webgpu_cubemap_adjustments.ts
-@@ -20,7 +20,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+@@ -21,7 +21,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
  
  import { Inspector } from 'three/addons/inspector/Inspector.js';
  
@@ -15784,16 +15784,16 @@ index 2e886d824..1161f02f6 100644
  
  init();
  
-@@ -68,7 +68,7 @@ async function init() {
+@@ -69,7 +69,7 @@ async function init() {
      const rotateY1Matrix = new THREE.Matrix4();
      const rotateY2Matrix = new THREE.Matrix4();
  
 -    const getEnvironmentNode = (reflectNode, positionNode) => {
 +    const getEnvironmentNode = (reflectNode: THREE.Node<'vec3'>, positionNode: THREE.Node<'vec3'>) => {
-         const custom1UV = reflectNode.xyz.mul(uniform(rotateY1Matrix));
-         const custom2UV = reflectNode.xyz.mul(uniform(rotateY2Matrix));
+         const custom1UV = reflectNode.xyz.mul(uniform(rotateY1Matrix).setGroup(renderGroup));
+         const custom2UV = reflectNode.xyz.mul(uniform(rotateY2Matrix).setGroup(renderGroup));
          const mixCubeMaps = mix(
-@@ -134,7 +134,7 @@ async function init() {
+@@ -135,7 +135,7 @@ async function init() {
  
      // gui
  
@@ -15855,7 +15855,7 @@ index 6fbdb55ae..fd5ec5705 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_custom_fog.ts b/examples-testing/examples/webgpu_custom_fog.ts
-index 840dce252..8474baef1 100644
+index c88c4ea50..9b87e83f7 100644
 --- a/examples-testing/examples/webgpu_custom_fog.ts
 +++ b/examples-testing/examples/webgpu_custom_fog.ts
 @@ -7,9 +7,18 @@ import { SkyMesh } from 'three/addons/objects/SkyMesh.js';
@@ -15880,7 +15880,7 @@ index 840dce252..8474baef1 100644
  
  const parameters = {
      elevation: 11, // sun height above the horizon, in degrees ( low = golden hour )
-@@ -127,7 +136,7 @@ async function init() {
+@@ -129,7 +138,7 @@ async function init() {
  
      // gui
  
@@ -16131,10 +16131,10 @@ index 9e159e465..128e18b7b 100644
      gui.add(scene, 'backgroundIntensity', 0, 1).name('background intensity');
  
 diff --git a/examples-testing/examples/webgpu_fog_height.ts b/examples-testing/examples/webgpu_fog_height.ts
-index 65bda9cd8..5d3957e54 100644
+index b1d15c825..ad237a82c 100644
 --- a/examples-testing/examples/webgpu_fog_height.ts
 +++ b/examples-testing/examples/webgpu_fog_height.ts
-@@ -4,8 +4,8 @@ import { exponentialHeightFogFactor, uniform, fog, color } from 'three/tsl';
+@@ -4,8 +4,8 @@ import { exponentialHeightFogFactor, uniform, renderGroup, fog, color } from 'th
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { Inspector } from 'three/addons/inspector/Inspector.js';
  
@@ -17775,7 +17775,7 @@ index e01b9823f..f39e53cb1 100644
      renderer.render(scene, camera);
  }
 diff --git a/examples-testing/examples/webgpu_lights_sunlight.ts b/examples-testing/examples/webgpu_lights_sunlight.ts
-index 4f3791505..1fd1ecb96 100644
+index 3511dd56b..0226c2a11 100644
 --- a/examples-testing/examples/webgpu_lights_sunlight.ts
 +++ b/examples-testing/examples/webgpu_lights_sunlight.ts
 @@ -7,7 +7,16 @@ import { SkyMesh } from 'three/addons/objects/SkyMesh.js';
@@ -17796,12 +17796,14 @@ index 4f3791505..1fd1ecb96 100644
  
  const params = {
      showCascades: false,
-@@ -25,10 +34,10 @@ const _fogDay = new THREE.Color(0xd8e2ea),
+@@ -25,10 +34,12 @@ const _fogDay = new THREE.Color(0xd8e2ea),
  // tints each fragment by its cascade, using the data of the built-in sun shadow node
  
  function tintCascades() {
--    const cascadeData = reference('_cascadeData', 'vec4', sunLight.shadow);
-+    const cascadeData = reference('_cascadeData', 'vec4', sunLight.shadow) as unknown as THREE.ArrayNode<'vec4'>;
+-    const cascadeData = reference('_cascadeData', 'vec4', sunLight.shadow).setGroup(renderGroup);
++    const cascadeData = reference('_cascadeData', 'vec4', sunLight.shadow).setGroup(
++        renderGroup,
++    ) as unknown as THREE.ArrayNode<'vec4'>;
      const viewDepth = positionView.z.negate();
  
 -    let cascade = float(0);
@@ -17809,7 +17811,7 @@ index 4f3791505..1fd1ecb96 100644
  
      for (let i = 0; i < sunLight.shadow.getViewportCount(); i++) {
          cascade = cascade.add(step(cascadeData.element(i).y, viewDepth));
-@@ -62,7 +71,7 @@ function updateSun() {
+@@ -64,7 +75,7 @@ function updateSun() {
      sunLight.color.lerpColors(_sunDusk, _sunDay, daylight);
      sunLight.intensity = 3 + daylight * 2;
  
@@ -17818,7 +17820,7 @@ index 4f3791505..1fd1ecb96 100644
  
      sky.sunPosition.value.copy(sunLight.position);
  
-@@ -188,7 +197,7 @@ function init() {
+@@ -190,7 +201,7 @@ function init() {
  
      // gui
  
