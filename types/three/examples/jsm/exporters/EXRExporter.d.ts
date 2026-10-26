@@ -17,6 +17,7 @@ export const PIZ_COMPRESSION: 4;
 export interface EXRExporterParseOptions {
     compression?: number;
     type?: TextureDataType;
+    textureIndex?: number;
 }
 
 export class EXRExporter {
