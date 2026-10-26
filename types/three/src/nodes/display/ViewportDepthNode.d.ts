@@ -36,7 +36,7 @@ export const viewZToLogarithmicDepth: (viewZ: Node, near: Node, far: Node) => No
 
 export const logarithmicDepthToViewZ: (depth: Node, near: Node, far: Node) => Node<"float">;
 
-export const getProjectionDepth: (depth: Node, near: Node, far: Node) => Node<"float">;
+export const projectionDepth: (depth: Node, near: Node, far: Node) => Node<"float">;
 
 export const depth: ViewportDepthNode;
 export const linearDepth: (valueNode?: Node | null) => ViewportDepthNode;
