@@ -46,7 +46,7 @@ declare class NodeMaterialObserver {
      */
     needsVelocity(renderer: Renderer): boolean;
     /**
-     * Returns `true` if the node builder's context (e.g. material, scene) uses node properties.
+     * Returns `true` if the node builder's context (e.g. material) uses node properties.
      *
      * @param {NodeBuilder} builder - The current node builder.
      * @return {boolean} Whether the node builder's context uses node properties or not.
