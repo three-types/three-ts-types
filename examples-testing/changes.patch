@@ -16788,7 +16788,7 @@ index ab4e49677..d5662716d 100644
          light.color.setHSL(h, s, l);
          light.position.set(x, y, z);
 diff --git a/examples-testing/examples/webgpu_lightmap_baking.ts b/examples-testing/examples/webgpu_lightmap_baking.ts
-index 3ce11765e..acabf3033 100644
+index d4cd5003d..2f8c6ff60 100644
 --- a/examples-testing/examples/webgpu_lightmap_baking.ts
 +++ b/examples-testing/examples/webgpu_lightmap_baking.ts
 @@ -9,7 +9,8 @@ import { VXGIVolume } from 'three/addons/lighting/vxgi/VXGIVolume.js';
@@ -16835,7 +16835,7 @@ index 3ce11765e..acabf3033 100644
  
  init();
  
-@@ -146,9 +159,12 @@ function init() {
+@@ -149,9 +162,12 @@ async function init() {
  
      // Light map UVs
  
@@ -16850,7 +16850,7 @@ index 3ce11765e..acabf3033 100644
  
      // "Baked GI" shows the light map while it accumulates,
      // "Live GI" evaluates the raw irradiance per pixel every frame
-@@ -156,11 +172,11 @@ function init() {
+@@ -159,11 +175,11 @@ async function init() {
      renderPipeline = new THREE.RenderPipeline(renderer);
      bakedPass = pass(scene, camera);
  
@@ -16864,7 +16864,7 @@ index 3ce11765e..acabf3033 100644
      gui.add(params, 'output', ['Baked GI', 'Live GI']).name('Output').onChange(setOutput);
      gui.add(params, 'algorithm', ['Light Probe', 'VXGI']).name('GI Algorithm').onChange(requestBake);
      gui.add(params, 'resolution', [256, 1024, 2048, 4096]).name('Light Map Resolution').onChange(requestBake);
-@@ -185,19 +201,24 @@ function bake() {
+@@ -188,19 +204,24 @@ function bake() {
  
      if (atlas.resolution !== params.resolution) {
          const geometries = new Set(meshes.map(mesh => mesh.geometry));
@@ -16892,7 +16892,7 @@ index 3ce11765e..acabf3033 100644
          source = probes;
      } else {
          const volume = new VXGIVolume();
-@@ -246,7 +267,7 @@ function setOutput() {
+@@ -249,7 +270,7 @@ function setOutput() {
  
      for (const material of materials) material.lightMapIntensity = live ? 0 : 1;
  
@@ -22014,20 +22014,19 @@ index cdb24ae66..72c79e199 100644
              renderPipeline.outputNode = vec4(vec3(ao), 1);
          } else if (value === 2) {
 diff --git a/examples-testing/examples/webgpu_postprocessing_ssgi_ballpool.ts b/examples-testing/examples/webgpu_postprocessing_ssgi_ballpool.ts
-index 9670ab3d3..737f3e3a7 100644
+index 7b929e367..878706365 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ssgi_ballpool.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ssgi_ballpool.ts
-@@ -14,7 +14,8 @@ import {
+@@ -14,7 +14,7 @@ import {
  } from 'three/tsl';
  import { ssgi } from 'three/addons/tsl/display/SSGINode.js';
  import { traa } from 'three/addons/tsl/display/TRAANode.js';
--import { World } from '@perplexdotgg/bounce';
-+import { Body, Vec3, World } from '@perplexdotgg/bounce';
-+import { WithPool } from 'monomorph';
+-import { RapierPhysics } from 'three/addons/physics/RapierPhysics.js';
++import { RapierPhysics, RapierPhysicsObject } from 'three/addons/physics/RapierPhysics.js';
  
  import { Inspector } from 'three/addons/inspector/Inspector.js';
  
-@@ -27,15 +28,18 @@ const WALL_THICKNESS = 0.5;
+@@ -27,14 +27,17 @@ const WALL_THICKNESS = 0.5;
  const CAM_FOV = 45;
  const EASE_SPEED = 8;
  
@@ -22041,34 +22040,32 @@ index 9670ab3d3..737f3e3a7 100644
 +let raycaster: THREE.Raycaster, pointer: THREE.Vector2;
 +let mouseLight: THREE.PointLight;
  
--let world;
-+let world: World;
+-let physics;
++let physics: RapierPhysicsObject;
  let ballCount = 0;
--let bodies = [];
 -let ballsMesh = null;
 -let wallMeshes = [];
-+let bodies: WithPool<Body>[] = [];
 +let ballsMesh: THREE.InstancedMesh<THREE.SphereGeometry, THREE.MeshPhysicalMaterial> | null = null;
 +let wallMeshes: THREE.Mesh<THREE.BoxGeometry, THREE.MeshPhysicalMaterial>[] = [];
  const boxSize = { w: 8, h: BOX_HEIGHT, d: BOX_DEPTH };
  
- const mouseRayOrigin = new THREE.Vector3();
-@@ -210,7 +214,12 @@ function createBox() {
-         metalness: 0.0,
-     });
+ const whiteMaterial = new THREE.MeshPhysicalMaterial({
+@@ -208,7 +211,12 @@ function createBox() {
+     const hd = boxSize.d / 2;
+     const t = WALL_THICKNESS;
  
 -    const walls = [
 +    const walls: {
 +        size: [number, number, number];
 +        pos: [number, number, number];
-+        mat?: THREE.MeshPhysicalMaterial;
++        mat: THREE.MeshPhysicalMaterial;
 +        noMesh?: boolean;
 +    }[] = [
          { size: [boxSize.w, t, boxSize.d], pos: [0, -t / 2, 0], mat: whiteMaterial },
          { size: [boxSize.w, t, boxSize.d], pos: [0, boxSize.h + t / 2, 0], mat: whiteMaterial },
          { size: [boxSize.w, boxSize.h, t], pos: [0, hh, -hd - t / 2], mat: whiteMaterial },
-@@ -274,7 +283,7 @@ function createBalls() {
-     }
+@@ -257,7 +265,7 @@ function createBalls() {
+     physics.addMesh(ballsMesh, 1, 0.5);
  }
  
 -function onPointerDown(event) {
@@ -22076,7 +22073,7 @@ index 9670ab3d3..737f3e3a7 100644
      activePointers.add(event.pointerId);
  
      if (event.pointerType === 'touch') {
-@@ -284,7 +293,7 @@ function onPointerDown(event) {
+@@ -267,7 +275,7 @@ function onPointerDown(event) {
      }
  }
  
@@ -22085,7 +22082,7 @@ index 9670ab3d3..737f3e3a7 100644
      activePointers.delete(event.pointerId);
  
      if (event.pointerType === 'touch') {
-@@ -294,7 +303,7 @@ function onPointerUp(event) {
+@@ -277,7 +285,7 @@ function onPointerUp(event) {
      }
  }
  
@@ -22094,28 +22091,35 @@ index 9670ab3d3..737f3e3a7 100644
      pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
      pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
  
-@@ -389,7 +398,7 @@ function animate() {
-                     x: _pushDir.x * strength,
-                     y: _pushDir.y * strength,
-                     z: _pushDir.z * strength,
--                });
-+                } as Vec3);
+@@ -311,8 +319,8 @@ function respawnBalls() {
+ 
+         const index = Math.floor(Math.random() * ballCount);
+ 
+-        physics.setMeshPosition(ballsMesh, position, index);
+-        ballsMesh.userData.physics.body[index].wakeUp();
++        physics.setMeshPosition(ballsMesh!, position, index);
++        ballsMesh!.userData.physics.body[index].wakeUp();
+     }
+ }
+ 
+@@ -355,7 +363,7 @@ function animate() {
+         const _pushDir = new THREE.Vector3();
+ 
+         for (let i = 0; i < ballCount; i++) {
+-            ballsMesh.getMatrixAt(i, _matrix);
++            ballsMesh!.getMatrixAt(i, _matrix);
+             _ballPos.setFromMatrixPosition(_matrix);
+ 
+             const ray = new THREE.Ray(mouseRayOrigin, mouseRayDir);
+@@ -369,7 +377,7 @@ function animate() {
+                 _pushDir.normalize();
+ 
+                 const strength = pushStrength * (1 - dist / pushRadius);
+-                physics.applyImpulse(ballsMesh, _pushDir.multiplyScalar(strength), i);
++                physics.applyImpulse(ballsMesh!, _pushDir.multiplyScalar(strength), i);
              }
          }
      }
-@@ -407,10 +416,10 @@ function animate() {
-         _dummy.quaternion.set(q.x, q.y, q.z, q.w);
-         _dummy.updateMatrix();
- 
--        ballsMesh.setMatrixAt(i, _dummy.matrix);
-+        ballsMesh!.setMatrixAt(i, _dummy.matrix);
-     }
- 
--    ballsMesh.instanceMatrix.needsUpdate = true;
-+    ballsMesh!.instanceMatrix.needsUpdate = true;
- 
-     renderPipeline.render();
- }
 diff --git a/examples-testing/examples/webgpu_postprocessing_ssr.ts b/examples-testing/examples/webgpu_postprocessing_ssr.ts
 index a5db67638..4d689dc1d 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ssr.ts
