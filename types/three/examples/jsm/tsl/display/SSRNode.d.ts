@@ -178,11 +178,11 @@ declare class SSRNode extends Node<"vec4"> {
     quality: UniformNode<"float">;
     /**
      * Mirror bias for the stochastic GGX sampling. Concentrates the reflected rays toward
-     * the lobe's narrow (near-mirror) core, trading a small amount of bias for less noise.
+     * the lobe's narrow (near-mirror) core, trading sampling bias for less noise.
      * `0` samples the full VNDF lobe; values toward `1` tighten the cone. Range `[0,1]`.
      *
      * @type {UniformNode<float>}
-     * @default 0.5
+     * @default 0
      */
     mirrorBias: UniformNode<"float">;
     /**
