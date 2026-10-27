@@ -1,0 +1,77 @@
+export default WebGPUAttributeUtils;
+/**
+ * A WebGPU backend utility module for managing shader attributes.
+ *
+ * @private
+ */
+declare class WebGPUAttributeUtils {
+    /**
+     * Constructs a new utility object.
+     *
+     * @param {WebGPUBackend} backend - The WebGPU backend.
+     */
+    constructor(backend: WebGPUBackend);
+    /**
+     * A reference to the WebGPU backend.
+     *
+     * @type {WebGPUBackend}
+     */
+    backend: WebGPUBackend;
+    /**
+     * Creates the GPU buffer for the given buffer attribute.
+     *
+     * @param {BufferAttribute} attribute - The buffer attribute.
+     * @param {GPUBufferUsage} usage - A flag that indicates how the buffer may be used after its creation.
+     */
+    createAttribute(attribute: BufferAttribute, usage: GPUBufferUsage): void;
+    /**
+     * Updates the GPU buffer of the given buffer attribute.
+     *
+     * @param {BufferAttribute} attribute - The buffer attribute.
+     */
+    updateAttribute(attribute: BufferAttribute): void;
+    /**
+     * Returns the vertex buffer layout data which are required
+     * when creating a render pipeline for the given render object.
+     *
+     * @param {RenderObject} renderObject - The render object.
+     * @return {Array<Object>} An array holding objects which describe the vertex buffer layout.
+     */
+    getVertexBufferLayout(renderObject: RenderObject): Array<Object>;
+    /**
+     * Returns a cache key that represents the vertex buffer layout data
+     * of the given render object.
+     *
+     * @param {RenderObject} renderObject - The render object.
+     * @return {string} The cache key.
+     */
+    getVertexBufferLayoutCacheKey(renderObject: RenderObject): string;
+    /**
+     * Destroys the GPU buffer of the given buffer attribute.
+     *
+     * @param {BufferAttribute} attribute - The buffer attribute.
+     */
+    destroyAttribute(attribute: BufferAttribute): void;
+    /**
+     * This method performs a readback operation by moving buffer data from
+     * a storage buffer attribute from the GPU to the CPU. ReadbackBuffer can
+     * be used to retain and reuse handles to the intermediate buffers and prevent
+     * new allocation.
+     *
+     * @async
+     * @param {BufferAttribute} attribute - The storage buffer attribute to read from.
+     * @param {?(ReadbackBuffer|ArrayBuffer)} [target=null] - The readback buffer or array buffer that receives the data. If `null`, a new array buffer is returned.
+     * @param {number} [offset=0] - The byte offset to start reading from. Must be a multiple of 4.
+     * @param {number} [count=-1] - The number of bytes to read. Must be a multiple of 4, or `-1` to read to the end of the buffer.
+     * @return {Promise<ArrayBuffer|ReadbackBuffer>} A promise that resolves with the buffer data when the data are ready.
+     */
+    getArrayBufferAsync(attribute: BufferAttribute, target?: (ReadbackBuffer | ArrayBuffer) | null, offset?: number, count?: number): Promise<ArrayBuffer | ReadbackBuffer>;
+    /**
+     * Returns the vertex format of the given buffer attribute.
+     *
+     * @private
+     * @param {BufferAttribute} geometryAttribute - The buffer attribute.
+     * @return {string|undefined} The vertex format (e.g. 'float32x3').
+     */
+    private _getVertexFormat;
+}
