@@ -455,7 +455,6 @@ declare class NodeClass<TEventMap extends NodeClassEventMap = NodeClassEventMap>
      * @return {?boolean} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
      */
     updateAfter(frame: NodeFrame): boolean | undefined;
-    before(node: Node): this;
     /**
      * This method performs the build of a node. The behavior and return value depend on the current build stage:
      * - **setup**: Prepares the node and its children for the build process. This process can also create new nodes. Returns the node itself or a variant.
