@@ -9,9 +9,6 @@ export class RenderTransitionPass extends Pass {
     sceneB: Object3D;
     cameraB: Camera;
 
-    renderTargetA: WebGLRenderTarget;
-    renderTargetB: WebGLRenderTarget;
-
     constructor(sceneA: Object3D, cameraA: Camera, sceneB: Object3D, cameraB: Camera);
 
     setTransition(value: number): void;
@@ -27,6 +24,4 @@ export class RenderTransitionPass extends Pass {
     render(renderer: WebGLRenderer, writeBuffer: WebGLRenderTarget): void;
 
     dispose(): void;
-
-    createMaterial(): ShaderMaterial;
 }

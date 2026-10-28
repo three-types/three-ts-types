@@ -1,4 +1,4 @@
-import { Camera, Color, MeshDepthMaterial, Scene, ShaderMaterial, WebGLRenderTarget } from "three";
+import { Camera, Scene, ShaderMaterial } from "three";
 
 import { Pass } from "./Pass.js";
 
@@ -13,10 +13,6 @@ export class BokehPass extends Pass {
     constructor(scene: Scene, camera: Camera, params: BokehPassParameters);
     scene: Scene;
     camera: Camera;
-    renderTargetColor: WebGLRenderTarget;
-    renderTargetDepth: WebGLRenderTarget;
-    materialDepth: MeshDepthMaterial;
     materialBokeh: ShaderMaterial;
     uniforms: object;
-    oldClearColor: Color;
 }
