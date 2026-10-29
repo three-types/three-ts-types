@@ -10,6 +10,14 @@ export interface SSRNodeOptions {
      */
     metalnessNode?: Node<"float"> | undefined;
     /**
+     * - Stochastic mode only: material normal-incidence reflectance (F0), typically an MRT `specularColorBlended` attachment (it already includes IOR, specular intensity and metalness; raw `material.specularColor` reflects too brightly). Defaults to the metalness/base-color approximation.
+     */
+    specularNode?: Node<"vec3"> | undefined;
+    /**
+     * - Stochastic mode only: material grazing reflectance, typically an MRT `specularF90` attachment. Defaults to one.
+     */
+    specularF90Node?: Node<"float"> | undefined;
+    /**
      * - Per-pixel roughness. Drives GGX sampling and the blur mip selection.
      */
     roughnessNode?: Node<"float"> | undefined;
@@ -109,6 +117,24 @@ declare class SSRNode extends Node<"vec4"> {
      * @type {?Node<float>}
      */
     metalnessNode: Node<"float"> | null;
+    /**
+     * Stochastic mode only: per-pixel normal-incidence reflectance (F0), typically an MRT
+     * `specularColorBlended` attachment, which already includes IOR, specular intensity and
+     * metalness (raw `material.specularColor` reflects too brightly). When `null`, F0 is
+     * derived from metalness and the diffuse color.
+     *
+     * @type {?Node<vec3>}
+     * @default null
+     */
+    specularNode: Node<"vec3"> | null;
+    /**
+     * Stochastic mode only: per-pixel grazing reflectance (F90), typically an MRT
+     * `specularF90` attachment. When `null`, the shader uses `1`.
+     *
+     * @type {?Node<float>}
+     * @default null
+     */
+    specularF90Node: Node<"float"> | null;
     /**
      * Per-pixel roughness, used to drive the GGX reflection sampling and the blur mip
      * selection. When `null`, the shader treats surfaces as fully smooth.
