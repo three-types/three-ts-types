@@ -14951,6 +14951,87 @@ index c117bcfa8..584957a68 100644
      gui.add(params, 'animate');
  
      const planeX = gui.addFolder('planeX');
+diff --git a/examples-testing/examples/webgpu_color_grading.ts b/examples-testing/examples/webgpu_color_grading.ts
+index 1d8a27083..311305342 100644
+--- a/examples-testing/examples/webgpu_color_grading.ts
++++ b/examples-testing/examples/webgpu_color_grading.ts
+@@ -2,12 +2,17 @@ import * as THREE from 'three/webgpu';
+ import { pass, renderOutput, texture3D } from 'three/tsl';
+ import { Inspector } from 'three/addons/inspector/Inspector.js';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+-import { LUTCubeLoader } from 'three/addons/loaders/LUTCubeLoader.js';
++import { LUTCubeLoader, LUTCubeResult } from 'three/addons/loaders/LUTCubeLoader.js';
+ import { lut3D } from 'three/addons/tsl/display/Lut3DNode.js';
+ import { LUT_PRESETS, exportCubeFormat } from 'three/addons/inspector/extensions/color-grading/LUTMath.js';
++import { ColorGrading } from 'three/addons/inspector/extensions/color-grading/ColorGrading.js';
+ 
+ const params = { preset: 'Cinematic Teal & Orange', mode: 'cube' };
+-let grading, exportedLUT;
++let grading: ColorGrading & {
++        gradingBtn: HTMLButtonElement;
++        modulesMap: Map<string, { params: { toneMapping: THREE.ToneMapping; exposure: number } }>;
++    },
++    exportedLUT: LUTCubeResult | undefined;
+ let mode = 'original';
+ 
+ const renderer = new THREE.WebGPURenderer({ antialias: true });
+@@ -42,7 +47,7 @@ for (const [index, color] of [0xe4523d, 0x3fbd80, 0x367de0, 0xf0c44a, 0xc368cb].
+ const chart = document.createElement('canvas');
+ chart.width = 512;
+ chart.height = 192;
+-const context = chart.getContext('2d');
++const context = chart.getContext('2d')!;
+ for (let x = 0; x < chart.width; x++) {
+     const level = Math.round((x / (chart.width - 1)) * 255);
+     context.fillStyle = `rgb(${level},${level},${level})`;
+@@ -71,12 +76,12 @@ function setBasePipeline() {
+     pipeline.needsUpdate = true;
+ }
+ 
+-function setMode(nextMode) {
++function setMode(nextMode: string) {
+     // Remove Live Preview before applying the exported LUT.
+     if (grading.sceneGradingEnabled) grading.gradingBtn.click();
+     setBasePipeline();
+     mode = params.mode = nextMode;
+-    const rendererSettings = grading.modulesMap.get('renderer').params;
++    const rendererSettings = grading.modulesMap.get('renderer')!.params;
+     renderer.toneMapping = rendererSettings.toneMapping;
+     renderer.toneMappingExposure = rendererSettings.exposure;
+ 
+@@ -107,11 +112,11 @@ function loadPreset() {
+ async function init() {
+     await renderer.init();
+     pipeline.render();
+-    inspector.updateTabs();
++    (inspector as any).updateTabs();
+     await Promise.resolve();
+-    await inspector.settings.setActiveExtension('Color Grading', true);
+-    grading = inspector.settings.extensions['Color Grading'].tab;
+-    inspector.updateTabs();
++    await (inspector as any).settings.setActiveExtension('Color Grading', true);
++    grading = (inspector as any).settings.extensions['Color Grading'].tab;
++    (inspector as any).updateTabs();
+ 
+     // The native Live Preview button switches away from the exported LUT too.
+     grading.gradingBtn.addEventListener(
+@@ -137,7 +142,7 @@ async function init() {
+             if (value !== mode) setMode(value);
+         });
+     inspector.setActiveTab(grading);
+-    if (!inspector.profiler.panel.classList.contains('visible')) inspector.profiler.togglePanel();
++    if (!(inspector as any).profiler.panel.classList.contains('visible')) (inspector as any).profiler.togglePanel();
+     renderer.setAnimationLoop(() => pipeline.render());
+ }
+ 
+@@ -148,6 +153,6 @@ window.addEventListener('resize', () => {
+ });
+ 
+ init().catch(error => {
+-    document.querySelector('#info small').textContent = `Unable to start: ${error.message}`;
++    document.querySelector('#info small')!.textContent = `Unable to start: ${error.message}`;
+     console.error(error);
+ });
 diff --git a/examples-testing/examples/webgpu_compile_async.ts b/examples-testing/examples/webgpu_compile_async.ts
 index fbcf0a7b0..b80719c41 100644
 --- a/examples-testing/examples/webgpu_compile_async.ts
