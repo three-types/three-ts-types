@@ -2,7 +2,7 @@ import NodeBuilder from "../../nodes/core/NodeBuilder.js";
 import { Material } from "../Material.js";
 import NodeMaterial from "./NodeMaterial.js";
 
-export default ProxyNodeMaterial;
+export default NodeMaterialInstance;
 /**
  * A material instance that reuses the shader of a node material with its own properties.
  * All instances created from the same node material share a single shader build, so
@@ -14,15 +14,15 @@ export default ProxyNodeMaterial;
  * const nodeMaterial = new MeshBasicNodeMaterial();
  * nodeMaterial.colorNode = materialReference( 'myColor', 'color' );
  *
- * const material = new ProxyNodeMaterial( nodeMaterial );
+ * const material = new NodeMaterialInstance( nodeMaterial );
  * material.myColor = new Color( 1, 0, 0 );
  * ```
  *
  * @augments Material
  */
-declare class ProxyNodeMaterial extends Material {
+declare class NodeMaterialInstance extends Material {
     /**
-     * Constructs a new proxy node material.
+     * Constructs a new node material instance.
      *
      * @param {NodeMaterial} nodeMaterial - The node material defining the shared shader.
      * @throws {TypeError} When the given material is not a node material.
@@ -35,7 +35,7 @@ declare class ProxyNodeMaterial extends Material {
      * @readonly
      * @default true
      */
-    readonly isProxyNodeMaterial: boolean;
+    readonly isNodeMaterialInstance: boolean;
     /**
      * The node material defining the shared shader.
      *
@@ -50,20 +50,20 @@ declare class ProxyNodeMaterial extends Material {
      */
     build(builder: NodeBuilder): void;
     /**
-     * Copies the values of the given proxy node material to this instance.
+     * Copies the values of the given node material instance to this instance.
      * Object values such as colors are shared with the source, except in `userData`.
      * Unlike {@link Material#copy}, `userData` is not copied via JSON: its first level
      * values are cloned when possible, so types such as colors are preserved. Textures
      * remain shared.
      *
-     * @param {ProxyNodeMaterial} source - The material to copy.
-     * @return {ProxyNodeMaterial} A reference to this instance.
+     * @param {NodeMaterialInstance} source - The material to copy.
+     * @return {NodeMaterialInstance} A reference to this instance.
      */
-    copy(source: ProxyNodeMaterial): this;
+    copy(source: NodeMaterialInstance): this;
     /**
-     * Returns a new proxy node material that shares the same node material.
+     * Returns a new node material instance that shares the same node material.
      *
-     * @return {ProxyNodeMaterial} A clone of this instance.
+     * @return {NodeMaterialInstance} A clone of this instance.
      */
     clone(): this;
 }
