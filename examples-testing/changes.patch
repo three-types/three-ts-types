@@ -1,3 +1,25 @@
+diff --git a/examples-testing/changes.patch b/examples-testing/changes.patch
+index 96a31b642..9c65f4a3a 100644
+--- a/examples-testing/changes.patch
++++ b/examples-testing/changes.patch
+@@ -19849,7 +19849,7 @@ index 964a75d5b..7d119e9ca 100644
+ +const phases: number[] = [];
+  
+  const params = {
+-     material: 'Proxy Node Material',
++     material: 'Node Material Instance',
+ @@ -24,7 +29,7 @@ const params = {
+  init();
+  
+@@ -19875,7 +19875,7 @@ index 964a75d5b..7d119e9ca 100644
+ -    const gui = renderer.inspector.createParameters('Settings');
+ +    const gui = (renderer.inspector as Inspector).createParameters('Settings');
+  
+-     gui.add(params, 'material', ['Proxy Node Material', 'Node Material per Mesh']).onChange(setMaterials);
++     gui.add(params, 'material', ['Node Material Instance', 'Node Material per Mesh']).onChange(setMaterials);
+      gui.add(params, 'randomize').name('randomize colors');
+ @@ -90,7 +95,7 @@ async function init() {
+      window.addEventListener('resize', onWindowResize);
 diff --git a/examples-testing/examples/css2d_label.ts b/examples-testing/examples/css2d_label.ts
 index 1b2889980..4a5af2121 100644
 --- a/examples-testing/examples/css2d_label.ts
@@ -19822,7 +19844,7 @@ index b72e65a07..898c39fa0 100644
      });
  }
 diff --git a/examples-testing/examples/webgpu_materials_node_instance.ts b/examples-testing/examples/webgpu_materials_node_instance.ts
-index 964a75d5b..7d119e9ca 100644
+index b2bd2571c..7b5a83999 100644
 --- a/examples-testing/examples/webgpu_materials_node_instance.ts
 +++ b/examples-testing/examples/webgpu_materials_node_instance.ts
 @@ -6,15 +6,20 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -19849,7 +19871,7 @@ index 964a75d5b..7d119e9ca 100644
 +const phases: number[] = [];
  
  const params = {
-     material: 'Proxy Node Material',
+     material: 'Node Material Instance',
 @@ -24,7 +29,7 @@ const params = {
  init();
  
@@ -19875,7 +19897,7 @@ index 964a75d5b..7d119e9ca 100644
 -    const gui = renderer.inspector.createParameters('Settings');
 +    const gui = (renderer.inspector as Inspector).createParameters('Settings');
  
-     gui.add(params, 'material', ['Proxy Node Material', 'Node Material per Mesh']).onChange(setMaterials);
+     gui.add(params, 'material', ['Node Material Instance', 'Node Material per Mesh']).onChange(setMaterials);
      gui.add(params, 'randomize').name('randomize colors');
 @@ -90,7 +95,7 @@ async function init() {
      window.addEventListener('resize', onWindowResize);
