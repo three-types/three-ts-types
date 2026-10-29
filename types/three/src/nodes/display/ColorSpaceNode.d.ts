@@ -11,7 +11,7 @@ export function getColorSpaceMethod(
     target: typeof LinearSRGBColorSpace | typeof SRGBColorSpace,
 ): ColorSpaceMethod;
 
-export default class ColorSpaceNode extends Node {
+export default class ColorSpaceNode extends Node<"vec4"> {
     colorNode: Node;
     source: string;
     target: string;
