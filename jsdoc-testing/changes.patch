@@ -2226,7 +2226,7 @@ index 3a794d7df..40bd78652 100644
       * Called by the tiles renderer when the plugin is unregistered or the
       * tiles renderer is disposed.
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/pipelines/MeshletDrawingPipeline.d.ts b/jsdoc-testing/jsdoc/examples/jsm/pipelines/MeshletDrawingPipeline.d.ts
-index c30ca7adb..087c363d4 100644
+index ec3a9ffd5..087c363d4 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/pipelines/MeshletDrawingPipeline.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/pipelines/MeshletDrawingPipeline.d.ts
 @@ -1,3 +1,15 @@
@@ -2245,13 +2245,7 @@ index c30ca7adb..087c363d4 100644
  /**
   * A GPU-driven drawing pipeline that renders compatible meshes as meshlets. Geometries are processed once into
   * clusters (meshlets) of 64 triangles with a chain of simplified levels of detail. Every frame, compute
-@@ -56,28 +68,13 @@
-  *
-  * @augments StandardDrawingPipeline
-  */
--export class MeshletDrawingPipeline {
-+export class MeshletDrawingPipeline extends StandardDrawingPipeline {
-     /**
+@@ -61,23 +73,8 @@ export class MeshletDrawingPipeline extends StandardDrawingPipeline {
       * Constructs a new meshlet drawing pipeline.
       *
       * @param {Object} [parameters] - The configuration parameter.
@@ -2276,7 +2270,7 @@ index c30ca7adb..087c363d4 100644
      /**
       * This flag can be used for type testing.
       *
-@@ -85,7 +82,7 @@ export class MeshletDrawingPipeline {
+@@ -85,7 +82,7 @@ export class MeshletDrawingPipeline extends StandardDrawingPipeline {
       * @readonly
       * @default true
       */
@@ -2285,11 +2279,11 @@ index c30ca7adb..087c363d4 100644
      /**
       * The projected error in pixels below which a simpler level of detail is selected.
       *
-@@ -158,41 +155,6 @@ export class MeshletDrawingPipeline {
+@@ -158,41 +155,6 @@ export class MeshletDrawingPipeline extends StandardDrawingPipeline {
       * @default false
       */
      depthPrepass: boolean;
--    _occlusionPipeline: any;
+-    _occlusionPipeline: StandardDrawingPipeline;
 -    _boundsNode: any;
 -    _ready: boolean;
 -    _gpuDrivenEnabled: boolean;
@@ -2327,7 +2321,7 @@ index c30ca7adb..087c363d4 100644
      /**
       * The maximum number of objects drawn by the GPU-driven pipeline per render list. The instances of instanced
       * meshes count as objects, once per geometry group. Limited by the maximum size of a storage buffer binding:
-@@ -201,14 +163,7 @@ export class MeshletDrawingPipeline {
+@@ -201,14 +163,7 @@ export class MeshletDrawingPipeline extends StandardDrawingPipeline {
       * @type {number}
       * @readonly
       */
@@ -2343,7 +2337,7 @@ index c30ca7adb..087c363d4 100644
      /**
       * Prepares the meshlets and geometry LODs before `Renderer.compileAsync()` projects
       * the scene. Shared geometries are processed once, including meshes outside the frustum.
-@@ -219,850 +174,10 @@ export class MeshletDrawingPipeline {
+@@ -219,846 +174,10 @@ export class MeshletDrawingPipeline extends StandardDrawingPipeline {
       * @param {Camera} camera - The camera.
       * @return {Promise} Resolves when the meshlets are ready.
       */
@@ -2386,7 +2380,7 @@ index c30ca7adb..087c363d4 100644
 -     * @return {boolean} Whether the level is selected or not.
 -     */
 -    private _isLevelSelected;
--    isCulled(object: any, camera: any): any;
+-    isCulled(object: any, camera: any): boolean;
 -    pushRenderItem(renderList: any, object: any, geometry: any, material: any, groupOrder: any, z: any, group: any, clippingContext: any): void;
 -    /**
 -     * Draws a static bundle group. When the render bundle of the group is recorded, the supported meshes are
@@ -2608,12 +2602,6 @@ index c30ca7adb..087c363d4 100644
 -     * @param {BufferGeometry} geometry - The geometry.
 -     */
 -    private _disposeGeometry;
-+    prepareAsync(scene: Object3D, camera: Camera): Promise<void>;
-     /**
-      * Frees the GPU-related resources of the pipeline: the cullings, batches and views of all render lists and the
-      * geometry pool. Called by {@link Renderer#dispose}. The pipeline can be used again, the resources are created again.
-      */
-     dispose(): void;
 -    /**
 -     * Returns the key of the batch drawing objects of the given geometry: the geometries with the same layout of
 -     * the vertex data share the batches of a material, their vertices are read from the geometry pool.
@@ -2933,6 +2921,7 @@ index c30ca7adb..087c363d4 100644
 - * @return {Object} The occlusion data.
 - */
 -export function createOcclusion(width: number, height: number): Object;
+-import { StandardDrawingPipeline } from 'three/webgpu';
 -/**
 - * The vertices and the triangles of the geometries drawn by the GPU-driven pipeline, in one storage buffer each,
 - * so the objects of several geometries sharing a material are drawn by one draw. The vertex data of a geometry
@@ -3182,10 +3171,13 @@ index c30ca7adb..087c363d4 100644
 -     * @param {Object} lodView - The view selecting the level of detail.
 -     */
 -    updateView(camera: Camera, projScreenMatrix: Matrix4, frustum: Frustum, width: number, height: number, lodView: Object): void;
--    /**
++    prepareAsync(scene: Object3D, camera: Camera): Promise<void>;
+     /**
 -     * Frees the GPU-related resources of the culling.
--     */
--    dispose(): void;
++     * Frees the GPU-related resources of the pipeline: the cullings, batches and views of all render lists and the
++     * geometry pool. Called by {@link Renderer#dispose}. The pipeline can be used again, the resources are created again.
+      */
+     dispose(): void;
  }
 -import { Mesh } from 'three/webgpu';
 -import { StorageBufferAttribute } from 'three/webgpu';
