@@ -5,10 +5,10 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
 import { LightProbeGrid } from 'three/addons/lighting/LightProbeGrid.js';
 import { LightProbeGridHelper } from 'three/addons/helpers/LightProbeGridHelper.js';
 
-let camera, scene, renderer, controls;
-let pendingBake = null;
-let probesLeft, probesRight;
-let probesHelperLeft, probesHelperRight;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, controls: OrbitControls;
+let pendingBake: (() => Promise<void>) | null = null;
+let probesLeft: LightProbeGrid, probesRight: LightProbeGrid;
+let probesHelperLeft: LightProbeGridHelper, probesHelperRight: LightProbeGridHelper;
 
 init();
 
@@ -221,7 +221,7 @@ async function init() {
         lightIntensity: 30,
     };
 
-    async function bake(resolution) {
+    async function bake(resolution: number) {
         warmLight.intensity = params.lightIntensity;
         coolLight.intensity = params.lightIntensity;
 
@@ -297,7 +297,7 @@ async function init() {
 
     // GUI
 
-    const gui = renderer.inspector.createParameters('Light Probes');
+    const gui = (renderer.inspector as Inspector).createParameters('Light Probes');
     gui.add(params, 'enabled')
         .name('GI')
         .onChange(value => {

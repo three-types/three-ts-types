@@ -26,7 +26,7 @@ import { TeapotGeometry } from 'three/addons/geometries/TeapotGeometry.js';
 
 // Halton sequence for temporal offset - matches TRAA's 32-sample Halton jitter
 // This creates optimal low-discrepancy distribution that accumulates well with TRAA
-function halton(index, base) {
+function halton(index: number, base: number) {
     let result = 0;
     let f = 1;
 
@@ -42,11 +42,16 @@ function halton(index, base) {
 // Generate 32 Halton offsets (base 2, 3) - same length as TRAA
 const _haltonOffsets = Array.from({ length: 32 }, (_, i) => [halton(i + 1, 2), halton(i + 1, 3)]);
 
-let renderer, scene, camera;
-let volumetricMesh, teapot, pointLight, spotLight;
-let renderPipeline;
-let temporalOffset, temporalRotation, shaderTime;
-let params;
+let renderer: THREE.WebGPURenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
+let volumetricMesh: THREE.Mesh<THREE.BoxGeometry, THREE.VolumeNodeMaterial>,
+    teapot: THREE.Mesh<TeapotGeometry, THREE.MeshStandardMaterial>,
+    pointLight: THREE.PointLight,
+    spotLight: THREE.SpotLight;
+let renderPipeline: THREE.RenderPipeline;
+let temporalOffset: THREE.UniformNode<'float'>,
+    temporalRotation: THREE.UniformNode<'float'>,
+    shaderTime: THREE.UniformNode<'float'>;
+let params: { traa: boolean; animated: boolean };
 
 init();
 
@@ -129,10 +134,10 @@ function init() {
     volumetricMaterial.offsetNode = fract(
         interleavedGradientNoise(screenCoordinate.add(temporalJitter2D.mul(100))).add(temporalOffset),
     );
-    volumetricMaterial.scatteringNode = Fn(({ positionRay }) => {
+    volumetricMaterial.scatteringNode = Fn(({ positionRay }: { positionRay: THREE.Node<'vec3'> }) => {
         const timeScaled = vec3(shaderTime, 0, shaderTime.mul(0.3));
 
-        const sampleGrain = (scale, timeScale = 1) =>
+        const sampleGrain = (scale: number, timeScale = 1) =>
             texture3D(noiseTexture3D, positionRay.add(timeScaled.mul(timeScale)).mul(scale).mod(1), 0).r.add(0.5);
 
         let density = sampleGrain(0.1);
@@ -233,7 +238,7 @@ function init() {
         animated: true,
     };
 
-    const gui = renderer.inspector.createParameters('Volumetric Lighting');
+    const gui = (renderer.inspector as Inspector).createParameters('Volumetric Lighting');
 
     gui.add(params, 'animated');
     gui.add(params, 'traa').name('TRAA').onChange(updatePostProcessing);

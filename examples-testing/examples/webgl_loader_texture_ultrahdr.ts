@@ -5,7 +5,14 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import { UltraHDRLoader } from 'three/addons/loaders/UltraHDRLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-const params = {
+const params: {
+    autoRotate: boolean;
+    metalness: number;
+    roughness: number;
+    exposure: number;
+    resolution: '2k' | '4k';
+    type: 'HalfFloatType' | 'FloatType';
+} = {
     autoRotate: true,
     metalness: 1.0,
     roughness: 0.0,
@@ -14,7 +21,12 @@ const params = {
     type: 'HalfFloatType',
 };
 
-let renderer, scene, camera, controls, torusMesh, loader;
+let renderer: THREE.WebGLRenderer,
+    scene: THREE.Scene,
+    camera: THREE.PerspectiveCamera,
+    controls: OrbitControls,
+    torusMesh: THREE.Mesh<THREE.TorusKnotGeometry, THREE.MeshStandardMaterial>,
+    loader: UltraHDRLoader;
 
 init();
 
@@ -45,7 +57,10 @@ function init() {
     loader = new UltraHDRLoader();
     loader.setDataType(THREE.FloatType);
 
-    const loadEnvironment = function (resolution = '2k', type = 'HalfFloatType') {
+    const loadEnvironment = function (
+        resolution: '2k' | '4k' = '2k',
+        type: 'HalfFloatType' | 'FloatType' = 'HalfFloatType',
+    ) {
         loader.setDataType(THREE[type]);
 
         loader.load(`textures/equirectangular/spruit_sunrise_${resolution}.hdr.jpg`, function (texture) {

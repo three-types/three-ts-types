@@ -12,15 +12,19 @@ const MODEL_INDEX_URL =
     'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/model-index.json';
 const SAMPLE_ASSETS_BASE_URL = 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/';
 
-let camera, scene, renderer, controls, timer;
-let probes = null,
-    probesHelper = null;
-let probeFar,
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGLRenderer,
+    controls: FirstPersonControls,
+    timer: THREE.Timer;
+let probes: LightProbeGridWebGL | null = null,
+    probesHelper: LightProbeGridHelperWebGL | null = null;
+let probeFar: number,
     bakeIndex = 0,
     bakePass = 0;
-let modelSize = null;
-let sunLight = null,
-    sky = null;
+let modelSize: THREE.Vector3 | null = null;
+let sunLight: SunLight | null = null,
+    sky: Sky | null = null;
 
 const _box = new THREE.Box3();
 const _size = new THREE.Vector3();
@@ -80,7 +84,7 @@ async function init() {
     controls.movementSpeed = 2.0;
     controls.lookSpeed = 0.2;
 
-    const progressBar = document.getElementById('progressBar');
+    const progressBar = document.getElementById('progressBar') as HTMLProgressElement;
 
     const manager = new THREE.LoadingManager();
     manager.onProgress = function (url, loaded, total) {
@@ -95,14 +99,14 @@ async function init() {
     const modelURL = await getSponzaModelURL();
     const gltf = await loader.loadAsync(modelURL);
     const model = gltf.scene;
-    const embeddedLights = [];
+    const embeddedLights: THREE.Light[] = [];
 
     model.traverse(child => {
-        if (child.isMesh) {
-            child.castShadow = true;
-            child.receiveShadow = true;
-        } else if (child.isLight) {
-            embeddedLights.push(child);
+        if ((child as THREE.Mesh).isMesh) {
+            (child as THREE.Mesh).castShadow = true;
+            (child as THREE.Mesh).receiveShadow = true;
+        } else if ((child as THREE.Light).isLight) {
+            embeddedLights.push(child as THREE.Light);
         }
     });
 
@@ -126,8 +130,8 @@ async function init() {
         const elevation = THREE.MathUtils.degToRad(params.lightElevation);
         const azimuth = THREE.MathUtils.degToRad(params.lightAzimuth);
 
-        sunLight.position.setFromSphericalCoords(1, Math.PI / 2 - elevation, azimuth);
-        sky.material.uniforms['sunPosition'].value.copy(sunLight.position);
+        sunLight!.position.setFromSphericalCoords(1, Math.PI / 2 - elevation, azimuth);
+        sky!.material.uniforms['sunPosition'].value.copy(sunLight!.position);
     }
 
     updateLightPosition();
@@ -154,7 +158,7 @@ async function init() {
     gui.add(params, 'lightIntensity', 0, 100, 0.1)
         .name('Light Intensity')
         .onChange(value => {
-            sunLight.intensity = value;
+            sunLight!.intensity = value;
             resetProbeBake();
         });
     gui.add(params, 'shadows')
@@ -180,7 +184,7 @@ async function init() {
             if (probesHelper) {
                 scene.remove(probesHelper);
                 probesHelper.dispose();
-                probesHelper = new LightProbeGridHelperWebGL(probes, value);
+                probesHelper = new LightProbeGridHelperWebGL(probes!, value);
                 probesHelper.visible = params.showProbes;
                 scene.add(probesHelper);
             }
@@ -282,9 +286,17 @@ function updateProbes() {
     }
 }
 
+interface Model {
+    label: string;
+    name: string;
+    screenshot: string;
+    tags: string[];
+    variants: Record<string, string>;
+}
+
 async function getSponzaModelURL() {
     const response = await fetch(MODEL_INDEX_URL);
-    const models = await response.json();
+    const models = (await response.json()) as Model[];
     const sponzaInfo = models.find(model => model.name === 'Sponza');
 
     if (!sponzaInfo) {
@@ -303,7 +315,7 @@ async function getSponzaModelURL() {
     return `${SAMPLE_ASSETS_BASE_URL}${sponzaInfo.name}/${variantFolder}/${variantName}`;
 }
 
-function setShadowsEnabled(enabled) {
+function setShadowsEnabled(enabled: boolean) {
     if (!renderer || !sunLight) return;
 
     renderer.shadowMap.enabled = enabled;
@@ -317,7 +329,7 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function animate(timestamp) {
+function animate(timestamp: number) {
     timer.update(timestamp);
     controls.update(timer.getDelta());
     updateProbes();

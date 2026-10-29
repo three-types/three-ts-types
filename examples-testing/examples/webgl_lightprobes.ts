@@ -5,8 +5,8 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import { LightProbeGridWebGL } from 'three/addons/lighting/LightProbeGridWebGL.js';
 import { LightProbeGridHelperWebGL } from 'three/addons/helpers/LightProbeGridHelperWebGL.js';
 
-let camera, scene, renderer, controls;
-let probes, probesHelper;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, controls: OrbitControls;
+let probes: LightProbeGridWebGL, probesHelper: LightProbeGridHelperWebGL;
 
 init();
 
@@ -122,7 +122,7 @@ async function init() {
 
     // Bake light probe volume
 
-    async function bake(resolution) {
+    async function bake(resolution: number) {
         if (probes) {
             scene.remove(probes);
             probes.dispose();

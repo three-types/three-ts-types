@@ -1,12 +1,14 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { RapierPhysics } from 'three/addons/physics/RapierPhysics.js';
+import { RapierPhysics, RapierPhysicsObject, RAPIER } from 'three/addons/physics/RapierPhysics.js';
 import { RapierHelper } from 'three/addons/helpers/RapierHelper.js';
 import Stats from 'three/addons/libs/stats.module.js';
 
-let camera, scene, renderer, stats;
-let physics, characterController, physicsHelper;
-let player, movement;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, stats: Stats;
+let physics: RapierPhysicsObject,
+    characterController: InstanceType<RAPIER['KinematicCharacterController']>,
+    physicsHelper: RapierHelper;
+let player: THREE.Mesh, movement: { forward: number; right: number };
 
 init();
 
@@ -100,7 +102,7 @@ async function init() {
     window.addEventListener('resize', onWindowResize, false);
 }
 
-function random(min, max) {
+function random(min: number, max: number) {
     return Math.random() * (max - min) + min;
 }
 

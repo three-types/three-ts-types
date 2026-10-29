@@ -33,15 +33,34 @@ import { CityGenerator, createBuildingMaterial, createRoadMaterial } from 'three
 import { MeshletDrawingPipeline } from 'three/addons/pipelines/MeshletDrawingPipeline.js';
 import { VisibilityBufferDrawingPipeline } from 'three/addons/pipelines/VisibilityBufferDrawingPipeline.js';
 
-let camera, scene, renderer, controls, timer;
-let cityGroup, tilesGroup, ground, materials, city, renderPipeline;
-let sky, sun, sunLight, pmremGenerator, envScene, envRenderTarget, cityBounds;
-let pipelines,
-    hazeDensity,
-    postProcessing = [];
-let curvedWorld, curvatureNode;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    controls: PointerLockControls | FirstPersonControls,
+    timer: THREE.Timer;
+let cityGroup: THREE.Group,
+    tilesGroup: THREE.Group,
+    ground: THREE.Mesh<THREE.PlaneGeometry, THREE.Material>,
+    materials: { building: THREE.MeshStandardNodeMaterial; buildingFar: THREE.MeshStandardNodeMaterial },
+    city: CityGenerator,
+    renderPipeline: THREE.RenderPipeline;
+let sky: SkyMesh,
+    sun: THREE.Vector3,
+    sunLight: THREE.DirectionalLight,
+    pmremGenerator: THREE.PMREMGenerator,
+    envScene: THREE.Scene,
+    envRenderTarget: THREE.CubeRenderTarget,
+    cityBounds: THREE.Box3;
+let pipelines: {
+        'gpu-driven': MeshletDrawingPipeline;
+        'visibility-buffer': VisibilityBufferDrawingPipeline;
+        default: THREE.StandardDrawingPipeline;
+    },
+    hazeDensity: THREE.UniformNode<'float', number>,
+    postProcessing: THREE.Node[] = [];
+let curvedWorld: THREE.OverrideContextNode, curvatureNode: THREE.UniformNode<'float', number>;
 
-const keys = {};
+const keys: Record<string, boolean> = {};
 
 const EYE_HEIGHT = 1.7;
 const WALK_SPEED = 6;
@@ -118,7 +137,7 @@ async function init() {
         default: renderer.drawingPipeline,
     };
 
-    renderer.drawingPipeline = pipelines[parameters.pipeline];
+    renderer.drawingPipeline = pipelines[parameters.pipeline as keyof typeof pipelines];
 
     await renderer.init();
 
@@ -148,7 +167,7 @@ async function init() {
     setCameraMode(parameters.camera);
 
     renderer.domElement.addEventListener('click', () => {
-        if (parameters.camera === 'walk') controls.lock();
+        if (parameters.camera === 'walk') (controls as PointerLockControls).lock();
     });
 
     window.addEventListener('keydown', event => (keys[event.code] = true));
@@ -229,7 +248,7 @@ async function init() {
     // distance d rises by the curvature times d², the rise inside of the sphere of radius r varies by at most
     // the curvature times 2dr + r²
 
-    const getBoundingSphere = (sphere, viewPosition) => {
+    const getBoundingSphere = (sphere: THREE.Node<'vec4'>, viewPosition: THREE.Node<'vec3'>) => {
         const d = sphere.xz.sub(viewPosition.xz).length();
         const r = sphere.w;
 
@@ -248,7 +267,7 @@ async function init() {
             [
                 modelViewProjection,
                 builder =>
-                    builder.camera === camera && !builder.material.vertexNode
+                    builder.camera === camera && !(builder.material as THREE.NodeMaterial).vertexNode
                         ? curvedProjection().toVar()
                         : modelViewProjection,
             ],
@@ -262,13 +281,13 @@ async function init() {
 
     // parameters
 
-    const gui = renderer.inspector.createParameters('City');
+    const gui = (renderer.inspector as Inspector).createParameters('City');
     gui.add(parameters, 'seed', 0, 100, 1).debounce(300).onChange(generateCity);
     gui.add(parameters, 'tiles', 1, 10, 1).debounce(300).onChange(generateCity);
     gui.add(parameters, 'timeOfDay', 6, 18, 0.1).name('time of day').onChange(updateSun);
     gui.add(renderer, 'toneMappingExposure', 0.01, 1).name('exposure');
-    gui.add(parameters, 'haze', 0, 4, 0.1).onChange(value => (hazeDensity.value = 0.00035 * value));
-    gui.add(parameters, 'shadows').onChange(value => {
+    gui.add(parameters, 'haze', 0, 4, 0.1).onChange((value: number) => (hazeDensity.value = 0.00035 * value));
+    gui.add(parameters, 'shadows').onChange((value: boolean) => {
         sunLight.castShadow = value;
         sunLight.shadow.needsUpdate = true;
     });
@@ -283,8 +302,8 @@ async function init() {
         if (curved !== curvatureNode.value > 0) setupPostProcessing();
     });
     gui.add(parameters, 'camera', ['walk', 'fly']).onChange(setCameraMode);
-    gui.add(parameters, 'pipeline', Object.keys(pipelines)).onChange(value => {
-        renderer.drawingPipeline = pipelines[value];
+    gui.add(parameters, 'pipeline', Object.keys(pipelines)).onChange((value: string) => {
+        renderer.drawingPipeline = pipelines[value as keyof typeof pipelines];
         sunLight.shadow.needsUpdate = true;
 
         // the static bundle group is only used by the meshlet drawing pipelines
@@ -294,20 +313,20 @@ async function init() {
     gui.add(parameters, 'static').name('static bundle').onChange(generateCity);
     gui.add(parameters, 'occlusion')
         .name('occlusion culling')
-        .onChange(value => {
+        .onChange((value: boolean) => {
             pipelines['gpu-driven'].occlusionCulling = value;
             pipelines['visibility-buffer'].occlusionCulling = value;
         });
     gui.add(pipelines['gpu-driven'], 'depthPrepass').name('depth prepass');
     gui.add(parameters, 'lod', 0, 8, 0.1)
         .name('lod (pixels)')
-        .onChange(value => {
+        .onChange((value: number) => {
             pipelines['gpu-driven'].lodThreshold = value;
             pipelines['visibility-buffer'].lodThreshold = value;
         });
     gui.add(parameters, 'shadowLod', 0, 8, 0.5)
         .name('shadow lod (texels)')
-        .onChange(value => {
+        .onChange((value: number) => {
             pipelines['gpu-driven'].shadowLodThreshold = value;
             pipelines['visibility-buffer'].shadowLodThreshold = value;
             sunLight.shadow.needsUpdate = true;
@@ -327,7 +346,7 @@ async function init() {
     gui.add(parameters, 'furniture').name('street furniture').onChange(updateProps);
     gui.add(parameters, 'meshlets')
         .name('show meshlets')
-        .onChange(value => {
+        .onChange((value: boolean) => {
             pipelines['gpu-driven'].debug = value;
             pipelines['visibility-buffer'].debug = value;
             renderer.toneMapping = value ? THREE.NoToneMapping : THREE.ACESFilmicToneMapping;
@@ -337,7 +356,7 @@ async function init() {
 
     // the geometry of the meshlet drawing pipelines is processed and the pipelines are compiled before the first frame
 
-    await postProcessing[0].compileAsync(renderer);
+    await (postProcessing[0] as THREE.PassNode).compileAsync(renderer);
 
     renderer.setAnimationLoop(animate);
 }
@@ -351,7 +370,7 @@ function getCurvature() {
 function setupPostProcessing() {
     for (const node of postProcessing) node.dispose();
 
-    let scenePass, colorNode;
+    let scenePass: THREE.PassNode, colorNode: THREE.Node<'vec4'>;
 
     if (parameters.antialiasing === 'traa') {
         // the thin windows of distant towers are resolved over several frames, the velocity
@@ -384,7 +403,10 @@ function setupPostProcessing() {
     renderPipeline.outputNode = colorNode.add(bloomPass);
     renderPipeline.needsUpdate = true;
 
-    postProcessing = colorNode.isTextureNode === true ? [scenePass, bloomPass] : [scenePass, colorNode, bloomPass];
+    postProcessing =
+        (colorNode as THREE.TextureNode).isTextureNode === true
+            ? [scenePass, bloomPass]
+            : [scenePass, colorNode, bloomPass];
 }
 
 function updateSun() {
@@ -458,36 +480,37 @@ function updateBuildingMaterial() {
     materials.building = createBuildingMaterial(city.layout, city.seedNode, getBuildingOptions());
 
     tilesGroup.traverse(object => {
-        if (object.material === previous) object.material = materials.building;
+        if ((object as THREE.Mesh).material === previous) (object as THREE.Mesh).material = materials.building;
     });
 
     previous.dispose();
 
-    if (tilesGroup.isBundleGroup) tilesGroup.needsUpdate = true;
+    if ((tilesGroup as THREE.BundleGroup).isBundleGroup) (tilesGroup as THREE.BundleGroup).needsUpdate = true;
 
     sunLight.shadow.needsUpdate = true;
 }
 
-function updateDetailDistance(value) {
+function updateDetailDistance(value: number) {
     if (parameters.farMaterial === false) return;
 
     tilesGroup.traverse(object => {
-        if (object.isLOD) object.levels[1].distance = value;
+        if ((object as THREE.LOD).isLOD) (object as THREE.LOD).levels[1].distance = value;
     });
 
-    if (tilesGroup.isBundleGroup) tilesGroup.needsUpdate = true;
+    if ((tilesGroup as THREE.BundleGroup).isBundleGroup) (tilesGroup as THREE.BundleGroup).needsUpdate = true;
 }
 
 function updateProps() {
     tilesGroup.traverse(object => {
         for (const key in props) {
-            if (props[key].includes(object.name)) object.visible = parameters[key];
+            if (props[key as keyof typeof props].includes(object.name))
+                object.visible = parameters[key as keyof typeof props];
         }
     });
 
     // the render bundle of a static bundle group is recorded again
 
-    if (tilesGroup.isBundleGroup) tilesGroup.needsUpdate = true;
+    if ((tilesGroup as THREE.BundleGroup).isBundleGroup) (tilesGroup as THREE.BundleGroup).needsUpdate = true;
 
     sunLight.shadow.needsUpdate = true;
 }
@@ -505,10 +528,10 @@ function generateCity() {
     // each tower is the first level of a LOD object, the same geometry with the cheaper material is the second
 
     if (parameters.farMaterial) {
-        const skyscrapers = [];
+        const skyscrapers: THREE.Mesh[] = [];
 
         cityGroup.traverse(child => {
-            if (child.name === 'Skyscraper') skyscrapers.push(child);
+            if (child.name === 'Skyscraper') skyscrapers.push(child as THREE.Mesh);
         });
 
         for (const tower of skyscrapers) {
@@ -516,7 +539,7 @@ function generateCity() {
             lod.position.copy(tower.position);
             lod.quaternion.copy(tower.quaternion);
             lod.scale.copy(tower.scale);
-            tower.parent.add(lod);
+            tower.parent!.add(lod);
 
             tower.position.set(0, 0, 0);
             tower.quaternion.identity();
@@ -593,19 +616,19 @@ function generateCity() {
 
     cityGroup.traverse(child => {
         if (child.name === 'Skyscraper') {
-            const geometry = child.geometry;
+            const geometry = (child as THREE.Mesh).geometry;
             triangles += (geometry.index !== null ? geometry.index.count : geometry.attributes.position.count) / 3;
         }
     });
 
     const towers = city.towers.length * tiles * tiles;
-    document.getElementById('stats').textContent =
+    document.getElementById('stats')!.textContent =
         `${new Intl.NumberFormat().format(towers)} towers, ${new Intl.NumberFormat().format(Math.round(triangles * tiles * tiles))} triangles`;
 }
 
 // walking along a street at eye height, or flying over the city
 
-function setCameraMode(mode) {
+function setCameraMode(mode: string) {
     if (controls) controls.dispose();
 
     if (mode === 'walk') {
@@ -640,14 +663,14 @@ function animate() {
     if (parameters.camera === 'walk') {
         const distance = (keys.ShiftLeft || keys.ShiftRight ? RUN_SPEED : WALK_SPEED) * delta;
 
-        if (keys.KeyW) controls.moveForward(distance);
-        if (keys.KeyS) controls.moveForward(-distance);
-        if (keys.KeyD) controls.moveRight(distance);
-        if (keys.KeyA) controls.moveRight(-distance);
+        if (keys.KeyW) (controls as PointerLockControls).moveForward(distance);
+        if (keys.KeyS) (controls as PointerLockControls).moveForward(-distance);
+        if (keys.KeyD) (controls as PointerLockControls).moveRight(distance);
+        if (keys.KeyA) (controls as PointerLockControls).moveRight(-distance);
 
         camera.position.y = EYE_HEIGHT;
     } else {
-        controls.update(delta);
+        (controls as FirstPersonControls).update(delta);
     }
 
     renderPipeline.render();

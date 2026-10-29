@@ -22,14 +22,19 @@ const parameters = {
     rotate: true,
 };
 
-const status = document.getElementById('status');
-const stats = document.getElementById('stats');
+const status = document.getElementById('status')!;
+const stats = document.getElementById('stats')!;
 const timer = new THREE.Timer();
 
-let renderer, scene, camera, controls, pipelines, sunLight;
-let geometry,
-    material,
-    statues = null;
+let renderer: THREE.WebGPURenderer,
+    scene: THREE.Scene,
+    camera: THREE.PerspectiveCamera,
+    controls: OrbitControls,
+    pipelines: { 'GPU-driven': MeshletDrawingPipeline; [key: string]: THREE.StandardDrawingPipeline },
+    sunLight: THREE.DirectionalLight;
+let geometry: THREE.BufferGeometry,
+    material: THREE.MeshStandardNodeMaterial,
+    statues: THREE.InstancedMesh | null = null;
 
 init().catch(error => {
     status.textContent = error.message;
@@ -101,7 +106,7 @@ async function init() {
     // stand the statue on the ground with a height of 4 units
 
     geometry.computeBoundingBox();
-    const box = geometry.boundingBox;
+    const box = geometry.boundingBox!;
     const size = box.getSize(new THREE.Vector3());
     geometry.translate(-(box.min.x + box.max.x) / 2, -box.min.y, -(box.min.z + box.max.z) / 2);
     geometry.scale(4 / size.y, 4 / size.y, 4 / size.y);
@@ -178,7 +183,7 @@ async function prepare() {
         await renderer.compileAsync(scene, camera);
         status.textContent = '';
     } catch (error) {
-        status.textContent = error.message;
+        status.textContent = (error as Error).message;
         console.error(error);
     } finally {
         renderer.setAnimationLoop(animate);
@@ -188,7 +193,7 @@ async function prepare() {
 function createGUI() {
     const pipeline = pipelines['GPU-driven'];
 
-    const gui = renderer.inspector.createParameters('Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
     gui.add(parameters, 'pipeline', Object.keys(pipelines)).name('Pipeline').onChange(prepare);
     gui.add(parameters, 'statues', { '1,000': 1000, '4,000': 4000, '10,000': 10000 })
         .name('Statues')
@@ -198,27 +203,27 @@ function createGUI() {
         });
     gui.add(parameters, 'lod', 1, 8, 0.5)
         .name('LOD error (px)')
-        .onChange(value => {
+        .onChange((value: number) => {
             pipeline.lodThreshold = value;
             pipeline.shadowLodThreshold = value;
             sunLight.shadow.needsUpdate = true;
         });
     gui.add(parameters, 'occlusion')
         .name('Occlusion culling')
-        .onChange(value => {
+        .onChange((value: boolean) => {
             pipeline.occlusionCulling = value;
             prepare();
         });
     gui.add(parameters, 'meshlets')
         .name('Show meshlets')
-        .onChange(value => {
+        .onChange((value: boolean) => {
             pipeline.debug = value;
             renderer.toneMapping = value ? THREE.NoToneMapping : THREE.ACESFilmicToneMapping;
             prepare();
         });
     gui.add(parameters, 'rotate')
         .name('Auto rotate')
-        .onChange(value => (controls.autoRotate = value));
+        .onChange((value: boolean) => (controls.autoRotate = value));
 }
 
 function onWindowResize() {
@@ -227,19 +232,19 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function formatCount(value) {
+function formatCount(value: number) {
     if (value >= 1e9) return (value / 1e9).toFixed(1) + 'B';
     if (value >= 1e6) return (value / 1e6).toFixed(1) + 'M';
     if (value >= 1e3) return (value / 1e3).toFixed(0) + 'k';
     return value.toString();
 }
 
-function animate(time) {
+function animate(time: number) {
     timer.update(time);
     controls.update(timer.getDelta());
     renderer.render(scene, camera);
 
-    let text = `${formatCount((parameters.statues * geometry.index.count) / 3)} triangles in the scene`;
+    let text = `${formatCount((parameters.statues * geometry.index!.count) / 3)} triangles in the scene`;
 
     if (renderer.drawingPipeline === pipelines['GPU-driven']) {
         const info = pipelines['GPU-driven'].info;

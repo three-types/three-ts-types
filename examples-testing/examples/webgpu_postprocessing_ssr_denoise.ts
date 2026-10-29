@@ -23,10 +23,10 @@ import {
     renderOutput,
     saturation,
 } from 'three/tsl';
-import { ssr } from 'three/addons/tsl/display/SSRNode.js';
-import { temporalReproject } from 'three/addons/tsl/display/TemporalReprojectNode.js';
-import { recurrentDenoise } from 'three/addons/tsl/display/RecurrentDenoiseNode.js';
-import { sharpen } from 'three/addons/tsl/display/SharpenNode.js';
+import SSRNode, { ssr } from 'three/addons/tsl/display/SSRNode.js';
+import TemporalReprojectNode, { temporalReproject } from 'three/addons/tsl/display/TemporalReprojectNode.js';
+import RecurrentDenoiseNode, { recurrentDenoise } from 'three/addons/tsl/display/RecurrentDenoiseNode.js';
+import SharpenNode, { sharpen } from 'three/addons/tsl/display/SharpenNode.js';
 import { traa } from 'three/addons/tsl/display/TRAANode.js';
 
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -40,7 +40,7 @@ import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
 // but scoped to this example rather than modifying the core library.
 const _indirectSpecular = THREE.PhysicalLightingModel.prototype.indirectSpecular;
 THREE.PhysicalLightingModel.prototype.indirectSpecular = function (builder) {
-    builder.context.radiance = vec3(0);
+    (builder.context as any).radiance = vec3(0);
 
     if (this.clearcoatRadiance) {
         this.clearcoatRadiance.assign(vec3(0));
@@ -54,20 +54,20 @@ const OUTPUT_COMPARE_SSR = 9;
 
 const GRADED_OUTPUTS = new Set([0, 1, 3, 4, OUTPUT_COMPARE_DENOISE, OUTPUT_COMPARE_SSR]);
 
-const compareHint = document.getElementById('compare-hint');
+const compareHint = document.getElementById('compare-hint')!;
 
-function isCompareMode(output) {
+function isCompareMode(output: number) {
     return output === OUTPUT_COMPARE_DENOISE || output === OUTPUT_COMPARE_SSR;
 }
 
-function updateCompareHint(output) {
+function updateCompareHint(output: number) {
     compareHint.hidden = !isCompareMode(output);
 }
 
 const compareSplit = uniform(0.5);
 const compareResolution = uniform(new THREE.Vector2(window.innerWidth, window.innerHeight));
 
-function buildCompareNode(noisy, denoised) {
+function buildCompareNode(noisy: SharpenNode, denoised: SharpenNode) {
     const compareColor = mix(noisy, denoised, step(compareSplit, screenUV.x));
     const lineWidth = float(1).div(compareResolution.x);
     const onLine = float(1).sub(step(lineWidth, abs(screenUV.x.sub(compareSplit))));
@@ -122,10 +122,22 @@ const params = {
     },
 };
 
-let camera, scene, model, renderer, postProcessing, ssrNode, temporalReprojectNode, denoiseNode;
-let controls;
-let scenePassNode, combinedOutputNode, scenePassDepth, scenePassVelocity;
-let gammaUniform, contrastUniform, saturationUniform;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    model: THREE.Group,
+    renderer: THREE.WebGPURenderer,
+    postProcessing: THREE.RenderPipeline,
+    ssrNode: SSRNode,
+    temporalReprojectNode: TemporalReprojectNode,
+    denoiseNode: RecurrentDenoiseNode;
+let controls: OrbitControls;
+let scenePassNode: THREE.PassNode,
+    combinedOutputNode: THREE.Node<'vec4'>,
+    scenePassDepth: THREE.TextureNode,
+    scenePassVelocity: THREE.TextureNode;
+let gammaUniform: THREE.UniformNode<'float'>,
+    contrastUniform: THREE.UniformNode<'float'>,
+    saturationUniform: THREE.UniformNode<'float'>;
 
 init();
 
@@ -141,12 +153,12 @@ async function init() {
         gltf.scene.scale.multiplyScalar(0.1);
 
         gltf.scene.traverse(function (object) {
-            if (!object.material) return;
+            if (!(object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).material) return;
 
             object.castShadow = true;
             object.receiveShadow = true;
-            object.material.roughness = 0.3;
-            object.material.normalMap = null;
+            (object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).material.roughness = 0.3;
+            (object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).material.normalMap = null;
         });
 
         model = gltf.scene;
@@ -297,7 +309,7 @@ async function init() {
         'Accumulation Speed (Alpha)': 6,
     };
 
-    const ssrGui = renderer.inspector.createParameters('SSR settings');
+    const ssrGui = (renderer.inspector as Inspector).createParameters('SSR settings');
     ssrGui.add(params, 'output', outputTypes).onChange(updateOutputNode);
     ssrGui.add(params.ssr, 'quality', 0, 1).name('quality').onChange(applyParams);
     ssrGui.add(params.ssr, 'mirrorBias', 0, 1).name('mirror bias').onChange(applyParams);
@@ -309,11 +321,12 @@ async function init() {
     ssrGui.add(params.ssr, 'environmentIntensity', 0, 10).name('env intensity').onChange(applyParams);
     ssrGui.add(params, 'roughness', 0, 1).onChange(value => {
         scene.traverse(object => {
-            if (object.material) object.material.roughness = value;
+            if ((object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).material)
+                (object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).material.roughness = value;
         });
     });
 
-    const denoiseGui = renderer.inspector.createParameters('Denoise settings');
+    const denoiseGui = (renderer.inspector as Inspector).createParameters('Denoise settings');
     denoiseGui.add(params.denoise, 'enabled').name('enabled').onChange(applyParams);
     denoiseGui.add(params.denoise, 'lumaPhi', 0, 3).name('luma phi').onChange(applyParams);
     denoiseGui.add(params.denoise, 'depthPhi', 0, 50).name('depth phi').onChange(applyParams);
@@ -332,7 +345,7 @@ async function init() {
     // denoiseGui.add( params.denoise, 'flickerSuppression', 0, 1 ).name( 'flicker suppression' ).onChange( applyParams );
     // denoiseGui.add( params.denoise, 'adaptiveTrust', 0, 1 ).name( 'adaptive trust' ).onChange( applyParams );
 
-    const temporalReprojectGui = renderer.inspector.createParameters('Temporal Reproject settings');
+    const temporalReprojectGui = (renderer.inspector as Inspector).createParameters('Temporal Reproject settings');
     temporalReprojectGui.add(params.temporalReproject, 'maxFrames', 1, 128, 1).name('max frames').onChange(applyParams);
     temporalReprojectGui
         .add(params.temporalReproject, 'clampIntensity', 0, 1)
@@ -349,8 +362,8 @@ async function init() {
     temporalReprojectGui.close();
 
     // Concise UI for Directional Light controls
-    const lightGui = renderer.inspector.createParameters('Light').close();
-    ['x', 'y', 'z'].forEach(axis => {
+    const lightGui = (renderer.inspector as Inspector).createParameters('Light').close();
+    (['x', 'y', 'z'] as const).forEach(axis => {
         lightGui
             .add(directionalLight.position, axis, -30, 30)
             .name(axis.toUpperCase())
@@ -402,7 +415,7 @@ function applyParams() {
     }
 }
 
-function applyGrading(source) {
+function applyGrading(source: THREE.Node<'vec4'>) {
     let rgb = source.rgb;
 
     rgb = renderOutput(vec4(rgb, 1), THREE.AgXToneMapping, THREE.SRGBColorSpace).rgb;
@@ -413,7 +426,7 @@ function applyGrading(source) {
     return vec4(rgb, 1);
 }
 
-function applyPostProcessing(source) {
+function applyPostProcessing(source: THREE.Node<'vec4'>) {
     return sharpen(traa(applyGrading(source), scenePassDepth, scenePassVelocity, camera), 0);
 }
 
@@ -430,7 +443,7 @@ function applyPost() {
 function updateOutputNode() {
     if (!postProcessing) return;
 
-    let node;
+    let node: THREE.Node;
 
     switch (params.output) {
         case 0:
@@ -470,7 +483,7 @@ function updateOutputNode() {
     updateCompareHint(params.output);
 
     postProcessing.outputColorTransform = !GRADED_OUTPUTS.has(params.output);
-    postProcessing.outputNode = node;
+    postProcessing.outputNode = node!;
     postProcessing.needsUpdate = true;
 }
 
@@ -482,7 +495,7 @@ function onWindowResize() {
     compareResolution.value.set(window.innerWidth, window.innerHeight);
 }
 
-function onComparePointerMove(event) {
+function onComparePointerMove(event: PointerEvent) {
     if (!isCompareMode(params.output)) return;
 
     if (event.shiftKey) {

@@ -34,8 +34,17 @@ if (WebGPU.isAvailable() === false) {
     throw new Error('No WebGPU support');
 }
 
-let camera, scene, renderer, controls, timer;
-let pipelines, standardPipeline, helmets, shadedMaterial, visMaterial, visNodes;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    controls: FirstPersonControls,
+    timer: THREE.Timer;
+let pipelines: Record<string, MeshletDrawingPipeline>,
+    standardPipeline: THREE.StandardDrawingPipeline,
+    helmets: THREE.InstancedMesh,
+    shadedMaterial: THREE.MeshStandardNodeMaterial,
+    visMaterial: THREE.NodeMaterial,
+    visNodes: Record<string, THREE.Node>;
 
 const instanceCount = 15625; // 125x125 plane or 25x25x25 volume
 
@@ -97,9 +106,10 @@ async function init() {
 
     envTexture.mapping = THREE.EquirectangularReflectionMapping;
 
-    let sourceMesh;
+    let sourceMesh!: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>;
     gltf.scene.traverse(child => {
-        if (child.isMesh) sourceMesh = child;
+        if ((child as THREE.Mesh).isMesh)
+            sourceMesh = child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>;
     });
 
     // Bake the glTF node transform into the geometry (the helmet is authored z-up)
@@ -134,7 +144,7 @@ async function init() {
 
     // Vis material: unlit visualization of one channel. The pipeline feeds the surface of each pixel into the
     // node graph, like for the shaded material
-    const sampleMap = map => texture(map, uv());
+    const sampleMap = (map: THREE.Texture | null) => texture(map!, uv());
     const metalRough = sampleMap(shadedMaterial.roughnessMap); // glTF packs roughness (g) and metalness (b) in one texture
     const mappedNormal = normalMap(
         sampleMap(shadedMaterial.normalMap),
@@ -165,10 +175,10 @@ async function init() {
 
     updateGrid();
 
-    const totalTriangles = (instanceCount * geometry.index.count) / 3;
-    document.getElementById('triangleCount').innerText = new Intl.NumberFormat().format(totalTriangles);
+    const totalTriangles = (instanceCount * geometry.index!.count) / 3;
+    document.getElementById('triangleCount')!.innerText = new Intl.NumberFormat().format(totalTriangles);
 
-    const parameterGroup = renderer.inspector.createParameters('Parameters');
+    const parameterGroup = (renderer.inspector as Inspector).createParameters('Parameters');
 
     parameterGroup
         .add(options, 'Output', {
@@ -188,15 +198,17 @@ async function init() {
         .add(options, 'Rasterizer', { Hybrid: 'Hybrid', Hardware: 'Hardware', Basic: 'Basic' })
         .onChange(updateRasterizer);
 
-    const maxRasterSize = parameterGroup.add(pipelines['Hybrid'], 'maxRasterSize', 1, 64, 1).name('Max Raster Size');
+    const maxRasterSize = parameterGroup
+        .add(pipelines['Hybrid'] as VisibilityBufferDrawingPipeline, 'maxRasterSize', 1, 64, 1)
+        .name('Max Raster Size');
 
     parameterGroup.add(options, 'Grid', { XZ: 'XZ', XYZ: 'XYZ' }).onChange(updateGrid);
 
-    const lodThreshold = parameterGroup.add(options, 'LOD Threshold', 1, 15, 0.1).onChange(value => {
+    const lodThreshold = parameterGroup.add(options, 'LOD Threshold', 1, 15, 0.1).onChange((value: number) => {
         for (const pipeline of Object.values(pipelines)) pipeline.lodThreshold = value;
     });
 
-    const occlusionCulling = parameterGroup.add(options, 'Occlusion Culling').onChange(value => {
+    const occlusionCulling = parameterGroup.add(options, 'Occlusion Culling').onChange((value: boolean) => {
         for (const pipeline of Object.values(pipelines)) pipeline.occlusionCulling = value;
     });
 
@@ -243,7 +255,8 @@ function updateMode() {
 function updateGrid() {
     let index = 0;
 
-    const setPosition = (x, y, z) => helmets.setMatrixAt(index++, matrix.makeTranslation(x, y, z));
+    const setPosition = (x: number, y: number, z: number) =>
+        helmets.setMatrixAt(index++, matrix.makeTranslation(x, y, z));
 
     if (options.Grid === 'XZ') {
         for (let x = 0; x < 125; x++) {

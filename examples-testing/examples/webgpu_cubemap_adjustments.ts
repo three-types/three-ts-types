@@ -21,7 +21,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let camera, scene, renderer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
 
 init();
 
@@ -69,7 +69,7 @@ async function init() {
     const rotateY1Matrix = new THREE.Matrix4();
     const rotateY2Matrix = new THREE.Matrix4();
 
-    const getEnvironmentNode = (reflectNode, positionNode) => {
+    const getEnvironmentNode = (reflectNode: THREE.Node<'vec3'>, positionNode: THREE.Node<'vec3'>) => {
         const custom1UV = reflectNode.xyz.mul(uniform(rotateY1Matrix).setGroup(renderGroup));
         const custom2UV = reflectNode.xyz.mul(uniform(rotateY2Matrix).setGroup(renderGroup));
         const mixCubeMaps = mix(
@@ -135,7 +135,7 @@ async function init() {
 
     // gui
 
-    const gui = renderer.inspector.createParameters('Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
     gui.add(adjustments, 'mix', -1, 2, 0.01);
     gui.add({ blurBackground: blurNode.value }, 'blurBackground', 0, 1, 0.01).onChange(value => {
         blurNode.value = value;

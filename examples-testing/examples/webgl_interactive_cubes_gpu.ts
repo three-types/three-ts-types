@@ -5,12 +5,12 @@ import Stats from 'three/addons/libs/stats.module.js';
 import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
 import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js';
 
-let container, stats;
-let camera, controls, scene, renderer;
-let pickingTexture, pickingScene;
-let highlightBox;
+let container: HTMLElement, stats: Stats;
+let camera: THREE.PerspectiveCamera, controls: TrackballControls, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+let pickingTexture: THREE.WebGLRenderTarget, pickingScene: THREE.Scene;
+let highlightBox: THREE.Mesh;
 
-const pickingData = [];
+const pickingData: { position: THREE.Vector3; rotation: THREE.Euler; scale: THREE.Vector3 }[] = [];
 
 const pointer = new THREE.Vector2();
 const offset = new THREE.Vector3(10, 10, 10);
@@ -19,7 +19,7 @@ const clearColor = new THREE.Color();
 init();
 
 function init() {
-    container = document.getElementById('container');
+    container = document.getElementById('container')!;
 
     camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 10000);
     camera.position.z = 1000;
@@ -73,7 +73,7 @@ function init() {
 					`,
     });
 
-    function applyId(geometry, id) {
+    function applyId(geometry: THREE.BoxGeometry, id: number) {
         const position = geometry.attributes.position;
         const array = new Int16Array(position.count);
         array.fill(id);
@@ -83,7 +83,7 @@ function init() {
         geometry.setAttribute('id', bufferAttribute);
     }
 
-    function applyVertexColors(geometry, color) {
+    function applyVertexColors(geometry: THREE.BoxGeometry, color: THREE.Color) {
         const position = geometry.attributes.position;
         const colors = [];
 
@@ -166,7 +166,7 @@ function init() {
 
 //
 
-function onPointerMove(e) {
+function onPointerMove(e: PointerEvent) {
     pointer.x = e.clientX;
     pointer.y = e.clientY;
 }

@@ -35,13 +35,24 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 import WebGPU from 'three/addons/capabilities/WebGPU.js';
 
-let container;
-let camera, scene, renderer;
+let container: HTMLDivElement;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
 
 let last = performance.now();
 
-let pointer, raycaster;
-let computeVelocity, computePosition, effectController;
+let pointer: THREE.Vector2, raycaster: THREE.Raycaster;
+let computeVelocity: THREE.ComputeNode,
+    computePosition: THREE.ComputeNode,
+    effectController: {
+        separation: THREE.UniformNode<'float'>;
+        alignment: THREE.UniformNode<'float'>;
+        cohesion: THREE.UniformNode<'float'>;
+        freedom: THREE.UniformNode<'float'>;
+        now: THREE.UniformNode<'float'>;
+        deltaTime: THREE.UniformNode<'float'>;
+        rayOrigin: THREE.UniformNode<'vec3'>;
+        rayDirection: THREE.UniformNode<'vec3'>;
+    };
 
 const BIRDS = 8192;
 const SPEED_LIMIT = 9.0;
@@ -61,7 +72,7 @@ class BirdGeometry extends THREE.BufferGeometry {
 
         let v = 0;
 
-        function verts_push() {
+        function verts_push(...args: number[]) {
             for (let i = 0; i < arguments.length; i++) {
                 vertices.array[v++] = arguments[i];
             }
@@ -378,7 +389,7 @@ function init() {
 
     window.addEventListener('resize', onWindowResize);
 
-    const gui = renderer.inspector.createParameters('Birds settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Birds settings');
     gui.add(effectController.separation, 'value', 0.0, 100.0, 1.0).name('Separation');
     gui.add(effectController.alignment, 'value', 0.0, 100, 0.001).name('Alignment ');
     gui.add(effectController.cohesion, 'value', 0.0, 100, 0.025).name('Cohesion');
@@ -391,7 +402,7 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function onPointerMove(event) {
+function onPointerMove(event: PointerEvent) {
     if (event.isPrimary === false) return;
 
     pointer.x = (event.clientX / window.innerWidth) * 2.0 - 1.0;

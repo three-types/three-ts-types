@@ -6,11 +6,11 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let camera, scene, renderer;
-let renderPipeline;
-let spheres,
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let renderPipeline: THREE.RenderPipeline;
+let spheres: THREE.Group,
     rotate = true;
-let mixer, timer;
+let mixer: THREE.AnimationMixer, timer: THREE.Timer;
 
 init();
 
@@ -37,7 +37,9 @@ function init() {
         const object = gltf.scene;
         mixer = new THREE.AnimationMixer(object);
 
-        const material = object.children[0].children[0].material;
+        const material = (
+            object.children[0].children[0] as THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhysicalMaterial>
+        ).material;
 
         // add glow effect
         material.mrtNode = mrt({ mask: output.add(1) });
@@ -55,7 +57,7 @@ function init() {
     spheres = new THREE.Group();
     scene.add(spheres);
 
-    function addSphere(color, mrtNode = null) {
+    function addSphere(color: number, mrtNode: THREE.MRTNode | null = null) {
         const distance = 1;
         const id = spheres.children.length;
         const rotation = THREE.MathUtils.degToRad(id * 90);

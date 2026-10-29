@@ -6,8 +6,8 @@ import { PLYLoader } from 'three/addons/loaders/PLYLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let camera, scene, renderer;
-let controls;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let controls: OrbitControls;
 
 init();
 
@@ -133,7 +133,7 @@ function init() {
 
     // gui
 
-    const gui = renderer.inspector.createParameters('Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
     gui.add(softEnabled, 'value', { hard: 0, soft: 1 }).name('mode');
     gui.add(softDistance, 'value', 0.1, 2, 0.01).name('soft distance');
     gui.add(softContrast, 'value', 1, 6, 0.01).name('soft contrast');

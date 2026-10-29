@@ -11,9 +11,9 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
 
 import { TSLGraphLoader } from 'three/addons/inspector/extensions/tsl-graph/TSLGraphLoader.js';
 
-let camera, scene, renderer;
-let controls;
-let prefab;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let controls: OrbitControls;
+let prefab: THREE.Group;
 
 init();
 
@@ -40,8 +40,8 @@ async function initTSLGraph() {
 
     // TSL Graph Editor
 
-    renderer.inspector.onExtension('TSL Graph', async tslGraph => {
-        renderer.inspector.setActiveTab(tslGraph);
+    (renderer.inspector as Inspector).onExtension('TSL Graph', async tslGraph => {
+        (renderer.inspector as Inspector).setActiveTab(tslGraph);
 
         // Apply TSL Graph from Local Storage if exists
         // Every time a TSL Graph is changed, it will be stored in the local storage
@@ -62,7 +62,7 @@ async function initTSLGraph() {
     // Active TSL Graph Editor
     // Only is needed if you don't activate it from the GUI
 
-    renderer.inspector.setActiveExtension('TSL Graph', true);
+    (renderer.inspector as Inspector).setActiveExtension('TSL Graph', true);
 }
 
 async function init() {
@@ -122,20 +122,23 @@ async function init() {
     resize();
 
     window.addEventListener('resize', resize);
-    renderer.inspector.addEventListener('resize', resize);
+    (renderer.inspector as Inspector).addEventListener('resize', resize);
 }
 
-async function createShaderBall(material, position = new THREE.Vector3()) {
+async function createShaderBall(material: THREE.NodeMaterial, position = new THREE.Vector3()) {
     const model = prefab.clone();
     model.position.copy(position);
     scene.add(model);
 
     //
 
-    const calibrationMesh = model.getObjectByName('Calibration_Mesh');
+    const calibrationMesh = model.getObjectByName('Calibration_Mesh') as THREE.Mesh<
+        THREE.BufferGeometry,
+        THREE.NodeMaterial
+    >;
     calibrationMesh.material = material;
 
-    const previewMesh = model.getObjectByName('Preview_Mesh');
+    const previewMesh = model.getObjectByName('Preview_Mesh') as THREE.Mesh<THREE.BufferGeometry, THREE.NodeMaterial>;
     previewMesh.material = material;
 
     calibrationMesh.renderOrder = 1;
@@ -143,7 +146,7 @@ async function createShaderBall(material, position = new THREE.Vector3()) {
 }
 
 function initGUI() {
-    const gui = renderer.inspector.createParameters('Shader Ball');
+    const gui = (renderer.inspector as Inspector).createParameters('Shader Ball');
 
     const API = {
         showCalibrationMesh: true,
@@ -162,11 +165,11 @@ function initGUI() {
             setVisibility('Preview_Mesh', value);
         });
 
-    renderer.inspector.hide();
+    (renderer.inspector as Inspector).hide();
 }
 
 function resize() {
-    const size = renderer.inspector.getSize();
+    const size = (renderer.inspector as Inspector).getSize();
     const width = window.innerWidth - size.width;
     const height = window.innerHeight - size.height;
 
@@ -184,9 +187,9 @@ function render() {
 
 //
 
-function setVisibility(name, visible) {
+function setVisibility(name: string, visible: boolean) {
     scene.traverse(function (node) {
-        if (node.isMesh) {
+        if ((node as THREE.Mesh).isMesh) {
             if (node.name == name) node.visible = visible;
         }
     });
@@ -195,26 +198,32 @@ function setVisibility(name, visible) {
 function createGroudMaterial() {
     const material = new THREE.MeshBasicNodeMaterial();
 
-    const grid = Fn(([coord, lineWidth = float(0.01), dotSize = float(0.03)]) => {
-        // https://bgolus.medium.com/the-best-darn-grid-shader-yet-727f9278b9d8
+    const grid = Fn(
+        ([coord, lineWidth = float(0.01), dotSize = float(0.03)]: [
+            THREE.Node<'vec2'>,
+            THREE.Node<'float'>,
+            THREE.Node<'float'>,
+        ]) => {
+            // https://bgolus.medium.com/the-best-darn-grid-shader-yet-727f9278b9d8
 
-        const g = fract(coord);
-        const fw = fwidth(coord);
-        const gx = abs(g.x.sub(0.5));
-        const gy = abs(g.y.sub(0.5));
+            const g = fract(coord);
+            const fw = fwidth(coord);
+            const gx = abs(g.x.sub(0.5));
+            const gy = abs(g.y.sub(0.5));
 
-        const lineX = saturate(lineWidth.sub(gx).div(fw.x).add(0.5));
-        const lineY = saturate(lineWidth.sub(gy).div(fw.y).add(0.5));
-        const lines = max(lineX, lineY);
+            const lineX = saturate(lineWidth.sub(gx).div(fw.x).add(0.5));
+            const lineY = saturate(lineWidth.sub(gy).div(fw.y).add(0.5));
+            const lines = max(lineX, lineY);
 
-        const squareDist = max(gx, gy);
-        const aa = max(fw.x, fw.y);
-        const dots = smoothstep(dotSize.add(aa), dotSize.sub(aa), squareDist);
+            const squareDist = max(gx, gy);
+            const aa = max(fw.x, fw.y);
+            const dots = smoothstep(dotSize.add(aa), dotSize.sub(aa), squareDist);
 
-        return max(dots, lines);
-    });
+            return max(dots, lines);
+        },
+    );
 
-    const fade = Fn(([radius = float(10.0), falloff = float(1.0)]) => {
+    const fade = Fn(([radius = float(10.0), falloff = float(1.0)]: [THREE.Node<'float'>, THREE.Node<'float'>]) => {
         return smoothstep(radius, radius.sub(falloff), length(positionWorld));
     });
 

@@ -16,8 +16,14 @@ if (WebGPU.isAvailable() === false) {
     throw new Error('No WebGPU support');
 }
 
-let camera, scene, renderer, controls, timer;
-let pipelines, standardPipeline, teapots;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    controls: FirstPersonControls,
+    timer: THREE.Timer;
+let pipelines: Record<string, MeshletDrawingPipeline>,
+    standardPipeline: THREE.StandardDrawingPipeline,
+    teapots: THREE.InstancedMesh;
 
 // the visibility buffer addresses up to 131072 objects per render list
 
@@ -107,14 +113,14 @@ async function init() {
 
     scene.add(teapots);
 
-    const totalTriangles = (instanceCount * geometry.index.count) / 3;
-    document.getElementById('triangleCount').innerText = new Intl.NumberFormat().format(totalTriangles);
+    const totalTriangles = (instanceCount * geometry.index!.count) / 3;
+    document.getElementById('triangleCount')!.innerText = new Intl.NumberFormat().format(totalTriangles);
 
-    const parameterGroup = renderer.inspector.createParameters('Parameters');
+    const parameterGroup = (renderer.inspector as Inspector).createParameters('Parameters');
 
     const mode = parameterGroup
         .add(options, 'Mode', { 'Meshlet Debug': 'Meshlet Debug', Texture: 'Texture' })
-        .onChange(value => {
+        .onChange((value: string) => {
             for (const pipeline of Object.values(pipelines)) pipeline.debug = value === 'Meshlet Debug';
         });
 
@@ -122,13 +128,15 @@ async function init() {
         .add(options, 'Rasterizer', { Hybrid: 'Hybrid', Hardware: 'Hardware', Basic: 'Basic' })
         .onChange(updateRasterizer);
 
-    const maxRasterSize = parameterGroup.add(pipelines['Hybrid'], 'maxRasterSize', 1, 64, 1).name('Max Raster Size');
+    const maxRasterSize = parameterGroup
+        .add(pipelines['Hybrid'] as VisibilityBufferDrawingPipeline, 'maxRasterSize', 1, 64, 1)
+        .name('Max Raster Size');
 
-    const lodThreshold = parameterGroup.add(options, 'LOD Threshold', 1, 15, 0.1).onChange(value => {
+    const lodThreshold = parameterGroup.add(options, 'LOD Threshold', 1, 15, 0.1).onChange((value: number) => {
         for (const pipeline of Object.values(pipelines)) pipeline.lodThreshold = value;
     });
 
-    const occlusionCulling = parameterGroup.add(options, 'Occlusion Culling').onChange(value => {
+    const occlusionCulling = parameterGroup.add(options, 'Occlusion Culling').onChange((value: boolean) => {
         for (const pipeline of Object.values(pipelines)) pipeline.occlusionCulling = value;
     });
 

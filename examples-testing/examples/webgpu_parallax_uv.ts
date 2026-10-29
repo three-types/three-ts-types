@@ -6,9 +6,9 @@ import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let camera, scene, renderer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
 
-let controls;
+let controls: OrbitControls;
 
 init();
 
@@ -103,7 +103,7 @@ async function init() {
 
     // gui
 
-    const gui = renderer.inspector.createParameters('Scene');
+    const gui = (renderer.inspector as Inspector).createParameters('Scene');
     gui.add(scene, 'backgroundBlurriness', 0, 1).name('Background Blurriness');
     gui.add(parallaxScale, 'value', 0.2, 0.5).name('Parallax Scale');
     gui.add(scaleUV, 'value', 1, 5).name('UV Scale');

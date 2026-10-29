@@ -15,11 +15,14 @@ import {
 import { HTMLMesh } from 'three/addons/interactive/HTMLMesh.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let camera, scene, renderer, renderPipeline;
-let controller1, controller2;
-let controllerGrip1, controllerGrip2;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    renderPipeline: THREE.DirectRenderPipeline;
+let controller1: THREE.XRTargetRaySpace, controller2: THREE.XRTargetRaySpace;
+let controllerGrip1: THREE.XRGripSpace, controllerGrip2: THREE.XRGripSpace;
 
-let room;
+let room: THREE.LineSegments;
 
 let count = 0;
 const radius = 0.08;
@@ -28,22 +31,22 @@ const relativeVelocity = new THREE.Vector3();
 
 const timer = new THREE.Timer();
 timer.connect(document);
-const funfairs = [];
+const funfairs: THREE.Mesh[] = [];
 const train = new THREE.Object3D();
 const rcdelta = timer.getDelta() * 0.8; // slow down simulation
 const PI2 = Math.PI * 2;
-let rccamera = null;
-let rcscene = null;
+let rccamera: THREE.PerspectiveCamera | null = null;
+let rcscene: THREE.Scene | null = null;
 
 const tempMatrix = new THREE.Matrix4();
-let raycaster = null;
+let raycaster: THREE.Raycaster | null = null;
 
 const curve = (function () {
     const vector = new THREE.Vector3();
     const vector2 = new THREE.Vector3();
 
     return {
-        getPointAt: function (t) {
+        getPointAt: function (t: number) {
             t = t * PI2;
 
             const x = Math.sin(t * 3) * Math.cos(t * 4) * 50;
@@ -53,7 +56,7 @@ const curve = (function () {
             return vector.set(x, y, z).multiplyScalar(2);
         },
 
-        getTangentAt: function (t) {
+        getTangentAt: function (t: number) {
             const delta = 0.0001;
             const t1 = Math.max(0, t - delta);
             const t2 = Math.min(1, t + delta);
@@ -63,20 +66,20 @@ const curve = (function () {
     };
 })();
 
-let horseCamera = null;
-let horseScene = null;
-let horseMixer = null;
+let horseCamera: THREE.PerspectiveCamera | null = null;
+let horseScene: THREE.Scene | null = null;
+let horseMixer: THREE.AnimationMixer | null = null;
 let horseTheta = 0;
 let horseMesh = null;
 const horseRadius = 600;
 
-let guiScene = null;
-let guiCamera = null;
-let guiGroup = null;
+let guiScene: THREE.Scene | null = null;
+let guiCamera: THREE.OrthographicCamera | null = null;
+let guiGroup: InteractiveGroup | null = null;
 
-let rollercoasterLayer = null;
-let horseLayer = null;
-let guiLayer = null;
+let rollercoasterLayer: THREE.Mesh | null = null;
+let horseLayer: THREE.Mesh | null = null;
+let guiLayer: THREE.Mesh | null = null;
 
 const parameters = {
     radius: 0.6,
@@ -90,13 +93,13 @@ const parameters = {
 
 init();
 
-function getIntersections(controller) {
+function getIntersections(controller: THREE.XRTargetRaySpace) {
     tempMatrix.identity().extractRotation(controller.matrixWorld);
 
-    raycaster.ray.origin.setFromMatrixPosition(controller.matrixWorld);
-    raycaster.ray.direction.set(0, 0, -1).applyMatrix4(tempMatrix);
+    raycaster!.ray.origin.setFromMatrixPosition(controller.matrixWorld);
+    raycaster!.ray.direction.set(0, 0, -1).applyMatrix4(tempMatrix);
 
-    return raycaster.intersectObjects(scene.children, false);
+    return raycaster!.intersectObjects(scene.children, false);
 }
 
 function init() {
@@ -159,15 +162,15 @@ function init() {
 
     // controllers
 
-    function onSqueezeStart() {
+    function onSqueezeStart(this: THREE.XRTargetRaySpace) {
         this.userData.isSelecting = true;
     }
 
-    function onSqueezeEnd() {
+    function onSqueezeEnd(this: THREE.XRTargetRaySpace) {
         this.userData.isSelecting = false;
     }
 
-    function onSelectStart(event) {
+    function onSelectStart(this: THREE.XRTargetRaySpace, event: { target: THREE.XRTargetRaySpace }) {
         const controller = event.target;
 
         const intersections = getIntersections(controller);
@@ -185,11 +188,10 @@ function init() {
             }
 
             if (intersections[x].object == guiLayer) {
-                const uv = intersections[x].uv;
-                guiGroup.children[0].dispatchEvent({
+                const uv = intersections[x].uv!;
+                (guiGroup!.children[0] as HTMLMesh).dispatchEvent({
                     type: 'mousedown',
                     data: { x: uv.x, y: 1 - uv.y },
-                    target: guiGroup,
                 });
                 hadSelection = true;
             }
@@ -198,10 +200,10 @@ function init() {
         this.userData.isSelecting = hadSelection === false;
     }
 
-    function onSelectEnd() {
-        horseLayer.visible = true;
-        scene.attach(rollercoasterLayer);
-        guiGroup.children[0].dispatchEvent({ type: 'mouseup', data: { x: 0, y: 0 }, target: guiGroup });
+    function onSelectEnd(this: THREE.XRTargetRaySpace) {
+        horseLayer!.visible = true;
+        scene.attach(rollercoasterLayer!);
+        (guiGroup!.children[0] as HTMLMesh).dispatchEvent({ type: 'mouseup', data: { x: 0, y: 0 } });
         this.userData.isSelecting = false;
     }
 
@@ -210,10 +212,10 @@ function init() {
     controller1.addEventListener('selectend', onSelectEnd);
     controller1.addEventListener('squeezestart', onSqueezeStart);
     controller1.addEventListener('squeezeend', onSqueezeEnd);
-    controller1.addEventListener('connected', function (event) {
-        this.add(buildController(event.data));
+    controller1.addEventListener('connected', function (this: THREE.XRTargetRaySpace, event: { data: XRInputSource }) {
+        this.add(buildController(event.data)!);
     });
-    controller1.addEventListener('disconnected', function () {
+    controller1.addEventListener('disconnected', function (this: THREE.XRTargetRaySpace) {
         this.remove(this.children[0]);
     });
     scene.add(controller1);
@@ -223,10 +225,10 @@ function init() {
     controller2.addEventListener('selectend', onSelectEnd);
     controller2.addEventListener('squeezestart', onSqueezeStart);
     controller2.addEventListener('squeezeend', onSqueezeEnd);
-    controller2.addEventListener('connected', function (event) {
-        this.add(buildController(event.data));
+    controller2.addEventListener('connected', function (this: THREE.XRTargetRaySpace, event: { data: XRInputSource }) {
+        this.add(buildController(event.data)!);
     });
-    controller2.addEventListener('disconnected', function () {
+    controller2.addEventListener('disconnected', function (this: THREE.XRTargetRaySpace) {
         this.remove(this.children[0]);
     });
     scene.add(controller2);
@@ -277,7 +279,7 @@ function init() {
 
     // environment
 
-    let rcgeometry = new THREE.PlaneGeometry(500, 500, 15, 15);
+    let rcgeometry: THREE.BufferGeometry = new THREE.PlaneGeometry(500, 500, 15, 15);
     rcgeometry.rotateX(-Math.PI / 2);
 
     const positions = rcgeometry.attributes.position.array;
@@ -297,7 +299,7 @@ function init() {
 
     rcgeometry.computeVertexNormals();
 
-    let rcmaterial = new THREE.MeshLambertMaterial({
+    let rcmaterial: THREE.Material = new THREE.MeshLambertMaterial({
         color: 0x407000,
     });
 
@@ -399,7 +401,7 @@ function init() {
     loader.load('models/gltf/Horse.glb', function (gltf) {
         horseMesh = gltf.scene.children[0];
         horseMesh.scale.set(1.5, 1.5, 1.5);
-        horseScene.add(horseMesh);
+        horseScene!.add(horseMesh);
 
         horseMixer = new THREE.AnimationMixer(horseMesh);
 
@@ -454,16 +456,16 @@ function init() {
 }
 
 function renderGui() {
-    renderer.render(guiScene, guiCamera);
+    renderer.render(guiScene!, guiCamera!);
 }
 
 function renderQuad() {
     horseTheta += 0.1;
 
-    horseCamera.position.x = horseRadius * Math.sin(THREE.MathUtils.degToRad(horseTheta));
-    horseCamera.position.z = horseRadius * Math.cos(THREE.MathUtils.degToRad(horseTheta));
+    horseCamera!.position.x = horseRadius * Math.sin(THREE.MathUtils.degToRad(horseTheta));
+    horseCamera!.position.z = horseRadius * Math.cos(THREE.MathUtils.degToRad(horseTheta));
 
-    horseCamera.lookAt(0, 150, 0);
+    horseCamera!.lookAt(0, 150, 0);
 
     if (horseMixer) {
         const time = Date.now();
@@ -473,7 +475,7 @@ function renderQuad() {
         prevTime = time;
     }
 
-    renderer.render(horseScene, horseCamera);
+    renderer.render(horseScene!, horseCamera!);
 }
 
 const rcposition = new THREE.Vector3();
@@ -511,11 +513,11 @@ function renderRollercoaster() {
 
     //
 
-    renderer.render(rcscene, rccamera);
+    renderer.render(rcscene!, rccamera!);
 }
 
-function buildController(data) {
-    let geometry, material;
+function buildController(data: XRInputSource) {
+    let geometry: THREE.BufferGeometry, material: THREE.Material;
 
     switch (data.targetRayMode) {
         case 'tracked-pointer':
@@ -541,7 +543,7 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function handleController(controller) {
+function handleController(controller: THREE.XRTargetRaySpace) {
     if (controller.userData.isSelecting) {
         const object = room.children[count++];
 
@@ -557,8 +559,8 @@ function handleController(controller) {
     const intersections = getIntersections(controller);
     for (let x = 0; x < intersections.length; x++) {
         if (intersections[x].object == guiLayer) {
-            const uv = intersections[x].uv;
-            guiGroup.children[0].dispatchEvent({ type: 'mousemove', data: { x: uv.x, y: 1 - uv.y }, target: guiGroup });
+            const uv = intersections[x].uv!;
+            (guiGroup!.children[0] as HTMLMesh).dispatchEvent({ type: 'mousemove', data: { x: uv.x, y: 1 - uv.y } });
         }
     }
 }
@@ -572,7 +574,7 @@ function render() {
     handleController(controller2);
 
     // rotate horse
-    horseLayer.rotation.y -= 0.02;
+    horseLayer!.rotation.y -= 0.02;
 
     //
     const delta = timer.getDelta() * 0.8;

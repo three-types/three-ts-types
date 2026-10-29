@@ -26,16 +26,32 @@ const LENGTH = BLOCKS * SPACING;
 const CAR_COUNT = 48;
 const palette = [0x23d9ff, 0xff527b, 0xffbe53, 0xab79ff, 0x64ffc9, 0xff71df];
 
-let camera, scene, renderer, renderPipeline, controls, timer;
-let cars, carWindows, carLamps, carWheels;
-let beams, helpers, pointHelpers, spotHelpers;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    renderPipeline: THREE.RenderPipeline,
+    controls: OrbitControls,
+    timer: THREE.Timer;
+let cars: THREE.InstancedMesh,
+    carWindows: THREE.InstancedMesh,
+    carLamps: THREE.InstancedMesh,
+    carWheels: THREE.InstancedMesh<THREE.BoxGeometry, THREE.MeshStandardMaterial>;
+let beams: THREE.InstancedMesh, helpers: THREE.Group, pointHelpers: THREE.Group, spotHelpers: THREE.Group;
 let elapsed = 0;
 let lightTime = 0;
 let tour = 0.4;
 
-const trams = [];
-const animatedPointLights = [];
-const animatedSpotLights = [];
+type Box = [number, number, number, number, number, number, number];
+
+const trams: THREE.Group[] = [];
+const animatedPointLights: { light: THREE.PointLight; origin: THREE.Vector3; intensity: number; phase: number }[] = [];
+const animatedSpotLights: {
+    light: THREE.SpotLight;
+    target: THREE.Vector3;
+    inset: number;
+    beam: number;
+    phase: number;
+}[] = [];
 const dummy = new THREE.Object3D();
 const color = new THREE.Color();
 const boxGeometry = new THREE.BoxGeometry();
@@ -101,11 +117,11 @@ async function init() {
     const ground = new THREE.Mesh(new THREE.PlaneGeometry(130, LENGTH + 30).rotateX(-Math.PI / 2), road);
     scene.add(ground);
 
-    const buildings = [];
-    const pavements = [];
-    const details = [];
-    const accents = [];
-    const windows = [];
+    const buildings: Box[] = [];
+    const pavements: Box[] = [];
+    const details: Box[] = [];
+    const accents: Box[] = [];
+    const windows: Box[] = [];
 
     // Two rows on either side of the avenue form a deep, continuous city.
 
@@ -208,9 +224,9 @@ async function init() {
                     });
 
                     const helper = new THREE.PointLightHelper(light, 0.12);
-                    helper.material.transparent = true;
-                    helper.material.opacity = 0.6;
-                    helper.material.depthWrite = false;
+                    (helper.material as THREE.Material).transparent = true;
+                    (helper.material as THREE.Material).opacity = 0.6;
+                    (helper.material as THREE.Material).depthWrite = false;
                     pointHelpers.add(helper);
                 }
 
@@ -249,9 +265,9 @@ async function init() {
                     });
 
                     const helper = new THREE.SpotLightHelper(light);
-                    helper.cone.material.transparent = true;
-                    helper.cone.material.opacity = 0.2;
-                    helper.cone.material.depthWrite = false;
+                    (helper.cone.material as THREE.Material).transparent = true;
+                    (helper.cone.material as THREE.Material).opacity = 0.2;
+                    (helper.cone.material as THREE.Material).depthWrite = false;
                     spotHelpers.add(helper);
 
                     addBox(
@@ -380,7 +396,7 @@ async function init() {
     renderPipeline = new THREE.RenderPipeline(renderer);
     renderPipeline.outputNode = sceneColor.add(glow);
 
-    const gui = renderer.inspector.createParameters('Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
     gui.add(pointLights, 'visible')
         .name('point lights')
         .onChange(value => (pointHelpers.visible = value));
@@ -398,11 +414,20 @@ async function init() {
     renderer.setAnimationLoop(animate);
 }
 
-function addBox(boxes, x, y, z, width, height, depth, tint) {
+function addBox(
+    boxes: Box[],
+    x: number,
+    y: number,
+    z: number,
+    width: number,
+    height: number,
+    depth: number,
+    tint: number,
+) {
     boxes.push([x, y, z, width, height, depth, tint]);
 }
 
-function setBeam(index, light, inset) {
+function setBeam(index: number, light: THREE.SpotLight, inset: number) {
     // Open cone from the lamp to the spotlight target.
 
     const length = light.position.distanceTo(light.target.position);
@@ -415,7 +440,7 @@ function setBeam(index, light, inset) {
     beams.setMatrixAt(index, beamTransform.matrix);
 }
 
-function animateLights(delta) {
+function animateLights(delta: number) {
     lightTime += delta;
 
     // Shopfront lights glide along the facades and pulse.
@@ -436,19 +461,28 @@ function animateLights(delta) {
     beams.instanceMatrix.needsUpdate = true;
 
     if (helpers.visible) {
-        for (const helper of pointHelpers.children) helper.update();
-        for (const helper of spotHelpers.children) helper.update();
+        for (const helper of pointHelpers.children) (helper as THREE.PointLightHelper).update();
+        for (const helper of spotHelpers.children) (helper as THREE.SpotLightHelper).update();
     }
 }
 
-function setInstance(mesh, index, x, y, z, width, height, depth) {
+function setInstance(
+    mesh: THREE.InstancedMesh,
+    index: number,
+    x: number,
+    y: number,
+    z: number,
+    width: number,
+    height: number,
+    depth: number,
+) {
     dummy.position.set(x, y, z);
     dummy.scale.set(width, height, depth);
     dummy.updateMatrix();
     mesh.setMatrixAt(index, dummy.matrix);
 }
 
-function createInstances(name, boxes, material) {
+function createInstances(name: string, boxes: Box[], material: THREE.Material) {
     const mesh = new THREE.InstancedMesh(boxGeometry, material, boxes.length);
     mesh.name = name;
 

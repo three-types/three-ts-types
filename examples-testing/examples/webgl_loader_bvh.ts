@@ -6,8 +6,8 @@ import { BVHLoader } from 'three/addons/loaders/BVHLoader.js';
 const timer = new THREE.Timer();
 timer.connect(document);
 
-let camera, controls, scene, renderer;
-let mixer;
+let camera: THREE.PerspectiveCamera, controls: OrbitControls, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+let mixer: THREE.AnimationMixer;
 
 init();
 

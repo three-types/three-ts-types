@@ -13,7 +13,7 @@ export default Lut3DNode;
 
 export const lut3D: (
     node: Node,
-    lut: Node,
+    lut: TextureNode,
     size: number,
-    intensity: Node,
+    intensity: Node<"float"> | number,
 ) => Lut3DNode;

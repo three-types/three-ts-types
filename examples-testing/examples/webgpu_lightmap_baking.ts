@@ -9,7 +9,8 @@ import { VXGIVolume } from 'three/addons/lighting/vxgi/VXGIVolume.js';
 import { vxgiIrradiance } from 'three/addons/lighting/vxgi/VXGIIrradiance.js';
 import { lightProbeGridIrradiance } from 'three/addons/tsl/lighting/LightProbeGridNode.js';
 import { traa } from 'three/addons/tsl/display/TRAANode.js';
-import { unwrapUVs } from 'three/addons/utils/unwrapUVs.js';
+import { unwrapUVs, UnwrapUVsResult } from 'three/addons/utils/unwrapUVs.js';
+import TRAANode from 'three/addons/tsl/display/TRAANode.js';
 
 import WebGPU from 'three/addons/capabilities/WebGPU.js';
 
@@ -19,9 +20,21 @@ if (WebGPU.isAvailable() === false) {
     throw new Error('No WebGPU support');
 }
 
-let camera, scene, renderer, controls, renderPipeline;
-let light, meshes, materials, atlas, status;
-let source, lightMapper, bakedPass, livePass, liveOutput;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    controls: OrbitControls,
+    renderPipeline: THREE.RenderPipeline;
+let light: THREE.PointLight,
+    meshes: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>[],
+    materials: Set<THREE.MeshStandardMaterial>,
+    atlas: UnwrapUVsResult,
+    status: HTMLElement;
+let source: LightProbeGrid | VXGIVolume | undefined,
+    lightMapper: LightMapper,
+    bakedPass: THREE.PassNode,
+    livePass: THREE.PassNode | undefined,
+    liveOutput: THREE.PassNode | TRAANode | undefined;
 let needsBake = true;
 
 // shifts the per-pixel cone noise of the live view every frame, like the light map samples
@@ -37,7 +50,7 @@ const params = {
 // light probes are deterministic and only need a few samples to antialias the light map,
 // the VXGI cones are rotated per sample and converge over more samples
 
-const bakeSamples = { 'Light Probe': 16, VXGI: 64 };
+const bakeSamples: Record<string, number> = { 'Light Probe': 16, VXGI: 64 };
 
 init();
 
@@ -149,9 +162,12 @@ async function init() {
 
     // Light map UVs
 
-    meshes = scene.children.filter(object => object.isMesh);
+    meshes = scene.children.filter(object => (object as THREE.Mesh).isMesh) as THREE.Mesh<
+        THREE.BufferGeometry,
+        THREE.MeshStandardMaterial
+    >[];
     materials = new Set(meshes.map(mesh => mesh.material));
-    atlas = unwrapUVs(scene, { resolution: params.resolution, padding: 3 });
+    atlas = unwrapUVs(scene, { resolution: params.resolution, padding: 3 })!;
 
     // "Baked GI" shows the light map while it accumulates,
     // "Live GI" evaluates the raw irradiance per pixel every frame
@@ -159,11 +175,11 @@ async function init() {
     renderPipeline = new THREE.RenderPipeline(renderer);
     bakedPass = pass(scene, camera);
 
-    status = document.getElementById('status');
+    status = document.getElementById('status')!;
 
     // GUI
 
-    const gui = renderer.inspector.createParameters('Light Baking');
+    const gui = (renderer.inspector as Inspector).createParameters('Light Baking');
     gui.add(params, 'output', ['Baked GI', 'Live GI']).name('Output').onChange(setOutput);
     gui.add(params, 'algorithm', ['Light Probe', 'VXGI']).name('GI Algorithm').onChange(requestBake);
     gui.add(params, 'resolution', [256, 1024, 2048, 4096]).name('Light Map Resolution').onChange(requestBake);
@@ -188,19 +204,24 @@ function bake() {
 
     if (atlas.resolution !== params.resolution) {
         const geometries = new Set(meshes.map(mesh => mesh.geometry));
-        atlas = unwrapUVs(scene, { resolution: params.resolution, padding: 3 });
+        atlas = unwrapUVs(scene, { resolution: params.resolution, padding: 3 })!;
 
         for (const geometry of geometries) geometry.dispose();
     }
 
-    let irradiance;
+    let irradiance: (
+        position: THREE.Node<'vec3'>,
+        normal: THREE.Node<'vec3'>,
+        sample?: THREE.Node<'float'>,
+    ) => THREE.Node<'vec3'>;
 
     if (params.algorithm === 'Light Probe') {
         const probes = new LightProbeGrid(6, 5, 6, 8, 8, 8);
         probes.position.set(0, 2.5, 0);
         probes.updateBoundingBox();
         probes.bake(renderer, scene, { cubemapSize: 32, near: 0.05, far: 20 });
-        irradiance = (position, normal) => lightProbeGridIrradiance(probes, position, normal);
+        irradiance = (position: THREE.Node<'vec3'>, normal: THREE.Node<'vec3'>) =>
+            lightProbeGridIrradiance(probes, position, normal);
         source = probes;
     } else {
         const volume = new VXGIVolume();
@@ -249,7 +270,7 @@ function setOutput() {
 
     for (const material of materials) material.lightMapIntensity = live ? 0 : 1;
 
-    renderPipeline.outputNode = live ? liveOutput : bakedPass;
+    renderPipeline.outputNode = live ? liveOutput! : bakedPass;
     renderPipeline.needsUpdate = true;
 }
 

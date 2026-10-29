@@ -9,8 +9,12 @@ import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js'
 import { MeshPhongNodeMaterial } from 'three/webgpu';
 import { sin, time, vec3, positionWorld } from 'three/tsl';
 
-let container, stats, gui, guiStatsEl;
-let camera, controls, scene, renderer, material;
+let container: HTMLElement, stats: Stats, gui: GUI, guiStatsEl: HTMLDivElement;
+let camera: THREE.PerspectiveCamera,
+    controls: OrbitControls,
+    scene: THREE.Scene,
+    renderer: THREE.WebGLRenderer,
+    material: MeshPhongNodeMaterial;
 
 // gui
 
@@ -33,10 +37,11 @@ initMesh();
 //
 
 function clean() {
-    const meshes = [];
+    const meshes: THREE.Mesh<THREE.BufferGeometry, THREE.Material>[] = [];
 
     scene.traverse(function (object) {
-        if (object.isMesh) meshes.push(object);
+        if ((object as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).isMesh)
+            meshes.push(object as THREE.Mesh<THREE.BufferGeometry, THREE.Material>);
     });
 
     for (let i = 0; i < meshes.length; i++) {
@@ -53,7 +58,7 @@ const randomizeMatrix = (function () {
     const quaternion = new THREE.Quaternion();
     const scale = new THREE.Vector3();
 
-    return function (matrix) {
+    return function (matrix: THREE.Matrix4) {
         position.x = Math.random() * 40 - 20;
         position.y = Math.random() * 40 - 20;
         position.z = Math.random() * 40 - 20;
@@ -106,7 +111,7 @@ function initMesh() {
     });
 }
 
-function makeInstanced(geometry) {
+function makeInstanced(geometry: THREE.BufferGeometry | THREE.InstancedBufferGeometry) {
     const matrix = new THREE.Matrix4();
     const mesh = new THREE.InstancedMesh(geometry, material, api.count);
 
@@ -127,7 +132,7 @@ function makeInstanced(geometry) {
     ].join('<br/>');
 }
 
-function makeMerged(geometry) {
+function makeMerged(geometry: THREE.BufferGeometry | THREE.InstancedBufferGeometry) {
     const geometries = [];
     const matrix = new THREE.Matrix4();
 
@@ -152,7 +157,7 @@ function makeMerged(geometry) {
     ].join('<br/>');
 }
 
-function makeNaive(geometry) {
+function makeNaive(geometry: THREE.BufferGeometry | THREE.InstancedBufferGeometry) {
     const matrix = new THREE.Matrix4();
 
     for (let i = 0; i < api.count; i++) {
@@ -191,7 +196,7 @@ function init() {
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(width, height);
     renderer.setAnimationLoop(animate);
-    container = document.getElementById('container');
+    container = document.getElementById('container')!;
     container.appendChild(renderer.domElement);
 
     // scene
@@ -260,7 +265,7 @@ function animate() {
 
 //
 
-function getGeometryByteLength(geometry) {
+function getGeometryByteLength(geometry: THREE.BufferGeometry | THREE.InstancedBufferGeometry) {
     let total = 0;
 
     if (geometry.index) total += geometry.index.array.byteLength;
@@ -273,7 +278,7 @@ function getGeometryByteLength(geometry) {
 }
 
 // Source: https://stackoverflow.com/a/18650828/1314762
-function formatBytes(bytes, decimals) {
+function formatBytes(bytes: number, decimals: number) {
     if (bytes === 0) return '0 bytes';
 
     const k = 1024;

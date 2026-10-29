@@ -1,10 +1,10 @@
 import * as THREE from 'three';
 
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { GLTF, GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let camera, scene, renderer;
-let start,
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+let start: number,
     heroTime = 'loading',
     backgroundCount = 0;
 
@@ -67,21 +67,22 @@ function init() {
     render();
 }
 
-function onBackgroundLoad(gltf) {
+function onBackgroundLoad(gltf: GLTF) {
     // Background models are downloaded and parsed, but only the critical model is displayed.
 
-    const textures = new Set();
+    const textures = new Set<THREE.Texture>();
 
     gltf.scene.traverse(object => {
-        if (!object.isMesh) return;
+        if (!(object as THREE.Mesh).isMesh) return;
+        const mesh = object as THREE.Mesh;
 
-        object.geometry.dispose();
+        mesh.geometry.dispose();
 
-        const materials = Array.isArray(object.material) ? object.material : [object.material];
+        const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
 
         for (const material of materials) {
             for (const value of Object.values(material)) {
-                if (value && value.isTexture) textures.add(value);
+                if (value && (value as THREE.Texture).isTexture) textures.add(value as THREE.Texture);
             }
 
             material.dispose();
@@ -94,7 +95,7 @@ function onBackgroundLoad(gltf) {
     updateStatus();
 }
 
-function onHeroLoad(gltf) {
+function onHeroLoad(gltf: GLTF) {
     heroTime = (performance.now() - start).toFixed(0) + ' ms';
 
     const model = gltf.scene;
@@ -113,11 +114,11 @@ function onHeroLoad(gltf) {
 }
 
 function updateStatus() {
-    document.getElementById('status').textContent =
+    document.getElementById('status')!.textContent =
         `Main asset (auto): ${heroTime}; background assets (${backgroundPriority}): ${backgroundCount} / ${models.length}`;
 }
 
-function onError(error) {
+function onError(error: unknown) {
     console.error(error);
 }
 
