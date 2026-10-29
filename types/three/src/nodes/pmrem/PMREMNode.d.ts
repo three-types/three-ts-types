@@ -15,6 +15,6 @@ export default PMREMNode;
 
 export const pmremTexture: (
     value: Texture,
-    uvNode?: Node,
-    levelNode?: Node,
+    uvNode?: Node | null,
+    levelNode?: Node | number | null,
 ) => PMREMNode;

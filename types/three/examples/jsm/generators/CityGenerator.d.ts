@@ -4,7 +4,7 @@ import { CarGenerator } from "./city/CarGenerator.js";
 import { HydrantGenerator } from "./city/HydrantGenerator.js";
 import { PersonGenerator } from "./city/PersonGenerator.js";
 import { SidewalkGenerator } from "./city/SidewalkGenerator.js";
-import { SkyscraperGenerator } from "./city/SkyscraperGenerator.js";
+import { SkyscraperGenerator, SkyscraperMaterialOptions } from "./city/SkyscraperGenerator.js";
 import { StreetlightGenerator } from "./city/StreetlightGenerator.js";
 import { StreetTreeGenerator } from "./city/StreetTreeGenerator.js";
 import { TrafficlightGenerator } from "./city/TrafficlightGenerator.js";
@@ -122,6 +122,7 @@ export class CityGenerator {
 export function createBuildingMaterial(
     layout: CityGeneratorLayout,
     seed?: number | Node<"uint">,
+    options?: SkyscraperMaterialOptions,
 ): MeshStandardNodeMaterial;
 
 /**

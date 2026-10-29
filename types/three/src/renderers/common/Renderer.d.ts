@@ -29,6 +29,7 @@ import InspectorBase from "./InspectorBase.js";
 import Lighting from "./Lighting.js";
 import NodeLibrary from "./nodes/NodeLibrary.js";
 import ReadbackBuffer from "./ReadbackBuffer.js";
+import StandardDrawingPipeline from "./StandardDrawingPipeline.js";
 import XRManager from "./XRManager.js";
 
 declare module "../../scenes/Scene.js" {
@@ -248,6 +249,15 @@ declare class Renderer {
      */
     lighting: Lighting;
     /**
+     * Decides which objects of a scene are rendered and how they are submitted
+     * to the render list. Assigning a drawing pipeline binds it to this renderer.
+     * The default is a {@link StandardDrawingPipeline}. This property is experimental.
+     *
+     * @type {StandardDrawingPipeline}
+     */
+    set drawingPipeline(pipeline: StandardDrawingPipeline);
+    get drawingPipeline(): StandardDrawingPipeline;
+    /**
      * A callback function that defines what should happen when a device/context lost occurs.
      *
      * @type {Function}
@@ -391,6 +401,7 @@ declare class Renderer {
      * Compiles all materials in the given scene. This can be useful to avoid a
      * phenomenon which is called "shader compilation stutter", which occurs when
      * rendering an object with a new shader for the first time.
+     * The active drawing pipeline also prepares its geometry resources and compute pipelines.
      *
      * If you want to add a 3D object to an existing scene, use the third optional
      * parameter for applying the target scene. Note that the (target) scene's lighting
