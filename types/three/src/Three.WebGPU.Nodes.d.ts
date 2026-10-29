@@ -6,6 +6,7 @@ export { default as BundleGroup } from "./renderers/common/BundleGroup.js";
 export { default as DirectRenderPipeline } from "./renderers/common/DirectRenderPipeline.js";
 export { default as PMREMGenerator } from "./renderers/common/extras/PMREMGenerator.js";
 export { default as Lighting } from "./renderers/common/Lighting.js";
+export { default as StandardDrawingPipeline } from "./renderers/common/StandardDrawingPipeline.js";
 export { default as PostProcessing } from "./renderers/common/PostProcessing.js";
 export { default as QuadMesh } from "./renderers/common/QuadMesh.js";
 export { default as ReadbackBuffer } from "./renderers/common/ReadbackBuffer.js";
