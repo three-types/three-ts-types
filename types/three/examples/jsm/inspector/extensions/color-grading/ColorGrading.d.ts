@@ -30,5 +30,5 @@ export class ColorGrading extends Extension {
     serialize(): ColorGradingJSON;
     deserialize(data: ColorGradingJSON): void;
 
-    load(data: ColorGradingJSON | string): void;
+    load(data: Partial<ColorGradingJSON> | string): void;
 }
