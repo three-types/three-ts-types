@@ -41,6 +41,7 @@ declare class ImportanceSampledEnvironment {
      * @param {Node<vec3>} params.V - View-space direction to camera.
      * @param {Node<float>} params.alpha - GGX roughness (alpha).
      * @param {Node<vec3>} params.f0
+     * @param {Node<float>} [params.f90=1] - Grazing reflectance.
      * @return {Node<vec3>}
      */
     sampleEnvironmentBRDF(params: {
@@ -50,6 +51,7 @@ declare class ImportanceSampledEnvironment {
         V: Node<"vec3">;
         alpha: Node<"float">;
         f0: Node<"vec3">;
+        f90?: Node<"float">;
     }): Node<"vec3">;
     /**
      * Environment reflection for a screen-space miss, estimated with multiple importance
@@ -66,6 +68,7 @@ declare class ImportanceSampledEnvironment {
      * @param {Node<vec3>} params.V - View-space direction to camera.
      * @param {Node<float>} params.alpha - GGX roughness (alpha).
      * @param {Node<vec3>} params.f0
+     * @param {Node<float>} [params.f90=1] - Grazing reflectance.
      * @param {Node<vec4>} params.Xi2 - Second blue-noise sample (zw used for the CDF).
      * @return {Node<vec3>}
      */
@@ -76,6 +79,7 @@ declare class ImportanceSampledEnvironment {
         V: Node<"vec3">;
         alpha: Node<"float">;
         f0: Node<"vec3">;
+        f90?: Node<"float">;
         Xi2: Node<"vec4">;
     }): Node<"vec3">;
     dispose(): void;
