@@ -19821,10 +19821,10 @@ index b72e65a07..898c39fa0 100644
 +        loadFile(event.dataTransfer!.files[0]);
      });
  }
-diff --git a/examples-testing/examples/webgpu_materials_node_proxy.ts b/examples-testing/examples/webgpu_materials_node_proxy.ts
+diff --git a/examples-testing/examples/webgpu_materials_node_instance.ts b/examples-testing/examples/webgpu_materials_node_instance.ts
 index 964a75d5b..7d119e9ca 100644
---- a/examples-testing/examples/webgpu_materials_node_proxy.ts
-+++ b/examples-testing/examples/webgpu_materials_node_proxy.ts
+--- a/examples-testing/examples/webgpu_materials_node_instance.ts
++++ b/examples-testing/examples/webgpu_materials_node_instance.ts
 @@ -6,15 +6,20 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
@@ -19894,9 +19894,9 @@ index 964a75d5b..7d119e9ca 100644
 +    const disposed = new Set<THREE.Material>();
  
      for (const mesh of meshes) {
--        if (mesh.material.isProxyNodeMaterial) disposed.add(mesh.material.nodeMaterial);
-+        if ((mesh.material as THREE.ProxyNodeMaterial).isProxyNodeMaterial)
-+            disposed.add((mesh.material as THREE.ProxyNodeMaterial).nodeMaterial);
+-        if (mesh.material.isNodeMaterialInstance) disposed.add(mesh.material.nodeMaterial);
++        if ((mesh.material as THREE.NodeMaterialInstance).isNodeMaterialInstance)
++            disposed.add((mesh.material as THREE.NodeMaterialInstance).nodeMaterial);
  
 -        disposed.add(mesh.material);
 +        disposed.add(mesh.material as THREE.Material);
@@ -19904,7 +19904,7 @@ index 964a75d5b..7d119e9ca 100644
  
      if (params.material === 'Node Material per Mesh') {
 @@ -128,13 +134,18 @@ async function setMaterials() {
-         // one node material defines the shader, each proxy only stores its values
+         // one node material defines the shader, each instance only stores its values
  
          const nodeMaterial = new THREE.MeshStandardNodeMaterial(
 -            createNodes(materialReference('myColor'), materialReference('userData.phase')),
@@ -19915,10 +19915,10 @@ index 964a75d5b..7d119e9ca 100644
          );
  
          for (let i = 0; i < meshes.length; i++) {
-             // values read by materialReference(), userData is independent for each proxy
+             // values read by materialReference(), userData is independent for each instance
  
--            const material = new THREE.ProxyNodeMaterial(nodeMaterial);
-+            const material = new THREE.ProxyNodeMaterial(nodeMaterial) as THREE.ProxyNodeMaterial & {
+-            const material = new THREE.NodeMaterialInstance(nodeMaterial);
++            const material = new THREE.NodeMaterialInstance(nodeMaterial) as THREE.NodeMaterialInstance & {
 +                myColor: THREE.Color;
 +            };
              material.myColor = colors[i];
