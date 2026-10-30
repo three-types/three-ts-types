@@ -1,0 +1,209 @@
+import * as THREE from 'three/webgpu';
+import { densityFogFactor, mix, pass, positionLocal, reference, uniform, vec2 } from 'three/tsl';
+import { gaussianBlur } from 'three/addons/tsl/display/GaussianBlurNode.js';
+
+import { FirstPersonControls } from 'three/addons/controls/FirstPersonControls.js';
+import { Inspector } from 'three/addons/inspector/Inspector.js';
+import { TreeGenerator, createTreeMaterial } from 'three/addons/generators/TreeGenerator.js';
+
+let camera, scene, renderer, renderPipeline, controls;
+
+const timer = new THREE.Timer();
+
+const params = {
+    scatteringEnabled: true,
+};
+
+init();
+
+function init() {
+    camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 120);
+    camera.position.set(0.4, 1.7, 9); // ~human eye height
+
+    scene = new THREE.Scene();
+
+    // fog: a bright, cool haze. the background matches it so the trunks read
+    // as dark silhouettes that dissolve into depth — the scattering subject
+
+    scene.fog = new THREE.FogExp2(0xc6cace, 0.11);
+    scene.background = new THREE.Color(0xc6cace);
+    updateFogRange();
+
+    // Soft sky light reveals the bark nearby; the distant trees fade into silhouettes.
+
+    const treeMaterial = createTreeMaterial({ barkColor: 0x302c28, barkScale: new THREE.Vector3(35, 2, 35) });
+    treeMaterial.colorNode = treeMaterial.colorNode.mul(positionLocal.y.smoothstep(0, 0.5));
+
+    scene.add(new THREE.HemisphereLight(0xdce6ed, 0x292521, 1.5));
+
+    const skyLight = new THREE.DirectionalLight(0xdce6ed, 2);
+    skyLight.position.set(-3, 8, 5);
+    scene.add(skyLight);
+
+    // Bare deciduous trees with uneven crowns, gently curved trunks and fine twigs.
+
+    const variants = [];
+
+    const generator = new TreeGenerator(treeMaterial)
+        .setTaper(0.94)
+        .setTaperCurve(0.85)
+        .setLevels(5)
+        .setBranchAngle([62, 46, 38, 32])
+        .setAngleVariance(24)
+        .setLengthRatio(0.62)
+        .setLengthVariance(0.3)
+        .setBranchLengthFalloff(0.45)
+        .setMinLength(0.04)
+        .setDroop(0.08)
+        .setUpPull(0.18)
+        .setGnarl([0.045, 0.13, 0.2, 0.26, 0.3])
+        .setSectionLength(0.26)
+        .setRadialSegments(7)
+        .setRadiusExponent(2)
+        .setMinRadius(0.0007)
+        .setRootFlare(0.5)
+        .setFlareFrac(0.12)
+        .setChildStart(0.22);
+
+    for (let v = 0; v < 10; v++) {
+        const mesh = generator
+            .setSeed(v + 1)
+            .setTrunkLength(3.4 + v * 0.16)
+            .setTrunkRadius(0.065 + v * 0.004)
+            .setChildren([7 + (v % 3), 4, 3, 1])
+            .setTrunkClear(0.38 + (v % 4) * 0.05)
+            .build();
+
+        variants.push(mesh.geometry);
+    }
+
+    const placements = variants.map(() => []);
+
+    THREE.MathUtils.seededRandom(25);
+    const random = THREE.MathUtils.seededRandom;
+    const dummy = new THREE.Object3D();
+    const cols = 13,
+        rows = 12,
+        spacing = 1.9;
+
+    for (let i = 0; i < cols; i++) {
+        for (let j = 0; j < rows; j++) {
+            const v = Math.floor(random() * variants.length);
+
+            const x = (i - cols / 2) * spacing + (random() - 0.5) * spacing * 1.4;
+            const z = j * spacing - rows * spacing + 4.2 + (random() - 0.5) * spacing * 1.4;
+
+            dummy.position.set(x, 0, z);
+
+            const scale = 0.7 + random() * 0.65;
+            dummy.rotation.set((random() - 0.5) * 0.08, random() * Math.PI * 2, (random() - 0.5) * 0.08);
+            dummy.scale.set(scale, scale * (0.85 + random() * 0.3), scale);
+            dummy.updateMatrix();
+
+            placements[v].push(dummy.matrix.clone());
+        }
+    }
+
+    variants.forEach((geometry, v) => {
+        const list = placements[v];
+        const mesh = new THREE.InstancedMesh(geometry, treeMaterial, list.length);
+        for (let k = 0; k < list.length; k++) mesh.setMatrixAt(k, list[k]);
+        mesh.instanceMatrix.needsUpdate = true;
+        scene.add(mesh);
+    });
+
+    // a couple of dominant trunks close to the camera to anchor the depth
+
+    [
+        [-1.1, 4.9, 1.25, 1.1, 8],
+        [1.5, 4, 1.1, 0.3, 5],
+    ].forEach(([x, z, s, ry, v]) => {
+        const hero = new THREE.Mesh(variants[v], treeMaterial);
+        hero.position.set(x, 0, z);
+        hero.rotation.y = ry;
+        hero.scale.setScalar(s);
+        scene.add(hero);
+    });
+
+    // ground
+
+    const groundMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
+    const ground = new THREE.Mesh(new THREE.PlaneGeometry(600, 600).rotateX(-Math.PI / 2), groundMaterial);
+    scene.add(ground);
+
+    // renderer
+
+    renderer = new THREE.WebGPURenderer({ antialias: true });
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setAnimationLoop(animate);
+    renderer.inspector = new Inspector();
+    document.body.appendChild(renderer.domElement);
+
+    // controls
+
+    controls = new FirstPersonControls(camera, renderer.domElement);
+    controls.movementSpeed = 2;
+    controls.lookSpeed = 0.2;
+    controls.lookAt(-0.2, 1.7, -8);
+
+    renderPipeline = new THREE.RenderPipeline(renderer);
+
+    // uniforms
+
+    const density = reference('density', 'float', scene.fog);
+    const scattering = uniform(2);
+
+    // scene pass
+
+    const scenePass = pass(scene, camera);
+
+    const scenePassColor = scenePass.getTextureNode('output');
+    const scenePassViewZ = scenePass.getViewZNode();
+
+    // blur pass (always downsampled to improve performance)
+
+    const sceneColorBlurred = gaussianBlur(scenePassColor, vec2(scattering), 4, { resolutionScale: 0.5 });
+
+    // composite
+
+    const fogFactor = densityFogFactor(density).context({ getViewZ: () => scenePassViewZ });
+
+    const compositeNode = mix(scenePassColor, sceneColorBlurred, fogFactor);
+
+    renderPipeline.outputNode = compositeNode;
+
+    // gui
+
+    const gui = renderer.inspector.createParameters('Settings');
+    gui.add(scene.fog, 'density', 0.025, 0.16).step(0.0005).name('fog density').onChange(updateFogRange);
+    gui.add(scattering, 'value', 0, 5).name('scattering factor');
+    gui.add(params, 'scatteringEnabled')
+        .name('enable scattering')
+        .onChange(value => {
+            renderPipeline.outputNode = value === true ? compositeNode : scenePassColor;
+            renderPipeline.needsUpdate = true;
+        });
+
+    window.addEventListener('resize', resize);
+}
+
+function updateFogRange() {
+    // Clip where FogExp2 leaves only 0.1% of the unfogged scene color.
+    camera.far = Math.min(120, Math.sqrt(-Math.log(0.001)) / scene.fog.density);
+    camera.updateProjectionMatrix();
+}
+
+function resize() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+
+    renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+function animate() {
+    timer.update();
+    controls.update(timer.getDelta());
+
+    renderPipeline.render();
+}
