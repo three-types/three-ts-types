@@ -106,6 +106,16 @@ while :; do
     short=${sha:0:10}
     subject=$(git -C three.js log -1 --format=%s "$sha")
 
+    # Releases need a manual version bump in types/three/package.json (0.<rev>.9999). Hold
+    # here until that lands on master, then the next run ports the release commit itself.
+    if [[ $subject =~ ^r([0-9]+)$ ]]; then
+        types_rev=$(jq -r .version types/three/package.json | cut -d. -f2)
+        if ((types_rev < BASH_REMATCH[1])); then
+            echo "::warning::three.js released $subject ($short). Bump types/three/package.json to 0.${BASH_REMATCH[1]}.9999 on master to continue syncing."
+            break
+        fi
+    fi
+
     if ! is_relevant "$sha"; then
         log "Skipping $short (no typed paths): $subject"
         mark_triaged "$sha"
