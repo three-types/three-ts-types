@@ -6492,7 +6492,7 @@ index cd54fe8ea..3657ae50d 100644
              scene.remove(probes);
              probes.dispose();
 diff --git a/examples-testing/examples/webgl_lightprobes_complex.ts b/examples-testing/examples/webgl_lightprobes_complex.ts
-index 3e88c05a7..1a3b435a1 100644
+index d9fda0081..298313d62 100644
 --- a/examples-testing/examples/webgl_lightprobes_complex.ts
 +++ b/examples-testing/examples/webgl_lightprobes_complex.ts
 @@ -5,9 +5,9 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -6508,7 +6508,7 @@ index 3e88c05a7..1a3b435a1 100644
  
  init();
  
-@@ -215,7 +215,7 @@ async function init() {
+@@ -222,7 +222,7 @@ async function init() {
          resolution: 6,
      };
  
@@ -16596,800 +16596,6 @@ index f378f3384..d1562c106 100644
      // a cord sagging between two stanchions, with both ends buried in
      // their poles
  
-diff --git a/examples-testing/examples/webgpu_gpudriven_city.ts b/examples-testing/examples/webgpu_gpudriven_city.ts
-index 6ecc8262f..4c6eefe0b 100644
---- a/examples-testing/examples/webgpu_gpudriven_city.ts
-+++ b/examples-testing/examples/webgpu_gpudriven_city.ts
-@@ -33,15 +33,34 @@ import { CityGenerator, createBuildingMaterial, createRoadMaterial } from 'three
- import { MeshletDrawingPipeline } from 'three/addons/pipelines/MeshletDrawingPipeline.js';
- import { VisibilityBufferDrawingPipeline } from 'three/addons/pipelines/VisibilityBufferDrawingPipeline.js';
- 
--let camera, scene, renderer, controls, timer;
--let cityGroup, tilesGroup, ground, materials, city, renderPipeline;
--let sky, sun, sunLight, pmremGenerator, envScene, envRenderTarget, cityBounds;
--let pipelines,
--    hazeDensity,
--    postProcessing = [];
--let curvedWorld, curvatureNode;
--
--const keys = {};
-+let camera: THREE.PerspectiveCamera,
-+    scene: THREE.Scene,
-+    renderer: THREE.WebGPURenderer,
-+    controls: PointerLockControls | FirstPersonControls,
-+    timer: THREE.Timer;
-+let cityGroup: THREE.Group,
-+    tilesGroup: THREE.Group,
-+    ground: THREE.Mesh<THREE.PlaneGeometry, THREE.Material>,
-+    materials: { building: THREE.MeshStandardNodeMaterial; buildingFar: THREE.MeshStandardNodeMaterial },
-+    city: CityGenerator,
-+    renderPipeline: THREE.RenderPipeline;
-+let sky: SkyMesh,
-+    sun: THREE.Vector3,
-+    sunLight: THREE.DirectionalLight,
-+    pmremGenerator: THREE.PMREMGenerator,
-+    envScene: THREE.Scene,
-+    envRenderTarget: THREE.CubeRenderTarget,
-+    cityBounds: THREE.Box3;
-+let pipelines: {
-+        'gpu-driven': MeshletDrawingPipeline;
-+        'visibility-buffer': VisibilityBufferDrawingPipeline;
-+        default: THREE.StandardDrawingPipeline;
-+    },
-+    hazeDensity: THREE.UniformNode<'float', number>,
-+    postProcessing: THREE.Node[] = [];
-+let curvedWorld: THREE.OverrideContextNode, curvatureNode: THREE.UniformNode<'float', number>;
-+
-+const keys: Record<string, boolean> = {};
- 
- const EYE_HEIGHT = 1.7;
- const WALK_SPEED = 6;
-@@ -118,7 +137,7 @@ async function init() {
-         default: renderer.drawingPipeline,
-     };
- 
--    renderer.drawingPipeline = pipelines[parameters.pipeline];
-+    renderer.drawingPipeline = pipelines[parameters.pipeline as keyof typeof pipelines];
- 
-     await renderer.init();
- 
-@@ -148,7 +167,7 @@ async function init() {
-     setCameraMode(parameters.camera);
- 
-     renderer.domElement.addEventListener('click', () => {
--        if (parameters.camera === 'walk') controls.lock();
-+        if (parameters.camera === 'walk') (controls as PointerLockControls).lock();
-     });
- 
-     window.addEventListener('keydown', event => (keys[event.code] = true));
-@@ -229,7 +248,7 @@ async function init() {
-     // distance d rises by the curvature times d², the rise inside of the sphere of radius r varies by at most
-     // the curvature times 2dr + r²
- 
--    const getBoundingSphere = (sphere, viewPosition) => {
-+    const getBoundingSphere = (sphere: THREE.Node<'vec4'>, viewPosition: THREE.Node<'vec3'>) => {
-         const d = sphere.xz.sub(viewPosition.xz).length();
-         const r = sphere.w;
- 
-@@ -248,7 +267,7 @@ async function init() {
-             [
-                 modelViewProjection,
-                 builder =>
--                    builder.camera === camera && !builder.material.vertexNode
-+                    builder.camera === camera && !(builder.material as THREE.NodeMaterial).vertexNode
-                         ? curvedProjection().toVar()
-                         : modelViewProjection,
-             ],
-@@ -262,13 +281,13 @@ async function init() {
- 
-     // parameters
- 
--    const gui = renderer.inspector.createParameters('City');
-+    const gui = (renderer.inspector as Inspector).createParameters('City');
-     gui.add(parameters, 'seed', 0, 100, 1).debounce(300).onChange(generateCity);
-     gui.add(parameters, 'tiles', 1, 10, 1).debounce(300).onChange(generateCity);
-     gui.add(parameters, 'timeOfDay', 6, 18, 0.1).name('time of day').onChange(updateSun);
-     gui.add(renderer, 'toneMappingExposure', 0.01, 1).name('exposure');
--    gui.add(parameters, 'haze', 0, 4, 0.1).onChange(value => (hazeDensity.value = 0.00035 * value));
--    gui.add(parameters, 'shadows').onChange(value => {
-+    gui.add(parameters, 'haze', 0, 4, 0.1).onChange((value: number) => (hazeDensity.value = 0.00035 * value));
-+    gui.add(parameters, 'shadows').onChange((value: boolean) => {
-         sunLight.castShadow = value;
-         sunLight.shadow.needsUpdate = true;
-     });
-@@ -283,8 +302,8 @@ async function init() {
-         if (curved !== curvatureNode.value > 0) setupPostProcessing();
-     });
-     gui.add(parameters, 'camera', ['walk', 'fly']).onChange(setCameraMode);
--    gui.add(parameters, 'pipeline', Object.keys(pipelines)).onChange(value => {
--        renderer.drawingPipeline = pipelines[value];
-+    gui.add(parameters, 'pipeline', Object.keys(pipelines)).onChange((value: string) => {
-+        renderer.drawingPipeline = pipelines[value as keyof typeof pipelines];
-         sunLight.shadow.needsUpdate = true;
- 
-         // the static bundle group is only used by the meshlet drawing pipelines
-@@ -294,20 +313,20 @@ async function init() {
-     gui.add(parameters, 'static').name('static bundle').onChange(generateCity);
-     gui.add(parameters, 'occlusion')
-         .name('occlusion culling')
--        .onChange(value => {
-+        .onChange((value: boolean) => {
-             pipelines['gpu-driven'].occlusionCulling = value;
-             pipelines['visibility-buffer'].occlusionCulling = value;
-         });
-     gui.add(pipelines['gpu-driven'], 'depthPrepass').name('depth prepass');
-     gui.add(parameters, 'lod', 0, 8, 0.1)
-         .name('lod (pixels)')
--        .onChange(value => {
-+        .onChange((value: number) => {
-             pipelines['gpu-driven'].lodThreshold = value;
-             pipelines['visibility-buffer'].lodThreshold = value;
-         });
-     gui.add(parameters, 'shadowLod', 0, 8, 0.5)
-         .name('shadow lod (texels)')
--        .onChange(value => {
-+        .onChange((value: number) => {
-             pipelines['gpu-driven'].shadowLodThreshold = value;
-             pipelines['visibility-buffer'].shadowLodThreshold = value;
-             sunLight.shadow.needsUpdate = true;
-@@ -327,7 +346,7 @@ async function init() {
-     gui.add(parameters, 'furniture').name('street furniture').onChange(updateProps);
-     gui.add(parameters, 'meshlets')
-         .name('show meshlets')
--        .onChange(value => {
-+        .onChange((value: boolean) => {
-             pipelines['gpu-driven'].debug = value;
-             pipelines['visibility-buffer'].debug = value;
-             renderer.toneMapping = value ? THREE.NoToneMapping : THREE.ACESFilmicToneMapping;
-@@ -337,7 +356,7 @@ async function init() {
- 
-     // the geometry of the meshlet drawing pipelines is processed and the pipelines are compiled before the first frame
- 
--    await postProcessing[0].compileAsync(renderer);
-+    await (postProcessing[0] as THREE.PassNode).compileAsync(renderer);
- 
-     renderer.setAnimationLoop(animate);
- }
-@@ -351,7 +370,7 @@ function getCurvature() {
- function setupPostProcessing() {
-     for (const node of postProcessing) node.dispose();
- 
--    let scenePass, colorNode;
-+    let scenePass: THREE.PassNode, colorNode: THREE.Node<'vec4'>;
- 
-     if (parameters.antialiasing === 'traa') {
-         // the thin windows of distant towers are resolved over several frames, the velocity
-@@ -384,7 +403,10 @@ function setupPostProcessing() {
-     renderPipeline.outputNode = colorNode.add(bloomPass);
-     renderPipeline.needsUpdate = true;
- 
--    postProcessing = colorNode.isTextureNode === true ? [scenePass, bloomPass] : [scenePass, colorNode, bloomPass];
-+    postProcessing =
-+        (colorNode as THREE.TextureNode).isTextureNode === true
-+            ? [scenePass, bloomPass]
-+            : [scenePass, colorNode, bloomPass];
- }
- 
- function updateSun() {
-@@ -458,36 +480,37 @@ function updateBuildingMaterial() {
-     materials.building = createBuildingMaterial(city.layout, city.seedNode, getBuildingOptions());
- 
-     tilesGroup.traverse(object => {
--        if (object.material === previous) object.material = materials.building;
-+        if ((object as THREE.Mesh).material === previous) (object as THREE.Mesh).material = materials.building;
-     });
- 
-     previous.dispose();
- 
--    if (tilesGroup.isBundleGroup) tilesGroup.needsUpdate = true;
-+    if ((tilesGroup as THREE.BundleGroup).isBundleGroup) (tilesGroup as THREE.BundleGroup).needsUpdate = true;
- 
-     sunLight.shadow.needsUpdate = true;
- }
- 
--function updateDetailDistance(value) {
-+function updateDetailDistance(value: number) {
-     if (parameters.farMaterial === false) return;
- 
-     tilesGroup.traverse(object => {
--        if (object.isLOD) object.levels[1].distance = value;
-+        if ((object as THREE.LOD).isLOD) (object as THREE.LOD).levels[1].distance = value;
-     });
- 
--    if (tilesGroup.isBundleGroup) tilesGroup.needsUpdate = true;
-+    if ((tilesGroup as THREE.BundleGroup).isBundleGroup) (tilesGroup as THREE.BundleGroup).needsUpdate = true;
- }
- 
- function updateProps() {
-     tilesGroup.traverse(object => {
-         for (const key in props) {
--            if (props[key].includes(object.name)) object.visible = parameters[key];
-+            if (props[key as keyof typeof props].includes(object.name))
-+                object.visible = parameters[key as keyof typeof props];
-         }
-     });
- 
-     // the render bundle of a static bundle group is recorded again
- 
--    if (tilesGroup.isBundleGroup) tilesGroup.needsUpdate = true;
-+    if ((tilesGroup as THREE.BundleGroup).isBundleGroup) (tilesGroup as THREE.BundleGroup).needsUpdate = true;
- 
-     sunLight.shadow.needsUpdate = true;
- }
-@@ -505,10 +528,10 @@ function generateCity() {
-     // each tower is the first level of a LOD object, the same geometry with the cheaper material is the second
- 
-     if (parameters.farMaterial) {
--        const skyscrapers = [];
-+        const skyscrapers: THREE.Mesh[] = [];
- 
-         cityGroup.traverse(child => {
--            if (child.name === 'Skyscraper') skyscrapers.push(child);
-+            if (child.name === 'Skyscraper') skyscrapers.push(child as THREE.Mesh);
-         });
- 
-         for (const tower of skyscrapers) {
-@@ -516,7 +539,7 @@ function generateCity() {
-             lod.position.copy(tower.position);
-             lod.quaternion.copy(tower.quaternion);
-             lod.scale.copy(tower.scale);
--            tower.parent.add(lod);
-+            tower.parent!.add(lod);
- 
-             tower.position.set(0, 0, 0);
-             tower.quaternion.identity();
-@@ -593,19 +616,19 @@ function generateCity() {
- 
-     cityGroup.traverse(child => {
-         if (child.name === 'Skyscraper') {
--            const geometry = child.geometry;
-+            const geometry = (child as THREE.Mesh).geometry;
-             triangles += (geometry.index !== null ? geometry.index.count : geometry.attributes.position.count) / 3;
-         }
-     });
- 
-     const towers = city.towers.length * tiles * tiles;
--    document.getElementById('stats').textContent =
-+    document.getElementById('stats')!.textContent =
-         `${new Intl.NumberFormat().format(towers)} towers, ${new Intl.NumberFormat().format(Math.round(triangles * tiles * tiles))} triangles`;
- }
- 
- // walking along a street at eye height, or flying over the city
- 
--function setCameraMode(mode) {
-+function setCameraMode(mode: string) {
-     if (controls) controls.dispose();
- 
-     if (mode === 'walk') {
-@@ -640,14 +663,14 @@ function animate() {
-     if (parameters.camera === 'walk') {
-         const distance = (keys.ShiftLeft || keys.ShiftRight ? RUN_SPEED : WALK_SPEED) * delta;
- 
--        if (keys.KeyW) controls.moveForward(distance);
--        if (keys.KeyS) controls.moveForward(-distance);
--        if (keys.KeyD) controls.moveRight(distance);
--        if (keys.KeyA) controls.moveRight(-distance);
-+        if (keys.KeyW) (controls as PointerLockControls).moveForward(distance);
-+        if (keys.KeyS) (controls as PointerLockControls).moveForward(-distance);
-+        if (keys.KeyD) (controls as PointerLockControls).moveRight(distance);
-+        if (keys.KeyA) (controls as PointerLockControls).moveRight(-distance);
- 
-         camera.position.y = EYE_HEIGHT;
-     } else {
--        controls.update(delta);
-+        (controls as FirstPersonControls).update(delta);
-     }
- 
-     renderPipeline.render();
-diff --git a/examples-testing/examples/webgpu_gpudriven_ibl.ts b/examples-testing/examples/webgpu_gpudriven_ibl.ts
-index d3992e7f1..15c251dd1 100644
---- a/examples-testing/examples/webgpu_gpudriven_ibl.ts
-+++ b/examples-testing/examples/webgpu_gpudriven_ibl.ts
-@@ -34,8 +34,17 @@ if (WebGPU.isAvailable() === false) {
-     throw new Error('No WebGPU support');
- }
- 
--let camera, scene, renderer, controls, timer;
--let pipelines, standardPipeline, helmets, shadedMaterial, visMaterial, visNodes;
-+let camera: THREE.PerspectiveCamera,
-+    scene: THREE.Scene,
-+    renderer: THREE.WebGPURenderer,
-+    controls: FirstPersonControls,
-+    timer: THREE.Timer;
-+let pipelines: Record<string, MeshletDrawingPipeline>,
-+    standardPipeline: THREE.StandardDrawingPipeline,
-+    helmets: THREE.InstancedMesh,
-+    shadedMaterial: THREE.MeshStandardNodeMaterial,
-+    visMaterial: THREE.NodeMaterial,
-+    visNodes: Record<string, THREE.Node>;
- 
- const instanceCount = 15625; // 125x125 plane or 25x25x25 volume
- 
-@@ -97,9 +106,10 @@ async function init() {
- 
-     envTexture.mapping = THREE.EquirectangularReflectionMapping;
- 
--    let sourceMesh;
-+    let sourceMesh!: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>;
-     gltf.scene.traverse(child => {
--        if (child.isMesh) sourceMesh = child;
-+        if ((child as THREE.Mesh).isMesh)
-+            sourceMesh = child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>;
-     });
- 
-     // Bake the glTF node transform into the geometry (the helmet is authored z-up)
-@@ -134,7 +144,7 @@ async function init() {
- 
-     // Vis material: unlit visualization of one channel. The pipeline feeds the surface of each pixel into the
-     // node graph, like for the shaded material
--    const sampleMap = map => texture(map, uv());
-+    const sampleMap = (map: THREE.Texture | null) => texture(map!, uv());
-     const metalRough = sampleMap(shadedMaterial.roughnessMap); // glTF packs roughness (g) and metalness (b) in one texture
-     const mappedNormal = normalMap(
-         sampleMap(shadedMaterial.normalMap),
-@@ -165,10 +175,10 @@ async function init() {
- 
-     updateGrid();
- 
--    const totalTriangles = (instanceCount * geometry.index.count) / 3;
--    document.getElementById('triangleCount').innerText = new Intl.NumberFormat().format(totalTriangles);
-+    const totalTriangles = (instanceCount * geometry.index!.count) / 3;
-+    document.getElementById('triangleCount')!.innerText = new Intl.NumberFormat().format(totalTriangles);
- 
--    const parameterGroup = renderer.inspector.createParameters('Parameters');
-+    const parameterGroup = (renderer.inspector as Inspector).createParameters('Parameters');
- 
-     parameterGroup
-         .add(options, 'Output', {
-@@ -188,15 +198,17 @@ async function init() {
-         .add(options, 'Rasterizer', { Hybrid: 'Hybrid', Hardware: 'Hardware', Basic: 'Basic' })
-         .onChange(updateRasterizer);
- 
--    const maxRasterSize = parameterGroup.add(pipelines['Hybrid'], 'maxRasterSize', 1, 64, 1).name('Max Raster Size');
-+    const maxRasterSize = parameterGroup
-+        .add(pipelines['Hybrid'] as VisibilityBufferDrawingPipeline, 'maxRasterSize', 1, 64, 1)
-+        .name('Max Raster Size');
- 
-     parameterGroup.add(options, 'Grid', { XZ: 'XZ', XYZ: 'XYZ' }).onChange(updateGrid);
- 
--    const lodThreshold = parameterGroup.add(options, 'LOD Threshold', 1, 15, 0.1).onChange(value => {
-+    const lodThreshold = parameterGroup.add(options, 'LOD Threshold', 1, 15, 0.1).onChange((value: number) => {
-         for (const pipeline of Object.values(pipelines)) pipeline.lodThreshold = value;
-     });
- 
--    const occlusionCulling = parameterGroup.add(options, 'Occlusion Culling').onChange(value => {
-+    const occlusionCulling = parameterGroup.add(options, 'Occlusion Culling').onChange((value: boolean) => {
-         for (const pipeline of Object.values(pipelines)) pipeline.occlusionCulling = value;
-     });
- 
-@@ -243,7 +255,8 @@ function updateMode() {
- function updateGrid() {
-     let index = 0;
- 
--    const setPosition = (x, y, z) => helmets.setMatrixAt(index++, matrix.makeTranslation(x, y, z));
-+    const setPosition = (x: number, y: number, z: number) =>
-+        helmets.setMatrixAt(index++, matrix.makeTranslation(x, y, z));
- 
-     if (options.Grid === 'XZ') {
-         for (let x = 0; x < 125; x++) {
-diff --git a/examples-testing/examples/webgpu_gpudriven_instanced.ts b/examples-testing/examples/webgpu_gpudriven_instanced.ts
-index 33d734c95..16cfd7882 100644
---- a/examples-testing/examples/webgpu_gpudriven_instanced.ts
-+++ b/examples-testing/examples/webgpu_gpudriven_instanced.ts
-@@ -22,14 +22,19 @@ const parameters = {
-     rotate: true,
- };
- 
--const status = document.getElementById('status');
--const stats = document.getElementById('stats');
-+const status = document.getElementById('status')!;
-+const stats = document.getElementById('stats')!;
- const timer = new THREE.Timer();
- 
--let renderer, scene, camera, controls, pipelines, sunLight;
--let geometry,
--    material,
--    statues = null;
-+let renderer: THREE.WebGPURenderer,
-+    scene: THREE.Scene,
-+    camera: THREE.PerspectiveCamera,
-+    controls: OrbitControls,
-+    pipelines: { 'GPU-driven': MeshletDrawingPipeline; [key: string]: THREE.StandardDrawingPipeline },
-+    sunLight: THREE.DirectionalLight;
-+let geometry: THREE.BufferGeometry,
-+    material: THREE.MeshStandardNodeMaterial,
-+    statues: THREE.InstancedMesh | null = null;
- 
- init().catch(error => {
-     status.textContent = error.message;
-@@ -101,7 +106,7 @@ async function init() {
-     // stand the statue on the ground with a height of 4 units
- 
-     geometry.computeBoundingBox();
--    const box = geometry.boundingBox;
-+    const box = geometry.boundingBox!;
-     const size = box.getSize(new THREE.Vector3());
-     geometry.translate(-(box.min.x + box.max.x) / 2, -box.min.y, -(box.min.z + box.max.z) / 2);
-     geometry.scale(4 / size.y, 4 / size.y, 4 / size.y);
-@@ -178,7 +183,7 @@ async function prepare() {
-         await renderer.compileAsync(scene, camera);
-         status.textContent = '';
-     } catch (error) {
--        status.textContent = error.message;
-+        status.textContent = (error as Error).message;
-         console.error(error);
-     } finally {
-         renderer.setAnimationLoop(animate);
-@@ -188,7 +193,7 @@ async function prepare() {
- function createGUI() {
-     const pipeline = pipelines['GPU-driven'];
- 
--    const gui = renderer.inspector.createParameters('Settings');
-+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
-     gui.add(parameters, 'pipeline', Object.keys(pipelines)).name('Pipeline').onChange(prepare);
-     gui.add(parameters, 'statues', { '1,000': 1000, '4,000': 4000, '10,000': 10000 })
-         .name('Statues')
-@@ -198,27 +203,27 @@ function createGUI() {
-         });
-     gui.add(parameters, 'lod', 1, 8, 0.5)
-         .name('LOD error (px)')
--        .onChange(value => {
-+        .onChange((value: number) => {
-             pipeline.lodThreshold = value;
-             pipeline.shadowLodThreshold = value;
-             sunLight.shadow.needsUpdate = true;
-         });
-     gui.add(parameters, 'occlusion')
-         .name('Occlusion culling')
--        .onChange(value => {
-+        .onChange((value: boolean) => {
-             pipeline.occlusionCulling = value;
-             prepare();
-         });
-     gui.add(parameters, 'meshlets')
-         .name('Show meshlets')
--        .onChange(value => {
-+        .onChange((value: boolean) => {
-             pipeline.debug = value;
-             renderer.toneMapping = value ? THREE.NoToneMapping : THREE.ACESFilmicToneMapping;
-             prepare();
-         });
-     gui.add(parameters, 'rotate')
-         .name('Auto rotate')
--        .onChange(value => (controls.autoRotate = value));
-+        .onChange((value: boolean) => (controls.autoRotate = value));
- }
- 
- function onWindowResize() {
-@@ -227,19 +232,19 @@ function onWindowResize() {
-     renderer.setSize(window.innerWidth, window.innerHeight);
- }
- 
--function formatCount(value) {
-+function formatCount(value: number) {
-     if (value >= 1e9) return (value / 1e9).toFixed(1) + 'B';
-     if (value >= 1e6) return (value / 1e6).toFixed(1) + 'M';
-     if (value >= 1e3) return (value / 1e3).toFixed(0) + 'k';
-     return value.toString();
- }
- 
--function animate(time) {
-+function animate(time: number) {
-     timer.update(time);
-     controls.update(timer.getDelta());
-     renderer.render(scene, camera);
- 
--    let text = `${formatCount((parameters.statues * geometry.index.count) / 3)} triangles in the scene`;
-+    let text = `${formatCount((parameters.statues * geometry.index!.count) / 3)} triangles in the scene`;
- 
-     if (renderer.drawingPipeline === pipelines['GPU-driven']) {
-         const info = pipelines['GPU-driven'].info;
-diff --git a/examples-testing/examples/webgpu_gpudriven_materials.ts b/examples-testing/examples/webgpu_gpudriven_materials.ts
-index 61a61b133..5906d52c3 100644
---- a/examples-testing/examples/webgpu_gpudriven_materials.ts
-+++ b/examples-testing/examples/webgpu_gpudriven_materials.ts
-@@ -41,12 +41,16 @@ const parameters = {
-     rotate: true,
- };
- 
--const status = document.getElementById('status');
--const stats = document.getElementById('stats');
-+const status = document.getElementById('status')!;
-+const stats = document.getElementById('stats')!;
- const timer = new THREE.Timer();
- 
--let renderer, scene, camera, controls, pipelines;
--let geometry,
-+let renderer: THREE.WebGPURenderer,
-+    scene: THREE.Scene,
-+    camera: THREE.PerspectiveCamera,
-+    controls: OrbitControls,
-+    pipelines: { 'GPU-driven': MeshletDrawingPipeline; [key: string]: THREE.StandardDrawingPipeline };
-+let geometry: THREE.BufferGeometry,
-     statueCount = 0;
- 
- init().catch(error => {
-@@ -115,7 +119,7 @@ async function init() {
-     // stand the statue on the ground with a height of 4 units
- 
-     geometry.computeBoundingBox();
--    const box = geometry.boundingBox;
-+    const box = geometry.boundingBox!;
-     const size = box.getSize(new THREE.Vector3());
-     geometry.translate(-(box.min.x + box.max.x) / 2, -box.min.y, -(box.min.z + box.max.z) / 2);
-     geometry.scale(4 / size.y, 4 / size.y, 4 / size.y);
-@@ -183,7 +187,7 @@ function createMaterials() {
-     return materials;
- }
- 
--function createStatues(materials) {
-+function createStatues(materials: THREE.Material[]) {
-     // a ring of sectors around the center, the statues of a sector are instances of one instanced mesh
- 
-     const sector = (Math.PI * 2) / materials.length;
-@@ -233,7 +237,7 @@ async function prepare() {
-         await renderer.compileAsync(scene, camera);
-         status.textContent = '';
-     } catch (error) {
--        status.textContent = error.message;
-+        status.textContent = (error as Error).message;
-         console.error(error);
-     } finally {
-         renderer.setAnimationLoop(animate);
-@@ -241,24 +245,24 @@ async function prepare() {
- }
- 
- function createGUI() {
--    const gui = renderer.inspector.createParameters('Settings');
-+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
-     gui.add(parameters, 'pipeline', Object.keys(pipelines)).name('Pipeline').onChange(prepare);
-     gui.add(parameters, 'meshlets')
-         .name('Show meshlets')
--        .onChange(value => {
-+        .onChange((value: boolean) => {
-             pipelines['GPU-driven'].debug = value;
-             renderer.toneMapping = value ? THREE.NoToneMapping : THREE.ACESFilmicToneMapping;
-             prepare();
-         });
-     gui.add(parameters, 'lod', 1, 8, 0.5)
-         .name('LOD error (px)')
--        .onChange(value => {
-+        .onChange((value: number) => {
-             pipelines['GPU-driven'].lodThreshold = value;
-             pipelines['GPU-driven'].shadowLodThreshold = value;
-         });
-     gui.add(parameters, 'rotate')
-         .name('Auto rotate')
--        .onChange(value => (controls.autoRotate = value));
-+        .onChange((value: boolean) => (controls.autoRotate = value));
- }
- 
- function onWindowResize() {
-@@ -267,19 +271,19 @@ function onWindowResize() {
-     renderer.setSize(window.innerWidth, window.innerHeight);
- }
- 
--function formatCount(value) {
-+function formatCount(value: number) {
-     if (value >= 1e9) return (value / 1e9).toFixed(1) + 'B';
-     if (value >= 1e6) return (value / 1e6).toFixed(1) + 'M';
-     if (value >= 1e3) return (value / 1e3).toFixed(0) + 'k';
-     return value.toString();
- }
- 
--function animate(time) {
-+function animate(time: number) {
-     timer.update(time);
-     controls.update(timer.getDelta());
-     renderer.render(scene, camera);
- 
--    let text = `${statueCount} statues | ${formatCount((statueCount * geometry.index.count) / 3)} triangles in the scene`;
-+    let text = `${statueCount} statues | ${formatCount((statueCount * geometry.index!.count) / 3)} triangles in the scene`;
- 
-     if (renderer.drawingPipeline === pipelines['GPU-driven']) {
-         const info = pipelines['GPU-driven'].info;
-diff --git a/examples-testing/examples/webgpu_gpudriven_meshes.ts b/examples-testing/examples/webgpu_gpudriven_meshes.ts
-index 8a70af9fd..fff07a38a 100644
---- a/examples-testing/examples/webgpu_gpudriven_meshes.ts
-+++ b/examples-testing/examples/webgpu_gpudriven_meshes.ts
-@@ -23,14 +23,19 @@ const parameters = {
-     mode: 'Static',
- };
- 
--const status = document.getElementById('status');
--const stats = document.getElementById('stats');
-+const status = document.getElementById('status')!;
-+const stats = document.getElementById('stats')!;
- const timer = new THREE.Timer();
- 
--let renderer, scene, camera, controls, pipelines, sunLight;
--let geometry,
--    materials,
--    statues = null;
-+let renderer: THREE.WebGPURenderer,
-+    scene: THREE.Scene,
-+    camera: THREE.PerspectiveCamera,
-+    controls: OrbitControls,
-+    pipelines: { 'GPU-driven': MeshletDrawingPipeline; [key: string]: THREE.StandardDrawingPipeline },
-+    sunLight: THREE.DirectionalLight;
-+let geometry: THREE.BufferGeometry,
-+    materials: THREE.MeshStandardNodeMaterial[],
-+    statues: THREE.Group | null = null;
- 
- init().catch(error => {
-     status.textContent = error.message;
-@@ -102,7 +107,7 @@ async function init() {
-     // stand the statue on the ground with a height of 4 units
- 
-     geometry.computeBoundingBox();
--    const box = geometry.boundingBox;
-+    const box = geometry.boundingBox!;
-     const size = box.getSize(new THREE.Vector3());
-     geometry.translate(-(box.min.x + box.max.x) / 2, -box.min.y, -(box.min.z + box.max.z) / 2);
-     geometry.scale(4 / size.y, 4 / size.y, 4 / size.y);
-@@ -184,7 +189,7 @@ function createGroup() {
-     return group;
- }
- 
--function setGroup(group) {
-+function setGroup(group: THREE.Group) {
-     if (statues !== null) {
-         scene.remove(statues);
-         group.add(...statues.children);
-@@ -204,7 +209,7 @@ async function prepare() {
-         await renderer.compileAsync(scene, camera);
-         status.textContent = '';
-     } catch (error) {
--        status.textContent = error.message;
-+        status.textContent = (error as Error).message;
-         console.error(error);
-     } finally {
-         renderer.setAnimationLoop(animate);
-@@ -214,7 +219,7 @@ async function prepare() {
- function createGUI() {
-     const pipeline = pipelines['GPU-driven'];
- 
--    const gui = renderer.inspector.createParameters('Settings');
-+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
-     gui.add(parameters, 'pipeline', Object.keys(pipelines)).name('Pipeline').onChange(prepare);
-     gui.add(parameters, 'statues', { '1,000': 1000, '4,000': 4000, '10,000': 10000 })
-         .name('Statues')
-@@ -224,35 +229,35 @@ function createGUI() {
-         });
-     gui.add(parameters, 'lod', 1, 8, 0.5)
-         .name('LOD error (px)')
--        .onChange(value => {
-+        .onChange((value: number) => {
-             pipeline.lodThreshold = value;
-             pipeline.shadowLodThreshold = value;
-             sunLight.shadow.needsUpdate = true;
-         });
-     gui.add(parameters, 'occlusion')
-         .name('Occlusion culling')
--        .onChange(value => {
-+        .onChange((value: boolean) => {
-             pipeline.occlusionCulling = value;
-             prepare();
-         });
-     gui.add(parameters, 'meshlets')
-         .name('Show meshlets')
--        .onChange(value => {
-+        .onChange((value: boolean) => {
-             pipeline.debug = value;
-             renderer.toneMapping = value ? THREE.NoToneMapping : THREE.ACESFilmicToneMapping;
-             prepare();
-         });
-     gui.add(parameters, 'rotate')
-         .name('Auto rotate')
--        .onChange(value => (controls.autoRotate = value));
-+        .onChange((value: boolean) => (controls.autoRotate = value));
-     gui.add(parameters, 'mode', ['Default', 'Animate', 'Static', 'Bundle Group'])
-         .name('Mode')
--        .onChange(value => {
-+        .onChange((value: string) => {
-             // the shadow map follows the animated statues, the others stand on the ground again
- 
-             sunLight.shadow.autoUpdate = value === 'Animate';
- 
--            if (value !== 'Animate') for (const statue of statues.children) statue.position.y = 0;
-+            if (value !== 'Animate') for (const statue of statues!.children) statue.position.y = 0;
- 
-             setGroup(createGroup());
-             prepare();
-@@ -265,14 +270,14 @@ function onWindowResize() {
-     renderer.setSize(window.innerWidth, window.innerHeight);
- }
- 
--function formatCount(value) {
-+function formatCount(value: number) {
-     if (value >= 1e9) return (value / 1e9).toFixed(1) + 'B';
-     if (value >= 1e6) return (value / 1e6).toFixed(1) + 'M';
-     if (value >= 1e3) return (value / 1e3).toFixed(0) + 'k';
-     return value.toString();
- }
- 
--function animate(time) {
-+function animate(time: number) {
-     timer.update(time);
-     const delta = timer.getDelta();
- 
-@@ -283,7 +288,7 @@ function animate(time) {
- 
-         const elapsed = timer.getElapsed();
- 
--        for (const statue of statues.children) {
-+        for (const statue of statues!.children) {
-             statue.rotation.y += statue.userData.spin * delta;
-             statue.position.y = Math.max(0, Math.sin(elapsed * 3 - statue.userData.distance * 0.15)) * 1.5;
-         }
-@@ -291,7 +296,7 @@ function animate(time) {
- 
-     renderer.render(scene, camera);
- 
--    let text = `${formatCount((parameters.statues * geometry.index.count) / 3)} triangles in the scene`;
-+    let text = `${formatCount((parameters.statues * geometry.index!.count) / 3)} triangles in the scene`;
- 
-     if (renderer.drawingPipeline === pipelines['GPU-driven']) {
-         const info = pipelines['GPU-driven'].info;
-diff --git a/examples-testing/examples/webgpu_gpudriven_meshlets.ts b/examples-testing/examples/webgpu_gpudriven_meshlets.ts
-index 7c25df9e4..b3c502419 100644
---- a/examples-testing/examples/webgpu_gpudriven_meshlets.ts
-+++ b/examples-testing/examples/webgpu_gpudriven_meshlets.ts
-@@ -16,8 +16,14 @@ if (WebGPU.isAvailable() === false) {
-     throw new Error('No WebGPU support');
- }
- 
--let camera, scene, renderer, controls, timer;
--let pipelines, standardPipeline, teapots;
-+let camera: THREE.PerspectiveCamera,
-+    scene: THREE.Scene,
-+    renderer: THREE.WebGPURenderer,
-+    controls: FirstPersonControls,
-+    timer: THREE.Timer;
-+let pipelines: Record<string, MeshletDrawingPipeline>,
-+    standardPipeline: THREE.StandardDrawingPipeline,
-+    teapots: THREE.InstancedMesh;
- 
- // the visibility buffer addresses up to 131072 objects per render list
- 
-@@ -107,14 +113,14 @@ async function init() {
- 
-     scene.add(teapots);
- 
--    const totalTriangles = (instanceCount * geometry.index.count) / 3;
--    document.getElementById('triangleCount').innerText = new Intl.NumberFormat().format(totalTriangles);
-+    const totalTriangles = (instanceCount * geometry.index!.count) / 3;
-+    document.getElementById('triangleCount')!.innerText = new Intl.NumberFormat().format(totalTriangles);
- 
--    const parameterGroup = renderer.inspector.createParameters('Parameters');
-+    const parameterGroup = (renderer.inspector as Inspector).createParameters('Parameters');
- 
-     const mode = parameterGroup
-         .add(options, 'Mode', { 'Meshlet Debug': 'Meshlet Debug', Texture: 'Texture' })
--        .onChange(value => {
-+        .onChange((value: string) => {
-             for (const pipeline of Object.values(pipelines)) pipeline.debug = value === 'Meshlet Debug';
-         });
- 
-@@ -122,13 +128,15 @@ async function init() {
-         .add(options, 'Rasterizer', { Hybrid: 'Hybrid', Hardware: 'Hardware', Basic: 'Basic' })
-         .onChange(updateRasterizer);
- 
--    const maxRasterSize = parameterGroup.add(pipelines['Hybrid'], 'maxRasterSize', 1, 64, 1).name('Max Raster Size');
-+    const maxRasterSize = parameterGroup
-+        .add(pipelines['Hybrid'] as VisibilityBufferDrawingPipeline, 'maxRasterSize', 1, 64, 1)
-+        .name('Max Raster Size');
- 
--    const lodThreshold = parameterGroup.add(options, 'LOD Threshold', 1, 15, 0.1).onChange(value => {
-+    const lodThreshold = parameterGroup.add(options, 'LOD Threshold', 1, 15, 0.1).onChange((value: number) => {
-         for (const pipeline of Object.values(pipelines)) pipeline.lodThreshold = value;
-     });
- 
--    const occlusionCulling = parameterGroup.add(options, 'Occlusion Culling').onChange(value => {
-+    const occlusionCulling = parameterGroup.add(options, 'Occlusion Culling').onChange((value: boolean) => {
-         for (const pipeline of Object.values(pipelines)) pipeline.occlusionCulling = value;
-     });
- 
 diff --git a/examples-testing/examples/webgpu_hdr.ts b/examples-testing/examples/webgpu_hdr.ts
 index b96ba5f42..676326fed 100644
 --- a/examples-testing/examples/webgpu_hdr.ts
@@ -17887,7 +17093,7 @@ index b2b0545e0..5d43a2e4b 100644
          .name('GI')
          .onChange(value => {
 diff --git a/examples-testing/examples/webgpu_lightprobes_complex.ts b/examples-testing/examples/webgpu_lightprobes_complex.ts
-index 8c910e26a..dec169221 100644
+index a28217fd4..d6283b82a 100644
 --- a/examples-testing/examples/webgpu_lightprobes_complex.ts
 +++ b/examples-testing/examples/webgpu_lightprobes_complex.ts
 @@ -5,10 +5,10 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -17905,7 +17111,7 @@ index 8c910e26a..dec169221 100644
  
  init();
  
-@@ -221,7 +221,7 @@ async function init() {
+@@ -228,7 +228,7 @@ async function init() {
          lightIntensity: 30,
      };
  
@@ -17914,7 +17120,7 @@ index 8c910e26a..dec169221 100644
          warmLight.intensity = params.lightIntensity;
          coolLight.intensity = params.lightIntensity;
  
-@@ -297,7 +297,7 @@ async function init() {
+@@ -304,7 +304,7 @@ async function init() {
  
      // GUI
  
@@ -17924,7 +17130,7 @@ index 8c910e26a..dec169221 100644
          .name('GI')
          .onChange(value => {
 diff --git a/examples-testing/examples/webgpu_lightprobes_sponza.ts b/examples-testing/examples/webgpu_lightprobes_sponza.ts
-index 6019f551e..51d29297a 100644
+index 6c04d2e89..60fafdbd4 100644
 --- a/examples-testing/examples/webgpu_lightprobes_sponza.ts
 +++ b/examples-testing/examples/webgpu_lightprobes_sponza.ts
 @@ -14,16 +14,20 @@ const MODEL_INDEX_URL =
@@ -20604,6 +19810,798 @@ index 6a6656e21..1ba69daf7 100644
      for (let i = 0, l = list.length; i < l; i++) {
          list[i].z *= factor;
      }
+diff --git a/examples-testing/examples/webgpu_meshlets.ts b/examples-testing/examples/webgpu_meshlets.ts
+index 410cc335a..03ec1eb07 100644
+--- a/examples-testing/examples/webgpu_meshlets.ts
++++ b/examples-testing/examples/webgpu_meshlets.ts
+@@ -16,8 +16,14 @@ if (WebGPU.isAvailable() === false) {
+     throw new Error('No WebGPU support');
+ }
+ 
+-let camera, scene, renderer, controls, timer;
+-let pipelines, standardPipeline, teapots;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGPURenderer,
++    controls: FirstPersonControls,
++    timer: THREE.Timer;
++let pipelines: Record<string, MeshletDrawingPipeline>,
++    standardPipeline: THREE.StandardDrawingPipeline,
++    teapots: THREE.InstancedMesh;
+ 
+ // the visibility buffer addresses up to 131072 objects per render list
+ 
+@@ -111,14 +117,14 @@ async function init() {
+ 
+     scene.add(teapots);
+ 
+-    const totalTriangles = (instanceCount * geometry.index.count) / 3;
+-    document.getElementById('triangleCount').innerText = new Intl.NumberFormat().format(totalTriangles);
++    const totalTriangles = (instanceCount * geometry.index!.count) / 3;
++    document.getElementById('triangleCount')!.innerText = new Intl.NumberFormat().format(totalTriangles);
+ 
+-    const parameterGroup = renderer.inspector.createParameters('Parameters');
++    const parameterGroup = (renderer.inspector as Inspector).createParameters('Parameters');
+ 
+     const mode = parameterGroup
+         .add(options, 'Mode', { 'Meshlet Debug': 'Meshlet Debug', Texture: 'Texture' })
+-        .onChange(value => {
++        .onChange((value: string) => {
+             for (const pipeline of Object.values(pipelines)) pipeline.debug = value === 'Meshlet Debug';
+         });
+ 
+@@ -127,14 +133,14 @@ async function init() {
+         .onChange(updateRasterizer);
+ 
+     const maxRasterSize = parameterGroup
+-        .add(pipelines['Visibility Buffer'], 'maxRasterSize', 1, 64, 1)
++        .add(pipelines['Visibility Buffer'] as VisibilityBufferDrawingPipeline, 'maxRasterSize', 1, 64, 1)
+         .name('Max Raster Size');
+ 
+-    const lodThreshold = parameterGroup.add(options, 'LOD Threshold', 1, 15, 0.1).onChange(value => {
++    const lodThreshold = parameterGroup.add(options, 'LOD Threshold', 1, 15, 0.1).onChange((value: number) => {
+         for (const pipeline of Object.values(pipelines)) pipeline.lodThreshold = value;
+     });
+ 
+-    const occlusionCulling = parameterGroup.add(options, 'Occlusion Culling').onChange(value => {
++    const occlusionCulling = parameterGroup.add(options, 'Occlusion Culling').onChange((value: boolean) => {
+         for (const pipeline of Object.values(pipelines)) pipeline.occlusionCulling = value;
+     });
+ 
+diff --git a/examples-testing/examples/webgpu_meshlets_city.ts b/examples-testing/examples/webgpu_meshlets_city.ts
+index 26f535e26..53cdced8f 100644
+--- a/examples-testing/examples/webgpu_meshlets_city.ts
++++ b/examples-testing/examples/webgpu_meshlets_city.ts
+@@ -33,15 +33,34 @@ import { CityGenerator, createBuildingMaterial, createRoadMaterial } from 'three
+ import { MeshletDrawingPipeline } from 'three/addons/pipelines/MeshletDrawingPipeline.js';
+ import { VisibilityBufferDrawingPipeline } from 'three/addons/pipelines/VisibilityBufferDrawingPipeline.js';
+ 
+-let camera, scene, renderer, controls, timer;
+-let cityGroup, tilesGroup, ground, materials, city, renderPipeline;
+-let sky, sun, sunLight, pmremGenerator, envScene, envRenderTarget, cityBounds;
+-let pipelines,
+-    hazeDensity,
+-    postProcessing = [];
+-let curvedWorld, curvatureNode;
+-
+-const keys = {};
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGPURenderer,
++    controls: PointerLockControls | FirstPersonControls,
++    timer: THREE.Timer;
++let cityGroup: THREE.Group,
++    tilesGroup: THREE.Group,
++    ground: THREE.Mesh<THREE.PlaneGeometry, THREE.Material>,
++    materials: { building: THREE.MeshStandardNodeMaterial; buildingFar: THREE.MeshStandardNodeMaterial },
++    city: CityGenerator,
++    renderPipeline: THREE.RenderPipeline;
++let sky: SkyMesh,
++    sun: THREE.Vector3,
++    sunLight: THREE.DirectionalLight,
++    pmremGenerator: THREE.PMREMGenerator,
++    envScene: THREE.Scene,
++    envRenderTarget: THREE.CubeRenderTarget,
++    cityBounds: THREE.Box3;
++let pipelines: {
++        meshlet: MeshletDrawingPipeline;
++        'visibility-buffer': VisibilityBufferDrawingPipeline;
++        default: THREE.StandardDrawingPipeline;
++    },
++    hazeDensity: THREE.UniformNode<'float', number>,
++    postProcessing: THREE.Node[] = [];
++let curvedWorld: THREE.OverrideContextNode, curvatureNode: THREE.UniformNode<'float', number>;
++
++const keys: Record<string, boolean> = {};
+ 
+ const EYE_HEIGHT = 1.7;
+ const WALK_SPEED = 6;
+@@ -118,7 +137,7 @@ async function init() {
+         default: renderer.drawingPipeline,
+     };
+ 
+-    renderer.drawingPipeline = pipelines[parameters.pipeline];
++    renderer.drawingPipeline = pipelines[parameters.pipeline as keyof typeof pipelines];
+ 
+     await renderer.init();
+ 
+@@ -148,7 +167,7 @@ async function init() {
+     setCameraMode(parameters.camera);
+ 
+     renderer.domElement.addEventListener('click', () => {
+-        if (parameters.camera === 'walk') controls.lock();
++        if (parameters.camera === 'walk') (controls as PointerLockControls).lock();
+     });
+ 
+     window.addEventListener('keydown', event => (keys[event.code] = true));
+@@ -229,7 +248,7 @@ async function init() {
+     // distance d rises by the curvature times d², the rise inside of the sphere of radius r varies by at most
+     // the curvature times 2dr + r²
+ 
+-    const getBoundingSphere = (sphere, viewPosition) => {
++    const getBoundingSphere = (sphere: THREE.Node<'vec4'>, viewPosition: THREE.Node<'vec3'>) => {
+         const d = sphere.xz.sub(viewPosition.xz).length();
+         const r = sphere.w;
+ 
+@@ -248,7 +267,7 @@ async function init() {
+             [
+                 modelViewProjection,
+                 builder =>
+-                    builder.camera === camera && !builder.material.vertexNode
++                    builder.camera === camera && !(builder.material as THREE.NodeMaterial).vertexNode
+                         ? curvedProjection().toVar()
+                         : modelViewProjection,
+             ],
+@@ -262,13 +281,13 @@ async function init() {
+ 
+     // parameters
+ 
+-    const gui = renderer.inspector.createParameters('City');
++    const gui = (renderer.inspector as Inspector).createParameters('City');
+     gui.add(parameters, 'seed', 0, 100, 1).debounce(300).onChange(generateCity);
+     gui.add(parameters, 'tiles', 1, 10, 1).debounce(300).onChange(generateCity);
+     gui.add(parameters, 'timeOfDay', 6, 18, 0.1).name('time of day').onChange(updateSun);
+     gui.add(renderer, 'toneMappingExposure', 0.01, 1).name('exposure');
+-    gui.add(parameters, 'haze', 0, 4, 0.1).onChange(value => (hazeDensity.value = 0.00035 * value));
+-    gui.add(parameters, 'shadows').onChange(value => {
++    gui.add(parameters, 'haze', 0, 4, 0.1).onChange((value: number) => (hazeDensity.value = 0.00035 * value));
++    gui.add(parameters, 'shadows').onChange((value: boolean) => {
+         sunLight.castShadow = value;
+         sunLight.shadow.needsUpdate = true;
+     });
+@@ -283,8 +302,8 @@ async function init() {
+         if (curved !== curvatureNode.value > 0) setupPostProcessing();
+     });
+     gui.add(parameters, 'camera', ['walk', 'fly']).onChange(setCameraMode);
+-    gui.add(parameters, 'pipeline', Object.keys(pipelines)).onChange(value => {
+-        renderer.drawingPipeline = pipelines[value];
++    gui.add(parameters, 'pipeline', Object.keys(pipelines)).onChange((value: string) => {
++        renderer.drawingPipeline = pipelines[value as keyof typeof pipelines];
+         sunLight.shadow.needsUpdate = true;
+ 
+         // the static bundle group is only used by the meshlet drawing pipelines
+@@ -294,20 +313,20 @@ async function init() {
+     gui.add(parameters, 'static').name('static bundle').onChange(generateCity);
+     gui.add(parameters, 'occlusion')
+         .name('occlusion culling')
+-        .onChange(value => {
++        .onChange((value: boolean) => {
+             pipelines['meshlet'].occlusionCulling = value;
+             pipelines['visibility-buffer'].occlusionCulling = value;
+         });
+     gui.add(pipelines['meshlet'], 'depthPrepass').name('depth prepass');
+     gui.add(parameters, 'lod', 0, 8, 0.1)
+         .name('lod (pixels)')
+-        .onChange(value => {
++        .onChange((value: number) => {
+             pipelines['meshlet'].lodThreshold = value;
+             pipelines['visibility-buffer'].lodThreshold = value;
+         });
+     gui.add(parameters, 'shadowLod', 0, 8, 0.5)
+         .name('shadow lod (texels)')
+-        .onChange(value => {
++        .onChange((value: number) => {
+             pipelines['meshlet'].shadowLodThreshold = value;
+             pipelines['visibility-buffer'].shadowLodThreshold = value;
+             sunLight.shadow.needsUpdate = true;
+@@ -327,7 +346,7 @@ async function init() {
+     gui.add(parameters, 'furniture').name('street furniture').onChange(updateProps);
+     gui.add(parameters, 'meshlets')
+         .name('show meshlets')
+-        .onChange(value => {
++        .onChange((value: boolean) => {
+             pipelines['meshlet'].debug = value;
+             pipelines['visibility-buffer'].debug = value;
+             renderer.toneMapping = value ? THREE.NoToneMapping : THREE.ACESFilmicToneMapping;
+@@ -337,7 +356,7 @@ async function init() {
+ 
+     // the geometry of the meshlet drawing pipelines is processed and the pipelines are compiled before the first frame
+ 
+-    await postProcessing[0].compileAsync(renderer);
++    await (postProcessing[0] as THREE.PassNode).compileAsync(renderer);
+ 
+     renderer.setAnimationLoop(animate);
+ }
+@@ -351,7 +370,7 @@ function getCurvature() {
+ function setupPostProcessing() {
+     for (const node of postProcessing) node.dispose();
+ 
+-    let scenePass, colorNode;
++    let scenePass: THREE.PassNode, colorNode: THREE.Node<'vec4'>;
+ 
+     if (parameters.antialiasing === 'traa') {
+         // the thin windows of distant towers are resolved over several frames, the velocity
+@@ -384,7 +403,10 @@ function setupPostProcessing() {
+     renderPipeline.outputNode = colorNode.add(bloomPass);
+     renderPipeline.needsUpdate = true;
+ 
+-    postProcessing = colorNode.isTextureNode === true ? [scenePass, bloomPass] : [scenePass, colorNode, bloomPass];
++    postProcessing =
++        (colorNode as THREE.TextureNode).isTextureNode === true
++            ? [scenePass, bloomPass]
++            : [scenePass, colorNode, bloomPass];
+ }
+ 
+ function updateSun() {
+@@ -458,36 +480,37 @@ function updateBuildingMaterial() {
+     materials.building = createBuildingMaterial(city.layout, city.seedNode, getBuildingOptions());
+ 
+     tilesGroup.traverse(object => {
+-        if (object.material === previous) object.material = materials.building;
++        if ((object as THREE.Mesh).material === previous) (object as THREE.Mesh).material = materials.building;
+     });
+ 
+     previous.dispose();
+ 
+-    if (tilesGroup.isBundleGroup) tilesGroup.needsUpdate = true;
++    if ((tilesGroup as THREE.BundleGroup).isBundleGroup) (tilesGroup as THREE.BundleGroup).needsUpdate = true;
+ 
+     sunLight.shadow.needsUpdate = true;
+ }
+ 
+-function updateDetailDistance(value) {
++function updateDetailDistance(value: number) {
+     if (parameters.farMaterial === false) return;
+ 
+     tilesGroup.traverse(object => {
+-        if (object.isLOD) object.levels[1].distance = value;
++        if ((object as THREE.LOD).isLOD) (object as THREE.LOD).levels[1].distance = value;
+     });
+ 
+-    if (tilesGroup.isBundleGroup) tilesGroup.needsUpdate = true;
++    if ((tilesGroup as THREE.BundleGroup).isBundleGroup) (tilesGroup as THREE.BundleGroup).needsUpdate = true;
+ }
+ 
+ function updateProps() {
+     tilesGroup.traverse(object => {
+         for (const key in props) {
+-            if (props[key].includes(object.name)) object.visible = parameters[key];
++            if (props[key as keyof typeof props].includes(object.name))
++                object.visible = parameters[key as keyof typeof props];
+         }
+     });
+ 
+     // the render bundle of a static bundle group is recorded again
+ 
+-    if (tilesGroup.isBundleGroup) tilesGroup.needsUpdate = true;
++    if ((tilesGroup as THREE.BundleGroup).isBundleGroup) (tilesGroup as THREE.BundleGroup).needsUpdate = true;
+ 
+     sunLight.shadow.needsUpdate = true;
+ }
+@@ -505,10 +528,10 @@ function generateCity() {
+     // each tower is the first level of a LOD object, the same geometry with the cheaper material is the second
+ 
+     if (parameters.farMaterial) {
+-        const skyscrapers = [];
++        const skyscrapers: THREE.Mesh[] = [];
+ 
+         cityGroup.traverse(child => {
+-            if (child.name === 'Skyscraper') skyscrapers.push(child);
++            if (child.name === 'Skyscraper') skyscrapers.push(child as THREE.Mesh);
+         });
+ 
+         for (const tower of skyscrapers) {
+@@ -516,7 +539,7 @@ function generateCity() {
+             lod.position.copy(tower.position);
+             lod.quaternion.copy(tower.quaternion);
+             lod.scale.copy(tower.scale);
+-            tower.parent.add(lod);
++            tower.parent!.add(lod);
+ 
+             tower.position.set(0, 0, 0);
+             tower.quaternion.identity();
+@@ -593,19 +616,19 @@ function generateCity() {
+ 
+     cityGroup.traverse(child => {
+         if (child.name === 'Skyscraper') {
+-            const geometry = child.geometry;
++            const geometry = (child as THREE.Mesh).geometry;
+             triangles += (geometry.index !== null ? geometry.index.count : geometry.attributes.position.count) / 3;
+         }
+     });
+ 
+     const towers = city.towers.length * tiles * tiles;
+-    document.getElementById('stats').textContent =
++    document.getElementById('stats')!.textContent =
+         `${new Intl.NumberFormat().format(towers)} towers, ${new Intl.NumberFormat().format(Math.round(triangles * tiles * tiles))} triangles`;
+ }
+ 
+ // walking along a street at eye height, or flying over the city
+ 
+-function setCameraMode(mode) {
++function setCameraMode(mode: string) {
+     if (controls) controls.dispose();
+ 
+     if (mode === 'walk') {
+@@ -640,14 +663,14 @@ function animate() {
+     if (parameters.camera === 'walk') {
+         const distance = (keys.ShiftLeft || keys.ShiftRight ? RUN_SPEED : WALK_SPEED) * delta;
+ 
+-        if (keys.KeyW) controls.moveForward(distance);
+-        if (keys.KeyS) controls.moveForward(-distance);
+-        if (keys.KeyD) controls.moveRight(distance);
+-        if (keys.KeyA) controls.moveRight(-distance);
++        if (keys.KeyW) (controls as PointerLockControls).moveForward(distance);
++        if (keys.KeyS) (controls as PointerLockControls).moveForward(-distance);
++        if (keys.KeyD) (controls as PointerLockControls).moveRight(distance);
++        if (keys.KeyA) (controls as PointerLockControls).moveRight(-distance);
+ 
+         camera.position.y = EYE_HEIGHT;
+     } else {
+-        controls.update(delta);
++        (controls as FirstPersonControls).update(delta);
+     }
+ 
+     renderPipeline.render();
+diff --git a/examples-testing/examples/webgpu_meshlets_ibl.ts b/examples-testing/examples/webgpu_meshlets_ibl.ts
+index 055518c21..c30a22903 100644
+--- a/examples-testing/examples/webgpu_meshlets_ibl.ts
++++ b/examples-testing/examples/webgpu_meshlets_ibl.ts
+@@ -34,8 +34,17 @@ if (WebGPU.isAvailable() === false) {
+     throw new Error('No WebGPU support');
+ }
+ 
+-let camera, scene, renderer, controls, timer;
+-let pipelines, standardPipeline, helmets, shadedMaterial, visMaterial, visNodes;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGPURenderer,
++    controls: FirstPersonControls,
++    timer: THREE.Timer;
++let pipelines: Record<string, MeshletDrawingPipeline>,
++    standardPipeline: THREE.StandardDrawingPipeline,
++    helmets: THREE.InstancedMesh,
++    shadedMaterial: THREE.MeshStandardNodeMaterial,
++    visMaterial: THREE.NodeMaterial,
++    visNodes: Record<string, THREE.Node>;
+ 
+ const instanceCount = 15625; // 125x125 plane or 25x25x25 volume
+ 
+@@ -97,9 +106,10 @@ async function init() {
+ 
+     envTexture.mapping = THREE.EquirectangularReflectionMapping;
+ 
+-    let sourceMesh;
++    let sourceMesh!: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>;
+     gltf.scene.traverse(child => {
+-        if (child.isMesh) sourceMesh = child;
++        if ((child as THREE.Mesh).isMesh)
++            sourceMesh = child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>;
+     });
+ 
+     // Bake the glTF node transform into the geometry (the helmet is authored z-up)
+@@ -134,7 +144,7 @@ async function init() {
+ 
+     // Vis material: unlit visualization of one channel. The pipeline feeds the surface of each pixel into the
+     // node graph, like for the shaded material
+-    const sampleMap = map => texture(map, uv());
++    const sampleMap = (map: THREE.Texture | null) => texture(map!, uv());
+     const metalRough = sampleMap(shadedMaterial.roughnessMap); // glTF packs roughness (g) and metalness (b) in one texture
+     const mappedNormal = normalMap(
+         sampleMap(shadedMaterial.normalMap),
+@@ -165,10 +175,10 @@ async function init() {
+ 
+     updateGrid();
+ 
+-    const totalTriangles = (instanceCount * geometry.index.count) / 3;
+-    document.getElementById('triangleCount').innerText = new Intl.NumberFormat().format(totalTriangles);
++    const totalTriangles = (instanceCount * geometry.index!.count) / 3;
++    document.getElementById('triangleCount')!.innerText = new Intl.NumberFormat().format(totalTriangles);
+ 
+-    const parameterGroup = renderer.inspector.createParameters('Parameters');
++    const parameterGroup = (renderer.inspector as Inspector).createParameters('Parameters');
+ 
+     parameterGroup
+         .add(options, 'Output', {
+@@ -189,16 +199,16 @@ async function init() {
+         .onChange(updateRasterizer);
+ 
+     const maxRasterSize = parameterGroup
+-        .add(pipelines['Visibility Buffer'], 'maxRasterSize', 1, 64, 1)
++        .add(pipelines['Visibility Buffer'] as VisibilityBufferDrawingPipeline, 'maxRasterSize', 1, 64, 1)
+         .name('Max Raster Size');
+ 
+     parameterGroup.add(options, 'Grid', { XZ: 'XZ', XYZ: 'XYZ' }).onChange(updateGrid);
+ 
+-    const lodThreshold = parameterGroup.add(options, 'LOD Threshold', 1, 15, 0.1).onChange(value => {
++    const lodThreshold = parameterGroup.add(options, 'LOD Threshold', 1, 15, 0.1).onChange((value: number) => {
+         for (const pipeline of Object.values(pipelines)) pipeline.lodThreshold = value;
+     });
+ 
+-    const occlusionCulling = parameterGroup.add(options, 'Occlusion Culling').onChange(value => {
++    const occlusionCulling = parameterGroup.add(options, 'Occlusion Culling').onChange((value: boolean) => {
+         for (const pipeline of Object.values(pipelines)) pipeline.occlusionCulling = value;
+     });
+ 
+@@ -245,7 +255,8 @@ function updateMode() {
+ function updateGrid() {
+     let index = 0;
+ 
+-    const setPosition = (x, y, z) => helmets.setMatrixAt(index++, matrix.makeTranslation(x, y, z));
++    const setPosition = (x: number, y: number, z: number) =>
++        helmets.setMatrixAt(index++, matrix.makeTranslation(x, y, z));
+ 
+     if (options.Grid === 'XZ') {
+         for (let x = 0; x < 125; x++) {
+diff --git a/examples-testing/examples/webgpu_meshlets_instanced.ts b/examples-testing/examples/webgpu_meshlets_instanced.ts
+index 7cc1568a2..a5103d997 100644
+--- a/examples-testing/examples/webgpu_meshlets_instanced.ts
++++ b/examples-testing/examples/webgpu_meshlets_instanced.ts
+@@ -22,14 +22,19 @@ const parameters = {
+     rotate: true,
+ };
+ 
+-const status = document.getElementById('status');
+-const stats = document.getElementById('stats');
++const status = document.getElementById('status')!;
++const stats = document.getElementById('stats')!;
+ const timer = new THREE.Timer();
+ 
+-let renderer, scene, camera, controls, pipelines, sunLight;
+-let geometry,
+-    material,
+-    statues = null;
++let renderer: THREE.WebGPURenderer,
++    scene: THREE.Scene,
++    camera: THREE.PerspectiveCamera,
++    controls: OrbitControls,
++    pipelines: { Meshlet: MeshletDrawingPipeline; [key: string]: THREE.StandardDrawingPipeline },
++    sunLight: THREE.DirectionalLight;
++let geometry: THREE.BufferGeometry,
++    material: THREE.MeshStandardNodeMaterial,
++    statues: THREE.InstancedMesh | null = null;
+ 
+ init().catch(error => {
+     status.textContent = error.message;
+@@ -101,7 +106,7 @@ async function init() {
+     // stand the statue on the ground with a height of 4 units
+ 
+     geometry.computeBoundingBox();
+-    const box = geometry.boundingBox;
++    const box = geometry.boundingBox!;
+     const size = box.getSize(new THREE.Vector3());
+     geometry.translate(-(box.min.x + box.max.x) / 2, -box.min.y, -(box.min.z + box.max.z) / 2);
+     geometry.scale(4 / size.y, 4 / size.y, 4 / size.y);
+@@ -178,7 +183,7 @@ async function prepare() {
+         await renderer.compileAsync(scene, camera);
+         status.textContent = '';
+     } catch (error) {
+-        status.textContent = error.message;
++        status.textContent = (error as Error).message;
+         console.error(error);
+     } finally {
+         renderer.setAnimationLoop(animate);
+@@ -188,7 +193,7 @@ async function prepare() {
+ function createGUI() {
+     const pipeline = pipelines['Meshlet'];
+ 
+-    const gui = renderer.inspector.createParameters('Settings');
++    const gui = (renderer.inspector as Inspector).createParameters('Settings');
+     gui.add(parameters, 'pipeline', Object.keys(pipelines)).name('Pipeline').onChange(prepare);
+     gui.add(parameters, 'statues', { '1,000': 1000, '4,000': 4000, '10,000': 10000 })
+         .name('Statues')
+@@ -198,27 +203,27 @@ function createGUI() {
+         });
+     gui.add(parameters, 'lod', 1, 8, 0.5)
+         .name('LOD error (px)')
+-        .onChange(value => {
++        .onChange((value: number) => {
+             pipeline.lodThreshold = value;
+             pipeline.shadowLodThreshold = value;
+             sunLight.shadow.needsUpdate = true;
+         });
+     gui.add(parameters, 'occlusion')
+         .name('Occlusion culling')
+-        .onChange(value => {
++        .onChange((value: boolean) => {
+             pipeline.occlusionCulling = value;
+             prepare();
+         });
+     gui.add(parameters, 'meshlets')
+         .name('Show meshlets')
+-        .onChange(value => {
++        .onChange((value: boolean) => {
+             pipeline.debug = value;
+             renderer.toneMapping = value ? THREE.NoToneMapping : THREE.ACESFilmicToneMapping;
+             prepare();
+         });
+     gui.add(parameters, 'rotate')
+         .name('Auto rotate')
+-        .onChange(value => (controls.autoRotate = value));
++        .onChange((value: boolean) => (controls.autoRotate = value));
+ }
+ 
+ function onWindowResize() {
+@@ -227,19 +232,19 @@ function onWindowResize() {
+     renderer.setSize(window.innerWidth, window.innerHeight);
+ }
+ 
+-function formatCount(value) {
++function formatCount(value: number) {
+     if (value >= 1e9) return (value / 1e9).toFixed(1) + 'B';
+     if (value >= 1e6) return (value / 1e6).toFixed(1) + 'M';
+     if (value >= 1e3) return (value / 1e3).toFixed(0) + 'k';
+     return value.toString();
+ }
+ 
+-function animate(time) {
++function animate(time: number) {
+     timer.update(time);
+     controls.update(timer.getDelta());
+     renderer.render(scene, camera);
+ 
+-    let text = `${formatCount((parameters.statues * geometry.index.count) / 3)} triangles in the scene`;
++    let text = `${formatCount((parameters.statues * geometry.index!.count) / 3)} triangles in the scene`;
+ 
+     if (renderer.drawingPipeline === pipelines['Meshlet']) {
+         const info = pipelines['Meshlet'].info;
+diff --git a/examples-testing/examples/webgpu_meshlets_materials.ts b/examples-testing/examples/webgpu_meshlets_materials.ts
+index 2b0425ca1..86c60652f 100644
+--- a/examples-testing/examples/webgpu_meshlets_materials.ts
++++ b/examples-testing/examples/webgpu_meshlets_materials.ts
+@@ -41,12 +41,16 @@ const parameters = {
+     rotate: true,
+ };
+ 
+-const status = document.getElementById('status');
+-const stats = document.getElementById('stats');
++const status = document.getElementById('status')!;
++const stats = document.getElementById('stats')!;
+ const timer = new THREE.Timer();
+ 
+-let renderer, scene, camera, controls, pipelines;
+-let geometry,
++let renderer: THREE.WebGPURenderer,
++    scene: THREE.Scene,
++    camera: THREE.PerspectiveCamera,
++    controls: OrbitControls,
++    pipelines: { Meshlet: MeshletDrawingPipeline; [key: string]: THREE.StandardDrawingPipeline };
++let geometry: THREE.BufferGeometry,
+     statueCount = 0;
+ 
+ init().catch(error => {
+@@ -115,7 +119,7 @@ async function init() {
+     // stand the statue on the ground with a height of 4 units
+ 
+     geometry.computeBoundingBox();
+-    const box = geometry.boundingBox;
++    const box = geometry.boundingBox!;
+     const size = box.getSize(new THREE.Vector3());
+     geometry.translate(-(box.min.x + box.max.x) / 2, -box.min.y, -(box.min.z + box.max.z) / 2);
+     geometry.scale(4 / size.y, 4 / size.y, 4 / size.y);
+@@ -183,7 +187,7 @@ function createMaterials() {
+     return materials;
+ }
+ 
+-function createStatues(materials) {
++function createStatues(materials: THREE.Material[]) {
+     // a ring of sectors around the center, the statues of a sector are instances of one instanced mesh
+ 
+     const sector = (Math.PI * 2) / materials.length;
+@@ -233,7 +237,7 @@ async function prepare() {
+         await renderer.compileAsync(scene, camera);
+         status.textContent = '';
+     } catch (error) {
+-        status.textContent = error.message;
++        status.textContent = (error as Error).message;
+         console.error(error);
+     } finally {
+         renderer.setAnimationLoop(animate);
+@@ -241,24 +245,24 @@ async function prepare() {
+ }
+ 
+ function createGUI() {
+-    const gui = renderer.inspector.createParameters('Settings');
++    const gui = (renderer.inspector as Inspector).createParameters('Settings');
+     gui.add(parameters, 'pipeline', Object.keys(pipelines)).name('Pipeline').onChange(prepare);
+     gui.add(parameters, 'meshlets')
+         .name('Show meshlets')
+-        .onChange(value => {
++        .onChange((value: boolean) => {
+             pipelines['Meshlet'].debug = value;
+             renderer.toneMapping = value ? THREE.NoToneMapping : THREE.ACESFilmicToneMapping;
+             prepare();
+         });
+     gui.add(parameters, 'lod', 1, 8, 0.5)
+         .name('LOD error (px)')
+-        .onChange(value => {
++        .onChange((value: number) => {
+             pipelines['Meshlet'].lodThreshold = value;
+             pipelines['Meshlet'].shadowLodThreshold = value;
+         });
+     gui.add(parameters, 'rotate')
+         .name('Auto rotate')
+-        .onChange(value => (controls.autoRotate = value));
++        .onChange((value: boolean) => (controls.autoRotate = value));
+ }
+ 
+ function onWindowResize() {
+@@ -267,19 +271,19 @@ function onWindowResize() {
+     renderer.setSize(window.innerWidth, window.innerHeight);
+ }
+ 
+-function formatCount(value) {
++function formatCount(value: number) {
+     if (value >= 1e9) return (value / 1e9).toFixed(1) + 'B';
+     if (value >= 1e6) return (value / 1e6).toFixed(1) + 'M';
+     if (value >= 1e3) return (value / 1e3).toFixed(0) + 'k';
+     return value.toString();
+ }
+ 
+-function animate(time) {
++function animate(time: number) {
+     timer.update(time);
+     controls.update(timer.getDelta());
+     renderer.render(scene, camera);
+ 
+-    let text = `${statueCount} statues | ${formatCount((statueCount * geometry.index.count) / 3)} triangles in the scene`;
++    let text = `${statueCount} statues | ${formatCount((statueCount * geometry.index!.count) / 3)} triangles in the scene`;
+ 
+     if (renderer.drawingPipeline === pipelines['Meshlet']) {
+         const info = pipelines['Meshlet'].info;
+diff --git a/examples-testing/examples/webgpu_meshlets_meshes.ts b/examples-testing/examples/webgpu_meshlets_meshes.ts
+index 5d995548d..0daaef39d 100644
+--- a/examples-testing/examples/webgpu_meshlets_meshes.ts
++++ b/examples-testing/examples/webgpu_meshlets_meshes.ts
+@@ -23,14 +23,19 @@ const parameters = {
+     mode: 'Static',
+ };
+ 
+-const status = document.getElementById('status');
+-const stats = document.getElementById('stats');
++const status = document.getElementById('status')!;
++const stats = document.getElementById('stats')!;
+ const timer = new THREE.Timer();
+ 
+-let renderer, scene, camera, controls, pipelines, sunLight;
+-let geometry,
+-    materials,
+-    statues = null;
++let renderer: THREE.WebGPURenderer,
++    scene: THREE.Scene,
++    camera: THREE.PerspectiveCamera,
++    controls: OrbitControls,
++    pipelines: { Meshlet: MeshletDrawingPipeline; [key: string]: THREE.StandardDrawingPipeline },
++    sunLight: THREE.DirectionalLight;
++let geometry: THREE.BufferGeometry,
++    materials: THREE.MeshStandardNodeMaterial[],
++    statues: THREE.Group | null = null;
+ 
+ init().catch(error => {
+     status.textContent = error.message;
+@@ -102,7 +107,7 @@ async function init() {
+     // stand the statue on the ground with a height of 4 units
+ 
+     geometry.computeBoundingBox();
+-    const box = geometry.boundingBox;
++    const box = geometry.boundingBox!;
+     const size = box.getSize(new THREE.Vector3());
+     geometry.translate(-(box.min.x + box.max.x) / 2, -box.min.y, -(box.min.z + box.max.z) / 2);
+     geometry.scale(4 / size.y, 4 / size.y, 4 / size.y);
+@@ -184,7 +189,7 @@ function createGroup() {
+     return group;
+ }
+ 
+-function setGroup(group) {
++function setGroup(group: THREE.Group) {
+     if (statues !== null) {
+         scene.remove(statues);
+         group.add(...statues.children);
+@@ -204,7 +209,7 @@ async function prepare() {
+         await renderer.compileAsync(scene, camera);
+         status.textContent = '';
+     } catch (error) {
+-        status.textContent = error.message;
++        status.textContent = (error as Error).message;
+         console.error(error);
+     } finally {
+         renderer.setAnimationLoop(animate);
+@@ -214,7 +219,7 @@ async function prepare() {
+ function createGUI() {
+     const pipeline = pipelines['Meshlet'];
+ 
+-    const gui = renderer.inspector.createParameters('Settings');
++    const gui = (renderer.inspector as Inspector).createParameters('Settings');
+     gui.add(parameters, 'pipeline', Object.keys(pipelines)).name('Pipeline').onChange(prepare);
+     gui.add(parameters, 'statues', { '1,000': 1000, '4,000': 4000, '10,000': 10000 })
+         .name('Statues')
+@@ -224,35 +229,35 @@ function createGUI() {
+         });
+     gui.add(parameters, 'lod', 1, 8, 0.5)
+         .name('LOD error (px)')
+-        .onChange(value => {
++        .onChange((value: number) => {
+             pipeline.lodThreshold = value;
+             pipeline.shadowLodThreshold = value;
+             sunLight.shadow.needsUpdate = true;
+         });
+     gui.add(parameters, 'occlusion')
+         .name('Occlusion culling')
+-        .onChange(value => {
++        .onChange((value: boolean) => {
+             pipeline.occlusionCulling = value;
+             prepare();
+         });
+     gui.add(parameters, 'meshlets')
+         .name('Show meshlets')
+-        .onChange(value => {
++        .onChange((value: boolean) => {
+             pipeline.debug = value;
+             renderer.toneMapping = value ? THREE.NoToneMapping : THREE.ACESFilmicToneMapping;
+             prepare();
+         });
+     gui.add(parameters, 'rotate')
+         .name('Auto rotate')
+-        .onChange(value => (controls.autoRotate = value));
++        .onChange((value: boolean) => (controls.autoRotate = value));
+     gui.add(parameters, 'mode', ['Default', 'Animate', 'Static', 'Bundle Group'])
+         .name('Mode')
+-        .onChange(value => {
++        .onChange((value: string) => {
+             // the shadow map follows the animated statues, the others stand on the ground again
+ 
+             sunLight.shadow.autoUpdate = value === 'Animate';
+ 
+-            if (value !== 'Animate') for (const statue of statues.children) statue.position.y = 0;
++            if (value !== 'Animate') for (const statue of statues!.children) statue.position.y = 0;
+ 
+             setGroup(createGroup());
+             prepare();
+@@ -265,14 +270,14 @@ function onWindowResize() {
+     renderer.setSize(window.innerWidth, window.innerHeight);
+ }
+ 
+-function formatCount(value) {
++function formatCount(value: number) {
+     if (value >= 1e9) return (value / 1e9).toFixed(1) + 'B';
+     if (value >= 1e6) return (value / 1e6).toFixed(1) + 'M';
+     if (value >= 1e3) return (value / 1e3).toFixed(0) + 'k';
+     return value.toString();
+ }
+ 
+-function animate(time) {
++function animate(time: number) {
+     timer.update(time);
+     const delta = timer.getDelta();
+ 
+@@ -283,7 +288,7 @@ function animate(time) {
+ 
+         const elapsed = timer.getElapsed();
+ 
+-        for (const statue of statues.children) {
++        for (const statue of statues!.children) {
+             statue.rotation.y += statue.userData.spin * delta;
+             statue.position.y = Math.max(0, Math.sin(elapsed * 3 - statue.userData.distance * 0.15)) * 1.5;
+         }
+@@ -291,7 +296,7 @@ function animate(time) {
+ 
+     renderer.render(scene, camera);
+ 
+-    let text = `${formatCount((parameters.statues * geometry.index.count) / 3)} triangles in the scene`;
++    let text = `${formatCount((parameters.statues * geometry.index!.count) / 3)} triangles in the scene`;
+ 
+     if (renderer.drawingPipeline === pipelines['Meshlet']) {
+         const info = pipelines['Meshlet'].info;
 diff --git a/examples-testing/examples/webgpu_mirror.ts b/examples-testing/examples/webgpu_mirror.ts
 index 565467340..98142306d 100644
 --- a/examples-testing/examples/webgpu_mirror.ts
