@@ -450,8 +450,8 @@ export class Texture<TImage = unknown, TEventMap extends TextureEventMap = Textu
     userData: Record<string, any>;
 
     /**
-     * This can be used to only update a subregion or specific rows of the texture (for example, just the
-     * first 3 rows). Use the `addUpdateRange()` function to add ranges to this array.
+     * This can be used to only update parts of a data texture (for example, just a few rows).
+     * Use the `addUpdateRange()` function to add ranges to this array.
      */
     updateRanges: Array<{ start: number; count: number }>;
 
@@ -543,8 +543,12 @@ export class Texture<TImage = unknown, TEventMap extends TextureEventMap = Textu
     /**
      * Adds a range of data in the data texture to be updated on the GPU.
      *
-     * @param {number} start - Position at which to start update.
-     * @param {number} count - The number of components to update.
+     * Update ranges assume four components per texel, so they currently only work with `RGBAFormat`.
+     * Each range must stay within a single row of the texture. To update several rows, add one
+     * range per row. Update ranges are only supported in `WebGLRenderer`.
+     *
+     * @param {number} start - Index of the first array element to update.
+     * @param {number} count - The number of array elements to update.
      */
     addUpdateRange(start: number, count: number): void;
 
