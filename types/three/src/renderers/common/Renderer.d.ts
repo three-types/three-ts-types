@@ -80,7 +80,7 @@ declare class Renderer {
      * Renderer options.
      *
      * @typedef {Object} Renderer~Options
-     * @property {boolean} [logarithmicDepthBuffer=false] - Whether logarithmic depth buffer is enabled or not.
+     * @property {boolean} [logarithmicDepthBuffer=false] - Whether logarithmic depth buffer is enabled or not. Ignored when a reversed depth buffer is in use.
      * @property {boolean} [reversedDepthBuffer=false] - Whether reversed depth buffer is enabled or not.
      * @property {boolean} [alpha=true] - Whether the default framebuffer (which represents the final contents of the canvas) should be transparent or opaque.
      * @property {boolean} [depth=true] - Whether the default framebuffer should have a depth buffer or not.
@@ -155,7 +155,8 @@ declare class Renderer {
      */
     alpha: boolean;
     /**
-     * Whether logarithmic depth buffer is enabled or not.
+     * Whether logarithmic depth buffer is enabled or not. It is disabled
+     * on initialization when a reversed depth buffer is in use.
      *
      * @type {boolean}
      * @default false
