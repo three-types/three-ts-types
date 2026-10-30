@@ -2226,7 +2226,7 @@ index 3a794d7df..40bd78652 100644
       * Called by the tiles renderer when the plugin is unregistered or the
       * tiles renderer is disposed.
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/pipelines/MeshletDrawingPipeline.d.ts b/jsdoc-testing/jsdoc/examples/jsm/pipelines/MeshletDrawingPipeline.d.ts
-index ec3a9ffd5..087c363d4 100644
+index 9fe0becec..087c363d4 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/pipelines/MeshletDrawingPipeline.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/pipelines/MeshletDrawingPipeline.d.ts
 @@ -1,3 +1,15 @@
@@ -2286,14 +2286,14 @@ index ec3a9ffd5..087c363d4 100644
 -    _occlusionPipeline: StandardDrawingPipeline;
 -    _boundsNode: any;
 -    _ready: boolean;
--    _gpuDrivenEnabled: boolean;
+-    _meshletsEnabled: boolean;
 -    _camera: any;
 -    _depth: number;
 -    _gpuProjectionId: number;
 -    _clusters: WeakMap<object, any>;
 -    _geometryStates: WeakMap<object, any>;
 -    _checkedGeometries: WeakSet<object>;
--    _geometryPool: GPUDrivenGeometryPool;
+-    _geometryPool: MeshletGeometryPool;
 -    _records: Set<any>;
 -    _onGeometryDispose: (event: any) => void;
 -    _groupClusters: WeakMap<object, any>;
@@ -2307,7 +2307,7 @@ index ec3a9ffd5..087c363d4 100644
 -    } | null;
 -    _lodRange: any;
 -    _lodRanges: WeakMap<object, any>;
--    _gpuDrivenSupported: boolean;
+-    _meshletsSupported: boolean;
 -    _shadowPass: boolean;
 -    _sceneProjected: boolean;
 -    _lodView: {
@@ -2456,7 +2456,7 @@ index ec3a9ffd5..087c363d4 100644
 -     * @param {?Object} group - The geometry group.
 -     * @return {boolean} Whether the object can be drawn by the GPU-driven pipeline or not.
 -     */
--    private _isGPUDriven;
+-    private _isMeshlet;
 -    /**
 -     * Returns `true` if objects with the given material can be drawn by the GPU-driven pipeline.
 -     * The result is cached per material version.
@@ -2493,10 +2493,10 @@ index ec3a9ffd5..087c363d4 100644
 -     * @param {Object} entry - The objects sharing geometry, material and shadow state.
 -     * @param {number} capacity - The maximum number of objects.
 -     * @param {?Object} view - The view of the render list.
--     * @param {GPUDrivenCulling} culling - The culling of the render list.
--     * @return {GPUDrivenBatch} The batch.
+-     * @param {MeshletCulling} culling - The culling of the render list.
+-     * @return {MeshletBatch} The batch.
 -     */
--    createBatch(entry: Object, capacity: number, view: Object | null, culling: GPUDrivenCulling): GPUDrivenBatch;
+-    createBatch(entry: Object, capacity: number, view: Object | null, culling: MeshletCulling): MeshletBatch;
 -    /**
 -     * Returns `true` if the batches of the current render call draw the depth of the clusters before their material.
 -     *
@@ -2614,7 +2614,7 @@ index ec3a9ffd5..087c363d4 100644
 -     * Adds the geometries of the given entries to the table of the culling and to the geometry pool.
 -     *
 -     * @private
--     * @param {GPUDrivenCulling} culling - The culling.
+-     * @param {MeshletCulling} culling - The culling.
 -     * @param {Array<Object>} entries - The entries.
 -     * @return {boolean} Whether all geometries were added, `false` if the culling is full.
 -     */
@@ -2657,12 +2657,12 @@ index ec3a9ffd5..087c363d4 100644
 -}
 -/**
 - * All objects of one render list sharing geometry and material, drawn by one indirect draw of their visible
-- * clusters through the hardware rasterizer. The objects are culled by the {@link GPUDrivenCulling} of the render
+- * clusters through the hardware rasterizer. The objects are culled by the {@link MeshletCulling} of the render
 - * list, the batch owns a range of its buffers. Subclasses can replace the draw by overriding `setupDraw()`.
 - *
 - * @private
 - */
--export class GPUDrivenBatch {
+-export class MeshletBatch {
 -    /**
 -     * Constructs a new batch.
 -     *
@@ -2671,7 +2671,7 @@ index ec3a9ffd5..087c363d4 100644
 -     * @param {boolean} receiveShadow - Whether the objects receive shadows.
 -     * @param {number} capacity - The maximum number of objects.
 -     * @param {Renderer} renderer - The renderer.
--     * @param {GPUDrivenCulling} culling - The culling of the render list.
+-     * @param {MeshletCulling} culling - The culling of the render list.
 -     * @param {Object} [parameters] - The configuration parameter.
 -     * @param {boolean} [parameters.debug=false] - Whether the clusters are shown instead of the material.
 -     * @param {number} [parameters.lodCount=clusters.lodCount] - The number of levels of detail used.
@@ -2681,12 +2681,12 @@ index ec3a9ffd5..087c363d4 100644
 -     * @param {boolean} [parameters.instanceColor=false] - Whether the instanced meshes have instance colors.
 -     * @param {?Material} [parameters.farMaterial=null] - The material of the objects beyond their switch distance, the levels of
 -     * LOD objects sharing the geometry. Shadow casters ignore it.
--     * @param {?GPUDrivenBatch} [parameters.source=null] - A batch of the same culling and capacity drawing the same objects, like
+-     * @param {?MeshletBatch} [parameters.source=null] - A batch of the same culling and capacity drawing the same objects, like
 -     * another group of the objects. The transforms, bounds and instance data of the objects are read from this batch, which
 -     * uploads them, instead of being stored again.
 -     * @param {number} [parameters.queueBudget=0] - The minimum number of work items of a queue of the batch, see getQueueCapacity().
 -     */
--    constructor(clusters: Object, material: Material, receiveShadow: boolean, capacity: number, renderer: Renderer, culling: GPUDrivenCulling, { debug, lodCount, view, depthPrepass, instanced, instanceColor, farMaterial, source, queueBudget, maxChunks, pool }?: {
+-    constructor(clusters: Object, material: Material, receiveShadow: boolean, capacity: number, renderer: Renderer, culling: MeshletCulling, { debug, lodCount, view, depthPrepass, instanced, instanceColor, farMaterial, source, queueBudget, maxChunks, pool }?: {
 -        debug?: boolean | undefined;
 -        lodCount?: number | undefined;
 -        view?: Object | null | undefined;
@@ -2694,7 +2694,7 @@ index ec3a9ffd5..087c363d4 100644
 -        instanced?: boolean | undefined;
 -        instanceColor?: boolean | undefined;
 -        farMaterial?: Material | null;
--        source?: GPUDrivenBatch | null | undefined;
+-        source?: MeshletBatch | null | undefined;
 -        queueBudget?: number | undefined;
 -    });
 -    source: any;
@@ -2705,7 +2705,7 @@ index ec3a9ffd5..087c363d4 100644
 -    farMaterialVersion: any;
 -    debug: boolean;
 -    shadow: boolean;
--    culling: GPUDrivenCulling;
+-    culling: MeshletCulling;
 -    occlusion: Object | null;
 -    depthPrepass: boolean;
 -    instanced: boolean;
@@ -2758,7 +2758,7 @@ index ec3a9ffd5..087c363d4 100644
 -    objectStates: any[] | undefined;
 -    geometryStates: any[] | undefined;
 -    /**
--     * Adds the batch to its resized culling, see {@link GPUDrivenCulling#resize}. The nodes and materials of the batch
+-     * Adds the batch to its resized culling, see {@link MeshletCulling#resize}. The nodes and materials of the batch
 -     * stay valid: the range of the batch and its indirect draws are updated, and the data of the objects is written
 -     * again in the next update.
 -     *
@@ -2930,7 +2930,7 @@ index ec3a9ffd5..087c363d4 100644
 - *
 - * @private
 - */
--declare class GPUDrivenGeometryPool {
+-declare class MeshletGeometryPool {
 -    vertexArray: Float32Array<ArrayBuffer>;
 -    indexArray: Uint32Array<ArrayBuffer>;
 -    vertexEnd: number;
@@ -2993,7 +2993,7 @@ index ec3a9ffd5..087c363d4 100644
 - *
 - * @private
 - */
--declare class GPUDrivenCulling {
+-declare class MeshletCulling {
 -    /**
 -     * Constructs a new culling.
 -     *
@@ -3118,16 +3118,16 @@ index ec3a9ffd5..087c363d4 100644
 -     * Allocates the ranges of a batch in the shared buffers and writes its parameters into the table.
 -     * Returns `false` if the buffers are full.
 -     *
--     * @param {GPUDrivenBatch} batch - The batch.
+-     * @param {MeshletBatch} batch - The batch.
 -     * @return {boolean} Whether the batch was added.
 -     */
--    add(batch: GPUDrivenBatch): boolean;
+-    add(batch: MeshletBatch): boolean;
 -    /**
 -     * Removes a batch, its ranges are reused after a rebuild of the culling.
 -     *
--     * @param {GPUDrivenBatch} batch - The batch.
+-     * @param {MeshletBatch} batch - The batch.
 -     */
--    remove(batch: GPUDrivenBatch): void;
+-    remove(batch: MeshletBatch): void;
 -    /**
 -     * Returns the index of the given geometry in the table of the geometries, or `-1` if it was not added.
 -     *
@@ -3147,10 +3147,10 @@ index ec3a9ffd5..087c363d4 100644
 -    /**
 -     * Sets the number of objects of a batch drawn in this projection.
 -     *
--     * @param {GPUDrivenBatch} batch - The batch.
+-     * @param {MeshletBatch} batch - The batch.
 -     * @param {number} count - The number of objects.
 -     */
--    setObjectCount(batch: GPUDrivenBatch, count: number): void;
+-    setObjectCount(batch: MeshletBatch, count: number): void;
 -    /**
 -     * Uploads the batch table after the object counts have been updated.
 -     * Only the table range changes each frame; the cluster bounds remain in the same buffer.
@@ -3188,7 +3188,7 @@ index ec3a9ffd5..087c363d4 100644
 -import { Matrix4 } from 'three/webgpu';
 -export {};
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/pipelines/VisibilityBufferDrawingPipeline.d.ts b/jsdoc-testing/jsdoc/examples/jsm/pipelines/VisibilityBufferDrawingPipeline.d.ts
-index 03f902801..c12d0c74f 100644
+index 6d5782345..c12d0c74f 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/pipelines/VisibilityBufferDrawingPipeline.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/pipelines/VisibilityBufferDrawingPipeline.d.ts
 @@ -1,3 +1,13 @@
@@ -3242,19 +3242,19 @@ index 03f902801..c12d0c74f 100644
 -     * @return {Object} The key.
 -     */
 -    _getBatchKey(clusters: Object): Object;
--    createBatch(entry: any, capacity: any, view: any, culling: any): GPUDrivenBatch | VisibilityBufferBatch;
+-    createBatch(entry: any, capacity: any, view: any, culling: any): MeshletBatch | VisibilityBufferBatch;
 -}
 -import { MeshletDrawingPipeline } from './MeshletDrawingPipeline.js';
--import { GPUDrivenBatch } from './MeshletDrawingPipeline.js';
+-import { MeshletBatch } from './MeshletDrawingPipeline.js';
 -/**
 - * A batch drawing the visible clusters into a visibility buffer: a compute shader rasterizes the small
 - * triangles in software and queues the large ones for the hardware rasterizer. A resolve draws the bounding
 - * box of each object and shades the fragments whose visible triangle belongs to the object.
 - *
 - * @private
-- * @augments GPUDrivenBatch
+- * @augments MeshletBatch
 - */
--declare class VisibilityBufferBatch extends GPUDrivenBatch {
+-declare class VisibilityBufferBatch extends MeshletBatch {
 -    triangleBase: import("three/tsl").UniformNode | undefined;
 -    maxRasterSize: import("three/tsl").UniformNode | undefined;
 -    instanceOffset: import("three/tsl").UniformNode | undefined;
