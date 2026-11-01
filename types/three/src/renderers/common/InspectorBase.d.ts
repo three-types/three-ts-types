@@ -1,29 +1,23 @@
-import { Camera } from "../../cameras/Camera.js";
-import { EventDispatcher } from "../../core/EventDispatcher.js";
-import { RenderTarget } from "../../core/RenderTarget.js";
-import Node from "../../nodes/core/Node.js";
-import NodeFrame from "../../nodes/core/NodeFrame.js";
-import ComputeNode from "../../nodes/gpgpu/ComputeNode.js";
-import { Scene } from "../../scenes/Scene.js";
-import { Texture } from "../../textures/Texture.js";
-import Renderer from "./Renderer.js";
-
-export interface InspectorBaseEventMap {
-    dispose: {};
-}
-
+export default InspectorBase;
 /**
  * InspectorBase is the base class for all inspectors. Can only be used with {@link WebGPURenderer}.
+ *
+ * @augments EventDispatcher
  */
-declare class InspectorBase<TEventMap extends InspectorBaseEventMap = InspectorBaseEventMap>
-    extends EventDispatcher<TEventMap>
-{
+declare class InspectorBase extends EventDispatcher {
+    /**
+     * The renderer associated with this inspector.
+     *
+     * @type {Renderer}
+     * @private
+     */
+    private _renderer;
     /**
      * The current frame being processed.
      *
      * @type {Object}
      */
-    currentFrame: unknown;
+    currentFrame: Object;
     /**
      * Indicates whether the inspector is running.
      *
@@ -43,7 +37,7 @@ declare class InspectorBase<TEventMap extends InspectorBaseEventMap = InspectorB
      *
      * @return {Object} The node frame.
      */
-    get nodeFrame(): NodeFrame;
+    get nodeFrame(): Object;
     /**
      * Sets the renderer for this inspector.
      *
@@ -70,28 +64,28 @@ declare class InspectorBase<TEventMap extends InspectorBaseEventMap = InspectorB
      *
      * @param {Node} node - The node to inspect.
      */
-    inspect(node: Node): void;
+    inspect(): void;
     /**
      * When a compute operation is performed.
      *
      * @param {ComputeNode} computeNode - The compute node being executed.
      * @param {number|Array<number>} dispatchSizeOrCount - The dispatch size or count.
      */
-    computeAsync(computeNode: ComputeNode, dispatchSizeOrCount: number | number[]): void;
+    computeAsync(): void;
     /**
      * Called when a compute operation begins.
      *
      * @param {string} uid - A unique identifier for the render context.
      * @param {ComputeNode} computeNode - The compute node being executed.
      */
-    beginCompute(uid: string, computeNode: ComputeNode): void;
+    beginCompute(): void;
     /**
      * Called when a compute operation ends.
      *
      * @param {string} uid - A unique identifier for the render context.
      * @param {ComputeNode} computeNode - The compute node being executed.
      */
-    finishCompute(uid: string): void;
+    finishCompute(): void;
     /**
      * Called when a render operation begins.
      *
@@ -100,30 +94,29 @@ declare class InspectorBase<TEventMap extends InspectorBaseEventMap = InspectorB
      * @param {Camera} camera - The camera being used for rendering.
      * @param {?RenderTarget} renderTarget - The render target, if any.
      */
-    beginRender(uid: string, scene: Scene, camera: Camera, renderTarget: RenderTarget): void;
+    beginRender(): void;
     /**
      * Called when an animation loop ends.
      *
      * @param {string} uid - A unique identifier for the render context.
      */
-    finishRender(uid: string): void;
+    finishRender(): void;
     /**
      * Called when a texture copy operation is performed.
      *
      * @param {Texture} srcTexture - The source texture.
      * @param {Texture} dstTexture - The destination texture.
      */
-    copyTextureToTexture(srcTexture: Texture, dstTexture: Texture): void;
+    copyTextureToTexture(): void;
     /**
      * Called when a framebuffer copy operation is performed.
      *
      * @param {Texture} framebufferTexture - The texture associated with the framebuffer.
      */
-    copyFramebufferToTexture(framebufferTexture: Texture): void;
+    copyFramebufferToTexture(): void;
     /**
      * Frees all internal resources of the inspector.
      */
     dispose(): void;
 }
-
-export default InspectorBase;
+import { EventDispatcher } from "../../core/EventDispatcher.js";

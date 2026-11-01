@@ -1,24 +1,11 @@
-import { Color } from "../../math/Color.js";
-import { Matrix2 } from "../../math/Matrix2.js";
-import { Matrix3 } from "../../math/Matrix3.js";
-import { Matrix4 } from "../../math/Matrix4.js";
-import { Vector2 } from "../../math/Vector2.js";
-import { Vector3 } from "../../math/Vector3.js";
-import { Vector4 } from "../../math/Vector4.js";
-import { NodeUpdateType } from "./constants.js";
-import ConstNode from "./ConstNode.js";
-import InputNode from "./InputNode.js";
-import NodeBuilder from "./NodeBuilder.js";
-import NodeFrame from "./NodeFrame.js";
-import UniformGroupNode from "./UniformGroupNode.js";
-import VarNode from "./VarNode.js";
-
+export default UniformNode;
+export function uniform(value: any | string, type?: string): UniformNode;
 /**
  * Class for representing a uniform.
  *
  * @augments InputNode
  */
-declare class UniformNodeClass<TValue> extends InputNode<unknown, TValue> {
+declare class UniformNode extends InputNode {
     /**
      * This flag can be used for type testing.
      *
@@ -41,7 +28,7 @@ declare class UniformNodeClass<TValue> extends InputNode<unknown, TValue> {
      * @param {string} name - The name of the uniform.
      * @return {UniformNode} A reference to this node.
      */
-    setName(name: string): this;
+    setName(name: string): UniformNode;
     /**
      * Sets the {@link UniformNode#name} property.
      *
@@ -49,14 +36,14 @@ declare class UniformNodeClass<TValue> extends InputNode<unknown, TValue> {
      * @param {string} name - The name of the uniform.
      * @return {UniformNode} A reference to this node.
      */
-    label(name: string): this;
+    label(name: string): UniformNode;
     /**
      * Sets the {@link UniformNode#groupNode} property.
      *
      * @param {UniformGroupNode} group - The uniform group.
      * @return {UniformNode} A reference to this node.
      */
-    setGroup(group: UniformGroupNode): this;
+    setGroup(group: UniformGroupNode): UniformNode;
     /**
      * Returns the {@link UniformNode#groupNode}.
      *
@@ -78,91 +65,9 @@ declare class UniformNodeClass<TValue> extends InputNode<unknown, TValue> {
      * @param {NodeBuilder} builder - The current node builder.
      * @return {UniformNode} The node the shared uniform refers to.
      */
-    getSharedNode(builder: NodeBuilder): UniformNode<unknown, TValue>;
-    onUpdate(
-        callback: (this: this, frame: NodeFrame, self: this) => TValue | undefined,
-        updateType: NodeUpdateType,
-    ): this;
-    getInputType(builder: NodeBuilder): string;
-    generate(builder: NodeBuilder, output: string | null): string;
-
-    // In UniformNode, callbacks provided to onUpdate-related functions are called with `this` as the last parameter:
-    onFrameUpdate(callback: (this: this, frame: NodeFrame, self: this) => TValue | undefined): this;
-    onRenderUpdate(callback: (this: this, frame: NodeFrame, self: this) => TValue | undefined): this;
-    onObjectUpdate(callback: (this: this, frame: NodeFrame, self: this) => TValue | undefined): this;
+    getSharedNode(builder: NodeBuilder): UniformNode;
+    onUpdate(callback: any, updateType: any): import("./Node.js").default;
+    getInputType(builder: any): string;
+    generate(builder: any, output: any): any;
 }
-
-declare const UniformNode: {
-    /**
-     * Constructs a new uniform node.
-     *
-     * @param {any} value - The value of this node. Usually a JS primitive or three.js object (vector, matrix, color, texture).
-     * @param {?string} nodeType - The node type. If no explicit type is defined, the node tries to derive the type from its value.
-     */
-    new<
-        TNodeType,
-        TValue = TNodeType extends keyof UniformValue ? UniformValue[TNodeType] : unknown,
-    >(value: TValue, nodeType?: string | null): UniformNode<TNodeType, TValue>;
-};
-
-type UniformNode<
-    TNodeType,
-    TValue = TNodeType extends keyof UniformValue ? UniformValue[TNodeType] : unknown,
-> = UniformNodeClass<TValue> & InputNode<TNodeType, TValue>;
-
-export default UniformNode;
-
-interface UniformValue {
-    float: number;
-    int: number;
-    uint: number;
-    bool: boolean;
-    vec2: Vector2;
-    ivec2: Vector2;
-    uvec2: Vector2;
-    vec3: Vector3;
-    ivec3: Vector3;
-    uvec3: Vector3;
-    vec4: Vector4;
-    ivec4: Vector4;
-    uvec4: Vector4;
-    mat2: Matrix2;
-    mat3: Matrix3;
-    mat4: Matrix4;
-    color: Color;
-}
-
-interface Uniform {
-    <const TNodeType extends keyof UniformValue>(type: TNodeType): UniformNode<TNodeType>;
-    (value: number, type?: "float"): UniformNode<"float">;
-    (value: number, type: "int"): UniformNode<"int">;
-    (value: number, type: "uint"): UniformNode<"uint">;
-    (value: boolean, type?: "bool"): UniformNode<"bool">;
-    (value: Vector2, type?: "vec2"): UniformNode<"vec2">;
-    (value: Vector2, type: "ivec2"): UniformNode<"ivec2">;
-    (value: Vector2, type: "uvec2"): UniformNode<"uvec2">;
-    (value: Vector3, type?: "vec3"): UniformNode<"vec3">;
-    (value: Vector3, type: "ivec3"): UniformNode<"ivec3">;
-    (value: Vector3, type: "uvec3"): UniformNode<"uvec3">;
-    (value: Vector4, type?: "vec4"): UniformNode<"vec4">;
-    (value: Vector4, type: "ivec4"): UniformNode<"ivec4">;
-    (value: Vector4, type: "uvec4"): UniformNode<"uvec4">;
-    (value: Matrix2, type?: "mat2"): UniformNode<"mat2">;
-    (value: Matrix3, type?: "mat3"): UniformNode<"mat3">;
-    (value: Matrix4, type?: "mat4"): UniformNode<"mat4">;
-    (value: Color, type?: "color"): UniformNode<"color">;
-    <TNodeType, TValue>(value: InputNode<TNodeType, TValue>): UniformNode<TNodeType, TValue>;
-    <TNodeType, TValue>(value: VarNode<TNodeType, ConstNode<TNodeType, TValue>>): UniformNode<TNodeType, TValue>;
-}
-
-/**
- * TSL function for creating a uniform node.
- *
- * @function
- * @param {any|string} value - The value of this uniform or your type. Usually a JS primitive or three.js object (vector, matrix, color, texture).
- * @param {string} [type] - The node type. If no explicit type is defined, the node tries to derive the type from its value.
- * @returns {UniformNode}
- */
-export declare const uniform: Uniform;
-
-export {};
+import InputNode from "./InputNode.js";

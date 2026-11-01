@@ -1,5 +1,3 @@
-import { Audio } from "./Audio.js";
-
 /**
  * This class can be used to analyse audio data.
  *
@@ -34,13 +32,17 @@ export class AudioAnalyser {
      * @param {Audio} audio - The audio to analyze.
      * @param {number} [fftSize=2048] - The window size in samples that is used when performing a Fast Fourier Transform (FFT) to get frequency domain data.
      */
-    constructor(audio: Audio<AudioNode>, fftSize?: number);
+    constructor(audio: new(src?: string) => HTMLAudioElement, fftSize?: number);
     /**
      * The global audio listener.
+     *
+     * @type {AnalyserNode}
      */
     analyser: AnalyserNode;
     /**
      * Holds the analyzed data.
+     *
+     * @type {Uint8Array}
      */
     data: Uint8Array;
     /**

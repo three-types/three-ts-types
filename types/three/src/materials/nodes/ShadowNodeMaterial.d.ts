@@ -1,21 +1,8 @@
-import ShadowMaskModel from "../../nodes/functions/ShadowMaskModel.js";
-import { MapColorPropertiesToColorRepresentations } from "../Material.js";
-import { ShadowMaterialParameters, ShadowMaterialProperties } from "../ShadowMaterial.js";
-import NodeMaterial, { NodeMaterialNodeProperties } from "./NodeMaterial.js";
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface ShadowNodeMaterialNodeProperties extends NodeMaterialNodeProperties {
-}
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface ShadowNodeMaterialParameters
-    extends
-        Partial<MapColorPropertiesToColorRepresentations<ShadowNodeMaterialNodeProperties>>,
-        ShadowMaterialParameters
-{}
-
+export default ShadowNodeMaterial;
 /**
  * Node material version of {@link ShadowMaterial}.
+ *
+ * @augments NodeMaterial
  */
 declare class ShadowNodeMaterial extends NodeMaterial {
     /**
@@ -23,14 +10,15 @@ declare class ShadowNodeMaterial extends NodeMaterial {
      *
      * @param {Object} [parameters] - The configuration parameter.
      */
-    constructor(parameters?: ShadowNodeMaterialParameters);
+    constructor(parameters?: Object);
     /**
      * This flag can be used for type testing.
      *
+     * @type {boolean}
+     * @readonly
      * @default true
      */
     readonly isShadowNodeMaterial: boolean;
-    setValues(values?: ShadowNodeMaterialParameters): void;
     /**
      * Setups the lighting model.
      *
@@ -38,8 +26,5 @@ declare class ShadowNodeMaterial extends NodeMaterial {
      */
     setupLightingModel(): ShadowMaskModel;
 }
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface ShadowNodeMaterial extends ShadowNodeMaterialNodeProperties, ShadowMaterialProperties {}
-
-export default ShadowNodeMaterial;
+import ShadowMaskModel from "../../nodes/functions/ShadowMaskModel.js";
+import NodeMaterial from "./NodeMaterial.js";

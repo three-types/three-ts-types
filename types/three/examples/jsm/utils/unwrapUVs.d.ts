@@ -1,43 +1,3 @@
-import { Object3D } from "../../../src/core/Object3D.js";
-import { Mesh } from "../../../src/objects/Mesh.js";
-
-export interface UnwrapUVsOptions {
-    attribute?: "uv" | "uv1" | "uv2" | "uv3" | undefined;
-    mode?: "lightmap" | "normal" | undefined;
-    resolution?: number | undefined;
-    padding?: number | undefined;
-    texelsPerUnit?: number | undefined;
-    respectUVSeams?: boolean | undefined;
-    useInputUVs?: boolean | undefined;
-}
-
-export interface UnwrapUVsChart {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-}
-
-export interface UnwrapUVsMeshResult {
-    mesh: Mesh;
-    sourceVertices: Uint32Array;
-    faceCharts: Int32Array;
-}
-
-export interface UnwrapUVsResult {
-    attribute: "uv" | "uv1" | "uv2" | "uv3";
-    resolution: number;
-    padding: number;
-    texelsPerUnit: number;
-    charts: UnwrapUVsChart[];
-    meshes: UnwrapUVsMeshResult[];
-    warnings: {
-        excludedFaces: number;
-        tinyFaces: number;
-        singleTriangleCharts: number;
-    };
-}
-
 /**
  * Generates a unique UV atlas for the meshes in a hierarchy, measured in world space.
  * Each mesh receives a new geometry. Skinned and morphed meshes are unwrapped in
@@ -62,4 +22,12 @@ export interface UnwrapUVsResult {
  * unchanged in that case. Charts that fail Float32 validation are split and repacked;
  * single faces that still fail are excluded.
  */
-export function unwrapUVs(root: Object3D, options?: UnwrapUVsOptions): UnwrapUVsResult | null;
+export function unwrapUVs(root: Object3D, options?: {
+    attribute?: string | undefined;
+    mode?: string | undefined;
+    resolution?: number | undefined;
+    padding?: number | undefined;
+    texelsPerUnit?: number | undefined;
+    respectUVSeams?: boolean | undefined;
+    useInputUVs?: boolean | undefined;
+}): Object | null;

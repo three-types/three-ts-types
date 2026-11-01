@@ -1,6 +1,3 @@
-import { ColorRepresentation } from "../math/Color.js";
-import { Light } from "./Light.js";
-
 /**
  * This light globally illuminates all objects in the scene equally.
  *
@@ -10,6 +7,8 @@ import { Light } from "./Light.js";
  * const light = new THREE.AmbientLight( 0x404040 ); // soft white light
  * scene.add( light );
  * ```
+ *
+ * @augments Light
  */
 export class AmbientLight extends Light {
     /**
@@ -18,11 +17,14 @@ export class AmbientLight extends Light {
      * @param {(number|Color|string)} [color=0xffffff] - The light's color.
      * @param {number} [intensity=1] - The light's strength/intensity.
      */
-    constructor(color?: ColorRepresentation, intensity?: number);
+    constructor(color?: number | Color | string, intensity?: number);
     /**
      * This flag can be used for type testing.
      *
+     * @type {boolean}
+     * @readonly
      * @default true
      */
     readonly isAmbientLight: boolean;
 }
+import { Light } from "./Light.js";

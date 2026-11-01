@@ -1,26 +1,3 @@
-import { CoordinateSystem } from "../constants.js";
-import { Object3D } from "../core/Object3D.js";
-import { RenderTarget } from "../core/RenderTarget.js";
-import CubeRenderTarget from "../renderers/common/CubeRenderTarget.js";
-import { WebGLCubeRenderTarget } from "../renderers/WebGLCubeRenderTarget.js";
-import { Camera } from "./Camera.js";
-
-export interface CubeCameraRenderer {
-    coordinateSystem: CoordinateSystem;
-    getRenderTarget(): RenderTarget | null;
-    getActiveCubeFace(): number;
-    getActiveMipmapLevel(): number;
-    xr: {
-        enabled: boolean;
-    };
-    setRenderTarget(
-        renderTarget: WebGLCubeRenderTarget | null,
-        activeCubeFace?: number,
-        activeMipmapLevel?: number,
-    ): void;
-    render(scene: Object3D, camera: Camera): void;
-}
-
 /**
  * A special type of camera that is positioned in 3D space to render its surroundings into a
  * cube render target. The render target can then be used as an environment map for rendering
@@ -48,6 +25,8 @@ export interface CubeCameraRenderer {
  * car.visible = true;
  * renderer.render( scene, camera );
  * ```
+ *
+ * @augments Object3D
  */
 export class CubeCamera extends Object3D {
     /**
@@ -57,20 +36,25 @@ export class CubeCamera extends Object3D {
      * @param {number} far - The camera's far plane.
      * @param {WebGLCubeRenderTarget} renderTarget - The cube render target.
      */
-    constructor(near: number, far: number, renderTarget: WebGLCubeRenderTarget | CubeRenderTarget);
+    constructor(near: number, far: number, renderTarget: WebGLCubeRenderTarget);
+    type: string;
     /**
      * A reference to the cube render target.
+     *
+     * @type {WebGLCubeRenderTarget}
      */
     renderTarget: WebGLCubeRenderTarget;
     /**
      * The current active coordinate system.
      *
+     * @type {?(WebGLCoordinateSystem|WebGPUCoordinateSystem)}
      * @default null
      */
-    coordinateSystem: CoordinateSystem | null;
+    coordinateSystem: (number | number) | null;
     /**
      * The current active mipmap level
      *
+     * @type {number}
      * @default 0
      */
     activeMipmapLevel: number;
@@ -85,5 +69,6 @@ export class CubeCamera extends Object3D {
      * @param {(Renderer|WebGLRenderer)} renderer - The renderer.
      * @param {Scene} scene - The scene to render.
      */
-    update(renderer: CubeCameraRenderer, scene: Object3D): void;
+    update(renderer: Renderer | WebGLRenderer, scene: Scene): void;
 }
+import { Object3D } from "../core/Object3D.js";

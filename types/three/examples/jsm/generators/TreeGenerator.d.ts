@@ -1,32 +1,3 @@
-import { Color, Material, Mesh, MeshStandardNodeMaterial, Node, Vector3 } from "three/webgpu";
-
-export interface TreeGeneratorParameters {
-    seed: number;
-    levels: number;
-    children: number[];
-    branchAngle: number[];
-    angleVariance: number;
-    lengthRatio: number;
-    lengthVariance: number;
-    branchLengthFalloff: number;
-    trunkLength: number;
-    trunkRadius: number;
-    taper: number;
-    taperCurve: number;
-    rootFlare: number;
-    flareFrac: number;
-    radiusExponent: number;
-    minRadius: number;
-    minLength: number;
-    droop: number;
-    upPull: number;
-    gnarl: number[];
-    radialSegments: number;
-    sectionLength: number;
-    childStart: number;
-    trunkClear: number;
-}
-
 /**
  * Grows a procedural tree skeleton — trunk, branches and twigs, each swept as a tapered
  * tube — and bakes it into one indexed {@link BufferGeometry} (position and normal
@@ -52,46 +23,39 @@ export interface TreeGeneratorParameters {
  * ```
  */
 export class TreeGenerator {
-    constructor(material?: Material | null);
-
-    material: Material | null;
-    parameters: Partial<TreeGeneratorParameters>;
-
+    constructor(material?: null);
+    material: any;
+    parameters: {};
     build(): Mesh;
-
-    static defaults: TreeGeneratorParameters;
-
-    setSeed: (seed: number) => this;
-    setLevels: (levels: number) => this;
-    setChildren: (children: number[]) => this;
-    setBranchAngle: (branchAngle: number[]) => this;
-    setAngleVariance: (angleVariance: number) => this;
-    setLengthRatio: (lengthRatio: number) => this;
-    setLengthVariance: (lengthVariance: number) => this;
-    setBranchLengthFalloff: (branchLengthFalloff: number) => this;
-    setTrunkLength: (trunkLength: number) => this;
-    setTrunkRadius: (trunkRadius: number) => this;
-    setTaper: (taper: number) => this;
-    setTaperCurve: (taperCurve: number) => this;
-    setRootFlare: (rootFlare: number) => this;
-    setFlareFrac: (flareFrac: number) => this;
-    setRadiusExponent: (radiusExponent: number) => this;
-    setMinRadius: (minRadius: number) => this;
-    setMinLength: (minLength: number) => this;
-    setDroop: (droop: number) => this;
-    setUpPull: (upPull: number) => this;
-    setGnarl: (gnarl: number[]) => this;
-    setRadialSegments: (radialSegments: number) => this;
-    setSectionLength: (sectionLength: number) => this;
-    setChildStart: (childStart: number) => this;
-    setTrunkClear: (trunkClear: number) => this;
 }
-
-export interface TreeMaterialParameters {
-    barkColor?: Color | number | Node<"color"> | undefined;
-    barkScale?: Vector3 | undefined;
+export namespace TreeGenerator {
+    namespace defaults {
+        let seed: number;
+        let levels: number;
+        let children: number[];
+        let branchAngle: number[];
+        let angleVariance: number;
+        let lengthRatio: number;
+        let lengthVariance: number;
+        let branchLengthFalloff: number;
+        let trunkLength: number;
+        let trunkRadius: number;
+        let taper: number;
+        let taperCurve: number;
+        let rootFlare: number;
+        let flareFrac: number;
+        let radiusExponent: number;
+        let minRadius: number;
+        let minLength: number;
+        let droop: number;
+        let upPull: number;
+        let gnarl: number[];
+        let radialSegments: number;
+        let sectionLength: number;
+        let childStart: number;
+        let trunkClear: number;
+    }
 }
-
 /**
  * A simple bark material for a {@link TreeGenerator} mesh: a low-saturation brown with a
  * faint, vertically-stretched grain, so trunks read near-black against bright fog.
@@ -99,4 +63,6 @@ export interface TreeMaterialParameters {
  * @param {Object} [parameters] - `barkColor` ( a hex, THREE.Color or TSL node ) and `barkScale` ( a THREE.Vector3 ).
  * @return {MeshStandardNodeMaterial}
  */
-export function createTreeMaterial(parameters?: TreeMaterialParameters): MeshStandardNodeMaterial;
+export function createTreeMaterial(parameters?: Object): MeshStandardNodeMaterial;
+import { Mesh } from "three";
+import { MeshStandardNodeMaterial } from "three/webgpu";

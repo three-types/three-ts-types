@@ -1,11 +1,3 @@
-import { InstancedMeshGenerator } from "./InstancedMeshGenerator.js";
-
-export interface TrafficlightGeneratorParameters {
-    height: number;
-    reach: number;
-    radius: number;
-}
-
 /**
  * A NYC traffic signal: a round pole at the curb with a horizontal mast arm
  * reaching out over the roadway to a vertical three-section signal head, plus a
@@ -22,8 +14,14 @@ export interface TrafficlightGeneratorParameters {
  * scene.add( lights.build( placements ) ); // placements: Matrix4[]
  * ```
  */
-export class TrafficlightGenerator extends InstancedMeshGenerator<TrafficlightGeneratorParameters> {
-    constructor(parameters?: Partial<TrafficlightGeneratorParameters>);
-
-    static defaults: TrafficlightGeneratorParameters;
+export class TrafficlightGenerator extends InstancedMeshGenerator {
+    constructor(parameters?: {});
 }
+export namespace TrafficlightGenerator {
+    namespace defaults {
+        let height: number;
+        let reach: number;
+        let radius: number;
+    }
+}
+import { InstancedMeshGenerator } from "./InstancedMeshGenerator.js";

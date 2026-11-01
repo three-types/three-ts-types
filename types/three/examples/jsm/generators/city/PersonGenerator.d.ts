@@ -1,14 +1,3 @@
-import { BufferGeometry, Group, Matrix4, MeshStandardNodeMaterial } from "three/webgpu";
-
-export interface PersonGeneratorParameters {
-    height: number;
-}
-
-export interface PersonGeneratorGeometries {
-    walk: BufferGeometry;
-    stand: BufferGeometry;
-}
-
 /**
  * A low-poly pedestrian crowd with shaped heads, jackets and lofted limbs.
  * Two shared poses stand or walk, with sleeves and trousers swept through
@@ -29,16 +18,24 @@ export interface PersonGeneratorGeometries {
  * ```
  */
 export class PersonGenerator {
-    constructor(parameters?: Partial<PersonGeneratorParameters>);
-
-    parameters: PersonGeneratorParameters;
-
+    constructor(parameters?: {});
+    parameters: {
+        height: number;
+    };
     material: MeshStandardNodeMaterial | null;
-    geometries: PersonGeneratorGeometries | null;
+    geometries: {
+        walk: import("three").BufferGeometry | null;
+        stand: import("three").BufferGeometry | null;
+    } | null;
     mesh: Group | null;
-
-    build(placements: Matrix4[]): Group;
+    _parametersKey: any;
+    build(placements: any): Group;
     dispose(): void;
-
-    static defaults: PersonGeneratorParameters;
 }
+export namespace PersonGenerator {
+    namespace defaults {
+        let height: number;
+    }
+}
+import { Group } from "three";
+import { MeshStandardNodeMaterial } from "three/webgpu";

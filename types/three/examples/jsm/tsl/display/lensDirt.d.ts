@@ -1,5 +1,3 @@
-import { Node, TextureNode } from "three/webgpu";
-
 /**
  * Applies a lens dirt effect. The lens dirt texture is revealed wherever the
  * scene's luminance is bright. The input is typically a blurred luminance of
@@ -13,8 +11,4 @@ import { Node, TextureNode } from "three/webgpu";
  * @param {Node<float>} [intensity=float(1)] - Defines the intensity of the lens dirt.
  * @return {Node<vec4>} The lens dirt.
  */
-export const lensDirt: (
-    textureNode: Node<"vec4">,
-    dirtTextureNode: TextureNode,
-    intensity?: Node<"float"> | number,
-) => Node<"vec4">;
+export const lensDirt: () => void;

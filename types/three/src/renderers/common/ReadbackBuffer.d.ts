@@ -1,19 +1,11 @@
-import { EventDispatcher } from "../../core/EventDispatcher.js";
-
-export interface ReadbackBufferEventMap {
-    release: {};
-    dispose: {};
-}
-
+export default ReadbackBuffer;
 /**
  * A readback buffer is used to transfer data from the GPU to the CPU.
  * It is primarily used to read back compute shader results.
  *
  * @augments EventDispatcher
  */
-declare class ReadbackBuffer<TEventMap extends ReadbackBufferEventMap = ReadbackBufferEventMap>
-    extends EventDispatcher<TEventMap>
-{
+declare class ReadbackBuffer extends EventDispatcher {
     /**
      * Constructs a new readback buffer.
      *
@@ -46,6 +38,7 @@ declare class ReadbackBuffer<TEventMap extends ReadbackBufferEventMap = Readback
      * @default true
      */
     readonly isReadbackBuffer: boolean;
+    _mapped: boolean;
     /**
      * Releases the mapped buffer data so the GPU buffer can be
      * used by the GPU again.
@@ -59,5 +52,4 @@ declare class ReadbackBuffer<TEventMap extends ReadbackBufferEventMap = Readback
      */
     dispose(): void;
 }
-
-export default ReadbackBuffer;
+import { EventDispatcher } from "../../core/EventDispatcher.js";

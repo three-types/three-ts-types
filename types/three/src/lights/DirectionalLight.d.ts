@@ -1,14 +1,3 @@
-import { JSONMeta, Object3D } from "../core/Object3D.js";
-import { ColorRepresentation } from "../math/Color.js";
-import { DirectionalLightShadow } from "./DirectionalLightShadow.js";
-import { Light, LightJSON } from "./Light.js";
-import { LightShadowJSON } from "./LightShadow.js";
-
-export interface DirectionalLightJSON extends LightJSON {
-    shadow: LightShadowJSON;
-    target: string;
-}
-
 /**
  * A light that gets emitted in a specific direction. This light will behave
  * as though it is infinitely far away and the rays produced from it are all
@@ -33,6 +22,8 @@ export interface DirectionalLightJSON extends LightJSON {
  * const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
  * scene.add( directionalLight );
  * ```
+ *
+ * @augments Light
  */
 export class DirectionalLight extends Light {
     /**
@@ -41,10 +32,12 @@ export class DirectionalLight extends Light {
      * @param {(number|Color|string)} [color=0xffffff] - The light's color.
      * @param {number} [intensity=1] - The light's strength/intensity.
      */
-    constructor(color?: ColorRepresentation, intensity?: number);
+    constructor(color?: number | Color | string, intensity?: number);
     /**
      * This flag can be used for type testing.
      *
+     * @type {boolean}
+     * @readonly
      * @default true
      */
     readonly isDirectionalLight: boolean;
@@ -57,12 +50,18 @@ export class DirectionalLight extends Light {
      *
      * It is also possible to set the target to be another 3D object
      * in the scene. The light will now track the target object.
+     *
+     * @type {Object3D}
      */
     target: Object3D;
     /**
      * This property holds the light's shadow configuration.
+     *
+     * @type {DirectionalLightShadow}
      */
     shadow: DirectionalLightShadow;
-    copy(source: DirectionalLight): this;
-    toJSON(meta?: JSONMeta): DirectionalLightJSON;
+    copy(source: any): this;
 }
+import { Object3D } from "../core/Object3D.js";
+import { DirectionalLightShadow } from "./DirectionalLightShadow.js";
+import { Light } from "./Light.js";

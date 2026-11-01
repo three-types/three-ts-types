@@ -1,11 +1,3 @@
-import { JSONMeta } from "../core/Object3D.js";
-import { SphericalHarmonics3 } from "../math/SphericalHarmonics3.js";
-import { Light, LightJSON } from "./Light.js";
-
-export interface LightProbeJSON extends LightJSON {
-    sh: number[];
-}
-
 /**
  * Light probes are an alternative way of adding light to a 3D scene. Unlike
  * classical light sources (e.g. directional, point or spot lights), light
@@ -22,6 +14,8 @@ export interface LightProbeJSON extends LightJSON {
  * The current probe implementation in three.js supports so-called diffuse
  * light probes. This type of light probe is functionally equivalent to an
  * irradiance environment map.
+ *
+ * @augments Light
  */
 export class LightProbe extends Light {
     /**
@@ -34,13 +28,18 @@ export class LightProbe extends Light {
     /**
      * This flag can be used for type testing.
      *
+     * @type {boolean}
+     * @readonly
      * @default true
      */
     readonly isLightProbe: boolean;
     /**
      * A light probe uses spherical harmonics to encode lighting information.
+     *
+     * @type {SphericalHarmonics3}
      */
     sh: SphericalHarmonics3;
-    copy(source: LightProbe): this;
-    toJSON(meta?: JSONMeta): LightProbeJSON;
+    copy(source: any): this;
 }
+import { SphericalHarmonics3 } from "../math/SphericalHarmonics3.js";
+import { Light } from "./Light.js";

@@ -1,37 +1,19 @@
-import { JSONMeta, Object3D, Object3DEventMap, Object3DJSON, Object3DJSONObject } from "../core/Object3D.js";
-import { Material } from "../materials/Material.js";
-import { Color } from "../math/Color.js";
-import { Euler, EulerTuple } from "../math/Euler.js";
-import { Texture } from "../textures/Texture.js";
-import { Fog, FogJSON } from "./Fog.js";
-import { FogExp2, FogExp2JSON } from "./FogExp2.js";
-
-export interface SceneJSONObject extends Object3DJSONObject {
-    fog?: FogJSON | FogExp2JSON;
-
-    backgroundBlurriness?: number;
-    backgroundIntensity?: number;
-    backgroundRotation: EulerTuple;
-
-    environmentIntensity?: number;
-    environmentRotation: EulerTuple;
-}
-
-export interface SceneJSON extends Object3DJSON {
-    object: SceneJSONObject;
-}
-
 /**
  * Scenes allow you to set up what is to be rendered and where by three.js.
  * This is where you place 3D objects like meshes, lines or lights.
+ *
+ * @augments Object3D
  */
-export class Scene<TEventMap extends Object3DEventMap = Object3DEventMap> extends Object3D<TEventMap> {
+export class Scene extends Object3D {
     /**
      * This flag can be used for type testing.
      *
+     * @type {boolean}
+     * @readonly
      * @default true
      */
     readonly isScene: boolean;
+    type: string;
     /**
      * Defines the background of the scene. Valid inputs are:
      *
@@ -39,6 +21,7 @@ export class Scene<TEventMap extends Object3DEventMap = Object3DEventMap> extend
      * - A texture for defining a (flat) textured background.
      * - Cube textures or equirectangular textures for defining a skybox.
      *
+     * @type {?(Color|Texture)}
      * @default null
      */
     background: (Color | Texture) | null;
@@ -47,6 +30,7 @@ export class Scene<TEventMap extends Object3DEventMap = Object3DEventMap> extend
      * it's not possible to overwrite an existing texture assigned to the `envMap`
      * material property.
      *
+     * @type {?Texture}
      * @default null
      */
     environment: Texture | null;
@@ -54,6 +38,7 @@ export class Scene<TEventMap extends Object3DEventMap = Object3DEventMap> extend
      * A fog instance defining the type of fog that affects everything
      * rendered in the scene.
      *
+     * @type {?(Fog|FogExp2)}
      * @default null
      */
     fog: (Fog | FogExp2) | null;
@@ -62,12 +47,14 @@ export class Scene<TEventMap extends Object3DEventMap = Object3DEventMap> extend
      * assigned to {@link Scene#background}. Valid input is a float between `0`
      * and `1`.
      *
+     * @type {number}
      * @default 0
      */
     backgroundBlurriness: number;
     /**
      * Attenuates the color of the background. Only applies to background textures.
      *
+     * @type {number}
      * @default 1
      */
     backgroundIntensity: number;
@@ -75,6 +62,7 @@ export class Scene<TEventMap extends Object3DEventMap = Object3DEventMap> extend
      * The rotation of the background in radians. Only influences environment maps
      * assigned to {@link Scene#background}.
      *
+     * @type {Euler}
      * @default (0,0,0)
      */
     backgroundRotation: Euler;
@@ -82,6 +70,7 @@ export class Scene<TEventMap extends Object3DEventMap = Object3DEventMap> extend
      * Attenuates the color of the environment. Only influences environment maps
      * assigned to {@link Scene#environment}.
      *
+     * @type {number}
      * @default 1
      */
     environmentIntensity: number;
@@ -89,6 +78,7 @@ export class Scene<TEventMap extends Object3DEventMap = Object3DEventMap> extend
      * The rotation of the environment map in radians. Only influences physical materials
      * in the scene when {@link Scene#environment} is used.
      *
+     * @type {Euler}
      * @default (0,0,0)
      */
     environmentRotation: Euler;
@@ -96,9 +86,12 @@ export class Scene<TEventMap extends Object3DEventMap = Object3DEventMap> extend
      * Forces everything in the scene to be rendered with the defined material. It is possible
      * to exclude materials from override by setting {@link Material#allowOverride} to `false`.
      *
+     * @type {?Material}
      * @default null
      */
     overrideMaterial: Material | null;
-    copy(source: Scene, recursive?: boolean): this;
-    toJSON(meta?: JSONMeta): SceneJSON;
+    copy(source: any, recursive: any): this;
+    toJSON(meta: any): Object;
 }
+import { Object3D } from "../core/Object3D.js";
+import { Euler } from "../math/Euler.js";

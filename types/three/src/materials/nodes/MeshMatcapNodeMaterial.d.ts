@@ -1,21 +1,8 @@
-import NodeBuilder from "../../nodes/core/NodeBuilder.js";
-import { MapColorPropertiesToColorRepresentations } from "../Material.js";
-import { MeshMatcapMaterialParameters, MeshMatcapMaterialProperties } from "../MeshMatcapMaterial.js";
-import NodeMaterial, { NodeMaterialNodeProperties } from "./NodeMaterial.js";
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface MeshMatcapNodeMaterialNodeProperties extends NodeMaterialNodeProperties {
-}
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface MeshMatcapNodeMaterialParameters
-    extends
-        Partial<MapColorPropertiesToColorRepresentations<MeshMatcapNodeMaterialNodeProperties>>,
-        MeshMatcapMaterialParameters
-{}
-
+export default MeshMatcapNodeMaterial;
 /**
  * Node material version of {@link MeshMatcapMaterial}.
+ *
+ * @augments NodeMaterial
  */
 declare class MeshMatcapNodeMaterial extends NodeMaterial {
     /**
@@ -23,14 +10,15 @@ declare class MeshMatcapNodeMaterial extends NodeMaterial {
      *
      * @param {Object} [parameters] - The configuration parameter.
      */
-    constructor(parameters?: MeshMatcapNodeMaterialParameters);
+    constructor(parameters?: Object);
     /**
      * This flag can be used for type testing.
      *
+     * @type {boolean}
+     * @readonly
      * @default true
      */
     readonly isMeshMatcapNodeMaterial: boolean;
-    setValues(values?: MeshMatcapNodeMaterialParameters): void;
     /**
      * Setups the matcap specific node variables.
      *
@@ -38,8 +26,4 @@ declare class MeshMatcapNodeMaterial extends NodeMaterial {
      */
     setupVariants(builder: NodeBuilder): void;
 }
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface MeshMatcapNodeMaterial extends MeshMatcapNodeMaterialNodeProperties, MeshMatcapMaterialProperties {}
-
-export default MeshMatcapNodeMaterial;
+import NodeMaterial from "./NodeMaterial.js";

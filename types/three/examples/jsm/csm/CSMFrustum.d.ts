@@ -1,11 +1,7 @@
-import { Matrix4, Vector3 } from "three";
-
-export interface CSMFrustumVertices {
-    near: Vector3[];
-    far: Vector3[];
-}
-
-export interface CSMFrustumParameters {
+/**
+ * ~Data
+ */
+export type CSMFrustum = {
     /**
      * - Whether this CSM frustum is used with WebGL or WebGPU.
      */
@@ -22,8 +18,8 @@ export interface CSMFrustumParameters {
      * - The maximum far value.
      */
     maxFar?: number | undefined;
-}
-
+};
+import { Matrix4 } from "three";
 /**
  * Represents the frustum of a CSM instance.
  *
@@ -35,7 +31,7 @@ export class CSMFrustum {
      *
      * @param {CSMFrustum~Data} [data] - The CSM data.
      */
-    constructor(data?: CSMFrustumParameters);
+    constructor(data: any);
     /**
      * The zNear value. This value depends on whether the CSM
      * is used with WebGL or WebGPU. Both API use different
@@ -56,7 +52,7 @@ export class CSMFrustum {
      *
      * @type {Object}
      */
-    vertices: CSMFrustumVertices;
+    vertices: Object;
     /**
      * Setups this CSM frustum from the given projection matrix and max far value.
      *
@@ -64,7 +60,7 @@ export class CSMFrustum {
      * @param {number} maxFar - The maximum far value.
      * @returns {Object} An object representing the vertices of the near and far plane in view space.
      */
-    setFromProjectionMatrix(projectionMatrix: Matrix4, maxFar: number): CSMFrustumVertices;
+    setFromProjectionMatrix(projectionMatrix: Matrix4, maxFar: number): Object;
     /**
      * Splits the CSM frustum by the given array. The new CSM frustum are pushed into the given
      * target array.

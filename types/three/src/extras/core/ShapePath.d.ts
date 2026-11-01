@@ -1,8 +1,3 @@
-import { Color } from "../../math/Color.js";
-import { Vector2 } from "../../math/Vector2.js";
-import { Path } from "./Path.js";
-import { Shape } from "./Shape.js";
-
 /**
  * This class is used to convert a series of paths to an array of
  * shapes. It is specifically used in context of fonts and SVG.
@@ -35,7 +30,7 @@ export class ShapePath {
      *
      * @type {Object}
      */
-    userData: Record<string, unknown>;
+    userData: Object;
     /**
      * Creates a new path and moves it current point to the given one.
      *
@@ -43,7 +38,7 @@ export class ShapePath {
      * @param {number} y - The y coordinate.
      * @return {ShapePath} A reference to this shape path.
      */
-    moveTo(x: number, y: number): this;
+    moveTo(x: number, y: number): ShapePath;
     /**
      * Adds an instance of {@link LineCurve} to the path by connecting
      * the current point with the given one.
@@ -52,7 +47,7 @@ export class ShapePath {
      * @param {number} y - The y coordinate of the end point.
      * @return {ShapePath} A reference to this shape path.
      */
-    lineTo(x: number, y: number): this;
+    lineTo(x: number, y: number): ShapePath;
     /**
      * Adds an instance of {@link QuadraticBezierCurve} to the path by connecting
      * the current point with the given one.
@@ -63,7 +58,7 @@ export class ShapePath {
      * @param {number} aY - The y coordinate of the end point.
      * @return {ShapePath} A reference to this shape path.
      */
-    quadraticCurveTo(aCPx: number, aCPy: number, aX: number, aY: number): this;
+    quadraticCurveTo(aCPx: number, aCPy: number, aX: number, aY: number): ShapePath;
     /**
      * Adds an instance of {@link CubicBezierCurve} to the path by connecting
      * the current point with the given one.
@@ -76,7 +71,7 @@ export class ShapePath {
      * @param {number} aY - The y coordinate of the end point.
      * @return {ShapePath} A reference to this shape path.
      */
-    bezierCurveTo(aCP1x: number, aCP1y: number, aCP2x: number, aCP2y: number, aX: number, aY: number): this;
+    bezierCurveTo(aCP1x: number, aCP1y: number, aCP2x: number, aCP2y: number, aX: number, aY: number): ShapePath;
     /**
      * Adds an instance of {@link SplineCurve} to the path by connecting
      * the current point with the given list of points.
@@ -84,7 +79,7 @@ export class ShapePath {
      * @param {Array<Vector2>} pts - An array of points in 2D space.
      * @return {ShapePath} A reference to this shape path.
      */
-    splineThru(pts: Array<Vector2>): this;
+    splineThru(pts: Array<Vector2>): ShapePath;
     /**
      * Converts the paths into an array of shapes.
      *
@@ -92,3 +87,7 @@ export class ShapePath {
      */
     toShapes(): Array<Shape>;
 }
+import { Color } from "../../math/Color.js";
+import { Vector2 } from "../../math/Vector2.js";
+import { Path } from "./Path.js";
+import { Shape } from "./Shape.js";

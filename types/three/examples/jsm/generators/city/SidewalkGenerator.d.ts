@@ -1,14 +1,3 @@
-import { Group, Matrix4, MeshStandardNodeMaterial } from "three/webgpu";
-
-export interface SidewalkGeneratorParameters {
-    width: number;
-    depth: number;
-    height: number;
-    radius: number;
-    curbWidth: number;
-    curbLip: number;
-}
-
 /**
  * Generates the raised sidewalk for a city's blocks: per block, a rounded-corner concrete
  * slab rimmed by a distinct granite kerbstone that stands proud of the walking surface and
@@ -25,16 +14,31 @@ export interface SidewalkGeneratorParameters {
  * ```
  */
 export class SidewalkGenerator {
-    constructor(parameters?: Partial<SidewalkGeneratorParameters>);
-
-    parameters: SidewalkGeneratorParameters;
-
+    constructor(parameters?: {});
+    parameters: {
+        width: number;
+        depth: number;
+        height: number;
+        radius: number;
+        curbWidth: number;
+        curbLip: number;
+    };
     material: MeshStandardNodeMaterial | null;
     curbMaterial: MeshStandardNodeMaterial | null;
     mesh: Group | null;
-
-    build(placements: Matrix4[]): Group;
+    _parametersKey: any;
+    build(placements: any): Group;
     dispose(): void;
-
-    static defaults: SidewalkGeneratorParameters;
 }
+export namespace SidewalkGenerator {
+    namespace defaults {
+        let width: number;
+        let depth: number;
+        let height: number;
+        let radius: number;
+        let curbWidth: number;
+        let curbLip: number;
+    }
+}
+import { MeshStandardNodeMaterial } from "three/webgpu";
+import { Group } from "three/webgpu";

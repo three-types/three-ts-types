@@ -1,5 +1,3 @@
-import { Light, Mesh, Node, Texture, WebGPURenderer } from "three/webgpu";
-
 /**
  * Bakes indirect diffuse irradiance into a light map. The irradiance is defined by a
  * function that returns a TSL node for a world-space position and normal, so any
@@ -45,7 +43,7 @@ export class LightMapper {
     constructor(
         renderer: WebGPURenderer,
         size: number,
-        irradianceNode: (position: Node<"vec3">, normal: Node<"vec3">, sample: Node<"float">) => Node<"vec3">,
+        irradianceNode: (arg0: Node<vec3>, arg1: Node<vec3>, arg2: Node<float>) => Node<vec3>,
         { lights }?: {
             lights?: Light[] | undefined;
         },
@@ -61,7 +59,7 @@ export class LightMapper {
      *
      * @type {function(Node<vec3>, Node<vec3>, Node<float>): Node<vec3>}
      */
-    irradianceNode: (position: Node<"vec3">, normal: Node<"vec3">, sample: Node<"float">) => Node<"vec3">;
+    irradianceNode: (arg0: Node<vec3>, arg1: Node<vec3>, arg2: Node<float>) => Node<vec3>;
     /**
      * The light map size in texels.
      *
@@ -76,6 +74,8 @@ export class LightMapper {
      * @default 0
      */
     readonly samples: number;
+    _accumulation: RenderTarget;
+    _renderTarget: RenderTarget;
     /**
      * The baked light map. It stores linear diffuse irradiance in lux, without baked
      * albedo, material ambient occlusion, or display exposure, and uses `uv1`.
@@ -84,6 +84,14 @@ export class LightMapper {
      * @type {Texture}
      */
     texture: Texture;
+    _scene: Scene;
+    _camera: OrthographicCamera;
+    _objects: any[];
+    _jitter: import("three/tsl").UniformNode;
+    _sample: import("three/tsl").UniformNode;
+    _frontMaterial: NodeMaterial;
+    _backMaterial: NodeMaterial;
+    _quad: QuadMesh;
     /**
      * Adds meshes to the light map. Their geometries must provide `uv1`.
      * Skinned and instanced meshes are not supported.
@@ -105,4 +113,20 @@ export class LightMapper {
      * Frees all internal resources.
      */
     dispose(): void;
+    /**
+     * Creates a material that rasterizes meshes in UV space and outputs irradiance.
+     *
+     * @private
+     * @param {function(Node<vec3>, Node<vec3>, Node<float>): Node<vec3>} irradianceNode - The irradiance function.
+     * @param {boolean} flipNormal - Whether to flip the normal, for back-sided meshes.
+     * @param {Array<Light>} directLights - Direct lights to include.
+     * @return {NodeMaterial} The material.
+     */
+    private _createBakeMaterial;
 }
+import { RenderTarget } from "three/webgpu";
+import { Scene } from "three/webgpu";
+import { OrthographicCamera } from "three/webgpu";
+import { NodeMaterial } from "three/webgpu";
+import { QuadMesh } from "three/webgpu";
+import { Mesh } from "three/webgpu";

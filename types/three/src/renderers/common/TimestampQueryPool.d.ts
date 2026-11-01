@@ -1,9 +1,10 @@
+export default TimestampQueryPool;
 /**
  * Abstract base class of a timestamp query pool.
  *
  * @abstract
  */
-declare abstract class TimestampQueryPool {
+declare class TimestampQueryPool {
     /**
      * Creates a new timestamp query pool.
      *
@@ -56,7 +57,7 @@ declare abstract class TimestampQueryPool {
      *
      * @type {Array<number>}
      */
-    frames: number[];
+    frames: Array<number>;
     /**
      * This property is used to avoid multiple concurrent resolve operations.
      * The WebGL backend uses it as a boolean flag. In context of WebGPU, it holds
@@ -77,7 +78,7 @@ declare abstract class TimestampQueryPool {
      *
      * @return {Array<number>} The timestamp frames.
      */
-    getTimestampFrames(): number[];
+    getTimestampFrames(): Array<number>;
     /**
      * Returns the timestamp for a given render context.
      *
@@ -100,7 +101,7 @@ declare abstract class TimestampQueryPool {
      * @param {number} frameId - The current frame identifier.
      * @returns {?number}
      */
-    abstract allocateQueriesForContext(uid: string, frameId: number): number | null;
+    allocateQueriesForContext(): number | null;
     /**
      * Resolve all timestamps and return data (or process them).
      *
@@ -108,13 +109,11 @@ declare abstract class TimestampQueryPool {
      * @async
      * @returns {Promise<number>|number} The resolved timestamp value.
      */
-    abstract resolveQueriesAsync(): Promise<number> | number;
+    resolveQueriesAsync(): Promise<number> | number;
     /**
      * Dispose of the query pool.
      *
      * @abstract
      */
-    abstract dispose(): void;
+    dispose(): void;
 }
-
-export default TimestampQueryPool;

@@ -1,14 +1,64 @@
-import { NormalMapTypes } from "../constants.js";
-import { Color } from "../math/Color.js";
-import { Euler } from "../math/Euler.js";
-import { Vector2 } from "../math/Vector2.js";
-import { Texture } from "../textures/Texture.js";
-import { MapColorPropertiesToColorRepresentations, Material, MaterialProperties } from "./Material.js";
-
-export interface MeshStandardMaterialProperties extends MaterialProperties {
+/**
+ * A standard physically based material, using Metallic-Roughness workflow.
+ *
+ * Physically based rendering (PBR) has recently become the standard in many
+ * 3D applications, such as [Unity](https://blogs.unity3d.com/2014/10/29/physically-based-shading-in-unity-5-a-primer/),
+ * [Unreal](https://docs.unrealengine.com/latest/INT/Engine/Rendering/Materials/PhysicallyBased/) and
+ * [3D Studio Max](http://area.autodesk.com/blogs/the-3ds-max-blog/what039s-new-for-rendering-in-3ds-max-2017).
+ *
+ * This approach differs from older approaches in that instead of using
+ * approximations for the way in which light interacts with a surface, a
+ * physically correct model is used. The idea is that, instead of tweaking
+ * materials to look good under specific lighting, a material can be created
+ * that will react 'correctly' under all lighting scenarios.
+ *
+ * In practice this gives a more accurate and realistic looking result than
+ * the {@link MeshLambertMaterial} or {@link MeshPhongMaterial}, at the cost of
+ * being somewhat more computationally expensive. `MeshStandardMaterial` uses per-fragment
+ * shading.
+ *
+ * Note that for best results you should always specify an environment map when using this material.
+ *
+ * For a non-technical introduction to the concept of PBR and how to set up a
+ * PBR material, check out these articles by the people at [marmoset](https://www.marmoset.co):
+ *
+ * - [Basic Theory of Physically Based Rendering](https://www.marmoset.co/posts/basic-theory-of-physically-based-rendering/)
+ * - [Physically Based Rendering and You Can Too](https://www.marmoset.co/posts/physically-based-rendering-and-you-can-too/)
+ *
+ * Technical details of the approach used in three.js (and most other PBR systems) can be found is this
+ * [paper from Disney](https://media.disneyanimation.com/uploads/production/publication_asset/48/asset/s2012_pbs_disney_brdf_notes_v3.pdf)
+ * (pdf), by Brent Burley.
+ *
+ * @augments Material
+ * @demo scenes/material-browser.html#MeshStandardMaterial
+ */
+export class MeshStandardMaterial extends Material {
+    /**
+     * Constructs a new mesh standard material.
+     *
+     * @param {Object} [parameters] - An object with one or more properties
+     * defining the material's appearance. Any property of the material
+     * (including any property from inherited materials) can be passed
+     * in here. Color values can be passed any type of value accepted
+     * by {@link Color#set}.
+     */
+    constructor(parameters?: Object);
+    /**
+     * This flag can be used for type testing.
+     *
+     * @type {boolean}
+     * @readonly
+     * @default true
+     */
+    readonly isMeshStandardMaterial: boolean;
+    type: string;
+    defines: {
+        STANDARD: string;
+    };
     /**
      * Color of the material.
      *
+     * @type {Color}
      * @default (1,1,1)
      */
     color: Color;
@@ -17,6 +67,7 @@ export interface MeshStandardMaterialProperties extends MaterialProperties {
      * means fully diffuse. If `roughnessMap` is also provided,
      * both values are multiplied.
      *
+     * @type {number}
      * @default 1
      */
     roughness: number;
@@ -26,6 +77,7 @@ export interface MeshStandardMaterialProperties extends MaterialProperties {
      * A value between `0.0` and `1.0` could be used for a rusty metal look.
      * If `metalnessMap` is also provided, both values are multiplied.
      *
+     * @type {number}
      * @default 0
      */
     metalness: number;
@@ -57,6 +109,7 @@ export interface MeshStandardMaterialProperties extends MaterialProperties {
     /**
      * Intensity of the baked light.
      *
+     * @type {number}
      * @default 1
      */
     lightMapIntensity: number;
@@ -76,6 +129,7 @@ export interface MeshStandardMaterialProperties extends MaterialProperties {
      * disables ambient occlusion. Where intensity is `1` and the AO map's
      * red channel is also `1`, ambient light is fully occluded on a surface.
      *
+     * @type {number}
      * @default 1
      */
     aoMapIntensity: number;
@@ -83,12 +137,14 @@ export interface MeshStandardMaterialProperties extends MaterialProperties {
      * Emissive (light) color of the material, essentially a solid color
      * unaffected by other lighting.
      *
+     * @type {Color}
      * @default (0,0,0)
      */
     emissive: Color;
     /**
      * Intensity of the emissive light. Modulates the emissive color.
      *
+     * @type {number}
      * @default 1
      */
     emissiveIntensity: number;
@@ -121,6 +177,7 @@ export interface MeshStandardMaterialProperties extends MaterialProperties {
     /**
      * How much the bump map affects the material. Typical range is `[0,1]`.
      *
+     * @type {number}
      * @default 1
      */
     bumpScale: number;
@@ -142,12 +199,14 @@ export interface MeshStandardMaterialProperties extends MaterialProperties {
     /**
      * The type of normal map.
      *
+     * @type {(TangentSpaceNormalMap|ObjectSpaceNormalMap)}
      * @default TangentSpaceNormalMap
      */
-    normalMapType: NormalMapTypes;
+    normalMapType: number | ObjectSpaceNormalMap;
     /**
      * How much the normal map affects the material. Typical value range is `[0,1]`.
      *
+     * @type {Vector2}
      * @default (1,1)
      */
     normalScale: Vector2;
@@ -173,6 +232,7 @@ export interface MeshStandardMaterialProperties extends MaterialProperties {
      * displacement, and white is maximum displacement). Without a displacement
      * map set, this value is not applied.
      *
+     * @type {number}
      * @default 1
      */
     displacementScale: number;
@@ -181,6 +241,7 @@ export interface MeshStandardMaterialProperties extends MaterialProperties {
      * The bias is added to the scaled sample of the displacement map.
      * Without a displacement map set, this value is not applied.
      *
+     * @type {number}
      * @default 0
      */
     displacementBias: number;
@@ -239,18 +300,21 @@ export interface MeshStandardMaterialProperties extends MaterialProperties {
     /**
      * The rotation of the environment map in radians.
      *
+     * @type {Euler}
      * @default (0,0,0)
      */
     envMapRotation: Euler;
     /**
      * Scales the effect of the environment map by multiplying its color.
      *
+     * @type {number}
      * @default 1
      */
     envMapIntensity: number;
     /**
      * Renders the geometry as a wireframe.
      *
+     * @type {boolean}
      * @default false
      */
     wireframe: boolean;
@@ -259,6 +323,7 @@ export interface MeshStandardMaterialProperties extends MaterialProperties {
      *
      * Can only be used with {@link SVGRenderer}.
      *
+     * @type {number}
      * @default 1
      */
     wireframeLinewidth: number;
@@ -267,6 +332,7 @@ export interface MeshStandardMaterialProperties extends MaterialProperties {
      *
      * Can only be used with {@link SVGRenderer}.
      *
+     * @type {('round'|'bevel'|'miter')}
      * @default 'round'
      */
     wireframeLinecap: "round" | "bevel" | "miter";
@@ -275,78 +341,27 @@ export interface MeshStandardMaterialProperties extends MaterialProperties {
      *
      * Can only be used with {@link SVGRenderer}.
      *
+     * @type {('round'|'bevel'|'miter')}
      * @default 'round'
      */
     wireframeLinejoin: "round" | "bevel" | "miter";
     /**
      * Whether the material is rendered with flat shading or not.
      *
+     * @type {boolean}
      * @default false
      */
     flatShading: boolean;
     /**
      * Whether the material is affected by fog or not.
      *
+     * @type {boolean}
      * @default true
      */
     fog: boolean;
+    copy(source: any): this;
 }
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface MeshStandardMaterialParameters
-    extends Partial<MapColorPropertiesToColorRepresentations<MeshStandardMaterialProperties>>
-{}
-
-/**
- * A standard physically based material, using Metallic-Roughness workflow.
- *
- * Physically based rendering (PBR) has recently become the standard in many
- * 3D applications, such as [Unity](https://blogs.unity3d.com/2014/10/29/physically-based-shading-in-unity-5-a-primer/),
- * [Unreal](https://docs.unrealengine.com/latest/INT/Engine/Rendering/Materials/PhysicallyBased/) and
- * [3D Studio Max](http://area.autodesk.com/blogs/the-3ds-max-blog/what039s-new-for-rendering-in-3ds-max-2017).
- *
- * This approach differs from older approaches in that instead of using
- * approximations for the way in which light interacts with a surface, a
- * physically correct model is used. The idea is that, instead of tweaking
- * materials to look good under specific lighting, a material can be created
- * that will react 'correctly' under all lighting scenarios.
- *
- * In practice this gives a more accurate and realistic looking result than
- * the {@link MeshLambertMaterial} or {@link MeshPhongMaterial}, at the cost of
- * being somewhat more computationally expensive. `MeshStandardMaterial` uses per-fragment
- * shading.
- *
- * Note that for best results you should always specify an environment map when using this material.
- *
- * For a non-technical introduction to the concept of PBR and how to set up a
- * PBR material, check out these articles by the people at [marmoset](https://www.marmoset.co):
- *
- * - [Basic Theory of Physically Based Rendering](https://www.marmoset.co/posts/basic-theory-of-physically-based-rendering/)
- * - [Physically Based Rendering and You Can Too](https://www.marmoset.co/posts/physically-based-rendering-and-you-can-too/)
- *
- * Technical details of the approach used in three.js (and most other PBR systems) can be found is this
- * [paper from Disney](https://media.disneyanimation.com/uploads/production/publication_asset/48/asset/s2012_pbs_disney_brdf_notes_v3.pdf)
- * (pdf), by Brent Burley.
- */
-export class MeshStandardMaterial extends Material {
-    /**
-     * Constructs a new mesh standard material.
-     *
-     * @param {Object} [parameters] - An object with one or more properties
-     * defining the material's appearance. Any property of the material
-     * (including any property from inherited materials) can be passed
-     * in here. Color values can be passed any type of value accepted
-     * by {@link Color#set}.
-     */
-    constructor(parameters?: MeshStandardMaterialParameters);
-    /**
-     * This flag can be used for type testing.
-     *
-     * @default true
-     */
-    readonly isMeshStandardMaterial: boolean;
-    setValues(values?: MeshStandardMaterialParameters): void;
-}
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface MeshStandardMaterial extends MeshStandardMaterialProperties {}
+import { Color } from "../math/Color.js";
+import { Euler } from "../math/Euler.js";
+import { Vector2 } from "../math/Vector2.js";
+import { Material } from "./Material.js";

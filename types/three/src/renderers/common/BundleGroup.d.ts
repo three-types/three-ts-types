@@ -1,5 +1,4 @@
-import { Group } from "../../objects/Group.js";
-
+export default BundleGroup;
 /**
  * A specialized group which enables applications access to the
  * Render Bundle API of WebGPU. The group with all its descendant nodes
@@ -42,5 +41,4 @@ declare class BundleGroup extends Group {
      */
     set needsUpdate(value: boolean);
 }
-
-export default BundleGroup;
+import { Group } from "../../objects/Group.js";
