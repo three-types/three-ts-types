@@ -1,3 +1,32 @@
+import { LineBasicMaterial, LineBasicMaterialProperties } from "./LineBasicMaterial.js";
+import { MapColorPropertiesToColorRepresentations } from "./Material.js";
+
+export interface LineDashedMaterialProperties extends LineBasicMaterialProperties {
+    /**
+     * The scale of the dashed part of a line.
+     *
+     * @default 1
+     */
+    scale: number;
+    /**
+     * The size of the dash. This is both the gap with the stroke.
+     *
+     * @default 3
+     */
+    dashSize: number;
+    /**
+     * The size of the gap.
+     *
+     * @default 1
+     */
+    gapSize: number;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface LineDashedMaterialParameters
+    extends Partial<MapColorPropertiesToColorRepresentations<LineDashedMaterialProperties>>
+{}
+
 /**
  * A material for rendering line primitives.
  *
@@ -11,39 +40,17 @@
  * 	gapSize: 1,
  * } );
  * ```
- *
- * @augments LineBasicMaterial
  */
 export class LineDashedMaterial extends LineBasicMaterial {
+    constructor(parameters?: LineDashedMaterialParameters);
     /**
      * This flag can be used for type testing.
      *
-     * @type {boolean}
-     * @readonly
      * @default true
      */
     readonly isLineDashedMaterial: boolean;
-    /**
-     * The scale of the dashed part of a line.
-     *
-     * @type {number}
-     * @default 1
-     */
-    scale: number;
-    /**
-     * The size of the dash. This is both the gap with the stroke.
-     *
-     * @type {number}
-     * @default 3
-     */
-    dashSize: number;
-    /**
-     * The size of the gap.
-     *
-     * @type {number}
-     * @default 1
-     */
-    gapSize: number;
-    copy(source: any): this;
+    setValues(values?: LineDashedMaterialParameters): void;
 }
-import { LineBasicMaterial } from "./LineBasicMaterial.js";
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface LineDashedMaterial extends LineDashedMaterialProperties {}

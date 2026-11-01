@@ -1,5 +1,9 @@
-export default ReferenceAttributeNode;
-export function referenceAttribute(name: string, type?: string | null, object?: Object | null): ReferenceAttributeNode;
+import { BufferAttribute } from "../../core/BufferAttribute.js";
+import { InterleavedBufferAttribute } from "../../core/InterleavedBufferAttribute.js";
+import { Object3D } from "../../core/Object3D.js";
+import Node from "../core/Node.js";
+import NodeBuilder from "../core/NodeBuilder.js";
+
 /**
  * This node binds a buffer attribute that is a property of the rendered object, like the
  * matrices of an instanced mesh. Unlike {@link BufferAttributeNode}, the attribute isn't part
@@ -20,7 +24,7 @@ declare class ReferenceAttributeNode extends Node {
      * @param {?string} [nodeType=null] - The node type. Inferred from the attribute if not set.
      * @param {?Object} [object=null] - The object the property belongs to. The rendered object if not set.
      */
-    constructor(property: string, nodeType?: string | null, object?: Object | null);
+    constructor(property: string, nodeType?: string | null, object?: object | null);
     /**
      * The name of the property the node refers to.
      *
@@ -40,14 +44,14 @@ declare class ReferenceAttributeNode extends Node {
      * @type {?Object}
      * @default null
      */
-    object: Object | null;
+    object: object | null;
     /**
      * Returns the value of the referred property of the given object.
      *
      * @param {Object} object - The object.
      * @return {?(BufferAttribute|InterleavedBufferAttribute)} The value of the referred property.
      */
-    getValueFromReference(object: Object): (BufferAttribute | InterleavedBufferAttribute) | null;
+    getValueFromReference(object: object): (BufferAttribute | InterleavedBufferAttribute) | null;
     /**
      * Returns the attribute the node binds when rendering the given object.
      *
@@ -70,5 +74,17 @@ declare class ReferenceAttributeNode extends Node {
      */
     setup(builder: NodeBuilder): Node;
 }
-import { InterleavedBufferAttribute } from "../../core/InterleavedBufferAttribute.js";
-import Node from "../core/Node.js";
+
+export default ReferenceAttributeNode;
+
+/**
+ * TSL function for creating a reference attribute node.
+ *
+ * @tsl
+ * @function
+ * @param {string} name - The name of the property the node refers to.
+ * @param {?string} [type=null] - The node type. Inferred from the attribute if not set.
+ * @param {?Object} [object=null] - The object the property belongs to. The rendered object if not set.
+ * @returns {ReferenceAttributeNode}
+ */
+export const referenceAttribute: (name: string, type?: string | null, object?: object | null) => ReferenceAttributeNode;

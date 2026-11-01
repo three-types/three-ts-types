@@ -1,34 +1,7 @@
-/**
- * A material used internally for implementing shadow mapping with
- * point lights.
- *
- * Can also be used to customize the shadow casting of an object by assigning
- * an instance of `MeshDistanceMaterial` to {@link Object3D#customDistanceMaterial}.
- * The following examples demonstrates this approach in order to ensure
- * transparent parts of objects do not cast shadows.
- *
- * @augments Material
- */
-export class MeshDistanceMaterial extends Material {
-    /**
-     * Constructs a new mesh distance material.
-     *
-     * @param {Object} [parameters] - An object with one or more properties
-     * defining the material's appearance. Any property of the material
-     * (including any property from inherited materials) can be passed
-     * in here. Color values can be passed any type of value accepted
-     * by {@link Color#set}.
-     */
-    constructor(parameters?: Object);
-    /**
-     * This flag can be used for type testing.
-     *
-     * @type {boolean}
-     * @readonly
-     * @default true
-     */
-    readonly isMeshDistanceMaterial: boolean;
-    type: string;
+import { Texture } from "../textures/Texture.js";
+import { MapColorPropertiesToColorRepresentations, Material, MaterialProperties } from "./Material.js";
+
+export interface MeshDistanceMaterialProperties extends MaterialProperties {
     /**
      * The color map. May optionally include an alpha channel, typically combined
      * with {@link Material#transparent} or {@link Material#alphaTest}.
@@ -78,7 +51,6 @@ export class MeshDistanceMaterial extends Material {
      * displacement, and white is maximum displacement). Without a displacement
      * map set, this value is not applied.
      *
-     * @type {number}
      * @default 1
      */
     displacementScale: number;
@@ -87,10 +59,44 @@ export class MeshDistanceMaterial extends Material {
      * The bias is added to the scaled sample of the displacement map.
      * Without a displacement map set, this value is not applied.
      *
-     * @type {number}
      * @default 0
      */
     displacementBias: number;
-    copy(source: any): this;
 }
-import { Material } from "./Material.js";
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface MeshDistanceMaterialParameters
+    extends Partial<MapColorPropertiesToColorRepresentations<MeshDistanceMaterialProperties>>
+{}
+
+/**
+ * A material used internally for implementing shadow mapping with
+ * point lights.
+ *
+ * Can also be used to customize the shadow casting of an object by assigning
+ * an instance of `MeshDistanceMaterial` to {@link Object3D#customDistanceMaterial}.
+ * The following examples demonstrates this approach in order to ensure
+ * transparent parts of objects do not cast shadows.
+ */
+export class MeshDistanceMaterial extends Material {
+    /**
+     * Constructs a new mesh distance material.
+     *
+     * @param {Object} [parameters] - An object with one or more properties
+     * defining the material's appearance. Any property of the material
+     * (including any property from inherited materials) can be passed
+     * in here. Color values can be passed any type of value accepted
+     * by {@link Color#set}.
+     */
+    constructor(parameters?: MeshDistanceMaterialParameters);
+    /**
+     * This flag can be used for type testing.
+     *
+     * @default true
+     */
+    readonly isMeshDistanceMaterial: boolean;
+    setValues(values?: MeshDistanceMaterialParameters): void;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface MeshDistanceMaterial extends MeshDistanceMaterialProperties {}

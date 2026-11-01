@@ -1,29 +1,9 @@
-/**
- * A material that maps the normal vectors to RGB colors.
- *
- * @augments Material
- * @demo scenes/material-browser.html#MeshNormalMaterial
- */
-export class MeshNormalMaterial extends Material {
-    /**
-     * Constructs a new mesh normal material.
-     *
-     * @param {Object} [parameters] - An object with one or more properties
-     * defining the material's appearance. Any property of the material
-     * (including any property from inherited materials) can be passed
-     * in here. Color values can be passed any type of value accepted
-     * by {@link Color#set}.
-     */
-    constructor(parameters?: Object);
-    /**
-     * This flag can be used for type testing.
-     *
-     * @type {boolean}
-     * @readonly
-     * @default true
-     */
-    readonly isMeshNormalMaterial: boolean;
-    type: string;
+import { NormalMapTypes } from "../constants.js";
+import { Vector2 } from "../math/Vector2.js";
+import { Texture } from "../textures/Texture.js";
+import { MapColorPropertiesToColorRepresentations, Material, MaterialProperties } from "./Material.js";
+
+export interface MeshNormalMaterialProperties extends MaterialProperties {
     /**
      * The texture to create a bump map. The black and white values map to the
      * perceived depth in relation to the lights. Bump doesn't actually affect
@@ -40,7 +20,6 @@ export class MeshNormalMaterial extends Material {
     /**
      * How much the bump map affects the material. Typical range is `[0,1]`.
      *
-     * @type {number}
      * @default 1
      */
     bumpScale: number;
@@ -62,14 +41,12 @@ export class MeshNormalMaterial extends Material {
     /**
      * The type of normal map.
      *
-     * @type {(TangentSpaceNormalMap|ObjectSpaceNormalMap)}
      * @default TangentSpaceNormalMap
      */
-    normalMapType: number | ObjectSpaceNormalMap;
+    normalMapType: NormalMapTypes;
     /**
      * How much the normal map affects the material. Typical value range is `[0,1]`.
      *
-     * @type {Vector2}
      * @default (1,1)
      */
     normalScale: Vector2;
@@ -83,7 +60,6 @@ export class MeshNormalMaterial extends Material {
      * displacement map with a matching normal map, since the renderer can
      * not recompute surface normals from the displaced vertices.
      *
-     * @type {?Texture}
      * @default null
      */
     displacementMap: Texture | null;
@@ -92,7 +68,6 @@ export class MeshNormalMaterial extends Material {
      * displacement, and white is maximum displacement). Without a displacement
      * map set, this value is not applied.
      *
-     * @type {number}
      * @default 1
      */
     displacementScale: number;
@@ -101,14 +76,12 @@ export class MeshNormalMaterial extends Material {
      * The bias is added to the scaled sample of the displacement map.
      * Without a displacement map set, this value is not applied.
      *
-     * @type {number}
      * @default 0
      */
     displacementBias: number;
     /**
      * Renders the geometry as a wireframe.
      *
-     * @type {boolean}
      * @default false
      */
     wireframe: boolean;
@@ -118,18 +91,44 @@ export class MeshNormalMaterial extends Material {
      * WebGL and WebGPU ignore this property and always render
      * 1 pixel wide lines.
      *
-     * @type {number}
      * @default 1
      */
     wireframeLinewidth: number;
     /**
      * Whether the material is rendered with flat shading or not.
      *
-     * @type {boolean}
      * @default false
      */
     flatShading: boolean;
-    copy(source: any): this;
 }
-import { Vector2 } from "../math/Vector2.js";
-import { Material } from "./Material.js";
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface MeshNormalMaterialParameters
+    extends Partial<MapColorPropertiesToColorRepresentations<MeshNormalMaterialProperties>>
+{}
+
+/**
+ * A material that maps the normal vectors to RGB colors.
+ */
+export class MeshNormalMaterial extends Material {
+    /**
+     * Constructs a new mesh normal material.
+     *
+     * @param {Object} [parameters] - An object with one or more properties
+     * defining the material's appearance. Any property of the material
+     * (including any property from inherited materials) can be passed
+     * in here. Color values can be passed any type of value accepted
+     * by {@link Color#set}.
+     */
+    constructor(parameters?: MeshNormalMaterialParameters);
+    /**
+     * This flag can be used for type testing.
+     *
+     * @default true
+     */
+    readonly isMeshNormalMaterial: boolean;
+    setValues(values?: MeshNormalMaterialParameters): void;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface MeshNormalMaterial extends MeshNormalMaterialProperties {}

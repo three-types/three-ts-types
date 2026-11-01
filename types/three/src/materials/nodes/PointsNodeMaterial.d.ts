@@ -1,4 +1,29 @@
-export default PointsNodeMaterial;
+import Node from "../../nodes/core/Node.js";
+import { MapColorPropertiesToColorRepresentations } from "../Material.js";
+import { PointsMaterialParameters, PointsMaterialProperties } from "../PointsMaterial.js";
+import SpriteNodeMaterial, { SpriteNodeMaterialNodeProperties } from "./SpriteNodeMaterial.js";
+
+export interface PointsNodeMaterialNodeProperties extends SpriteNodeMaterialNodeProperties {
+    /**
+     * This node property provides an additional way to set the point size.
+     *
+     * Note that WebGPU only supports point primitives with 1 pixel size. Consequently,
+     * this node has no effect when the material is used with {@link Points} and a WebGPU
+     * backend. If an application wants to render points with a size larger than 1 pixel,
+     * the material should be used with {@link Sprite} and instancing.
+     *
+     * @default null
+     */
+    sizeNode: Node;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface PointsNodeMaterialParameters
+    extends
+        Partial<MapColorPropertiesToColorRepresentations<PointsNodeMaterialNodeProperties>>,
+        PointsMaterialParameters
+{}
+
 /**
  * Node material version of {@link PointsMaterial}.
  *
@@ -17,33 +42,19 @@ export default PointsNodeMaterial;
  * ```js
  * const instancedPoints = new THREE.Sprite( new THREE.PointsNodeMaterial( { positionNode: instancedBufferAttribute( positionAttribute ) } ) );
  * ```
- *
- * @augments SpriteNodeMaterial
  */
 declare class PointsNodeMaterial extends SpriteNodeMaterial {
-    /**
-     * This node property provides an additional way to set the point size.
-     *
-     * Note that WebGPU only supports point primitives with 1 pixel size. Consequently,
-     * this node has no effect when the material is used with {@link Points} and a WebGPU
-     * backend. If an application wants to render points with a size larger than 1 pixel,
-     * the material should be used with {@link Sprite} and instancing.
-     *
-     * @type {?Node<vec2>}
-     * @default null
-     */
-    sizeNode: Node<any> | null;
+    constructor(parameters?: PointsNodeMaterialParameters);
     /**
      * This flag can be used for type testing.
      *
-     * @type {boolean}
-     * @readonly
      * @default true
      */
     readonly isPointsNodeMaterial: boolean;
-    setupPositionView(): any;
-    setupVertexSprite(builder: any): any;
-    setupVertex(builder: any): any;
-    _useAlphaToCoverage: any;
+    setValues(values?: PointsNodeMaterialParameters): void;
 }
-import SpriteNodeMaterial from "./SpriteNodeMaterial.js";
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface PointsNodeMaterial extends PointsNodeMaterialNodeProperties, PointsMaterialProperties {}
+
+export default PointsNodeMaterial;

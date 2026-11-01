@@ -1,3 +1,16 @@
+import { JSONMeta } from "../core/Object3D.js";
+import { ColorRepresentation } from "../math/Color.js";
+import { Light, LightJSON } from "./Light.js";
+import { LightShadowJSON } from "./LightShadow.js";
+import { PointLightShadow } from "./PointLightShadow.js";
+
+export interface PointLightJSON extends LightJSON {
+    distance: number;
+    decay: number;
+
+    shadow: LightShadowJSON;
+}
+
 /**
  * A light that gets emitted from a single point in all directions. A common
  * use case for this is to replicate the light emitted from a bare
@@ -10,8 +23,6 @@
  * light.position.set( 50, 50, 50 );
  * scene.add( light );
  * ```
- *
- * @augments Light
  */
 export class PointLight extends Light {
     /**
@@ -22,12 +33,10 @@ export class PointLight extends Light {
      * @param {number} [distance=0] - Maximum range of the light. `0` means no limit.
      * @param {number} [decay=2] - The amount the light dims along the distance of the light.
      */
-    constructor(color?: number | Color | string, intensity?: number, distance?: number, decay?: number);
+    constructor(color?: ColorRepresentation, intensity?: number, distance?: number, decay?: number);
     /**
      * This flag can be used for type testing.
      *
-     * @type {boolean}
-     * @readonly
      * @default true
      */
     readonly isPointLight: boolean;
@@ -38,7 +47,6 @@ export class PointLight extends Light {
      * will then attenuate quickly and smoothly to 0. Inherently, cutoffs are not
      * physically correct.
      *
-     * @type {number}
      * @default 0
      */
     distance: number;
@@ -46,25 +54,19 @@ export class PointLight extends Light {
      * The amount the light dims along the distance of the light. In context of
      * physically-correct rendering the default value should not be changed.
      *
-     * @type {number}
      * @default 2
      */
     decay: number;
     /**
      * This property holds the light's shadow configuration.
-     *
-     * @type {PointLightShadow}
      */
     shadow: PointLightShadow;
     set power(power: number);
     /**
      * The light's power. Power is the luminous power of the light measured in lumens (lm).
      * Changing the power will also change the light's intensity.
-     *
-     * @type {number}
      */
     get power(): number;
-    copy(source: any, recursive: any): this;
+    copy(source: PointLight, recursive?: boolean): this;
+    toJSON(meta?: JSONMeta): PointLightJSON;
 }
-import { Light } from "./Light.js";
-import { PointLightShadow } from "./PointLightShadow.js";

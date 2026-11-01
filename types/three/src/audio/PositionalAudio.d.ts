@@ -1,3 +1,5 @@
+import { Audio } from "./Audio.js";
+
 /**
  * Represents a positional audio object.
  *
@@ -25,21 +27,14 @@
  *
  * // finally add the sound to the mesh
  * mesh.add( sound );
- *
- * @augments Audio
  */
-export class PositionalAudio extends Audio {
+export class PositionalAudio extends Audio<PannerNode> {
     /**
      * The panner node represents the location, direction, and behavior of an audio
      * source in 3D space.
-     *
-     * @type {PannerNode}
-     * @readonly
      */
     readonly panner: PannerNode;
-    connect(): this;
     disconnect(): this;
-    getOutput(): PannerNode;
     /**
      * Returns the current reference distance.
      *
@@ -54,7 +49,7 @@ export class PositionalAudio extends Audio {
      * @param {number} value - The reference distance to set.
      * @return {PositionalAudio} A reference to this instance.
      */
-    setRefDistance(value: number): PositionalAudio;
+    setRefDistance(value: number): this;
     /**
      * Returns the current rolloff factor.
      *
@@ -67,7 +62,7 @@ export class PositionalAudio extends Audio {
      * @param {number} value - The rolloff factor.
      * @return {PositionalAudio} A reference to this instance.
      */
-    setRolloffFactor(value: number): PositionalAudio;
+    setRolloffFactor(value: number): this;
     /**
      * Returns the current distance model.
      *
@@ -84,7 +79,7 @@ export class PositionalAudio extends Audio {
      * @param {('linear'|'inverse'|'exponential')} value - The distance model to set.
      * @return {PositionalAudio} A reference to this instance.
      */
-    setDistanceModel(value: "linear" | "inverse" | "exponential"): PositionalAudio;
+    setDistanceModel(value: "linear" | "inverse" | "exponential"): this;
     /**
      * Returns the current max distance.
      *
@@ -100,7 +95,7 @@ export class PositionalAudio extends Audio {
      * @param {number} value - The max distance.
      * @return {PositionalAudio} A reference to this instance.
      */
-    setMaxDistance(value: number): PositionalAudio;
+    setMaxDistance(value: number): this;
     /**
      * Sets the directional cone in which the audio can be listened.
      *
@@ -109,7 +104,5 @@ export class PositionalAudio extends Audio {
      * @param {number} coneOuterGain - The amount of volume reduction outside the cone defined by the `coneOuterAngle`. When set to `0`, no sound can be heard.
      * @return {PositionalAudio} A reference to this instance.
      */
-    setDirectionalCone(coneInnerAngle: number, coneOuterAngle: number, coneOuterGain: number): PositionalAudio;
-    updateMatrixWorld(force: any): void;
+    setDirectionalCone(coneInnerAngle: number, coneOuterAngle: number, coneOuterGain: number): this;
 }
-import { Audio } from "./Audio.js";

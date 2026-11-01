@@ -1,3 +1,5 @@
+import { WebGPURenderer } from "three/webgpu";
+
 /**
  * Sets up a construction-time WebGL fallback for WebGPU XR examples.
  *
@@ -7,6 +9,6 @@
  */
 export function setupWebGLXRFallback(
     renderer: WebGPURenderer,
-    createFallbackRenderer: Function,
-    onFallback?: Function,
+    createFallbackRenderer: (renderer: WebGPURenderer) => WebGPURenderer,
+    onFallback?: (fallbackRenderer: WebGPURenderer, renderer: WebGPURenderer) => Promise<void> | void,
 ): void;

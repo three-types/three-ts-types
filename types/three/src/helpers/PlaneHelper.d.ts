@@ -1,3 +1,7 @@
+import { ColorRepresentation } from "../math/Color.js";
+import { Plane } from "../math/Plane.js";
+import { Line } from "../objects/Line.js";
+
 /**
  * A helper object to visualize an instance of {@link Plane}.
  *
@@ -6,8 +10,6 @@
  * const helper = new THREE.PlaneHelper( plane, 1, 0xffff00 );
  * scene.add( helper );
  * ```
- *
- * @augments Line
  */
 export class PlaneHelper extends Line {
     /**
@@ -17,20 +19,15 @@ export class PlaneHelper extends Line {
      * @param {number} [size=1] - The side length of plane helper.
      * @param {number|Color|string} [hex=0xffff00] - The helper's color.
      */
-    constructor(plane: Plane, size?: number, hex?: number | Color | string);
+    constructor(plane: Plane, size?: number, hex?: ColorRepresentation);
     /**
      * The plane being visualized.
-     *
-     * @type {Plane}
      */
     plane: Plane;
     /**
      * The side length of plane helper.
      *
-     * @type {number}
      * @default 1
      */
     size: number;
-    updateMatrixWorld(force: any): void;
 }
-import { Line } from "../objects/Line.js";

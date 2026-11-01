@@ -1,3 +1,10 @@
+import { InstancedMeshGenerator } from "./InstancedMeshGenerator.js";
+
+export interface StreetTreeGeneratorParameters {
+    trunkHeight: number;
+    trunkRadius: number;
+}
+
 /**
  * A young street tree set in a curbside pit: a flared bark trunk rising through a
  * cast-iron pit grate, branching into a canopy of vertex-jittered leaf clumps. The
@@ -16,13 +23,8 @@
  * scene.add( trees.build( placements ) ); // placements: Matrix4[]
  * ```
  */
-export class StreetTreeGenerator extends InstancedMeshGenerator {
-    constructor(parameters?: {});
+export class StreetTreeGenerator extends InstancedMeshGenerator<StreetTreeGeneratorParameters> {
+    constructor(parameters?: Partial<StreetTreeGeneratorParameters>);
+
+    static defaults: StreetTreeGeneratorParameters;
 }
-export namespace StreetTreeGenerator {
-    namespace defaults {
-        let trunkHeight: number;
-        let trunkRadius: number;
-    }
-}
-import { InstancedMeshGenerator } from "./InstancedMeshGenerator.js";

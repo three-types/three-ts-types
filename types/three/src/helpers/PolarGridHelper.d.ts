@@ -1,3 +1,6 @@
+import { ColorRepresentation } from "../math/Color.js";
+import { LineSegments } from "../objects/LineSegments.js";
+
 /**
  * This helper is an object to define polar grids. Grids are
  * two-dimensional arrays of lines.
@@ -11,8 +14,6 @@
  * const helper = new THREE.PolarGridHelper( radius, sectors, rings, divisions );
  * scene.add( helper );
  * ```
- *
- * @augments LineSegments
  */
 export class PolarGridHelper extends LineSegments {
     /**
@@ -30,9 +31,7 @@ export class PolarGridHelper extends LineSegments {
         sectors?: number,
         rings?: number,
         divisions?: number,
-        color1?: number | Color | string,
-        color2?: number | Color | string,
+        color1?: ColorRepresentation,
+        color2?: ColorRepresentation,
     );
 }
-import { Color } from "../math/Color.js";
-import { LineSegments } from "../objects/LineSegments.js";

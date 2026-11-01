@@ -1,3 +1,9 @@
+import { Object3D } from "../../../src/core/Object3D.js";
+
+export interface TileCreasedNormalsPluginOptions {
+    creaseAngle?: number | undefined;
+}
+
 /**
  * A plugin for `3d-tiles-renderer` that computes creased vertex normals for the
  * geometry of each loaded tile: smooth normals everywhere except where faces meet
@@ -20,18 +26,13 @@ export class TileCreasedNormalsPlugin {
      * @param {Object} [options] - The configuration options.
      * @param {number} [options.creaseAngle=Math.PI/3] - The crease angle in radians.
      */
-    constructor({ creaseAngle }?: {
-        creaseAngle?: number | undefined;
-    });
+    constructor({ creaseAngle }?: TileCreasedNormalsPluginOptions);
     /**
      * The crease angle in radians.
      *
      * @type {number}
      */
     creaseAngle: number;
-    _requestId: number;
-    _pending: Map<any, any>;
-    _worker: Worker;
     /**
      * Called by the tiles renderer for each loaded tile model. The tile is
      * displayed once the returned promise resolves.
@@ -39,8 +40,7 @@ export class TileCreasedNormalsPlugin {
      * @param {Object3D} scene - The tile model.
      * @return {Promise} A promise that resolves when all geometries have creased normals.
      */
-    processTileModel(scene: Object3D): Promise<any>;
-    _processMesh(mesh: any): Promise<any>;
+    processTileModel(scene: Object3D): Promise<void>;
     /**
      * Called by the tiles renderer when the plugin is unregistered or the
      * tiles renderer is disposed.

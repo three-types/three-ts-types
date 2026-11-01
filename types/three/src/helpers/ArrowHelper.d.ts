@@ -1,3 +1,9 @@
+import { Object3D } from "../core/Object3D.js";
+import { ColorRepresentation } from "../math/Color.js";
+import { Vector3 } from "../math/Vector3.js";
+import { Line } from "../objects/Line.js";
+import { Mesh } from "../objects/Mesh.js";
+
 /**
  * An 3D arrow object for visualizing directions.
  *
@@ -14,8 +20,6 @@
  * const arrowHelper = new THREE.ArrowHelper( dir, origin, length, hex );
  * scene.add( arrowHelper );
  * ```
- *
- * @augments Object3D
  */
 export class ArrowHelper extends Object3D {
     /**
@@ -25,28 +29,23 @@ export class ArrowHelper extends Object3D {
      * @param {Vector3} [origin=(0, 0, 0)] - Point at which the arrow starts.
      * @param {number} [length=1] - Length of the arrow in world units.
      * @param {(number|Color|string)} [color=0xffff00] - Color of the arrow.
-     * @param {number} [headLength=length*0.2] - The length of the head of the arrow.
-     * @param {number} [headWidth=headLength*0.2] - The width of the head of the arrow.
+     * @param {number} [headLength=length times 0.2] - The length of the head of the arrow.
+     * @param {number} [headWidth=headLength times 0.2] - The width of the head of the arrow.
      */
     constructor(
         dir?: Vector3,
         origin?: Vector3,
         length?: number,
-        color?: number | Color | string,
+        color?: ColorRepresentation,
         headLength?: number,
         headWidth?: number,
     );
-    type: string;
     /**
      * The line part of the arrow helper.
-     *
-     * @type {Line}
      */
     line: Line;
     /**
      * The cone part of the arrow helper.
-     *
-     * @type {Mesh}
      */
     cone: Mesh;
     /**
@@ -59,8 +58,8 @@ export class ArrowHelper extends Object3D {
      * Sets the length of the helper.
      *
      * @param {number} length - Length of the arrow in world units.
-     * @param {number} [headLength=length*0.2] - The length of the head of the arrow.
-     * @param {number} [headWidth=headLength*0.2] - The width of the head of the arrow.
+     * @param {number} [headLength=length times 0.2] - The length of the head of the arrow.
+     * @param {number} [headWidth=headLength times 0.2] - The width of the head of the arrow.
      */
     setLength(length: number, headLength?: number, headWidth?: number): void;
     /**
@@ -68,10 +67,6 @@ export class ArrowHelper extends Object3D {
      *
      * @param {number|Color|string} color - The color to set.
      */
-    setColor(color: number | Color | string): void;
-    copy(source: any): this;
+    setColor(color: ColorRepresentation): void;
+    copy(source: ArrowHelper): this;
 }
-import { Object3D } from "../core/Object3D.js";
-import { Vector3 } from "../math/Vector3.js";
-import { Line } from "../objects/Line.js";
-import { Mesh } from "../objects/Mesh.js";

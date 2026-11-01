@@ -1,3 +1,12 @@
+import { InstancedMeshGenerator } from "./InstancedMeshGenerator.js";
+
+export interface BenchGeneratorParameters {
+    length: number;
+    depth: number;
+    seatHeight: number;
+    backHeight: number;
+}
+
 /**
  * A public street bench: timber slats carried on two cast-iron end frames that
  * curl into armrests, with a reclined slatted backrest. Built once and instanced
@@ -13,15 +22,8 @@
  * scene.add( benches.build( placements ) ); // placements: Matrix4[]
  * ```
  */
-export class BenchGenerator extends InstancedMeshGenerator {
-    constructor(parameters?: {});
+export class BenchGenerator extends InstancedMeshGenerator<BenchGeneratorParameters> {
+    constructor(parameters?: Partial<BenchGeneratorParameters>);
+
+    static defaults: BenchGeneratorParameters;
 }
-export namespace BenchGenerator {
-    namespace defaults {
-        let length: number;
-        let depth: number;
-        let seatHeight: number;
-        let backHeight: number;
-    }
-}
-import { InstancedMeshGenerator } from "./InstancedMeshGenerator.js";

@@ -1,24 +1,12 @@
-export default MeshLambertNodeMaterial;
-/**
- * Node material version of {@link MeshLambertMaterial}.
- *
- * @augments NodeMaterial
- */
-declare class MeshLambertNodeMaterial extends NodeMaterial {
-    /**
-     * Constructs a new mesh lambert node material.
-     *
-     * @param {Object} [parameters] - The configuration parameter.
-     */
-    constructor(parameters?: Object);
-    /**
-     * This flag can be used for type testing.
-     *
-     * @type {boolean}
-     * @readonly
-     * @default true
-     */
-    readonly isMeshLambertNodeMaterial: boolean;
+import Node from "../../nodes/core/Node.js";
+import NodeBuilder from "../../nodes/core/NodeBuilder.js";
+import PhongLightingModel from "../../nodes/functions/PhongLightingModel.js";
+import BasicEnvironmentNode from "../../nodes/lighting/BasicEnvironmentNode.js";
+import { MapColorPropertiesToColorRepresentations } from "../Material.js";
+import { MeshLambertMaterialParameters, MeshLambertMaterialProperties } from "../MeshLambertMaterial.js";
+import NodeMaterial, { NodeMaterialNodeProperties } from "./NodeMaterial.js";
+
+export interface MeshLambertNodeMaterialNodeProperties extends NodeMaterialNodeProperties {
     /**
      * The emissive color of lambert materials is by default inferred from the `emissive`,
      * `emissiveIntensity` and `emissiveMap` properties. This node property allows to
@@ -27,10 +15,35 @@ declare class MeshLambertNodeMaterial extends NodeMaterial {
      * If you don't want to overwrite the emissive color but modify the existing
      * value instead, use {@link materialEmissive}.
      *
-     * @type {?Node<vec3>}
      * @default null
      */
-    emissiveNode: Node<vec3> | null;
+    emissiveNode: Node | null;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface MeshLambertNodeMaterialParameters
+    extends
+        Partial<MapColorPropertiesToColorRepresentations<MeshLambertNodeMaterialNodeProperties>>,
+        MeshLambertMaterialParameters
+{}
+
+/**
+ * Node material version of {@link MeshLambertMaterial}.
+ */
+declare class MeshLambertNodeMaterial extends NodeMaterial {
+    /**
+     * Constructs a new mesh lambert node material.
+     *
+     * @param {Object} [parameters] - The configuration parameter.
+     */
+    constructor(parameters?: MeshLambertNodeMaterialParameters);
+    /**
+     * This flag can be used for type testing.
+     *
+     * @default true
+     */
+    readonly isMeshLambertNodeMaterial: boolean;
+    setValues(values?: MeshLambertNodeMaterialParameters): void;
     /**
      * Overwritten since this type of material uses {@link BasicEnvironmentNode}
      * to implement the default environment mapping.
@@ -38,7 +51,7 @@ declare class MeshLambertNodeMaterial extends NodeMaterial {
      * @param {NodeBuilder} builder - The current node builder.
      * @return {?BasicEnvironmentNode<vec3>} The environment node.
      */
-    setupEnvironment(builder: NodeBuilder): BasicEnvironmentNode<vec3> | null;
+    setupEnvironment(builder: NodeBuilder): BasicEnvironmentNode | null;
     /**
      * Setups the lighting model.
      *
@@ -46,6 +59,8 @@ declare class MeshLambertNodeMaterial extends NodeMaterial {
      */
     setupLightingModel(): PhongLightingModel;
 }
-import PhongLightingModel from "../../nodes/functions/PhongLightingModel.js";
-import BasicEnvironmentNode from "../../nodes/lighting/BasicEnvironmentNode.js";
-import NodeMaterial from "./NodeMaterial.js";
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface MeshLambertNodeMaterial extends MeshLambertNodeMaterialNodeProperties, MeshLambertMaterialProperties {}
+
+export default MeshLambertNodeMaterial;

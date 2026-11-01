@@ -1,3 +1,11 @@
+import { JSONMeta } from "../core/Object3D.js";
+import { Color, ColorRepresentation } from "../math/Color.js";
+import { Light, LightJSON } from "./Light.js";
+
+export interface HemisphereLightJSON extends LightJSON {
+    groundColor: number;
+}
+
 /**
  * A light source positioned directly above the scene, with color fading from
  * the sky color to the ground color.
@@ -8,8 +16,6 @@
  * const light = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1 );
  * scene.add( light );
  * ```
- *
- * @augments Light
  */
 export class HemisphereLight extends Light {
     /**
@@ -19,22 +25,17 @@ export class HemisphereLight extends Light {
      * @param {(number|Color|string)} [groundColor=0xffffff] - The light's ground color.
      * @param {number} [intensity=1] - The light's strength/intensity.
      */
-    constructor(skyColor?: number | Color | string, groundColor?: number | Color | string, intensity?: number);
+    constructor(skyColor?: ColorRepresentation, groundColor?: ColorRepresentation, intensity?: number);
     /**
      * This flag can be used for type testing.
      *
-     * @type {boolean}
-     * @readonly
      * @default true
      */
     readonly isHemisphereLight: boolean;
     /**
      * The light's ground color.
-     *
-     * @type {Color}
      */
     groundColor: Color;
-    copy(source: any, recursive: any): this;
+    copy(source: HemisphereLight, recursive?: boolean): this;
+    toJSON(meta?: JSONMeta): HemisphereLightJSON;
 }
-import { Color } from "../math/Color.js";
-import { Light } from "./Light.js";

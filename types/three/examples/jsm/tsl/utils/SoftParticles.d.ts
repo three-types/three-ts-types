@@ -1,3 +1,5 @@
+import { Node } from "three/webgpu";
+
 /**
  * Computes an opacity node for soft particles, based on the "Soft Particles" white
  * paper (NVIDIA, Tristan Lorach).
@@ -12,8 +14,8 @@
  * @return {Node<float>} The opacity node to assign to `material.opacityNode`.
  */
 export function softParticles({ opacity, distance, contrast, viewportDepth }?: {
-    opacity?: Node<any>;
-    distance?: Node<any> | number;
-    contrast?: Node<any> | number;
-    viewportDepth?: Node<any>;
-}): Node<any>;
+    opacity?: Node<"float">;
+    distance?: Node<"float"> | number;
+    contrast?: Node<"float"> | number;
+    viewportDepth?: Node<"float">;
+}): Node<"float">;

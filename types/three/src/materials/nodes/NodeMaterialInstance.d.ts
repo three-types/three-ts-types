@@ -1,3 +1,7 @@
+import NodeBuilder from "../../nodes/core/NodeBuilder.js";
+import { Material } from "../Material.js";
+import NodeMaterial from "./NodeMaterial.js";
+
 export default NodeMaterialInstance;
 /**
  * A material instance that reuses the shader of a node material with its own properties.
@@ -24,8 +28,6 @@ declare class NodeMaterialInstance extends Material {
      * @throws {TypeError} When the given material is not a node material.
      */
     constructor(nodeMaterial: NodeMaterial);
-    userData: {};
-    type: string;
     /**
      * This flag can be used for type testing.
      *
@@ -47,14 +49,6 @@ declare class NodeMaterialInstance extends Material {
      * @param {NodeBuilder} builder - The current node builder.
      */
     build(builder: NodeBuilder): void;
-    set version(value: number);
-    /**
-     * The version of the node material. Setting `needsUpdate` on the node material
-     * updates all its instances, while setting it on an instance has no effect.
-     *
-     * @type {number}
-     */
-    get version(): number;
     /**
      * Copies the values of the given node material instance to this instance.
      * Object values such as colors are shared with the source, except in `userData`.
@@ -65,12 +59,11 @@ declare class NodeMaterialInstance extends Material {
      * @param {NodeMaterialInstance} source - The material to copy.
      * @return {NodeMaterialInstance} A reference to this instance.
      */
-    copy(source: NodeMaterialInstance): NodeMaterialInstance;
+    copy(source: NodeMaterialInstance): this;
     /**
      * Returns a new node material instance that shares the same node material.
      *
      * @return {NodeMaterialInstance} A clone of this instance.
      */
-    clone(): NodeMaterialInstance;
+    clone(): this;
 }
-import { Material } from "../Material.js";

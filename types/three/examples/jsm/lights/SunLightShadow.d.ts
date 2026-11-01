@@ -1,3 +1,5 @@
+import { Camera, Frustum, Light, LightShadow, Matrix4, OrthographicCamera } from "three";
+
 /**
  * Represents the shadow configuration of {@link SunLight}, using two
  * cascaded shadow maps (CSM).
@@ -9,10 +11,9 @@
  *
  * The default `mapSize` is `1024x1024` per cascade.
  *
- * @augments LightShadow
  * @three_import import { SunLightShadow } from 'three/addons/lights/SunLightShadow.js';
  */
-export class SunLightShadow extends LightShadow {
+export class SunLightShadow extends LightShadow<OrthographicCamera> {
     /**
      * Constructs a new sun light shadow.
      */
@@ -20,16 +21,9 @@ export class SunLightShadow extends LightShadow {
     /**
      * This flag can be used for type testing.
      *
-     * @type {boolean}
-     * @readonly
      * @default true
      */
     readonly isSunLightShadow: boolean;
-    _cameras: OrthographicCamera[];
-    _matrices: Matrix4[];
-    _frustums: Frustum[];
-    _cascadeSplits: any[];
-    _cascadeData: Vector4[];
     /**
      * Returns the shadow camera of the given cascade.
      *
@@ -59,10 +53,5 @@ export class SunLightShadow extends LightShadow {
      * @param {Light} light - The light for which the shadow is being rendered.
      * @param {Camera} viewCamera - The camera the scene is rendered with.
      */
-    updateMatrices(light: Light, viewCamera: Camera): void;
+    updateMatrices(light: Light, viewCamera?: Camera): void;
 }
-import { LightShadow } from "three";
-import { OrthographicCamera } from "three";
-import { Matrix4 } from "three";
-import { Frustum } from "three";
-import { Vector4 } from "three";

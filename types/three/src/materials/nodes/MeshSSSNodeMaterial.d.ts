@@ -1,67 +1,13 @@
-export default MeshSSSNodeMaterial;
-/**
- * This node material is an experimental extension of {@link MeshPhysicalNodeMaterial}
- * that implements a Subsurface scattering (SSS) term.
- *
- * @augments MeshPhysicalNodeMaterial
- */
-declare class MeshSSSNodeMaterial extends MeshPhysicalNodeMaterial {
-    /**
-     * Represents the thickness color.
-     *
-     * @type {?Node<vec3>}
-     * @default null
-     */
-    thicknessColorNode: Node<any> | null;
-    /**
-     * Represents the distortion factor.
-     *
-     * @type {?Node<float>}
-     */
-    thicknessDistortionNode: Node<any> | null;
-    /**
-     * Represents the thickness ambient factor.
-     *
-     * @type {?Node<float>}
-     */
-    thicknessAmbientNode: Node<any> | null;
-    /**
-     * Represents the thickness attenuation.
-     *
-     * @type {?Node<float>}
-     */
-    thicknessAttenuationNode: Node<any> | null;
-    /**
-     * Represents the thickness power.
-     *
-     * @type {?Node<float>}
-     */
-    thicknessPowerNode: Node<any> | null;
-    /**
-     * Represents the thickness scale.
-     *
-     * @type {?Node<float>}
-     */
-    thicknessScaleNode: Node<any> | null;
-    /**
-     * Whether the lighting model should use SSS or not.
-     *
-     * @type {boolean}
-     * @default true
-     */
-    get useSSS(): boolean;
-    /**
-     * Setups the lighting model.
-     *
-     * @return {SSSLightingModel} The lighting model.
-     */
-    setupLightingModel(): SSSLightingModel;
-}
-import MeshPhysicalNodeMaterial from "./MeshPhysicalNodeMaterial.js";
+import { LightingModelDirectInput } from "../../nodes/core/LightingModel.js";
+import Node from "../../nodes/core/Node.js";
+import NodeBuilder from "../../nodes/core/NodeBuilder.js";
+import PhysicalLightingModel from "../../nodes/functions/PhysicalLightingModel.js";
+import { MapColorPropertiesToColorRepresentations } from "../Material.js";
+import { MeshPhysicalMaterialParameters, MeshPhysicalMaterialProperties } from "../MeshPhysicalMaterial.js";
+import MeshPhysicalNodeMaterial, { MeshPhysicalNodeMaterialNodeProperties } from "./MeshPhysicalNodeMaterial.js";
+
 /**
  * Represents the lighting model for {@link MeshSSSNodeMaterial}.
- *
- * @augments PhysicalLightingModel
  */
 declare class SSSLightingModel extends PhysicalLightingModel {
     /**
@@ -87,7 +33,6 @@ declare class SSSLightingModel extends PhysicalLightingModel {
     /**
      * Whether the lighting model should use SSS or not.
      *
-     * @type {boolean}
      * @default false
      */
     useSSS: boolean;
@@ -99,6 +44,67 @@ declare class SSSLightingModel extends PhysicalLightingModel {
      * @param {Object} input - The input data.
      * @param {NodeBuilder} builder - The current node builder.
      */
-    direct({ lightDirection, lightColor, reflectedLight }: Object, builder: NodeBuilder): void;
+    direct(input: LightingModelDirectInput, builder: NodeBuilder): void;
 }
-import PhysicalLightingModel from "../../nodes/functions/PhysicalLightingModel.js";
+
+export interface MeshSSSNodeMaterialNodeProperties extends MeshPhysicalNodeMaterialNodeProperties {
+    /**
+     * Represents the thickness color.
+     *
+     * @default null
+     */
+    thicknessColorNode: Node | null;
+    /**
+     * Represents the distortion factor.
+     */
+    thicknessDistortionNode: Node<"float">;
+    /**
+     * Represents the thickness ambient factor.
+     */
+    thicknessAmbientNode: Node<"float">;
+    /**
+     * Represents the thickness attenuation.
+     */
+    thicknessAttenuationNode: Node<"float">;
+    /**
+     * Represents the thickness power.
+     */
+    thicknessPowerNode: Node<"float">;
+    /**
+     * Represents the thickness scale.
+     */
+    thicknessScaleNode: Node<"float">;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface MeshSSSNodeMaterialParameters
+    extends
+        Partial<MapColorPropertiesToColorRepresentations<MeshSSSNodeMaterialNodeProperties>>,
+        MeshPhysicalMaterialParameters
+{}
+
+/**
+ * This node material is an experimental extension of {@link MeshPhysicalNodeMaterial}
+ * that implements a Subsurface scattering (SSS) term.
+ */
+declare class MeshSSSNodeMaterial extends MeshPhysicalNodeMaterial {
+    constructor(parameters?: MeshSSSNodeMaterialParameters);
+    setValues(values?: MeshSSSNodeMaterialParameters): void;
+    /**
+     * Whether the lighting model should use SSS or not.
+     *
+     * @default true
+     */
+    get useSSS(): boolean;
+    /**
+     * Setups the lighting model.
+     *
+     * @return {SSSLightingModel} The lighting model.
+     */
+    setupLightingModel(): SSSLightingModel;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface MeshSSSNodeMaterial extends MeshSSSNodeMaterialNodeProperties, MeshPhysicalMaterialProperties {}
+
+export default MeshSSSNodeMaterial;

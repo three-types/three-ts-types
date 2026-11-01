@@ -1,7 +1,10 @@
-export default StructType;
+import { MemberLayout } from "./StructTypeNode.js";
+
 declare class StructType {
-    constructor(name: any, members: any);
-    name: any;
-    members: any;
+    constructor(name: string, members: MemberLayout[]);
+    name: string;
+    members: MemberLayout[];
     output: boolean;
 }
+
+export default StructType;

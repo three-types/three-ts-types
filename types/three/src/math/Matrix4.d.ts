@@ -1,3 +1,28 @@
+import { CoordinateSystem } from "../constants.js";
+import { Euler } from "./Euler.js";
+import { Matrix3 } from "./Matrix3.js";
+import { Quaternion } from "./Quaternion.js";
+import { Vector3 } from "./Vector3.js";
+
+export type Matrix4Tuple = [
+    n11: number,
+    n12: number,
+    n13: number,
+    n14: number,
+    n21: number,
+    n22: number,
+    n23: number,
+    n24: number,
+    n31: number,
+    n32: number,
+    n33: number,
+    n34: number,
+    n41: number,
+    n42: number,
+    n43: number,
+    n44: number,
+];
+
 /**
  * Represents a 4x4 matrix.
  *
@@ -38,9 +63,13 @@
  */
 export class Matrix4 {
     /**
-     * Constructs a new 4x4 matrix. The arguments are supposed to be
-     * in row-major order. If no arguments are provided, the constructor
+     * Constructs a new 4x4 matrix. This constructor
      * initializes the matrix as an identity matrix.
+     */
+    constructor();
+    /**
+     * Constructs a new 4x4 matrix. The arguments are supposed to be
+     * in row-major order.
      *
      * @param {number} [n11] - 1-1 matrix element.
      * @param {number} [n12] - 1-2 matrix element.
@@ -60,29 +89,29 @@ export class Matrix4 {
      * @param {number} [n44] - 4-4 matrix element.
      */
     constructor(
-        n11?: number,
-        n12?: number,
-        n13?: number,
-        n14?: number,
-        n21?: number,
-        n22?: number,
-        n23?: number,
-        n24?: number,
-        n31?: number,
-        n32?: number,
-        n33?: number,
-        n34?: number,
-        n41?: number,
-        n42?: number,
-        n43?: number,
-        n44?: number,
+        n11: number,
+        n12: number,
+        n13: number,
+        n14: number,
+        n21: number,
+        n22: number,
+        n23: number,
+        n24: number,
+        n31: number,
+        n32: number,
+        n33: number,
+        n34: number,
+        n41: number,
+        n42: number,
+        n43: number,
+        n44: number,
     );
     /**
      * A column-major list of matrix values.
      *
      * @type {Array<number>}
      */
-    elements: Array<number>;
+    elements: Matrix4Tuple;
     /**
      * Sets the elements of the matrix.The arguments are supposed to be
      * in row-major order.
@@ -106,29 +135,29 @@ export class Matrix4 {
      * @return {Matrix4} A reference to this matrix.
      */
     set(
-        n11?: number,
-        n12?: number,
-        n13?: number,
-        n14?: number,
-        n21?: number,
-        n22?: number,
-        n23?: number,
-        n24?: number,
-        n31?: number,
-        n32?: number,
-        n33?: number,
-        n34?: number,
-        n41?: number,
-        n42?: number,
-        n43?: number,
-        n44?: number,
-    ): Matrix4;
+        n11: number,
+        n12: number,
+        n13: number,
+        n14: number,
+        n21: number,
+        n22: number,
+        n23: number,
+        n24: number,
+        n31: number,
+        n32: number,
+        n33: number,
+        n34: number,
+        n41: number,
+        n42: number,
+        n43: number,
+        n44: number,
+    ): this;
     /**
      * Sets this matrix to the 4x4 identity matrix.
      *
      * @return {Matrix4} A reference to this matrix.
      */
-    identity(): Matrix4;
+    identity(): this;
     /**
      * Returns a matrix with copied values from this instance.
      *
@@ -141,7 +170,7 @@ export class Matrix4 {
      * @param {Matrix4} m - The matrix to copy.
      * @return {Matrix4} A reference to this matrix.
      */
-    copy(m: Matrix4): Matrix4;
+    copy(m: Matrix4): this;
     /**
      * Copies the translation component of the given matrix
      * into this matrix's translation component.
@@ -149,14 +178,14 @@ export class Matrix4 {
      * @param {Matrix4} m - The matrix to copy the translation component.
      * @return {Matrix4} A reference to this matrix.
      */
-    copyPosition(m: Matrix4): Matrix4;
+    copyPosition(m: Matrix4): this;
     /**
      * Set the upper 3x3 elements of this matrix to the values of given 3x3 matrix.
      *
      * @param {Matrix3} m - The 3x3 matrix.
      * @return {Matrix4} A reference to this matrix.
      */
-    setFromMatrix3(m: Matrix3): Matrix4;
+    setFromMatrix3(m: Matrix3): this;
     /**
      * Extracts the basis vectors of this matrix into the three vectors provided.
      *
@@ -165,7 +194,7 @@ export class Matrix4 {
      * @param {Vector3} zAxis - The basis's z axis.
      * @return {Matrix4} A reference to this matrix.
      */
-    extractBasis(xAxis: Vector3, yAxis: Vector3, zAxis: Vector3): Matrix4;
+    extractBasis(xAxis: Vector3, yAxis: Vector3, zAxis: Vector3): this;
     /**
      * Sets the given basis vectors to this matrix.
      *
@@ -174,7 +203,7 @@ export class Matrix4 {
      * @param {Vector3} zAxis - The basis's z axis.
      * @return {Matrix4} A reference to this matrix.
      */
-    makeBasis(xAxis: Vector3, yAxis: Vector3, zAxis: Vector3): Matrix4;
+    makeBasis(xAxis: Vector3, yAxis: Vector3, zAxis: Vector3): this;
     /**
      * Extracts the rotation component of the given matrix
      * into this matrix's rotation component.
@@ -184,7 +213,7 @@ export class Matrix4 {
      * @param {Matrix4} m - The matrix.
      * @return {Matrix4} A reference to this matrix.
      */
-    extractRotation(m: Matrix4): Matrix4;
+    extractRotation(m: Matrix4): this;
     /**
      * Sets the rotation component (the upper left 3x3 matrix) of this matrix to
      * the rotation specified by the given Euler angles. The rest of
@@ -195,7 +224,7 @@ export class Matrix4 {
      * @param {Euler} euler - The Euler angles.
      * @return {Matrix4} A reference to this matrix.
      */
-    makeRotationFromEuler(euler: Euler): Matrix4;
+    makeRotationFromEuler(euler: Euler): this;
     /**
      * Sets the rotation component of this matrix to the rotation specified by
      * the given Quaternion as outlined [here](https://en.wikipedia.org/wiki/Rotation_matrix#Quaternion)
@@ -204,7 +233,7 @@ export class Matrix4 {
      * @param {Quaternion} q - The Quaternion.
      * @return {Matrix4} A reference to this matrix.
      */
-    makeRotationFromQuaternion(q: Quaternion): Matrix4;
+    makeRotationFromQuaternion(q: Quaternion): this;
     /**
      * Sets the rotation component of the transformation matrix, looking from `eye` towards
      * `target`, and oriented by the up-direction.
@@ -214,21 +243,21 @@ export class Matrix4 {
      * @param {Vector3} up - The up vector.
      * @return {Matrix4} A reference to this matrix.
      */
-    lookAt(eye: Vector3, target: Vector3, up: Vector3): Matrix4;
+    lookAt(eye: Vector3, target: Vector3, up: Vector3): this;
     /**
      * Post-multiplies this matrix by the given 4x4 matrix.
      *
      * @param {Matrix4} m - The matrix to multiply with.
      * @return {Matrix4} A reference to this matrix.
      */
-    multiply(m: Matrix4): Matrix4;
+    multiply(m: Matrix4): this;
     /**
      * Pre-multiplies this matrix by the given 4x4 matrix.
      *
      * @param {Matrix4} m - The matrix to multiply with.
      * @return {Matrix4} A reference to this matrix.
      */
-    premultiply(m: Matrix4): Matrix4;
+    premultiply(m: Matrix4): this;
     /**
      * Multiples the given 4x4 matrices and stores the result
      * in this matrix.
@@ -237,14 +266,14 @@ export class Matrix4 {
      * @param {Matrix4} b - The second matrix.
      * @return {Matrix4} A reference to this matrix.
      */
-    multiplyMatrices(a: Matrix4, b: Matrix4): Matrix4;
+    multiplyMatrices(a: Matrix4, b: Matrix4): this;
     /**
      * Multiplies every component of the matrix by the given scalar.
      *
      * @param {number} s - The scalar.
      * @return {Matrix4} A reference to this matrix.
      */
-    multiplyScalar(s: number): Matrix4;
+    multiplyScalar(s: number): this;
     /**
      * Computes and returns the determinant of this matrix.
      *
@@ -268,17 +297,25 @@ export class Matrix4 {
      *
      * @return {Matrix4} A reference to this matrix.
      */
-    transpose(): Matrix4;
+    transpose(): this;
     /**
      * Sets the position component for this matrix from the given vector,
      * without affecting the rest of the matrix.
      *
-     * @param {number|Vector3} x - The x component of the vector or alternatively the vector object.
+     * @param {number|Vector3} v - The vector object.
+     * @return {Matrix4} A reference to this matrix.
+     */
+    setPosition(v: Vector3): this;
+    /**
+     * Sets the position component for this matrix from the given vector,
+     * without affecting the rest of the matrix.
+     *
+     * @param {number} x - The x component of the vector.
      * @param {number} y - The y component of the vector.
      * @param {number} z - The z component of the vector.
      * @return {Matrix4} A reference to this matrix.
      */
-    setPosition(x: number | Vector3, y: number, z: number): Matrix4;
+    setPosition(x: number, y: number, z: number): this;
     /**
      * Inverts this matrix, using the [analytic method](https://en.wikipedia.org/wiki/Invertible_matrix#Analytic_solution).
      * You can not invert with a determinant of zero. If you attempt this, the method produces
@@ -286,14 +323,14 @@ export class Matrix4 {
      *
      * @return {Matrix4} A reference to this matrix.
      */
-    invert(): Matrix4;
+    invert(): this;
     /**
      * Scales each of the first three columns of this matrix by the corresponding component of the given vector.
      *
      * @param {Vector3} v - The scale vector.
      * @return {Matrix4} A reference to this matrix.
      */
-    scale(v: Vector3): Matrix4;
+    scale(v: Vector3): this;
     /**
      * Gets the maximum scale value of the three axes.
      *
@@ -303,12 +340,19 @@ export class Matrix4 {
     /**
      * Sets this matrix as a translation transform from the given vector.
      *
-     * @param {number|Vector3} x - The amount to translate in the X axis or alternatively a translation vector.
+     * @param {Vector3} v - A translation vector.
+     * @return {Matrix4} A reference to this matrix.
+     */
+    makeTranslation(v: Vector3): this;
+    /**
+     * Sets this matrix as a translation transform from the given vector.
+     *
+     * @param {number} x - The amount to translate in the X axis.
      * @param {number} y - The amount to translate in the Y axis.
      * @param {number} z - The amount to translate in the z axis.
      * @return {Matrix4} A reference to this matrix.
      */
-    makeTranslation(x: number | Vector3, y: number, z: number): Matrix4;
+    makeTranslation(x: number, y: number, z: number): this;
     /**
      * Sets this matrix as a rotational transformation around the X axis by
      * the given angle.
@@ -316,7 +360,7 @@ export class Matrix4 {
      * @param {number} theta - The rotation in radians.
      * @return {Matrix4} A reference to this matrix.
      */
-    makeRotationX(theta: number): Matrix4;
+    makeRotationX(theta: number): this;
     /**
      * Sets this matrix as a rotational transformation around the Y axis by
      * the given angle.
@@ -324,7 +368,7 @@ export class Matrix4 {
      * @param {number} theta - The rotation in radians.
      * @return {Matrix4} A reference to this matrix.
      */
-    makeRotationY(theta: number): Matrix4;
+    makeRotationY(theta: number): this;
     /**
      * Sets this matrix as a rotational transformation around the Z axis by
      * the given angle.
@@ -332,7 +376,7 @@ export class Matrix4 {
      * @param {number} theta - The rotation in radians.
      * @return {Matrix4} A reference to this matrix.
      */
-    makeRotationZ(theta: number): Matrix4;
+    makeRotationZ(theta: number): this;
     /**
      * Sets this matrix as a rotational transformation around the given axis by
      * the given angle.
@@ -341,7 +385,7 @@ export class Matrix4 {
      * @param {number} angle - The rotation in radians.
      * @return {Matrix4} A reference to this matrix.
      */
-    makeRotationAxis(axis: Vector3, angle: number): Matrix4;
+    makeRotationAxis(axis: Vector3, angle: number): this;
     /**
      * Sets this matrix as a scale transformation.
      *
@@ -350,7 +394,7 @@ export class Matrix4 {
      * @param {number} z - The amount to scale in the Z axis.
      * @return {Matrix4} A reference to this matrix.
      */
-    makeScale(x: number, y: number, z: number): Matrix4;
+    makeScale(x: number, y: number, z: number): this;
     /**
      * Sets this matrix as a shear transformation.
      *
@@ -362,7 +406,7 @@ export class Matrix4 {
      * @param {number} zy - The amount to shear Z by Y.
      * @return {Matrix4} A reference to this matrix.
      */
-    makeShear(xy: number, xz: number, yx: number, yz: number, zx: number, zy: number): Matrix4;
+    makeShear(xy: number, xz: number, yx: number, yz: number, zx: number, zy: number): this;
     /**
      * Sets this matrix to the transformation composed of the given position,
      * rotation (Quaternion) and scale.
@@ -372,7 +416,7 @@ export class Matrix4 {
      * @param {Vector3} scale - The scale vector.
      * @return {Matrix4} A reference to this matrix.
      */
-    compose(position: Vector3, quaternion: Quaternion, scale: Vector3): Matrix4;
+    compose(position: Vector3, quaternion: Quaternion, scale: Vector3): this;
     /**
      * Decomposes this matrix into its position, rotation and scale components
      * and provides the result in the given objects.
@@ -386,7 +430,7 @@ export class Matrix4 {
      * @param {Vector3} scale - The scale vector.
      * @return {Matrix4} A reference to this matrix.
      */
-    decompose(position: Vector3, quaternion: Quaternion, scale: Vector3): Matrix4;
+    decompose(position: Vector3, quaternion: Quaternion, scale: Vector3): this;
     /**
      * Creates a perspective projection matrix. This is used internally by
      * {@link PerspectiveCamera#updateProjectionMatrix}.
@@ -408,9 +452,9 @@ export class Matrix4 {
         bottom: number,
         near: number,
         far: number,
-        coordinateSystem?: number | number,
+        coordinateSystem?: CoordinateSystem,
         reversedDepth?: boolean,
-    ): Matrix4;
+    ): this;
     /**
      * Creates a orthographic projection matrix. This is used internally by
      * {@link OrthographicCamera#updateProjectionMatrix}.
@@ -432,9 +476,9 @@ export class Matrix4 {
         bottom: number,
         near: number,
         far: number,
-        coordinateSystem?: number | number,
+        coordinateSystem?: CoordinateSystem,
         reversedDepth?: boolean,
-    ): Matrix4;
+    ): this;
     /**
      * Returns `true` if this matrix is equal with the given one.
      *
@@ -449,7 +493,7 @@ export class Matrix4 {
      * @param {number} [offset=0] - Index of the first element in the array.
      * @return {Matrix4} A reference to this matrix.
      */
-    fromArray(array: Array<number>, offset?: number): Matrix4;
+    fromArray(array: ArrayLike<number>, offset?: number): this;
     /**
      * Writes the elements of this matrix to the given array. If no array is provided,
      * the method returns a new instance.
@@ -458,6 +502,5 @@ export class Matrix4 {
      * @param {number} [offset=0] - Index of the first element in the array.
      * @return {Array<number>} The matrix elements in column-major order.
      */
-    toArray(array?: Array<number>, offset?: number): Array<number>;
+    toArray<TArray extends ArrayLike<number> = Matrix4Tuple>(array?: TArray, offset?: number): TArray;
 }
-import { Vector3 } from "./Vector3.js";

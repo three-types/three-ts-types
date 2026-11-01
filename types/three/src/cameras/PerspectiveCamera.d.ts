@@ -1,3 +1,35 @@
+import { JSONMeta, Object3DJSON, Object3DJSONObject } from "../core/Object3D.js";
+import { Vector2 } from "../math/Vector2.js";
+import { Camera } from "./Camera.js";
+
+export interface PerspectiveCameraJSONObject extends Object3DJSONObject {
+    fov: number;
+    zoom: number;
+
+    near: number;
+    far: number;
+    focus: number;
+
+    aspect: number;
+
+    view?: {
+        enabled: boolean;
+        fullWidth: number;
+        fullHeight: number;
+        offsetX: number;
+        offsetY: number;
+        width: number;
+        height: number;
+    };
+
+    filmGauge: number;
+    filmOffset: number;
+}
+
+export interface PerspectiveCameraJSON extends Object3DJSON {
+    object: PerspectiveCameraJSONObject;
+}
+
 /**
  * Camera that uses [perspective projection](https://en.wikipedia.org/wiki/Perspective_(graphical)).
  *
@@ -8,8 +40,6 @@
  * const camera = new THREE.PerspectiveCamera( 45, width / height, 1, 1000 );
  * scene.add( camera );
  * ```
- *
- * @augments Camera
  */
 export class PerspectiveCamera extends Camera {
     /**
@@ -24,8 +54,6 @@ export class PerspectiveCamera extends Camera {
     /**
      * This flag can be used for type testing.
      *
-     * @type {boolean}
-     * @readonly
      * @default true
      */
     readonly isPerspectiveCamera: boolean;
@@ -33,14 +61,12 @@ export class PerspectiveCamera extends Camera {
      * The vertical field of view, from bottom to top of view,
      * in degrees.
      *
-     * @type {number}
      * @default 50
      */
     fov: number;
     /**
      * The zoom factor of the camera.
      *
-     * @type {number}
      * @default 1
      */
     zoom: number;
@@ -51,7 +77,6 @@ export class PerspectiveCamera extends Camera {
      * Note that, unlike for the {@link OrthographicCamera}, `0` is <em>not</em> a
      * valid value for a perspective camera's near plane.
      *
-     * @type {number}
      * @default 0.1
      */
     near: number;
@@ -59,7 +84,6 @@ export class PerspectiveCamera extends Camera {
      * The camera's far plane. Must be greater than the
      * current value of {@link PerspectiveCamera#near}.
      *
-     * @type {number}
      * @default 2000
      */
     far: number;
@@ -68,14 +92,12 @@ export class PerspectiveCamera extends Camera {
      * parameter does not influence the projection matrix unless a
      * {@link StereoCamera} is being used.
      *
-     * @type {number}
      * @default 10
      */
     focus: number;
     /**
      * The aspect ratio, usually the canvas width / canvas height.
      *
-     * @type {number}
      * @default 1
      */
     aspect: number;
@@ -83,27 +105,32 @@ export class PerspectiveCamera extends Camera {
      * Represents the frustum window specification. This property should not be edited
      * directly but via {@link PerspectiveCamera#setViewOffset} and {@link PerspectiveCamera#clearViewOffset}.
      *
-     * @type {?Object}
      * @default null
      */
-    view: Object | null;
+    view: {
+        enabled: boolean;
+        fullWidth: number;
+        fullHeight: number;
+        offsetX: number;
+        offsetY: number;
+        width: number;
+        height: number;
+    } | null;
     /**
      * Film size used for the larger axis. Default is `35` (millimeters). This
      * parameter does not influence the projection matrix unless {@link PerspectiveCamera#filmOffset}
      * is set to a nonzero value.
      *
-     * @type {number}
      * @default 35
      */
     filmGauge: number;
     /**
      * Horizontal off-center offset in the same unit as {@link PerspectiveCamera#filmGauge}.
      *
-     * @type {number}
      * @default 0
      */
     filmOffset: number;
-    copy(source: any, recursive: any): this;
+    copy(source: PerspectiveCamera, recursive?: boolean): this;
     /**
      * Sets the FOV by focal length in respect to the current {@link PerspectiveCamera#filmGauge}.
      *
@@ -210,7 +237,5 @@ export class PerspectiveCamera extends Camera {
      * camera properties.
      */
     updateProjectionMatrix(): void;
-    toJSON(meta: any): Object;
+    toJSON(meta?: JSONMeta): PerspectiveCameraJSON;
 }
-import { Vector2 } from "../math/Vector2.js";
-import { Camera } from "./Camera.js";
