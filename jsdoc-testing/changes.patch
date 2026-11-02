@@ -17887,7 +17887,7 @@ index e6cad71cf..a475ea915 100644
 +
 +export default CubeRenderTarget;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/Info.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/Info.d.ts
-index 8155740ab..bc7ea9656 100644
+index 64fdb5580..191f727f6 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/Info.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/common/Info.d.ts
 @@ -1,4 +1,8 @@
@@ -17966,7 +17966,23 @@ index 8155740ab..bc7ea9656 100644
      /**
       * This method should be executed per draw call and updates the corresponding metrics.
       *
-@@ -118,14 +147,6 @@ declare class Info {
+@@ -112,28 +141,20 @@ declare class Info {
+      * @param {Texture} texture
+      * @param {Object} options - The texture's size and level information.
+      */
+-    createTexture(texture: Texture, options: Object): void;
++    createTexture(texture: Texture, options: { width: number; height: number; depth: number; levels: number }): void;
+     /**
+      * Updates the tracked memory of a texture when its default texture is replaced with the loaded one.
+      *
+      * @param {Texture} texture
+      * @param {Object} options - The texture's size and level information.
+      */
+-    updateTexture(texture: Texture, options: Object): void;
++    updateTexture(texture: Texture, options: { width: number; height: number; depth: number; levels: number }): void;
+     /**
+      * Tracks texture memory explicitly, updating counts and byte tracking.
+      *
       * @param {Texture} texture
       */
      destroyTexture(texture: Texture): void;
@@ -17981,7 +17997,7 @@ index 8155740ab..bc7ea9656 100644
      /**
       * Tracks a regular attribute memory explicitly.
       *
-@@ -168,44 +189,6 @@ declare class Info {
+@@ -176,45 +197,6 @@ declare class Info {
       * @param {ReadbackBuffer} readbackBuffer - The readback buffer to track.
       */
      destroyReadbackBuffer(readbackBuffer: ReadbackBuffer): void;
@@ -18013,6 +18029,7 @@ index 8155740ab..bc7ea9656 100644
 -     * Calculates the memory size of a texture in bytes.
 -     *
 -     * @param {Texture} texture - The texture to calculate the size for.
+-     * @param {Object} options - The texture's size and level information.
 -     * @return {number} The calculated size in bytes.
 -     * @private
 -     */
