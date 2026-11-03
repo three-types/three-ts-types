@@ -1849,7 +1849,7 @@ index 914ca6ad0..f2a861d99 100644
 -import { StorageBufferAttribute } from 'three/webgpu';
 -import { Vector4 } from 'three/webgpu';
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/lights/SunLight.d.ts b/jsdoc-testing/jsdoc/examples/jsm/lights/SunLight.d.ts
-index 286054b0d..a6cdfb8b7 100644
+index 91e1c990d..69fdfdc0c 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/lights/SunLight.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/lights/SunLight.d.ts
 @@ -1,3 +1,10 @@
@@ -1891,8 +1891,8 @@ index 286054b0d..a6cdfb8b7 100644
 -     * @type {SunLightShadow}
       */
      shadow: SunLightShadow;
--    copy(source: any): this;
-+    copy(source: SunLight): this;
+-    copy(source: any, recursive: any): this;
++    copy(source: SunLight, recursive?: boolean): this;
 +    toJSON(meta?: JSONMeta): SunLightJSON;
  }
 -import { Light } from 'three';
@@ -7800,7 +7800,7 @@ index 78c3196fd..bc1d01a9b 100644
  }
 -import { Light } from './Light.js';
 diff --git a/jsdoc-testing/jsdoc/src/lights/DirectionalLight.d.ts b/jsdoc-testing/jsdoc/src/lights/DirectionalLight.d.ts
-index 753317423..1062b06af 100644
+index e031d6d68..7eb1dff46 100644
 --- a/jsdoc-testing/jsdoc/src/lights/DirectionalLight.d.ts
 +++ b/jsdoc-testing/jsdoc/src/lights/DirectionalLight.d.ts
 @@ -1,3 +1,14 @@
@@ -7855,8 +7855,8 @@ index 753317423..1062b06af 100644
 -     * @type {DirectionalLightShadow}
       */
      shadow: DirectionalLightShadow;
--    copy(source: any): this;
-+    copy(source: DirectionalLight): this;
+-    copy(source: any, recursive: any): this;
++    copy(source: DirectionalLight, recursive?: boolean): this;
 +    toJSON(meta?: JSONMeta): DirectionalLightJSON;
  }
 -import { Light } from './Light.js';
@@ -8014,7 +8014,7 @@ index ff44d1e48..06de93aed 100644
 -import { Object3D } from '../core/Object3D.js';
 -import { Color } from '../math/Color.js';
 diff --git a/jsdoc-testing/jsdoc/src/lights/LightProbe.d.ts b/jsdoc-testing/jsdoc/src/lights/LightProbe.d.ts
-index 8a03aa8cf..234390948 100644
+index 823a64a9b..d1b4907a8 100644
 --- a/jsdoc-testing/jsdoc/src/lights/LightProbe.d.ts
 +++ b/jsdoc-testing/jsdoc/src/lights/LightProbe.d.ts
 @@ -1,3 +1,11 @@
@@ -8053,8 +8053,8 @@ index 8a03aa8cf..234390948 100644
 -     * @type {SphericalHarmonics3}
       */
      sh: SphericalHarmonics3;
--    copy(source: any): this;
-+    copy(source: LightProbe): this;
+-    copy(source: any, recursive: any): this;
++    copy(source: LightProbe, recursive?: boolean): this;
 +    toJSON(meta?: JSONMeta): LightProbeJSON;
  }
 -import { Light } from './Light.js';
@@ -8383,7 +8383,7 @@ index 9157a63b8..8d29ffab2 100644
  }
 -import { LightShadow } from './LightShadow.js';
 diff --git a/jsdoc-testing/jsdoc/src/lights/RectAreaLight.d.ts b/jsdoc-testing/jsdoc/src/lights/RectAreaLight.d.ts
-index 6d4b7b657..edd5db77c 100644
+index 821ff7b58..aeceb8e75 100644
 --- a/jsdoc-testing/jsdoc/src/lights/RectAreaLight.d.ts
 +++ b/jsdoc-testing/jsdoc/src/lights/RectAreaLight.d.ts
 @@ -1,3 +1,6 @@
@@ -8438,8 +8438,8 @@ index 6d4b7b657..edd5db77c 100644
 -     * @type {number}
       */
      get power(): number;
--    copy(source: any): this;
-+    copy(source: RectAreaLight): this;
+-    copy(source: any, recursive: any): this;
++    copy(source: RectAreaLight, recursive?: boolean): this;
  }
 -import { Light } from './Light.js';
 diff --git a/jsdoc-testing/jsdoc/src/lights/SpotLight.d.ts b/jsdoc-testing/jsdoc/src/lights/SpotLight.d.ts

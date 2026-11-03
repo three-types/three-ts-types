@@ -63,6 +63,6 @@ export class DirectionalLight extends Light {
      * This property holds the light's shadow configuration.
      */
     shadow: DirectionalLightShadow;
-    copy(source: DirectionalLight): this;
+    copy(source: DirectionalLight, recursive?: boolean): this;
     toJSON(meta?: JSONMeta): DirectionalLightJSON;
 }
