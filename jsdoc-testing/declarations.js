@@ -24,7 +24,7 @@ const files = [
     'examples/jsm/lighting/LightMapper',
     'examples/jsm/lighting/LightProbeGrid',
     'examples/jsm/lighting/LightProbeGridWebGL',
-    'examples/jsm/lighting/vxgi/VXGIIrradiance',
+    'examples/jsm/lighting/RayTracedRadiosity',
     'examples/jsm/lighting/vxgi/VXGIVolume',
     'examples/jsm/lights/SunLight',
     'examples/jsm/lights/SunLightNode',
