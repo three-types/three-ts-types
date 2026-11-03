@@ -1247,7 +1247,7 @@ index e82b5711c..8131a4ece 100644
 -import { Lighting } from 'three/webgpu';
 -import ClusteredLightsNode from '../tsl/lighting/ClusteredLightsNode.js';
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/lighting/LightMapper.d.ts b/jsdoc-testing/jsdoc/examples/jsm/lighting/LightMapper.d.ts
-index 3e00a4061..a232fc06f 100644
+index 847d722df..63d830db9 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/lighting/LightMapper.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/lighting/LightMapper.d.ts
 @@ -1,3 +1,5 @@
@@ -1255,8 +1255,8 @@ index 3e00a4061..a232fc06f 100644
 +
  /**
   * Bakes indirect diffuse irradiance into a light map. The irradiance is defined by a
-  * function that returns a TSL node for a world-space position and normal, so any
-@@ -40,7 +42,7 @@ export class LightMapper {
+  * function that returns a TSL node for a world-space position and normal, e.g. a prepared
+@@ -42,7 +44,7 @@ export class LightMapper {
       * @param {Object} [options] - Bake options.
       * @param {Array<Light>} [options.lights=[]] - Direct lights to include in the diffuse bake. Render their shadows in the source scene first and disable shadow updates during the UV bake.
       */
@@ -1265,7 +1265,7 @@ index 3e00a4061..a232fc06f 100644
          lights?: Light[] | undefined;
      });
      /**
-@@ -54,7 +56,7 @@ export class LightMapper {
+@@ -56,7 +58,7 @@ export class LightMapper {
       *
       * @type {function(Node<vec3>, Node<vec3>, Node<float>): Node<vec3>}
       */
@@ -1274,7 +1274,7 @@ index 3e00a4061..a232fc06f 100644
      /**
       * The light map size in texels.
       *
-@@ -69,8 +71,6 @@ export class LightMapper {
+@@ -71,8 +73,6 @@ export class LightMapper {
       * @default 0
       */
      readonly samples: number;
@@ -1283,7 +1283,7 @@ index 3e00a4061..a232fc06f 100644
      /**
       * The baked light map. It stores linear diffuse irradiance in lux, without baked
       * albedo, material ambient occlusion, or display exposure, and uses `uv1`.
-@@ -79,14 +79,6 @@ export class LightMapper {
+@@ -81,14 +81,6 @@ export class LightMapper {
       * @type {Texture}
       */
      texture: Texture;
@@ -1298,7 +1298,7 @@ index 3e00a4061..a232fc06f 100644
      /**
       * Adds meshes to the light map. Their geometries must provide `uv1`.
       * Skinned and instanced meshes are not supported.
-@@ -108,20 +100,4 @@ export class LightMapper {
+@@ -110,20 +102,4 @@ export class LightMapper {
       * Frees all internal resources.
       */
      dispose(): void;
@@ -1549,23 +1549,108 @@ index 05e2c9045..65cc308d2 100644
 -import { Box3 } from 'three';
 -import { Data3DTexture } from 'three';
 -import { Scene } from 'three';
-diff --git a/jsdoc-testing/jsdoc/examples/jsm/lighting/vxgi/VXGIIrradiance.d.ts b/jsdoc-testing/jsdoc/examples/jsm/lighting/vxgi/VXGIIrradiance.d.ts
-index 154226976..d32d66db3 100644
---- a/jsdoc-testing/jsdoc/examples/jsm/lighting/vxgi/VXGIIrradiance.d.ts
-+++ b/jsdoc-testing/jsdoc/examples/jsm/lighting/vxgi/VXGIIrradiance.d.ts
-@@ -1,3 +1,6 @@
-+import { Node } from "three/webgpu";
-+import { VXGIVolume } from "./VXGIVolume.js";
+diff --git a/jsdoc-testing/jsdoc/examples/jsm/lighting/RayTracedRadiosity.d.ts b/jsdoc-testing/jsdoc/examples/jsm/lighting/RayTracedRadiosity.d.ts
+index 91095f88a..96f79935e 100644
+--- a/jsdoc-testing/jsdoc/examples/jsm/lighting/RayTracedRadiosity.d.ts
++++ b/jsdoc-testing/jsdoc/examples/jsm/lighting/RayTracedRadiosity.d.ts
+@@ -1,3 +1,5 @@
++import { Node, Scene, WebGPURenderer } from "three/webgpu";
 +
  /**
-  * Creates a world-space diffuse irradiance sampler for a prepared {@link VXGIVolume}.
-  * Call `volume.update( renderer, scene )` before baking. The sampler traces cosine-weighted
-@@ -14,4 +17,4 @@
+  * Approximates diffuse global illumination with ray traced radiosity, as a source of irradiance for
+  * {@link LightMapper}. Every sample casts cosine-distributed rays from each point through a
+@@ -80,27 +82,6 @@ export class RayTracedRadiosity {
+      * @default 0.001
+      */
+     bias: number;
+-    _bvh: any;
+-    _geometry: BufferGeometry | null;
+-    _trace: any;
+-    _surface: any;
+-    _visibility: any;
+-    _triangles: import("three/tsl").StorageBufferNode | null;
+-    _materials: any;
+-    _lights: any;
+-    _lightCount: number;
+-    _emitters: any;
+-    _emitterCount: number;
+-    _lightMapMeshes: any[];
+-    _cache: LightMapper | null;
+-    _environment: any;
+-    _sky: import("three/tsl").StorageBufferNode | null;
+-    _environmentIntensity: import("three/tsl").UniformNode;
+-    _environmentRotation: import("three/tsl").UniformNode;
+-    _environmentInverseRotation: import("three/tsl").UniformNode;
+-    _pass: number;
+-    _passNode: import("three/tsl").Node;
+-    _biasNode: import("three/tsl").Node;
+     /**
+      * Collects the meshes of the scene, builds the BVH and solves the cached bounces. Call this again
+      * after changing the scene or the lighting.
+@@ -113,55 +94,6 @@ export class RayTracedRadiosity {
+      * Frees all internal resources.
+      */
+     dispose(): void;
+-    /**
+-     * Disposes the BVH, the scene buffers and the bounce cache.
+-     *
+-     * @private
+-     */
+-    private _clear;
+-    /**
+-     * Merges the visible meshes into one world space geometry, builds its BVH and stores the
+-     * materials, emissive triangles and lights.
+-     *
+-     * @private
+-     * @param {Scene} scene - The scene.
+-     */
+-    private _collect;
+-    /**
+-     * Builds the table that samples the sky by the power of its latitude-longitude cells, measured on
+-     * the GPU from the radiance that the rays see. So any equirectangular or cube texture works, also
+-     * without data on the CPU, like the textures of TextureLoader and CubeTextureLoader, and render
+-     * targets. A cell stores its power and the sum of the powers of its row up to it. Then an item per
+-     * row stores the power of the row, the sum of the powers of the rows up to it, and the factor that
+-     * turns the power of a cell of the row into its density over the solid angle.
+-     *
+-     * @private
+-     * @param {WebGPURenderer} renderer - The renderer.
+-     */
+-    private _createSky;
+-    /**
+-     * Creates the functions that trace rays through the BVH.
+-     *
+-     * @private
+-     */
+-    private _createTrace;
+-    /**
+-     * Solves the cached bounces. Every iteration gathers one sample from the previous one, then the
+-     * converged estimate is refined by accumulating samples.
+-     *
+-     * @private
+-     */
+-    private _solve;
+-    /**
+-     * Returns the irradiance gathered with rays at a world-space position and normal.
+-     *
+-     * @private
+-     * @param {Node<vec3>} positionNode - The world-space position.
+-     * @param {Node<vec3>} normalNode - The world-space normal.
+-     * @param {boolean} analyticLights - Whether to add the direct light of the analytic lights.
+-     * @return {Node<vec3>} The irradiance.
+-     */
+-    private _gather;
+ }
+ /**
+  * Creates a world-space diffuse irradiance sampler for a prepared {@link RayTracedRadiosity}, for
+@@ -175,6 +107,4 @@ export class RayTracedRadiosity {
   */
- export function vxgiIrradiance(volume: VXGIVolume, { coneCount }?: {
-     coneCount?: number | undefined;
--}): (arg0: Node<vec3>, arg1: Node<vec3>, arg2: Node<any> | null) => Node<vec3>;
-+}): (position: Node<"vec3">, normal: Node<"vec3">, sample?: Node<"float">) => Node<"vec3">;
+ export function rayTracedRadiosityIrradiance(radiosity: RayTracedRadiosity, { analyticLights }?: {
+     analyticLights?: boolean | undefined;
+-}): (arg0: Node<any>, arg1: Node<any>) => Node<any>;
+-import { BufferGeometry } from 'three/webgpu';
+-import { LightMapper } from './LightMapper.js';
++}): (position: Node<"vec3">, normal: Node<"vec3">) => Node<"vec3">;
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/lighting/vxgi/VXGIVolume.d.ts b/jsdoc-testing/jsdoc/examples/jsm/lighting/vxgi/VXGIVolume.d.ts
 index 914ca6ad0..f2a861d99 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/lighting/vxgi/VXGIVolume.d.ts
