@@ -53,6 +53,6 @@ export class SunLight extends Light {
      * This property holds the light's shadow configuration.
      */
     shadow: SunLightShadow;
-    copy(source: SunLight): this;
+    copy(source: SunLight, recursive?: boolean): this;
     toJSON(meta?: JSONMeta): SunLightJSON;
 }
