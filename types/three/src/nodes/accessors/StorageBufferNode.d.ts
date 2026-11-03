@@ -37,7 +37,6 @@ declare const StorageBufferNode: {
     new<TNodeType>(
         value: StorageBufferAttribute | StorageInstancedBufferAttribute,
         bufferType?: string | Struct | null,
-        bufferCount?: number,
     ): StorageBufferNode<TNodeType>;
 };
 
@@ -68,12 +67,10 @@ interface Storage {
     <const TNodeType extends StorageNodeType>(
         value: StorageBufferAttribute | StorageInstancedBufferAttribute | BufferAttribute,
         type: TNodeType,
-        count: number,
     ): StorageBufferNode<TNodeType>;
     (
         value: StorageBufferAttribute | StorageInstancedBufferAttribute | BufferAttribute,
         type: Struct,
-        count: number,
     ): StorageBufferNode<"struct">;
 }
 
