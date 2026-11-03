@@ -16869,71 +16869,64 @@ index ab4e49677..d5662716d 100644
          light.color.setHSL(h, s, l);
          light.position.set(x, y, z);
 diff --git a/examples-testing/examples/webgpu_lightmap_baking.ts b/examples-testing/examples/webgpu_lightmap_baking.ts
-index 1153e59af..bced26694 100644
+index b961249d2..f75cf8234 100644
 --- a/examples-testing/examples/webgpu_lightmap_baking.ts
 +++ b/examples-testing/examples/webgpu_lightmap_baking.ts
-@@ -9,7 +9,8 @@ import { VXGIVolume } from 'three/addons/lighting/vxgi/VXGIVolume.js';
- import { vxgiIrradiance } from 'three/addons/lighting/vxgi/VXGIIrradiance.js';
- import { lightProbeGridIrradiance } from 'three/addons/tsl/lighting/LightProbeGridNode.js';
- import { traa } from 'three/addons/tsl/display/TRAANode.js';
+@@ -5,7 +5,7 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
+ import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
+ import { LightMapper } from 'three/addons/lighting/LightMapper.js';
+ import { RayTracedRadiosity, rayTracedRadiosityIrradiance } from 'three/addons/lighting/RayTracedRadiosity.js';
 -import { unwrapUVs } from 'three/addons/utils/unwrapUVs.js';
 +import { unwrapUVs, UnwrapUVsResult } from 'three/addons/utils/unwrapUVs.js';
-+import TRAANode from 'three/addons/tsl/display/TRAANode.js';
  
  import WebGPU from 'three/addons/capabilities/WebGPU.js';
  
-@@ -19,9 +20,21 @@ if (WebGPU.isAvailable() === false) {
+@@ -15,9 +15,25 @@ if (WebGPU.isAvailable() === false) {
      throw new Error('No WebGPU support');
  }
  
--let camera, scene, renderer, controls, renderPipeline;
--let light, meshes, materials, atlas, status;
--let source, lightMapper, bakedPass, livePass, liveOutput;
+-let camera, scene, renderer, controls, status;
+-let world, meshes, materials;
+-let radiosity, lightMapper;
++interface World {
++    root: THREE.Group;
++    lightMapped: THREE.Group;
++    background: THREE.Color | THREE.Texture;
++    cacheSize: number;
++    camera: THREE.Vector3;
++    target: THREE.Vector3;
++    atlas?: UnwrapUVsResult;
++}
++
 +let camera: THREE.PerspectiveCamera,
 +    scene: THREE.Scene,
 +    renderer: THREE.WebGPURenderer,
 +    controls: OrbitControls,
-+    renderPipeline: THREE.RenderPipeline;
-+let light: THREE.PointLight,
-+    meshes: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>[],
-+    materials: Set<THREE.MeshStandardMaterial>,
-+    atlas: UnwrapUVsResult,
 +    status: HTMLElement;
-+let source: LightProbeGrid | VXGIVolume | undefined,
-+    lightMapper: LightMapper,
-+    bakedPass: THREE.PassNode,
-+    livePass: THREE.PassNode | undefined,
-+    liveOutput: THREE.PassNode | TRAANode | undefined;
- let needsBake = true;
++let world: World | undefined,
++    meshes: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>[],
++    materials: Set<THREE.MeshStandardMaterial>;
++let radiosity: RayTracedRadiosity | undefined, lightMapper: LightMapper | undefined;
+ let needsBake = false;
  
- // shifts the per-pixel cone noise of the live view every frame, like the light map samples
-@@ -37,7 +50,7 @@ const params = {
- // light probes are deterministic and only need a few samples to antialias the light map,
- // the VXGI cones are rotated per sample and converge over more samples
+ const params = {
+@@ -25,8 +41,11 @@ const params = {
+     resolution: 1024,
+ };
  
--const bakeSamples = { 'Light Probe': 16, VXGI: 64 };
-+const bakeSamples: Record<string, number> = { 'Light Probe': 16, VXGI: 64 };
+-const scenes = { 'Cornell Box': createCornellBox, Courtyard: loadCourtyard };
+-const worlds = {};
++const scenes: Record<string, () => World | Promise<World>> = {
++    'Cornell Box': createCornellBox,
++    Courtyard: loadCourtyard,
++};
++const worlds: Record<string, World> = {};
  
- init();
+ // every sample continues the ray sequences of the texels
  
-@@ -149,9 +162,12 @@ async function init() {
+@@ -54,11 +73,11 @@ async function init() {
  
-     // Light map UVs
- 
--    meshes = scene.children.filter(object => object.isMesh);
-+    meshes = scene.children.filter(object => (object as THREE.Mesh).isMesh) as THREE.Mesh<
-+        THREE.BufferGeometry,
-+        THREE.MeshStandardMaterial
-+    >[];
-     materials = new Set(meshes.map(mesh => mesh.material));
--    atlas = unwrapUVs(scene, { resolution: params.resolution, padding: 3 });
-+    atlas = unwrapUVs(scene, { resolution: params.resolution, padding: 3 })!;
- 
-     // "Baked GI" shows the light map while it accumulates,
-     // "Live GI" evaluates the raw irradiance per pixel every frame
-@@ -159,11 +175,11 @@ async function init() {
-     renderPipeline = new THREE.RenderPipeline(renderer);
-     bakedPass = pass(scene, camera);
+     controls = new OrbitControls(camera, renderer.domElement);
  
 -    status = document.getElementById('status');
 +    status = document.getElementById('status')!;
@@ -16942,46 +16935,86 @@ index 1153e59af..bced26694 100644
  
 -    const gui = renderer.inspector.createParameters('Light Baking');
 +    const gui = (renderer.inspector as Inspector).createParameters('Light Baking');
-     gui.add(params, 'output', ['Baked GI', 'Live GI']).name('Output').onChange(setOutput);
-     gui.add(params, 'algorithm', ['Light Probe', 'VXGI']).name('GI Algorithm').onChange(requestBake);
+     gui.add(params, 'scene', Object.keys(scenes)).name('Scene').onChange(setScene);
      gui.add(params, 'resolution', [256, 1024, 2048, 4096]).name('Light Map Resolution').onChange(requestBake);
-@@ -188,19 +204,24 @@ function bake() {
+     gui.add({ bake: requestBake }, 'bake').name('Re-Bake GI');
+@@ -90,7 +109,11 @@ async function setScene() {
+     controls.update();
  
-     if (atlas.resolution !== params.resolution) {
+     meshes = [];
+-    world.lightMapped.traverse(object => object.isMesh && meshes.push(object));
++    world.lightMapped.traverse(
++        object =>
++            (object as THREE.Mesh).isMesh &&
++            meshes.push(object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>),
++    );
+     materials = new Set(meshes.map(mesh => mesh.material));
+ 
+     requestBake();
+@@ -192,7 +215,14 @@ async function loadCourtyard() {
+     const leaves = new THREE.MeshStandardMaterial({ color: 0x4a7a32 });
+     const banners = [0xb02a20, 0x2a4ab0, 0xd8a020, 0x2a8a50].map(color => new THREE.MeshStandardMaterial({ color }));
+ 
+-    function add(parent, geometry, material, x, y, z) {
++    function add(
++        parent: THREE.Object3D,
++        geometry: THREE.BufferGeometry,
++        material: THREE.MeshStandardMaterial,
++        x: number,
++        y: number,
++        z: number,
++    ) {
+         const mesh = new THREE.Mesh(geometry, material);
+         mesh.position.set(x, y, z);
+         parent.add(mesh);
+@@ -247,7 +277,7 @@ async function loadCourtyard() {
+ 
+     // fountain
+ 
+-    const octagon = radius =>
++    const octagon = (radius: number) =>
+         Array.from({ length: 8 }, (v, i) =>
+             new THREE.Vector2(radius, 0).rotateAround(new THREE.Vector2(), ((i + 0.5) * Math.PI) / 4),
+         );
+@@ -296,21 +326,21 @@ function bake() {
+ 
+     // each mesh gets a new geometry with light map UVs, also for another resolution
+ 
+-    if (world.atlas?.resolution !== params.resolution) {
++    if (world!.atlas?.resolution !== params.resolution) {
          const geometries = new Set(meshes.map(mesh => mesh.geometry));
--        atlas = unwrapUVs(scene, { resolution: params.resolution, padding: 3 });
-+        atlas = unwrapUVs(scene, { resolution: params.resolution, padding: 3 })!;
+-        world.atlas = unwrapUVs(world.lightMapped, { resolution: params.resolution, padding: 3 });
++        world!.atlas = unwrapUVs(world!.lightMapped, { resolution: params.resolution, padding: 3 })!;
  
          for (const geometry of geometries) geometry.dispose();
      }
  
--    let irradiance;
-+    let irradiance: (
-+        position: THREE.Node<'vec3'>,
-+        normal: THREE.Node<'vec3'>,
-+        sample?: THREE.Node<'float'>,
-+    ) => THREE.Node<'vec3'>;
+     // rays through a BVH of the scene, with the bounces cached in a light map of their own
  
-     if (params.algorithm === 'Light Probe') {
-         const probes = new LightProbeGrid(6, 5, 6, 8, 8, 8);
-         probes.position.set(0, 2.5, 0);
-         probes.updateBoundingBox();
-         probes.bake(renderer, scene, { cubemapSize: 32, near: 0.05, far: 20 });
--        irradiance = (position, normal) => lightProbeGridIrradiance(probes, position, normal);
-+        irradiance = (position: THREE.Node<'vec3'>, normal: THREE.Node<'vec3'>) =>
-+            lightProbeGridIrradiance(probes, position, normal);
-         source = probes;
+-    radiosity = new RayTracedRadiosity({ cacheSize: world.cacheSize });
++    radiosity = new RayTracedRadiosity({ cacheSize: world!.cacheSize });
+     radiosity.update(renderer, scene);
+ 
+     // the light map accumulates one sample per frame in animate()
+ 
+-    lightMapper = new LightMapper(renderer, world.atlas.resolution, rayTracedRadiosityIrradiance(radiosity));
++    lightMapper = new LightMapper(renderer, world!.atlas.resolution, rayTracedRadiosityIrradiance(radiosity));
+     lightMapper.addObjects(meshes);
+ 
+     for (const material of materials) material.lightMap = lightMapper.texture;
+@@ -329,9 +359,9 @@ function animate() {
+         needsBake = false;
+     }
+ 
+-    if (lightMapper.samples < samples) {
+-        lightMapper.update();
+-        status.textContent = `Baking: ${lightMapper.samples} / ${samples} samples`;
++    if (lightMapper!.samples < samples) {
++        lightMapper!.update();
++        status.textContent = `Baking: ${lightMapper!.samples} / ${samples} samples`;
      } else {
-         const volume = new VXGIVolume();
-@@ -249,7 +270,7 @@ function setOutput() {
- 
-     for (const material of materials) material.lightMapIntensity = live ? 0 : 1;
- 
--    renderPipeline.outputNode = live ? liveOutput : bakedPass;
-+    renderPipeline.outputNode = live ? liveOutput! : bakedPass;
-     renderPipeline.needsUpdate = true;
- }
- 
+         status.textContent = `Baked: ${samples} samples`;
+     }
 diff --git a/examples-testing/examples/webgpu_lightprobe.ts b/examples-testing/examples/webgpu_lightprobe.ts
 index 3e90b6f66..342083547 100644
 --- a/examples-testing/examples/webgpu_lightprobe.ts
