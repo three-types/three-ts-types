@@ -8060,10 +8060,10 @@ index 823a64a9b..d1b4907a8 100644
 -import { Light } from './Light.js';
 -import { SphericalHarmonics3 } from '../math/SphericalHarmonics3.js';
 diff --git a/jsdoc-testing/jsdoc/src/lights/LightShadow.d.ts b/jsdoc-testing/jsdoc/src/lights/LightShadow.d.ts
-index 71e500048..f504b394a 100644
+index 68174f6f0..68d28a011 100644
 --- a/jsdoc-testing/jsdoc/src/lights/LightShadow.d.ts
 +++ b/jsdoc-testing/jsdoc/src/lights/LightShadow.d.ts
-@@ -1,27 +1,45 @@
+@@ -1,27 +1,46 @@
 +import { Vector2, Vector2Tuple } from "../math/Vector2.js";
 +import { Matrix4 } from '../math/Matrix4.js';
 +import { Frustum } from '../math/Frustum.js';
@@ -8074,6 +8074,7 @@ index 71e500048..f504b394a 100644
 +import { TextureDataType } from "../constants.js";
 +import { RenderTarget } from "../core/RenderTarget.js";
 +import { Light } from "./Light.js";
++import { Texture } from "../textures/Texture.js";
 +
 +export interface LightShadowJSON {
 +    intensity?: number;
@@ -8117,7 +8118,7 @@ index 71e500048..f504b394a 100644
       * @default 1
       */
      intensity: number;
-@@ -32,7 +50,6 @@ export class LightShadow {
+@@ -32,7 +51,6 @@ export class LightShadow {
       * The default is `0`. Very tiny adjustments here (in the order of `0.0001`)
       * may help reduce artifacts in shadows.
       *
@@ -8125,7 +8126,7 @@ index 71e500048..f504b394a 100644
       * @default 0
       */
      bias: number;
-@@ -41,17 +58,15 @@ export class LightShadow {
+@@ -41,27 +59,29 @@ export class LightShadow {
       *
       * If a bias node is defined, `bias` has no effect.
       *
@@ -8135,8 +8136,32 @@ index 71e500048..f504b394a 100644
 -    biasNode: Node<float> | null;
 +    biasNode: Node<'float'> | null;
      /**
-      * Defines how much the position used to query the shadow map is offset along
-      * the object normal. The default is `0`. Increasing this value can be used to
+      * A custom shadow filter function. Only supported with `WebGPURenderer`.
+      *
+      * If a filter node is defined, it replaces the filter selected by the
+      * renderer's shadow map type.
+      *
+-     * @type {?Function}
+      * @default null
+      */
+-    filterNode: Function | null;
++    filterNode: ((inputs: {
++        depthTexture: Texture;
++        shadowCoord: Node;
++        shadow: LightShadow;
++        depthLayer: number;
++    }) => Node) | null;
+     /**
+      * A custom shadow node that replaces the default shadow node of the light.
+      * Only supported with `WebGPURenderer`.
+      *
+      * The node is bound to its light, so `copy()` and `clone()` do not transfer it.
+      *
+-     * @type {?Node}
+      * @default null
+      */
+     shadowNode: Node | null;
+@@ -71,7 +91,6 @@ export class LightShadow {
       * reduce shadow acne especially in large scenes where light shines onto
       * geometry at a shallow angle. The cost is that shadows may appear distorted.
       *
@@ -8144,7 +8169,7 @@ index 71e500048..f504b394a 100644
       * @default 0
       */
      normalBias: number;
-@@ -63,14 +78,12 @@ export class LightShadow {
+@@ -83,14 +102,12 @@ export class LightShadow {
       *
       * The property has no effect when the shadow map type is `BasicShadowMap`.
       *
@@ -8159,7 +8184,7 @@ index 71e500048..f504b394a 100644
       * @default 8
       */
      blurSamples: number;
-@@ -78,22 +91,19 @@ export class LightShadow {
+@@ -98,22 +115,19 @@ export class LightShadow {
       * Defines the width and height of the shadow map. Higher values give better quality
       * shadows at the cost of computation time. Values must be powers of two.
       *
@@ -8183,7 +8208,7 @@ index 71e500048..f504b394a 100644
       * @default null
       */
      map: RenderTarget | null;
-@@ -102,22 +112,18 @@ export class LightShadow {
+@@ -122,22 +136,18 @@ export class LightShadow {
       * calculated based on the distribution of depths. Computed internally during
       * rendering.
       *
@@ -8206,7 +8231,7 @@ index 71e500048..f504b394a 100644
       * @default true
       */
      autoUpdate: boolean;
-@@ -126,14 +132,9 @@ export class LightShadow {
+@@ -146,14 +156,9 @@ export class LightShadow {
       * If you have set {@link LightShadow#autoUpdate} to `false`, you will need to
       * set this property to `true` and then make a render call to update the light's shadow.
       *
@@ -8221,7 +8246,7 @@ index 71e500048..f504b394a 100644
      /**
       * Used internally by the renderer to get the number of viewports that need
       * to be rendered for this shadow.
-@@ -147,7 +148,7 @@ export class LightShadow {
+@@ -167,7 +172,7 @@ export class LightShadow {
       * @param {number} [viewportIndex=0] - The viewport index.
       * @return {Camera} The shadow camera.
       */
@@ -8230,7 +8255,7 @@ index 71e500048..f504b394a 100644
      /**
       * Gets the shadow cameras frustum. Used internally by the renderer to cull objects.
       *
-@@ -160,16 +161,6 @@ export class LightShadow {
+@@ -180,16 +185,6 @@ export class LightShadow {
       * @param {Light} light - The light for which the shadow is being rendered.
       */
      updateMatrices(light: Light): void;
@@ -8247,7 +8272,7 @@ index 71e500048..f504b394a 100644
      /**
       * Returns a viewport definition for the given viewport index.
       *
-@@ -194,22 +185,18 @@ export class LightShadow {
+@@ -214,22 +209,18 @@ export class LightShadow {
       * @param {LightShadow} source - The light shadow to copy.
       * @return {LightShadow} A reference to this light shadow instance.
       */
