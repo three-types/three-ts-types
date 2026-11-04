@@ -7,6 +7,7 @@ import { Matrix4 } from "../math/Matrix4.js";
 import { Vector2, Vector2Tuple } from "../math/Vector2.js";
 import { Vector4 } from "../math/Vector4.js";
 import Node from "../nodes/core/Node.js";
+import { Texture } from "../textures/Texture.js";
 import { Light } from "./Light.js";
 
 export interface LightShadowJSON {
@@ -61,6 +62,31 @@ export abstract class LightShadow<TCamera extends Camera = Camera> {
      * @default null
      */
     biasNode: Node<"float"> | null;
+    /**
+     * A custom shadow filter function. Only supported with `WebGPURenderer`.
+     *
+     * If a filter node is defined, it replaces the filter selected by the
+     * renderer's shadow map type.
+     *
+     * @default null
+     */
+    filterNode:
+        | ((inputs: {
+            depthTexture: Texture;
+            shadowCoord: Node;
+            shadow: LightShadow;
+            depthLayer: number;
+        }) => Node)
+        | null;
+    /**
+     * A custom shadow node that replaces the default shadow node of the light.
+     * Only supported with `WebGPURenderer`.
+     *
+     * The node is bound to its light, so `copy()` and `clone()` do not transfer it.
+     *
+     * @default null
+     */
+    shadowNode: Node | null;
     /**
      * Defines how much the position used to query the shadow map is offset along
      * the object normal. The default is `0`. Increasing this value can be used to
