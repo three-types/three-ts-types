@@ -5,12 +5,6 @@ import LightingNode from "./LightingNode.js";
 import { DirectLightData, DirectRectAreaLightData } from "./LightsNode.js";
 import ShadowNode from "./ShadowNode.js";
 
-declare module "../../lights/LightShadow.js" {
-    interface LightShadow {
-        shadowNode?: Node;
-    }
-}
-
 declare class AnalyticLightNode<T extends Light> extends LightingNode {
     light: T | null;
 
