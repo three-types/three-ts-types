@@ -208,8 +208,8 @@ declare class OrbitControls<TCamera extends Camera = Camera> extends Controls<Or
      */
     constructor(object: TCamera, domElement?: HTMLElement | SVGElement | null);
 
-    set cursorStyle(type: "auto" | "grab");
-    get cursorStyle(): "auto" | "grab";
+    set cursorStyle(type: "" | "grab");
+    get cursorStyle(): "" | "grab";
 
     /**
      * Get the current vertical rotation, in radians.
