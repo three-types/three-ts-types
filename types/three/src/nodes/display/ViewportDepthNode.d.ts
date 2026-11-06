@@ -1,3 +1,4 @@
+import { Camera } from "../../cameras/Camera.js";
 import Node from "../core/Node.js";
 
 declare class ViewportDepthNode extends Node<"float"> {
@@ -35,6 +36,8 @@ export const perspectiveDepthToViewZ: (depth: Node, near: Node, far: Node) => No
 export const viewZToLogarithmicDepth: (viewZ: Node, near: Node, far: Node) => Node<"float">;
 
 export const logarithmicDepthToViewZ: (depth: Node, near: Node, far: Node) => Node<"float">;
+
+export const depthToViewZ: (depth: Node, near: Node, far: Node, camera: Camera) => Node<"float">;
 
 export const projectionDepth: (depth: Node, near: Node, far: Node) => Node<"float">;
 
