@@ -1,4 +1,4 @@
-import { Camera, Node, PassTextureNode, Texture, TextureNode, UniformNode } from "three/webgpu";
+import { Camera, Node, Texture, TextureNode, UniformNode } from "three/webgpu";
 
 export type DenoiseQuality = "fast" | "quality";
 
@@ -55,7 +55,7 @@ declare class DenoiseNode extends Node<"vec4"> {
 
     constructor(inputNode: TextureNode, options?: DenoiseNodeOptions);
 
-    getTextureNode(): PassTextureNode;
+    getTextureNode(): TextureNode;
 
     getTexture(): Texture;
 
