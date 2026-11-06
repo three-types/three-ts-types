@@ -48,7 +48,8 @@ export class RayTracedRadiosity {
         cacheSize?: number | undefined;
     });
     /**
-     * The number of rays cast per point and sample.
+     * The number of rays cast per point and sample. It can change between samples, e.g. to keep the
+     * frame rate of a progressive bake: the samples continue the same sequences of rays.
      *
      * @type {number}
      * @default 8

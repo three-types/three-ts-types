@@ -64,6 +64,15 @@ export interface NodeMaterialNodeProperties {
      */
     aoNode: Node | null;
     /**
+     * The lighting of node materials might be influenced by a light map. The default
+     * light map is inferred from a light map assigned to `lightMap` and the respective
+     * `lightMapIntensity`. This node property allows to overwrite the default and define
+     * the light map with a custom node instead, e.g. the output of a denoiser.
+     *
+     * @default null
+     */
+    lightMapNode: Node | null;
+    /**
      * The diffuse color of node materials is by default inferred from the
      * `color` and `map` properties. This node property allows to overwrite the default
      * and define the diffuse color with a node instead.

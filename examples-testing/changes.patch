@@ -16431,7 +16431,7 @@ index ec0088e0e..6335c36db 100644
      gui.add(parameters, 'height', 60, 200, 1).onChange(generate);
      gui.add(parameters, 'width', 18, 60, 1).onChange(generate);
 diff --git a/examples-testing/examples/webgpu_generator_city.ts b/examples-testing/examples/webgpu_generator_city.ts
-index 198b036d2..4eb6e070c 100644
+index 19f8ffa8a..b5b09de1c 100644
 --- a/examples-testing/examples/webgpu_generator_city.ts
 +++ b/examples-testing/examples/webgpu_generator_city.ts
 @@ -9,10 +9,24 @@ import { CityGenerator, createBuildingMaterial, createRoadMaterial } from 'three
@@ -16869,25 +16869,30 @@ index ab4e49677..d5662716d 100644
          light.color.setHSL(h, s, l);
          light.position.set(x, y, z);
 diff --git a/examples-testing/examples/webgpu_lightmap_baking.ts b/examples-testing/examples/webgpu_lightmap_baking.ts
-index b961249d2..f75cf8234 100644
+index a22cefdf1..77979b5b0 100644
 --- a/examples-testing/examples/webgpu_lightmap_baking.ts
 +++ b/examples-testing/examples/webgpu_lightmap_baking.ts
-@@ -5,7 +5,7 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
+@@ -4,9 +4,9 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { Inspector } from 'three/addons/inspector/Inspector.js';
  import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
  import { LightMapper } from 'three/addons/lighting/LightMapper.js';
+-import { denoise } from 'three/addons/tsl/display/DenoiseNode.js';
++import DenoiseNode, { denoise } from 'three/addons/tsl/display/DenoiseNode.js';
  import { RayTracedRadiosity, rayTracedRadiosityIrradiance } from 'three/addons/lighting/RayTracedRadiosity.js';
 -import { unwrapUVs } from 'three/addons/utils/unwrapUVs.js';
 +import { unwrapUVs, UnwrapUVsResult } from 'three/addons/utils/unwrapUVs.js';
  
  import WebGPU from 'three/addons/capabilities/WebGPU.js';
  
-@@ -15,9 +15,25 @@ if (WebGPU.isAvailable() === false) {
+@@ -16,11 +16,27 @@ if (WebGPU.isAvailable() === false) {
      throw new Error('No WebGPU support');
  }
  
 -let camera, scene, renderer, controls, status;
 -let world, meshes, materials;
--let radiosity, lightMapper;
+-let radiosity,
+-    lightMapper,
+-    denoiseNode = null;
 +interface World {
 +    root: THREE.Group;
 +    lightMapped: THREE.Group;
@@ -16904,14 +16909,16 @@ index b961249d2..f75cf8234 100644
 +    controls: OrbitControls,
 +    status: HTMLElement;
 +let world: World | undefined,
-+    meshes: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>[],
-+    materials: Set<THREE.MeshStandardMaterial>;
-+let radiosity: RayTracedRadiosity | undefined, lightMapper: LightMapper | undefined;
- let needsBake = false;
++    meshes: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardNodeMaterial>[],
++    materials: Set<THREE.MeshStandardNodeMaterial>;
++let radiosity: RayTracedRadiosity | undefined,
++    lightMapper: LightMapper | undefined,
++    denoiseNode: DenoiseNode | null = null;
+ let needsBake = false,
+     denoised = false;
  
- const params = {
-@@ -25,8 +41,11 @@ const params = {
-     resolution: 1024,
+@@ -30,8 +46,11 @@ const params = {
+     denoise: false,
  };
  
 -const scenes = { 'Cornell Box': createCornellBox, Courtyard: loadCourtyard };
@@ -16922,9 +16929,18 @@ index b961249d2..f75cf8234 100644
 +};
 +const worlds: Record<string, World> = {};
  
- // every sample continues the ray sequences of the texels
+ // phones have less GPU memory, 4096² takes over 1 GB with the denoiser
  
-@@ -54,11 +73,11 @@ async function init() {
+@@ -41,7 +60,7 @@ const phone = window.matchMedia('(pointer: coarse)').matches;
+ // many per frame as keep the frame rate of the display
+ 
+ const rays = 512;
+-const frameTimes = [];
++const frameTimes: number[] = [];
+ 
+ let bakedRays = 0,
+     raysPerFrame = 8,
+@@ -70,11 +89,11 @@ async function init() {
  
      controls = new OrbitControls(camera, renderer.domElement);
  
@@ -16936,9 +16952,9 @@ index b961249d2..f75cf8234 100644
 -    const gui = renderer.inspector.createParameters('Light Baking');
 +    const gui = (renderer.inspector as Inspector).createParameters('Light Baking');
      gui.add(params, 'scene', Object.keys(scenes)).name('Scene').onChange(setScene);
-     gui.add(params, 'resolution', [256, 1024, 2048, 4096]).name('Light Map Resolution').onChange(requestBake);
-     gui.add({ bake: requestBake }, 'bake').name('Re-Bake GI');
-@@ -90,7 +109,11 @@ async function setScene() {
+     gui.add(params, 'resolution', phone ? [256, 1024, 2048] : [256, 1024, 2048, 4096])
+         .name('Light Map Resolution')
+@@ -109,7 +128,11 @@ async function setScene() {
      controls.update();
  
      meshes = [];
@@ -16946,20 +16962,20 @@ index b961249d2..f75cf8234 100644
 +    world.lightMapped.traverse(
 +        object =>
 +            (object as THREE.Mesh).isMesh &&
-+            meshes.push(object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>),
++            meshes.push(object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardNodeMaterial>),
 +    );
      materials = new Set(meshes.map(mesh => mesh.material));
  
      requestBake();
-@@ -192,7 +215,14 @@ async function loadCourtyard() {
-     const leaves = new THREE.MeshStandardMaterial({ color: 0x4a7a32 });
-     const banners = [0xb02a20, 0x2a4ab0, 0xd8a020, 0x2a8a50].map(color => new THREE.MeshStandardMaterial({ color }));
+@@ -213,7 +236,14 @@ async function loadCourtyard() {
+         color => new THREE.MeshStandardNodeMaterial({ color }),
+     );
  
 -    function add(parent, geometry, material, x, y, z) {
 +    function add(
 +        parent: THREE.Object3D,
 +        geometry: THREE.BufferGeometry,
-+        material: THREE.MeshStandardMaterial,
++        material: THREE.MeshStandardNodeMaterial,
 +        x: number,
 +        y: number,
 +        z: number,
@@ -16967,7 +16983,7 @@ index b961249d2..f75cf8234 100644
          const mesh = new THREE.Mesh(geometry, material);
          mesh.position.set(x, y, z);
          parent.add(mesh);
-@@ -247,7 +277,7 @@ async function loadCourtyard() {
+@@ -268,7 +298,7 @@ async function loadCourtyard() {
  
      // fountain
  
@@ -16976,7 +16992,7 @@ index b961249d2..f75cf8234 100644
          Array.from({ length: 8 }, (v, i) =>
              new THREE.Vector2(radius, 0).rotateAround(new THREE.Vector2(), ((i + 0.5) * Math.PI) / 4),
          );
-@@ -296,21 +326,21 @@ function bake() {
+@@ -318,16 +348,16 @@ function bake() {
  
      // each mesh gets a new geometry with light map UVs, also for another resolution
  
@@ -16996,25 +17012,37 @@ index b961249d2..f75cf8234 100644
      radiosity.update(renderer, scene);
  
      // the light map accumulates one sample per frame in animate()
+@@ -335,7 +365,7 @@ function bake() {
+     // to denoise, the light mapper also bakes the inputs of the denoiser: the variance of each texel
+     // and the surfaces of the texels as guides, which take more memory
  
--    lightMapper = new LightMapper(renderer, world.atlas.resolution, rayTracedRadiosityIrradiance(radiosity));
-+    lightMapper = new LightMapper(renderer, world!.atlas.resolution, rayTracedRadiosityIrradiance(radiosity));
-     lightMapper.addObjects(meshes);
+-    lightMapper = new LightMapper(renderer, world.atlas.resolution, rayTracedRadiosityIrradiance(radiosity), {
++    lightMapper = new LightMapper(renderer, world!.atlas.resolution, rayTracedRadiosityIrradiance(radiosity), {
+         variance: params.denoise,
+         guides: params.denoise,
+     });
+@@ -359,7 +389,7 @@ function bake() {
+     setLightMap(lightMapper.getTextureNode());
+ }
  
-     for (const material of materials) material.lightMap = lightMapper.texture;
-@@ -329,9 +359,9 @@ function animate() {
-         needsBake = false;
-     }
+-function setLightMap(lightMapNode) {
++function setLightMap(lightMapNode: THREE.Node | null) {
+     for (const material of materials) {
+         material.lightMapNode = lightMapNode;
+         material.needsUpdate = true;
+@@ -407,9 +437,9 @@ function animate() {
+         const budget = Math.min(raysPerFrame, rays - bakedRays);
+         const samples = Math.ceil(budget / 8);
  
--    if (lightMapper.samples < samples) {
--        lightMapper.update();
--        status.textContent = `Baking: ${lightMapper.samples} / ${samples} samples`;
-+    if (lightMapper!.samples < samples) {
-+        lightMapper!.update();
-+        status.textContent = `Baking: ${lightMapper!.samples} / ${samples} samples`;
+-        radiosity.rays = Math.max(Math.ceil(budget / samples), 2);
+-        lightMapper.update(samples);
+-        bakedRays += samples * radiosity.rays;
++        radiosity!.rays = Math.max(Math.ceil(budget / samples), 2);
++        lightMapper!.update(samples);
++        bakedRays += samples * radiosity!.rays;
+ 
+         status.textContent = `Baking: ${bakedRays} / ${rays} rays per texel`;
      } else {
-         status.textContent = `Baked: ${samples} samples`;
-     }
 diff --git a/examples-testing/examples/webgpu_lightprobe.ts b/examples-testing/examples/webgpu_lightprobe.ts
 index 3e90b6f66..342083547 100644
 --- a/examples-testing/examples/webgpu_lightprobe.ts
@@ -22924,19 +22952,19 @@ index cdb24ae66..72c79e199 100644
              renderPipeline.outputNode = vec4(vec3(ao), 1);
          } else if (value === 2) {
 diff --git a/examples-testing/examples/webgpu_postprocessing_ssgi_ballpool.ts b/examples-testing/examples/webgpu_postprocessing_ssgi_ballpool.ts
-index 7b929e367..878706365 100644
+index f930f57cc..8a139c828 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ssgi_ballpool.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ssgi_ballpool.ts
-@@ -14,7 +14,7 @@ import {
- } from 'three/tsl';
+@@ -15,7 +15,7 @@ import {
  import { ssgi } from 'three/addons/tsl/display/SSGINode.js';
+ import { temporalDenoise } from 'three/addons/tsl/display/DenoiseNode.js';
  import { traa } from 'three/addons/tsl/display/TRAANode.js';
 -import { RapierPhysics } from 'three/addons/physics/RapierPhysics.js';
 +import { RapierPhysics, RapierPhysicsObject } from 'three/addons/physics/RapierPhysics.js';
  
  import { Inspector } from 'three/addons/inspector/Inspector.js';
  
-@@ -27,14 +27,17 @@ const WALL_THICKNESS = 0.5;
+@@ -28,14 +28,17 @@ const WALL_THICKNESS = 0.5;
  const CAM_FOV = 45;
  const EASE_SPEED = 8;
  
@@ -22960,7 +22988,7 @@ index 7b929e367..878706365 100644
  const boxSize = { w: 8, h: BOX_HEIGHT, d: BOX_DEPTH };
  
  const whiteMaterial = new THREE.MeshPhysicalMaterial({
-@@ -208,7 +211,12 @@ function createBox() {
+@@ -223,7 +226,12 @@ function createBox() {
      const hd = boxSize.d / 2;
      const t = WALL_THICKNESS;
  
@@ -22974,7 +23002,7 @@ index 7b929e367..878706365 100644
          { size: [boxSize.w, t, boxSize.d], pos: [0, -t / 2, 0], mat: whiteMaterial },
          { size: [boxSize.w, t, boxSize.d], pos: [0, boxSize.h + t / 2, 0], mat: whiteMaterial },
          { size: [boxSize.w, boxSize.h, t], pos: [0, hh, -hd - t / 2], mat: whiteMaterial },
-@@ -257,7 +265,7 @@ function createBalls() {
+@@ -272,7 +280,7 @@ function createBalls() {
      physics.addMesh(ballsMesh, 1, 0.5);
  }
  
@@ -22983,7 +23011,7 @@ index 7b929e367..878706365 100644
      activePointers.add(event.pointerId);
  
      if (event.pointerType === 'touch') {
-@@ -267,7 +275,7 @@ function onPointerDown(event) {
+@@ -282,7 +290,7 @@ function onPointerDown(event) {
      }
  }
  
@@ -22992,7 +23020,7 @@ index 7b929e367..878706365 100644
      activePointers.delete(event.pointerId);
  
      if (event.pointerType === 'touch') {
-@@ -277,7 +285,7 @@ function onPointerUp(event) {
+@@ -292,7 +300,7 @@ function onPointerUp(event) {
      }
  }
  
@@ -23001,7 +23029,7 @@ index 7b929e367..878706365 100644
      pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
      pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
  
-@@ -311,8 +319,8 @@ function respawnBalls() {
+@@ -326,8 +334,8 @@ function respawnBalls() {
  
          const index = Math.floor(Math.random() * ballCount);
  
@@ -23012,7 +23040,7 @@ index 7b929e367..878706365 100644
      }
  }
  
-@@ -355,7 +363,7 @@ function animate() {
+@@ -370,7 +378,7 @@ function animate() {
          const _pushDir = new THREE.Vector3();
  
          for (let i = 0; i < ballCount; i++) {
@@ -23021,7 +23049,7 @@ index 7b929e367..878706365 100644
              _ballPos.setFromMatrixPosition(_matrix);
  
              const ray = new THREE.Ray(mouseRayOrigin, mouseRayDir);
-@@ -369,7 +377,7 @@ function animate() {
+@@ -384,7 +392,7 @@ function animate() {
                  _pushDir.normalize();
  
                  const strength = pushStrength * (1 - dist / pushRadius);
@@ -23098,25 +23126,23 @@ index a5db67638..4d689dc1d 100644
          });
      });
 diff --git a/examples-testing/examples/webgpu_postprocessing_ssr_denoise.ts b/examples-testing/examples/webgpu_postprocessing_ssr_denoise.ts
-index 23eb2c7a1..95c43c55e 100644
+index 5f4961d5b..68e69dbe9 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ssr_denoise.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ssr_denoise.ts
-@@ -23,10 +23,10 @@ import {
+@@ -22,9 +22,9 @@ import {
      renderOutput,
      saturation,
  } from 'three/tsl';
 -import { ssr } from 'three/addons/tsl/display/SSRNode.js';
--import { temporalReproject } from 'three/addons/tsl/display/TemporalReprojectNode.js';
--import { recurrentDenoise } from 'three/addons/tsl/display/RecurrentDenoiseNode.js';
+-import { temporalDenoise } from 'three/addons/tsl/display/DenoiseNode.js';
 -import { sharpen } from 'three/addons/tsl/display/SharpenNode.js';
 +import SSRNode, { ssr } from 'three/addons/tsl/display/SSRNode.js';
-+import TemporalReprojectNode, { temporalReproject } from 'three/addons/tsl/display/TemporalReprojectNode.js';
-+import RecurrentDenoiseNode, { recurrentDenoise } from 'three/addons/tsl/display/RecurrentDenoiseNode.js';
++import DenoiseNode, { temporalDenoise } from 'three/addons/tsl/display/DenoiseNode.js';
 +import SharpenNode, { sharpen } from 'three/addons/tsl/display/SharpenNode.js';
  import { traa } from 'three/addons/tsl/display/TRAANode.js';
  
  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-@@ -40,7 +40,7 @@ import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
+@@ -38,7 +38,7 @@ import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
  // but scoped to this example rather than modifying the core library.
  const _indirectSpecular = THREE.PhysicalLightingModel.prototype.indirectSpecular;
  THREE.PhysicalLightingModel.prototype.indirectSpecular = function (builder) {
@@ -23125,7 +23151,7 @@ index 23eb2c7a1..95c43c55e 100644
  
      if (this.clearcoatRadiance) {
          this.clearcoatRadiance.assign(vec3(0));
-@@ -54,20 +54,20 @@ const OUTPUT_COMPARE_SSR = 9;
+@@ -52,20 +52,20 @@ const OUTPUT_COMPARE_SSR = 9;
  
  const GRADED_OUTPUTS = new Set([0, 1, 3, 4, OUTPUT_COMPARE_DENOISE, OUTPUT_COMPARE_SSR]);
  
@@ -23150,11 +23176,11 @@ index 23eb2c7a1..95c43c55e 100644
      const compareColor = mix(noisy, denoised, step(compareSplit, screenUV.x));
      const lineWidth = float(1).div(compareResolution.x);
      const onLine = float(1).sub(step(lineWidth, abs(screenUV.x.sub(compareSplit))));
-@@ -122,10 +122,22 @@ const params = {
+@@ -104,10 +104,22 @@ const params = {
      },
  };
  
--let camera, scene, model, renderer, postProcessing, ssrNode, temporalReprojectNode, denoiseNode;
+-let camera, scene, model, renderer, postProcessing, ssrNode, denoiseNode, denoised;
 -let controls;
 -let scenePassNode, combinedOutputNode, scenePassDepth, scenePassVelocity;
 -let gammaUniform, contrastUniform, saturationUniform;
@@ -23164,8 +23190,8 @@ index 23eb2c7a1..95c43c55e 100644
 +    renderer: THREE.WebGPURenderer,
 +    postProcessing: THREE.RenderPipeline,
 +    ssrNode: SSRNode,
-+    temporalReprojectNode: TemporalReprojectNode,
-+    denoiseNode: RecurrentDenoiseNode;
++    denoiseNode: DenoiseNode,
++    denoised: THREE.Node<'vec3'>;
 +let controls: OrbitControls;
 +let scenePassNode: THREE.PassNode,
 +    combinedOutputNode: THREE.Node<'vec4'>,
@@ -23174,10 +23200,10 @@ index 23eb2c7a1..95c43c55e 100644
 +let gammaUniform: THREE.UniformNode<'float'>,
 +    contrastUniform: THREE.UniformNode<'float'>,
 +    saturationUniform: THREE.UniformNode<'float'>;
+ const denoiseEnabled = uniform(1);
  
  init();
- 
-@@ -141,12 +153,12 @@ async function init() {
+@@ -124,12 +136,12 @@ async function init() {
          gltf.scene.scale.multiplyScalar(0.1);
  
          gltf.scene.traverse(function (object) {
@@ -23193,8 +23219,8 @@ index 23eb2c7a1..95c43c55e 100644
          });
  
          model = gltf.scene;
-@@ -297,7 +309,7 @@ async function init() {
-         'Accumulation Speed (Alpha)': 6,
+@@ -271,7 +283,7 @@ async function init() {
+         'Ray Length': 7,
      };
  
 -    const ssrGui = renderer.inspector.createParameters('SSR settings');
@@ -23202,7 +23228,7 @@ index 23eb2c7a1..95c43c55e 100644
      ssrGui.add(params, 'output', outputTypes).onChange(updateOutputNode);
      ssrGui.add(params.ssr, 'quality', 0, 1).name('quality').onChange(applyParams);
      ssrGui.add(params.ssr, 'mirrorBias', 0, 1).name('mirror bias').onChange(applyParams);
-@@ -309,11 +321,12 @@ async function init() {
+@@ -283,18 +295,19 @@ async function init() {
      ssrGui.add(params.ssr, 'environmentIntensity', 0, 10).name('env intensity').onChange(applyParams);
      ssrGui.add(params, 'roughness', 0, 1).onChange(value => {
          scene.traverse(object => {
@@ -23215,19 +23241,8 @@ index 23eb2c7a1..95c43c55e 100644
 -    const denoiseGui = renderer.inspector.createParameters('Denoise settings');
 +    const denoiseGui = (renderer.inspector as Inspector).createParameters('Denoise settings');
      denoiseGui.add(params.denoise, 'enabled').name('enabled').onChange(applyParams);
-     denoiseGui.add(params.denoise, 'lumaPhi', 0, 3).name('luma phi').onChange(applyParams);
-     denoiseGui.add(params.denoise, 'depthPhi', 0, 50).name('depth phi').onChange(applyParams);
-@@ -332,7 +345,7 @@ async function init() {
-     // denoiseGui.add( params.denoise, 'flickerSuppression', 0, 1 ).name( 'flicker suppression' ).onChange( applyParams );
-     // denoiseGui.add( params.denoise, 'adaptiveTrust', 0, 1 ).name( 'adaptive trust' ).onChange( applyParams );
- 
--    const temporalReprojectGui = renderer.inspector.createParameters('Temporal Reproject settings');
-+    const temporalReprojectGui = (renderer.inspector as Inspector).createParameters('Temporal Reproject settings');
-     temporalReprojectGui.add(params.temporalReproject, 'maxFrames', 1, 128, 1).name('max frames').onChange(applyParams);
-     temporalReprojectGui
-         .add(params.temporalReproject, 'clampIntensity', 0, 1)
-@@ -349,8 +362,8 @@ async function init() {
-     temporalReprojectGui.close();
+     denoiseGui.add(params.denoise, 'luminancePhi', 0, 10).name('luminance phi').onChange(applyParams);
+     denoiseGui.add(params.denoise, 'maxFrames', 1, 32, 1).name('max frames').onChange(applyParams);
  
      // Concise UI for Directional Light controls
 -    const lightGui = renderer.inspector.createParameters('Light').close();
@@ -23237,7 +23252,7 @@ index 23eb2c7a1..95c43c55e 100644
          lightGui
              .add(directionalLight.position, axis, -30, 30)
              .name(axis.toUpperCase())
-@@ -402,7 +415,7 @@ function applyParams() {
+@@ -331,7 +344,7 @@ function applyParams() {
      }
  }
  
@@ -23246,7 +23261,7 @@ index 23eb2c7a1..95c43c55e 100644
      let rgb = source.rgb;
  
      rgb = renderOutput(vec4(rgb, 1), THREE.AgXToneMapping, THREE.SRGBColorSpace).rgb;
-@@ -413,7 +426,7 @@ function applyGrading(source) {
+@@ -342,7 +355,7 @@ function applyGrading(source) {
      return vec4(rgb, 1);
  }
  
@@ -23255,7 +23270,7 @@ index 23eb2c7a1..95c43c55e 100644
      return sharpen(traa(applyGrading(source), scenePassDepth, scenePassVelocity, camera), 0);
  }
  
-@@ -430,7 +443,7 @@ function applyPost() {
+@@ -359,7 +372,7 @@ function applyPost() {
  function updateOutputNode() {
      if (!postProcessing) return;
  
@@ -23264,7 +23279,7 @@ index 23eb2c7a1..95c43c55e 100644
  
      switch (params.output) {
          case 0:
-@@ -470,7 +483,7 @@ function updateOutputNode() {
+@@ -396,7 +409,7 @@ function updateOutputNode() {
      updateCompareHint(params.output);
  
      postProcessing.outputColorTransform = !GRADED_OUTPUTS.has(params.output);
@@ -23273,7 +23288,7 @@ index 23eb2c7a1..95c43c55e 100644
      postProcessing.needsUpdate = true;
  }
  
-@@ -482,7 +495,7 @@ function onWindowResize() {
+@@ -408,7 +421,7 @@ function onWindowResize() {
      compareResolution.value.set(window.innerWidth, window.innerHeight);
  }
  
@@ -27717,4 +27732,23 @@ index 6921dd16b..01d4fbe47 100644
 +function animate(time: number) {
      handleController(controller1, cursor1, time);
      handleController(controller2, cursor2, time);
+ 
+diff --git a/types/three/examples/jsm/tsl/display/DenoiseNode.d.ts b/types/three/examples/jsm/tsl/display/DenoiseNode.d.ts
+index 3aea9222a..72af9e1f6 100644
+--- a/types/three/examples/jsm/tsl/display/DenoiseNode.d.ts
++++ b/types/three/examples/jsm/tsl/display/DenoiseNode.d.ts
+@@ -1,4 +1,4 @@
+-import { Camera, Node, PassTextureNode, Texture, TextureNode, UniformNode } from "three/webgpu";
++import { Camera, Node, Texture, TextureNode, UniformNode } from "three/webgpu";
+ 
+ export type DenoiseQuality = "fast" | "quality";
+ 
+@@ -55,7 +55,7 @@ declare class DenoiseNode extends Node<"vec4"> {
+ 
+     constructor(inputNode: TextureNode, options?: DenoiseNodeOptions);
+ 
+-    getTextureNode(): PassTextureNode;
++    getTextureNode(): TextureNode;
+ 
+     getTexture(): Texture;
  

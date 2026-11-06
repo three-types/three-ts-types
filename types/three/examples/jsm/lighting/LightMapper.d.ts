@@ -1,4 +1,4 @@
-import { Light, Mesh, Node, Texture, WebGPURenderer } from "three/webgpu";
+import { Light, Mesh, Node, Texture, TextureNode, WebGPURenderer } from "three/webgpu";
 
 /**
  * Bakes indirect diffuse irradiance into a light map. The irradiance is defined by a
@@ -18,6 +18,9 @@ import { Light, Mesh, Node, Texture, WebGPURenderer } from "three/webgpu";
  * Do not include material ambient occlusion, base color, or exposure in the source
  * irradiance. Material occlusion is applied once at runtime. Keep any contributions
  * included in the bake out of runtime diffuse lighting to avoid counting them twice.
+ * The `variance` and `guides` options also bake the inputs of a denoiser like
+ * {@link DenoiseNode}: the noise of each texel and the surface that it lies on,
+ * see {@link LightMapper#getTextureNode}.
  *
  * ```js
  * const radiosity = new RayTracedRadiosity();
@@ -43,13 +46,17 @@ export class LightMapper {
      * @param {function(Node<vec3>, Node<vec3>, Node<float>): Node<vec3>} irradianceNode - Returns the irradiance for a world-space position, normal and sample index.
      * @param {Object} [options] - Bake options.
      * @param {Array<Light>} [options.lights=[]] - Direct lights to include in the diffuse bake. Render their shadows in the source scene first and disable shadow updates during the UV bake.
+     * @param {boolean} [options.variance=false] - Whether to also estimate the noise of each texel into {@link LightMapper#varianceTexture}. Requires the 'float32-blendable' renderer feature.
+     * @param {boolean} [options.guides=false] - Whether to also rasterize the surface of each texel into {@link LightMapper#positionTexture} and {@link LightMapper#normalTexture}.
      */
     constructor(
         renderer: WebGPURenderer,
         size: number,
         irradianceNode: (position: Node<"vec3">, normal: Node<"vec3">, sample: Node<"float">) => Node<"vec3">,
-        { lights }?: {
+        { lights, variance, guides }?: {
             lights?: Light[] | undefined;
+            variance?: boolean | undefined;
+            guides?: boolean | undefined;
         },
     );
     /**
@@ -86,6 +93,48 @@ export class LightMapper {
      * @type {Texture}
      */
     texture: Texture;
+    /**
+     * The variance of the luminance of each texel of the light map, the variance of the mean of its
+     * samples, in the red channel. Texels without samples are -1. Only with the `variance` option and
+     * the 'float32-blendable' renderer feature, else `null`.
+     *
+     * @type {?Texture}
+     * @readonly
+     */
+    readonly varianceTexture: Texture | null;
+    /**
+     * The world-space position of the surface of each texel, with the index of its chart + 1 in alpha,
+     * or 0 in alpha for texels without a surface. A chart is a set of triangles that are connected in
+     * the light map. Only with the `guides` option, else `null`.
+     *
+     * @type {?Texture}
+     * @readonly
+     */
+    readonly positionTexture: Texture | null;
+    /**
+     * The world-space normal of the surface of each texel. Only with the `guides` option, else `null`.
+     *
+     * @type {?Texture}
+     * @readonly
+     */
+    readonly normalTexture: Texture | null;
+    /**
+     * Returns a texture of the light mapper: `'color'`, the light map, or the inputs of a denoiser like
+     * {@link DenoiseNode}: `'variance'` with the `variance` option, `'position'` and `'normal'` with
+     * the `guides` option.
+     *
+     * @param {('color'|'variance'|'position'|'normal')} [name='color'] - The name of the texture.
+     * @return {Texture} The texture.
+     */
+    getTexture(name?: "color" | "variance" | "position" | "normal"): Texture;
+    /**
+     * Returns a texture of the light mapper as a texture node, see {@link LightMapper#getTexture}. The
+     * nodes sample the light map UVs, e.g. `material.lightMapNode = lightMapper.getTextureNode()`.
+     *
+     * @param {('color'|'variance'|'position'|'normal')} [name='color'] - The name of the texture.
+     * @return {TextureNode} The texture node.
+     */
+    getTextureNode(name?: "color" | "variance" | "position" | "normal"): TextureNode;
     /**
      * Adds meshes to the light map. Their geometries must provide `uv1`.
      * Skinned and instanced meshes are not supported.
