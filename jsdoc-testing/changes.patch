@@ -1247,25 +1247,25 @@ index e82b5711c..8131a4ece 100644
 -import { Lighting } from 'three/webgpu';
 -import ClusteredLightsNode from '../tsl/lighting/ClusteredLightsNode.js';
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/lighting/LightMapper.d.ts b/jsdoc-testing/jsdoc/examples/jsm/lighting/LightMapper.d.ts
-index 847d722df..63d830db9 100644
+index 60f7dd501..4752143e3 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/lighting/LightMapper.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/lighting/LightMapper.d.ts
 @@ -1,3 +1,5 @@
-+import { Light, Mesh, Node, Texture, WebGPURenderer } from "three/webgpu";
++import { Light, Mesh, Node, Texture, TextureNode, WebGPURenderer } from "three/webgpu";
 +
  /**
   * Bakes indirect diffuse irradiance into a light map. The irradiance is defined by a
   * function that returns a TSL node for a world-space position and normal, e.g. a prepared
-@@ -42,7 +44,7 @@ export class LightMapper {
-      * @param {Object} [options] - Bake options.
-      * @param {Array<Light>} [options.lights=[]] - Direct lights to include in the diffuse bake. Render their shadows in the source scene first and disable shadow updates during the UV bake.
+@@ -47,7 +49,7 @@ export class LightMapper {
+      * @param {boolean} [options.variance=false] - Whether to also estimate the noise of each texel into {@link LightMapper#varianceTexture}. Requires the 'float32-blendable' renderer feature.
+      * @param {boolean} [options.guides=false] - Whether to also rasterize the surface of each texel into {@link LightMapper#positionTexture} and {@link LightMapper#normalTexture}.
       */
--    constructor(renderer: WebGPURenderer, size: number, irradianceNode: (arg0: Node<vec3>, arg1: Node<vec3>, arg2: Node<float>) => Node<vec3>, { lights }?: {
-+    constructor(renderer: WebGPURenderer, size: number, irradianceNode: (position: Node<"vec3">, normal: Node<"vec3">, sample: Node<"float">) => Node<"vec3">, { lights }?: {
+-    constructor(renderer: WebGPURenderer, size: number, irradianceNode: (arg0: Node<vec3>, arg1: Node<vec3>, arg2: Node<float>) => Node<vec3>, { lights, variance, guides }?: {
++    constructor(renderer: WebGPURenderer, size: number, irradianceNode: (position: Node<"vec3">, normal: Node<"vec3">, sample: Node<"float">) => Node<"vec3">, { lights, variance, guides }?: {
          lights?: Light[] | undefined;
-     });
-     /**
-@@ -56,7 +58,7 @@ export class LightMapper {
+         variance?: boolean | undefined;
+         guides?: boolean | undefined;
+@@ -63,7 +65,7 @@ export class LightMapper {
       *
       * @type {function(Node<vec3>, Node<vec3>, Node<float>): Node<vec3>}
       */
@@ -1274,7 +1274,7 @@ index 847d722df..63d830db9 100644
      /**
       * The light map size in texels.
       *
-@@ -71,8 +73,6 @@ export class LightMapper {
+@@ -78,8 +80,6 @@ export class LightMapper {
       * @default 0
       */
      readonly samples: number;
@@ -1283,25 +1283,55 @@ index 847d722df..63d830db9 100644
      /**
       * The baked light map. It stores linear diffuse irradiance in lux, without baked
       * albedo, material ambient occlusion, or display exposure, and uses `uv1`.
-@@ -81,14 +81,6 @@ export class LightMapper {
-      * @type {Texture}
+@@ -97,7 +97,6 @@ export class LightMapper {
+      * @readonly
       */
-     texture: Texture;
+     readonly varianceTexture: Texture | null;
+-    _guides: RenderTarget | null;
+     /**
+      * The world-space position of the surface of each texel, with the index of its chart + 1 in alpha,
+      * or 0 in alpha for texels without a surface. A chart is a set of triangles that are connected in
+@@ -114,19 +113,6 @@ export class LightMapper {
+      * @readonly
+      */
+     readonly normalTexture: Texture | null;
+-    _textureNodes: {};
 -    _scene: Scene;
+-    _guideScene: Scene;
 -    _camera: OrthographicCamera;
 -    _objects: any[];
 -    _jitter: import("three/tsl").UniformNode;
 -    _sample: import("three/tsl").UniformNode;
+-    _charts: number;
+-    _guidesNeedUpdate: boolean;
 -    _frontMaterial: NodeMaterial;
 -    _backMaterial: NodeMaterial;
+-    _guideMaterials: NodeMaterial[] | null;
 -    _quad: QuadMesh;
      /**
-      * Adds meshes to the light map. Their geometries must provide `uv1`.
-      * Skinned and instanced meshes are not supported.
-@@ -110,20 +102,4 @@ export class LightMapper {
+      * Returns a texture of the light mapper: `'color'`, the light map, or the inputs of a denoiser like
+      * {@link DenoiseNode}: `'variance'` with the `variance` option, `'position'` and `'normal'` with
+@@ -165,45 +151,4 @@ export class LightMapper {
       * Frees all internal resources.
       */
      dispose(): void;
+-    /**
+-     * Adds a proxy of a mesh that rasterizes its surface and charts into the guides.
+-     *
+-     * @private
+-     * @param {Mesh} object - The mesh.
+-     */
+-    private _addGuide;
+-    /**
+-     * Rasterizes the world-space positions, normals and chart indices of the meshes into the guides, with the
+-     * jitters of a range of samples, so that the guides cover the texels that the samples cover, also at the
+-     * borders of the charts. The texel centers come last, the interior texels keep them.
+-     *
+-     * @private
+-     * @param {number} start - The first sample, 0 clears the guides.
+-     * @param {number} end - The sample after the last one.
+-     */
+-    private _renderGuides;
 -    /**
 -     * Creates a material that rasterizes meshes in UV space and outputs irradiance.
 -     *
@@ -1312,6 +1342,14 @@ index 847d722df..63d830db9 100644
 -     * @return {NodeMaterial} The material.
 -     */
 -    private _createBakeMaterial;
+-    /**
+-     * Creates the material that rasterizes the guides in UV space.
+-     *
+-     * @private
+-     * @param {boolean} flipNormal - Whether to flip the normal, for back-sided meshes.
+-     * @return {NodeMaterial} The material.
+-     */
+-    private _createGuideMaterial;
  }
 -import { RenderTarget } from 'three/webgpu';
 -import { Scene } from 'three/webgpu';
@@ -1550,7 +1588,7 @@ index 05e2c9045..65cc308d2 100644
 -import { Data3DTexture } from 'three';
 -import { Scene } from 'three';
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/lighting/RayTracedRadiosity.d.ts b/jsdoc-testing/jsdoc/examples/jsm/lighting/RayTracedRadiosity.d.ts
-index 91095f88a..96f79935e 100644
+index 562021768..cdfe88f74 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/lighting/RayTracedRadiosity.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/lighting/RayTracedRadiosity.d.ts
 @@ -1,3 +1,5 @@
@@ -1559,7 +1597,7 @@ index 91095f88a..96f79935e 100644
  /**
   * Approximates diffuse global illumination with ray traced radiosity, as a source of irradiance for
   * {@link LightMapper}. Every sample casts cosine-distributed rays from each point through a
-@@ -80,27 +82,6 @@ export class RayTracedRadiosity {
+@@ -81,28 +83,6 @@ export class RayTracedRadiosity {
       * @default 0.001
       */
      bias: number;
@@ -1581,13 +1619,14 @@ index 91095f88a..96f79935e 100644
 -    _environmentIntensity: import("three/tsl").UniformNode;
 -    _environmentRotation: import("three/tsl").UniformNode;
 -    _environmentInverseRotation: import("three/tsl").UniformNode;
--    _pass: number;
--    _passNode: import("three/tsl").Node;
+-    _firstRay: number;
+-    _firstRayNode: import("three/tsl").Node;
+-    _raysNode: import("three/tsl").Node;
 -    _biasNode: import("three/tsl").Node;
      /**
       * Collects the meshes of the scene, builds the BVH and solves the cached bounces. Call this again
       * after changing the scene or the lighting.
-@@ -113,55 +94,6 @@ export class RayTracedRadiosity {
+@@ -115,55 +95,6 @@ export class RayTracedRadiosity {
       * Frees all internal resources.
       */
      dispose(): void;
@@ -1643,7 +1682,7 @@ index 91095f88a..96f79935e 100644
  }
  /**
   * Creates a world-space diffuse irradiance sampler for a prepared {@link RayTracedRadiosity}, for
-@@ -175,6 +107,4 @@ export class RayTracedRadiosity {
+@@ -177,6 +108,4 @@ export class RayTracedRadiosity {
   */
  export function rayTracedRadiosityIrradiance(radiosity: RayTracedRadiosity, { analyticLights }?: {
      analyticLights?: boolean | undefined;
@@ -3747,7 +3786,7 @@ index 0f8db6fc4..8e1da0128 100644
 +
 +export function ssao(depthNode: Node, normalNode: Node, camera: Camera): SSAONode;
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/tsl/display/SSRNode.d.ts b/jsdoc-testing/jsdoc/examples/jsm/tsl/display/SSRNode.d.ts
-index 29a6717cf..948280050 100644
+index e07bcd1fd..722a1ddb8 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/tsl/display/SSRNode.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/tsl/display/SSRNode.d.ts
 @@ -1,6 +1,6 @@
@@ -12772,7 +12811,7 @@ index 89820e463..a96ee0a23 100644
 +
 +export default LineDashedNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/MeshBasicNodeMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/MeshBasicNodeMaterial.d.ts
-index 97d6b1cb4..3cf3c9eed 100644
+index 25a5c913a..3cf3c9eed 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/MeshBasicNodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/MeshBasicNodeMaterial.d.ts
 @@ -1,8 +1,19 @@
@@ -12820,7 +12859,7 @@ index 97d6b1cb4..3cf3c9eed 100644
       * @param {NodeBuilder} builder - The current node builder.
       * @return {?BasicEnvironmentNode<vec3>} The environment node.
       */
--    setupEnvironment(builder: NodeBuilder): BasicEnvironmentNode<vec3> | null;
+-    setupEnvironment(builder: NodeBuilder): BasicEnvironmentNode<any> | null;
 +    setupEnvironment(builder: NodeBuilder): BasicEnvironmentNode | null;
      /**
       * Setups the lighting model.
@@ -13861,7 +13900,7 @@ index fda2a3a25..9d352222f 100644
 +
 +export default MeshToonNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/NodeMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/NodeMaterial.d.ts
-index 19d5c6403..13215a0c4 100644
+index dc7518cb2..c3c4b0b6c 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/NodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/NodeMaterial.d.ts
 @@ -1,37 +1,24 @@
@@ -13934,7 +13973,7 @@ index 19d5c6403..13215a0c4 100644
      /**
       * The lighting of node materials might be influenced by ambient occlusion.
       * The default AO is inferred from an ambient occlusion map assigned to `aoMap`
-@@ -75,10 +60,9 @@ declare class NodeMaterial extends Material {
+@@ -75,20 +60,18 @@ declare class NodeMaterial extends Material {
       * If you don't want to overwrite the diffuse color but modify the existing
       * values instead, use {@link materialAO}.
       *
@@ -13944,9 +13983,20 @@ index 19d5c6403..13215a0c4 100644
 -    aoNode: Node<any> | null;
 +    aoNode: Node | null;
      /**
+      * The lighting of node materials might be influenced by a light map. The default
+      * light map is inferred from a light map assigned to `lightMap` and the respective
+      * `lightMapIntensity`. This node property allows to overwrite the default and define
+      * the light map with a custom node instead, e.g. the output of a denoiser.
+      *
+-     * @type {?Node<vec3>}
+      * @default null
+      */
+-    lightMapNode: Node<any> | null;
++    lightMapNode: Node | null;
+     /**
       * The diffuse color of node materials is by default inferred from the
       * `color` and `map` properties. This node property allows to overwrite the default
-@@ -95,10 +79,9 @@ declare class NodeMaterial extends Material {
+@@ -105,10 +88,9 @@ declare class NodeMaterial extends Material {
       * material.colorNode = materialColor.mul( color( 0xff0000 ) ); // give diffuse colors a red tint
       * ```
       *
@@ -13958,7 +14008,7 @@ index 19d5c6403..13215a0c4 100644
      /**
       * The normals of node materials are by default inferred from the `normalMap`/`normalScale`
       * or `bumpMap`/`bumpScale` properties. This node property allows to overwrite the default
-@@ -107,10 +90,9 @@ declare class NodeMaterial extends Material {
+@@ -117,10 +99,9 @@ declare class NodeMaterial extends Material {
       * If you don't want to overwrite the normals but modify the existing values instead,
       * use {@link materialNormal}.
       *
@@ -13970,7 +14020,7 @@ index 19d5c6403..13215a0c4 100644
      /**
       * The opacity of node materials is by default inferred from the `opacity`
       * and `alphaMap` properties. This node property allows to overwrite the default
-@@ -119,10 +101,9 @@ declare class NodeMaterial extends Material {
+@@ -129,10 +110,9 @@ declare class NodeMaterial extends Material {
       * If you don't want to overwrite the opacity but modify the existing
       * value instead, use {@link materialOpacity}.
       *
@@ -13982,7 +14032,7 @@ index 19d5c6403..13215a0c4 100644
      /**
       * This node can be used to implement a variety of filter-like effects. The idea is
       * to store the current rendering into a texture e.g. via `viewportSharedTexture()`, use it
-@@ -139,17 +120,15 @@ declare class NodeMaterial extends Material {
+@@ -149,17 +129,15 @@ declare class NodeMaterial extends Material {
       *
       * Backdrop computations are part of the lighting so only lit materials can use this property.
       *
@@ -14002,7 +14052,7 @@ index 19d5c6403..13215a0c4 100644
      /**
       * The alpha test of node materials is by default inferred from the `alphaTest`
       * property. This node property allows to overwrite the default and define the
-@@ -158,24 +137,21 @@ declare class NodeMaterial extends Material {
+@@ -168,24 +146,21 @@ declare class NodeMaterial extends Material {
       * If you don't want to overwrite the alpha test but modify the existing
       * value instead, use {@link materialAlphaTest}.
       *
@@ -14030,7 +14080,7 @@ index 19d5c6403..13215a0c4 100644
      /**
       * The local vertex positions are computed based on multiple factors like the
       * attribute data, morphing, skinning, instancing or batching. This node property
-@@ -188,10 +164,9 @@ declare class NodeMaterial extends Material {
+@@ -198,10 +173,9 @@ declare class NodeMaterial extends Material {
       * material.positionNode = positionLocal.add( displace );
       * ```
       *
@@ -14042,7 +14092,7 @@ index 19d5c6403..13215a0c4 100644
      /**
       * This node property is intended for logic which modifies geometry data once or per animation step.
       * Apps usually place such logic randomly in initialization routines or in the animation loop.
-@@ -203,34 +178,30 @@ declare class NodeMaterial extends Material {
+@@ -213,34 +187,30 @@ declare class NodeMaterial extends Material {
       * simulation would be implemented as compute shaders and managed inside a `Fn` function. This function is
       * eventually assigned to `geometryNode`.
       *
@@ -14081,7 +14131,7 @@ index 19d5c6403..13215a0c4 100644
      /**
       * This node can be used to influence how an object using this node material
       * receive shadows.
-@@ -243,10 +214,9 @@ declare class NodeMaterial extends Material {
+@@ -253,10 +223,9 @@ declare class NodeMaterial extends Material {
       * 	return shadow.mix( color( 0xff0000 ), 1 ); // modify shadow color
       * } );
       *
@@ -14093,7 +14143,7 @@ index 19d5c6403..13215a0c4 100644
      /**
       * This node can be used to influence how an object using this node material
       * casts shadows. To apply a color to shadows, you can simply do:
-@@ -266,10 +236,9 @@ declare class NodeMaterial extends Material {
+@@ -276,10 +245,9 @@ declare class NodeMaterial extends Material {
       * } )();
       *  ```
       *
@@ -14105,7 +14155,7 @@ index 19d5c6403..13215a0c4 100644
      /**
       * This node can be used to overwrite the final output of the material.
       *
-@@ -277,17 +246,15 @@ declare class NodeMaterial extends Material {
+@@ -287,17 +255,15 @@ declare class NodeMaterial extends Material {
       * (diffuse color, lighting, etc.) is still evaluated; assigning a node
       * only replaces the resulting output color.
       *
@@ -14124,7 +14174,7 @@ index 19d5c6403..13215a0c4 100644
       * @default null
       */
      mrtNode: MRTNode | null;
-@@ -296,33 +263,40 @@ declare class NodeMaterial extends Material {
+@@ -306,33 +272,40 @@ declare class NodeMaterial extends Material {
       * the fragment shader. Assigning a node will replace the built-in material
       * logic used in the fragment stage.
       *
@@ -14175,7 +14225,7 @@ index 19d5c6403..13215a0c4 100644
      /**
       * Builds this material with the given node builder.
       *
-@@ -368,28 +342,28 @@ declare class NodeMaterial extends Material {
+@@ -378,28 +351,28 @@ declare class NodeMaterial extends Material {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {Node<vec3>} The position in view space.
       */
@@ -14208,7 +14258,7 @@ index 19d5c6403..13215a0c4 100644
      /**
       * Setups the computation of the material's diffuse color.
       *
-@@ -403,40 +377,40 @@ declare class NodeMaterial extends Material {
+@@ -413,40 +386,40 @@ declare class NodeMaterial extends Material {
       * @abstract
       * @param {NodeBuilder} builder - The current node builder.
       */
@@ -14255,7 +14305,7 @@ index 19d5c6403..13215a0c4 100644
      /**
       * Setups the ambient occlusion node from the material.
       *
-@@ -459,7 +433,7 @@ declare class NodeMaterial extends Material {
+@@ -469,7 +442,7 @@ declare class NodeMaterial extends Material {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {Node<vec3>} The outgoing light node.
       */
@@ -14264,7 +14314,7 @@ index 19d5c6403..13215a0c4 100644
      /**
       * Setup the fog.
       *
-@@ -467,7 +441,7 @@ declare class NodeMaterial extends Material {
+@@ -477,7 +450,7 @@ declare class NodeMaterial extends Material {
       * @param {Node<vec4>} outputNode - The existing output node.
       * @return {Node<vec4>} The output node.
       */
@@ -14273,7 +14323,7 @@ index 19d5c6403..13215a0c4 100644
      /**
       * Setups premultiplied alpha.
       *
-@@ -475,7 +449,7 @@ declare class NodeMaterial extends Material {
+@@ -485,7 +458,7 @@ declare class NodeMaterial extends Material {
       * @param {Node<vec4>} outputNode - The existing output node.
       * @return {Node<vec4>} The output node.
       */
@@ -14282,7 +14332,7 @@ index 19d5c6403..13215a0c4 100644
      /**
       * Setups the output node.
       *
-@@ -503,7 +477,7 @@ declare class NodeMaterial extends Material {
+@@ -513,7 +486,7 @@ declare class NodeMaterial extends Material {
       * @param {Node<vec4>} outputNode - The existing output node.
       * @return {Node<vec4>} The output node.
       */
@@ -14291,7 +14341,7 @@ index 19d5c6403..13215a0c4 100644
      /**
       * Most classic material types have a node pendant e.g. for `MeshBasicMaterial`
       * there is `MeshBasicNodeMaterial`. This utility method is intended for
-@@ -518,7 +492,10 @@ declare class NodeMaterial extends Material {
+@@ -528,7 +501,10 @@ declare class NodeMaterial extends Material {
       * @param {Material} source - The material to copy.
       * @return {NodeMaterial} A reference to this node material.
       */
