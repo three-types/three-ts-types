@@ -10,125 +10,141 @@ export interface SkeletonJSON {
 }
 
 /**
- * Use an array of {@link Bone | bones} to create a {@link Skeleton} that can be used by a {@link THREE.SkinnedMesh | SkinnedMesh}.
- * @example
- * ```typescript
- * // Create a simple "arm"
+ * Class for representing the armatures in `three.js`. The skeleton
+ * is defined by a hierarchy of bones.
+ *
+ * ```js
  * const bones = [];
+ *
  * const shoulder = new THREE.Bone();
  * const elbow = new THREE.Bone();
  * const hand = new THREE.Bone();
- * shoulder.add(elbow);
- * elbow.add(hand);
- * bones.push(shoulder);
- * bones.push(elbow);
- * bones.push(hand);
+ *
+ * shoulder.add( elbow );
+ * elbow.add( hand );
+ *
+ * bones.push( shoulder , elbow, hand);
+ *
  * shoulder.position.y = -5;
  * elbow.position.y = 0;
  * hand.position.y = 5;
- * const armSkeleton = new THREE.Skeleton(bones);
- * See the[page: SkinnedMesh] page
- * for an example of usage with standard[page: BufferGeometry].
+ *
+ * const armSkeleton = new THREE.Skeleton( bones );
  * ```
- * @see {@link https://threejs.org/docs/index.html#api/en/objects/Skeleton | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/objects/Skeleton.js | Source}
  */
 export class Skeleton {
     /**
-     * Creates a new Skeleton.
-     * @param bones The array of {@link THREE.Bone | bones}. Default `[]`.
-     * @param boneInverses An array of {@link THREE.Matrix4 | Matrix4s}. Default `[]`.
+     * Constructs a new skeleton.
+     *
+     * @param {Array<Bone>} [bones] - An array of bones.
+     * @param {Array<Matrix4>} [boneInverses] - An array of bone inverse matrices.
+     * If not provided, these matrices will be computed automatically via {@link Skeleton#calculateInverses}.
      */
-    constructor(bones?: Bone[], boneInverses?: Matrix4[]);
-
-    /**
-     * {@link http://en.wikipedia.org/wiki/Universally_unique_identifier | UUID} of this object instance.
-     * @remarks This gets automatically assigned and shouldn't be edited.
-     */
+    constructor(bones?: Array<Bone>, boneInverses?: Array<Matrix4>);
     uuid: string;
-
     /**
-     * The array of {@link THREE.Bone | Bones}.
-     * @remarks Note this is a copy of the original array, not a reference, so you can modify the original array without effecting this one.
+     * An array of bones defining the skeleton.
+     *
+     * @type {Array<Bone>}
      */
-    bones: Bone[];
-
+    bones: Array<Bone>;
     /**
-     * An array of {@link Matrix4 | Matrix4s} that represent the inverse of the {@link THREE.Matrix4 | matrixWorld} of the individual bones.
+     * An array of bone inverse matrices.
+     *
+     * @type {Array<Matrix4>}
      */
-    boneInverses: Matrix4[];
-
+    boneInverses: Array<Matrix4>;
     /**
-     * The array buffer holding the bone data when using a vertex texture.
+     * An array buffer holding the bone data.
+     * Input data for {@link Skeleton#boneTexture}.
+     *
+     * @type {?Float32Array}
+     * @default null
      */
     boneMatrices: Float32Array | null;
-
     /**
      * An array buffer holding the bone data of the previous frame.
      * Required for computing velocity.
+     *
+     * @type {?Float32Array}
      * @default null
      */
     previousBoneMatrices: Float32Array | null;
-
     /**
-     * The {@link THREE.DataTexture | DataTexture} holding the bone data when using a vertex texture.
+     * A texture holding the bone data for use
+     * in the vertex shader.
+     *
+     * @type {?DataTexture}
+     * @default null
      */
     boneTexture: DataTexture | null;
-
     /**
      * A texture holding the bone data of the previous frame.
      * Required for computing velocity.
+     *
+     * @type {?DataTexture}
      * @default null
      */
     previousBoneTexture: DataTexture | null;
-
-    frame: number;
-
-    init(): void;
-
     /**
-     * Generates the {@link boneInverses} array if not provided in the constructor.
+     * Initializes the skeleton. This method gets automatically called by the constructor
+     * but depending on how the skeleton is created it might be necessary to call this method
+     * manually.
+     */
+    init(): void;
+    /**
+     * Computes the bone inverse matrices. This method resets {@link Skeleton#boneInverses}
+     * and fills it with new matrices.
      */
     calculateInverses(): void;
-
     /**
-     * Computes an instance of {@link THREE.DataTexture | DataTexture} in order to pass the bone data more efficiently to the shader
-     * @remarks
-     * The texture is assigned to {@link boneTexture}.
-     */
-    computeBoneTexture(): this;
-
-    /**
-     * Returns the skeleton to the base pose.
+     * Resets the skeleton to the base pose.
      */
     pose(): void;
-
     /**
-     * Updates the {@link boneMatrices} and {@link boneTexture} after changing the bones
-     * @remarks
-     * This is called automatically by the {@link THREE.WebGLRenderer | WebGLRenderer} if the {@link Skeleton} is used with a {@link THREE.SkinnedMesh | SkinnedMesh}.
+     * Resets the skeleton to the base pose.
      */
     update(): void;
-
     /**
-     * Returns a clone of this {@link Skeleton} object.
+     * Returns a new skeleton with copied values from this instance.
+     *
+     * @return {Skeleton} A clone of this instance.
      */
     clone(): Skeleton;
-
     /**
-     * Searches through the skeleton's bone array and returns the first with a matching name.
-     * @param name String to match to the Bone's {@link THREE.Bone.name | .name} property.
+     * Computes a data texture for passing bone data to the vertex shader.
+     *
+     * @return {Skeleton} A reference of this instance.
      */
-    getBoneByName(name: string): undefined | Bone;
-
+    computeBoneTexture(): this;
     /**
-     * Frees the GPU-related resources allocated by this instance
-     * @remarks
-     * Call this method whenever this instance is no longer used in your app.
+     * Searches through the skeleton's bone array and returns the first with a
+     * matching name.
+     *
+     * @param {string} name - The name of the bone.
+     * @return {Bone|undefined} The found bone. `undefined` if no bone has been found.
+     */
+    getBoneByName(name: string): Bone | undefined;
+    /**
+     * Frees the GPU-related resources allocated by this instance. Call this
+     * method whenever this instance is no longer used in your app.
      */
     dispose(): void;
-
+    /**
+     * Setups the skeleton by the given JSON and bones.
+     *
+     * @param {Object} json - The skeleton as serialized JSON.
+     * @param {Object<string, Bone>} bones - An array of bones.
+     * @return {Skeleton} A reference of this instance.
+     */
+    fromJSON(json: SkeletonJSON, bones: {
+        [x: string]: Bone;
+    }): this;
+    /**
+     * Serializes the skeleton into JSON.
+     *
+     * @return {Object} A JSON object representing the serialized skeleton.
+     * @see {@link ObjectLoader#parse}
+     */
     toJSON(): SkeletonJSON;
-
-    fromJSON(json: SkeletonJSON, bones: Record<string, Bone>): void;
 }

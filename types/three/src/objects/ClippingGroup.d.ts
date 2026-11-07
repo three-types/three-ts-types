@@ -2,40 +2,51 @@ import { Plane } from "../math/Plane.js";
 import { Group } from "./Group.js";
 
 /**
- * A special version of the Group object that defines clipping planes for descendant objects. ClippingGroups can be
- * nested, with clipping planes accumulating by type: intersection or union.
+ * In earlier three.js versions, clipping was defined globally
+ * on the renderer or on material level. This special version of
+ * `THREE.Group` allows to encode the clipping state into the scene
+ * graph. Meaning if you create an instance of this group, all
+ * descendant 3D objects will be affected by the respective clipping
+ * planes.
+ *
+ * Note: `ClippingGroup` can only be used with `WebGPURenderer`.
+ *
+ * @augments Group
  */
-declare class ClippingGroup extends Group {
+export class ClippingGroup extends Group {
     /**
-     * Read-only flag to check if a given object is of type ClippingGroup.
+     * This flag can be used for type testing.
+     *
+     * @type {boolean}
+     * @readonly
+     * @default true
      */
     readonly isClippingGroup: true;
-
     /**
-     * User-defined clipping planes specified as THREE.Plane objects in world space. These planes apply to the objects
-     * that are children of this ClippingGroup. Points in space whose signed distance to the plane is negative are
-     * clipped (not rendered). See the webgpu_clipping example. Default is `[]`.
+     * An array with clipping planes.
+     *
+     * @type {Array<Plane>}
      */
-    clippingPlanes: Plane[];
-
+    clippingPlanes: Array<Plane>;
     /**
-     * Determines if the clipping planes defined by this object are applied. Default is `true`.
+     * Whether clipping should be enabled or not.
+     *
+     * @type {boolean}
+     * @default true
      */
     enabled: boolean;
-
     /**
-     * Changes the behavior of clipping planes so that only their intersection is clipped, rather than their union.
-     * Default is `false`.
+     * Whether the intersection of the clipping planes is used to clip objects, rather than their union.
+     *
+     * @type {boolean}
+     * @default false
      */
     clipIntersection: boolean;
-
     /**
-     * Defines whether to clip shadows according to the clipping planes specified by this ClippingGroup. Default is
-     * `false`.
+     * Whether shadows should be clipped or not.
+     *
+     * @type {boolean}
+     * @default false
      */
     clipShadows: boolean;
-
-    constructor();
 }
-
-export { ClippingGroup };

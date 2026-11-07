@@ -1,5 +1,6 @@
 import { Camera } from "../cameras/Camera.js";
 import { JSONMeta, Object3D, Object3DEventMap, Object3DJSON, Object3DJSONObject } from "../core/Object3D.js";
+import { Intersection, Raycaster } from "../core/Raycaster.js";
 
 export interface LODJSONObject extends Object3DJSONObject {
     autoUpdate?: boolean;
@@ -16,97 +17,106 @@ export interface LODJSON extends Object3DJSON {
 }
 
 /**
- * Every level is associated with an object, and rendering can be switched between them at the distances specified
- * @remarks
- * Typically you would create, say, three meshes, one for far away (low detail), one for mid range (medium detail) and one for close up (high detail).
- * @example
+ * A component for providing a basic Level of Detail (LOD) mechanism.
+ *
+ * Every LOD level is associated with an object, and rendering can be switched
+ * between them at the distances specified. Typically you would create, say,
+ * three meshes, one for far away (low detail), one for mid range (medium
+ * detail) and one for close up (high detail).
+ *
+ * ```js
  * const lod = new THREE.LOD();
  * const material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
  *
- * //Create spheres with 3 levels of detail and create new {@link LOD} levels for them
- * for (let i = 0; i & lt; 3; i++) {
- *     const geometry = new THREE.IcosahedronGeometry(10, 3 - i)
- *     const mesh = new THREE.Mesh(geometry, material);
- *     lod.addLevel(mesh, i * 75);
- * }
- * scene.add(lod);
+ * //Create spheres with 3 levels of detail and create new LOD levels for them
+ * for( let i = 0; i < 3; i++ ) {
  *
- * @see Example: {@link https://threejs.org/examples/#webgl_lod | webgl / {@link LOD} }
- * @see {@link https://threejs.org/docs/index.html#api/en/objects/LOD | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/objects/LOD.js | Source}
+ * 	const geometry = new THREE.IcosahedronGeometry( 10, 3 - i );
+ * 	const mesh = new THREE.Mesh( geometry, material );
+ * 	lod.addLevel( mesh, i * 75 );
+ *
+ * }
+ *
+ * scene.add( lod );
+ * ```
+ *
+ * @augments Object3D
  */
 export class LOD<TEventMap extends Object3DEventMap = Object3DEventMap> extends Object3D<TEventMap> {
     /**
-     * Creates a new {@link LOD}.
-     */
-    constructor();
-
-    /**
-     * Read-only flag to check if a given object is of type {@link LOD}.
-     * @remarks This is a _constant_ value
-     * @defaultValue `true`
+     * This flag can be used for type testing.
+     *
+     * @type {boolean}
+     * @readonly
+     * @default true
      */
     readonly isLOD: true;
-
     /**
-     * @override
-     * @defaultValue `LOD`
-     */
-    override readonly type: string | "LOD";
-
-    /**
-     * An array of level objects
+     * This array holds the LOD levels.
+     *
+     * @name LOD#levels
+     * @type {Array<{object:Object3D,distance:number,hysteresis:number}>}
      */
     readonly levels: Array<{
-        /** The Object3D to display at this level. */
         object: Object3D;
-        /** The distance at which to display this level of detail. Expects a `Float`. */
         distance: number;
-        /** Threshold used to avoid flickering at LOD boundaries, as a fraction of distance. Expects a `Float`. */
         hysteresis: number;
     }>;
-
     /**
-     * Whether the {@link LOD} object is updated automatically by the renderer per frame or not.
-     * If set to `false`, you have to call {@link update | .update()} in the render loop by yourself.
-     * @defaultValue `true`
+     * Whether the LOD object is updated automatically by the renderer per frame
+     * or not. If set to `false`, you have to call {@link LOD#update} in the
+     * render loop by yourself.
+     *
+     * @type {boolean}
+     * @default true
      */
     autoUpdate: boolean;
-
+    copy(source: LOD): this;
     /**
-     * Adds a mesh that will display at a certain distance and greater. Typically the further away the distance, the lower the detail on the mesh.
+     * Adds a mesh that will display at a certain distance and greater. Typically
+     * the further away the distance, the lower the detail on the mesh.
      *
-     * @param object The Object3D to display at this level.
-     * @param distance The distance at which to display this level of detail. Expects a `Float`. Default `0.0`.
-     * @param hysteresis Threshold used to avoid flickering at LOD boundaries, as a fraction of distance. Expects a `Float`. Default `0.0`.
+     * @param {Object3D} object - The 3D object to display at this level.
+     * @param {number} [distance=0] - The distance at which to display this level of detail.
+     * @param {number} [hysteresis=0] - Threshold used to avoid flickering at LOD boundaries, as a fraction of distance.
+     * @return {LOD} A reference to this instance.
      */
     addLevel(object: Object3D, distance?: number, hysteresis?: number): this;
-
     /**
-     * Removes an existing level, based on the distance from the camera. Returns `true` when the level has been removed.
-     * Otherwise `false`.
-     * @param distance Distance of the level to delete.
+     * Removes an existing level, based on the distance from the camera.
+     * Returns `true` when the level has been removed. Otherwise `false`.
+     *
+     * @param {number} distance - Distance of the level to remove.
+     * @return {boolean} Whether the level has been removed or not.
      */
     removeLevel(distance: number): boolean;
-
     /**
-     * Get the currently active {@link LOD} level
-     * @remarks
-     * As index of the levels array.
+     * Returns the currently active LOD level index.
+     *
+     * @return {number} The current active LOD level index.
      */
     getCurrentLevel(): number;
-
     /**
-     * Get a reference to the first {@link THREE.Object3D | Object3D} (mesh) that is greater than {@link distance}.
-     * @param distance Expects a `Float`
+     * Returns a reference to the first 3D object that is greater than
+     * the given distance.
+     *
+     * @param {number} distance - The LOD distance.
+     * @return {?Object3D} The found 3D object. `null` if no 3D object has been found.
      */
     getObjectForDistance(distance: number): Object3D | null;
-
     /**
-     * Set the visibility of each {@link levels | level}'s {@link THREE.Object3D | object} based on distance from the {@link THREE.Camera | camera}.
-     * @param camera
+     * Computes intersection points between a casted ray and this LOD.
+     *
+     * @param {Raycaster} raycaster - The raycaster.
+     * @param {Array<Object>} intersects - The target array that holds the intersection points.
+     */
+    raycast(raycaster: Raycaster, intersects: Intersection[]): void;
+    /**
+     * Updates the LOD by computing which LOD level should be visible according
+     * to the current distance of the given camera.
+     *
+     * @param {Camera} camera - The camera the scene is rendered with.
      */
     update(camera: Camera): void;
-
     toJSON(meta?: JSONMeta): LODJSON;
 }

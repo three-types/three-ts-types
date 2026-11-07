@@ -1,6 +1,8 @@
 import { BufferGeometry } from "../core/BufferGeometry.js";
 import { JSONMeta, Object3D, Object3DEventMap, Object3DJSON, Object3DJSONObject } from "../core/Object3D.js";
-import { SpriteMaterial } from "../materials/Materials.js";
+import { Intersection, Raycaster } from "../core/Raycaster.js";
+import SpriteNodeMaterial from "../materials/nodes/SpriteNodeMaterial.js";
+import { SpriteMaterial } from "../materials/SpriteMaterial.js";
 import { Frustum } from "../math/Frustum.js";
 import { FrustumArray } from "../math/FrustumArray.js";
 import { Vector2, Vector2Tuple } from "../math/Vector2.js";
@@ -14,79 +16,80 @@ export interface SpriteJSON extends Object3DJSON {
 }
 
 /**
- * A {@link Sprite} is a plane that always faces towards the camera, generally with a partially transparent texture applied.
- * @remarks Sprites do not cast shadows, setting `castShadow = true` will have no effect.
- * @example
- * ```typescript
- * const map = new THREE.TextureLoader().load('sprite.png');
- * const material = new THREE.SpriteMaterial({
- *     map: map
- * });
- * const {@link Sprite} = new THREE.Sprite(material);
- * scene.add(sprite);
+ * A sprite is a plane that always faces towards the camera, generally with a
+ * partially transparent texture applied.
+ *
+ * Sprites do not cast shadows, setting {@link Object3D#castShadow} to `true` will
+ * have no effect.
+ *
+ * ```js
+ * const map = new THREE.TextureLoader().load( 'sprite.png' );
+ * const material = new THREE.SpriteMaterial( { map: map } );
+ *
+ * const sprite = new THREE.Sprite( material );
+ * scene.add( sprite );
  * ```
- * @see {@link https://threejs.org/docs/index.html#api/en/objects/Sprite | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/objects/Sprite.js | Source}
+ *
+ * @augments Object3D
  */
 export class Sprite<TEventMap extends Object3DEventMap = Object3DEventMap> extends Object3D<TEventMap> {
     /**
-     * Creates a new Sprite.
-     * @param material An instance of {@link THREE.SpriteMaterial | SpriteMaterial}. Default {@link THREE.SpriteMaterial | `new SpriteMaterial()`}, _with white color_.
+     * Constructs a new sprite.
+     *
+     * @param {(SpriteMaterial|SpriteNodeMaterial)} [material] - The sprite material.
      */
-    constructor(material?: SpriteMaterial);
-
+    constructor(material?: SpriteMaterial | SpriteNodeMaterial);
     /**
-     * Read-only flag to check if a given object is of type {@link Sprite}.
-     * @remarks This is a _constant_ value
-     * @defaultValue `true`
+     * This flag can be used for type testing.
+     *
+     * @type {boolean}
+     * @readonly
+     * @default true
      */
     readonly isSprite: true;
-
     /**
-     * @override
-     * @defaultValue `Sprite`
+     * The sprite geometry.
+     *
+     * @type {BufferGeometry}
      */
-    override readonly type: string | "Sprite";
-
-    /**
-     * Whether the object gets rendered into shadow map.
-     * No effect in {@link Sprite}.
-     * @ignore
-     * @hidden
-     * @defaultValue `false`
-     */
-    override castShadow: false;
-
     geometry: BufferGeometry;
-
     /**
-     * An instance of {@link THREE.SpriteMaterial | SpriteMaterial}, defining the object's appearance.
-     * @defaultValue {@link THREE.SpriteMaterial | `new SpriteMaterial()`}, _with white color_.
+     * The sprite material.
+     *
+     * @type {(SpriteMaterial|SpriteNodeMaterial)}
      */
-    material: SpriteMaterial;
-
+    material: SpriteMaterial | SpriteNodeMaterial;
     /**
-     * The sprite's anchor point, and the point around which the {@link Sprite} rotates.
-     * A value of (0.5, 0.5) corresponds to the midpoint of the sprite.
-     * A value of (0, 0) corresponds to the lower left corner of the sprite.
-     * @defaultValue {@link THREE.Vector2 | `new Vector2(0.5, 0.5)`}.
+     * The sprite's anchor point, and the point around which the sprite rotates.
+     * A value of `(0.5, 0.5)` corresponds to the midpoint of the sprite. A value
+     * of `(0, 0)` corresponds to the lower left corner of the sprite.
+     *
+     * @type {Vector2}
+     * @default (0.5,0.5)
      */
     center: Vector2;
-
     /**
      * The number of instances of this sprite.
      * Can only be used with {@link WebGPURenderer}.
      *
+     * @type {number}
      * @default 1
      */
     count: number;
-
     /**
      * Returns `true` if this sprite intersects the given frustum.
-     * @param frustum The frustum to test.
-     * @returns Whether this sprite intersects the given frustum or not.
+     *
+     * @param {Frustum|FrustumArray} frustum - The frustum to test.
+     * @return {boolean} Whether this sprite intersects the given frustum or not.
      */
     intersectsFrustum(frustum: Frustum | FrustumArray): boolean;
-
+    /**
+     * Computes intersection points between a casted ray and this sprite.
+     *
+     * @param {Raycaster} raycaster - The raycaster.
+     * @param {Array<Object>} intersects - The target array that holds the intersection points.
+     */
+    raycast(raycaster: Raycaster, intersects: Intersection[]): void;
+    copy(source: Sprite, recursive?: boolean): this;
     toJSON(meta?: JSONMeta): SpriteJSON;
 }
