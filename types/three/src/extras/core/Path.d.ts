@@ -6,161 +6,182 @@ export interface PathJSON extends CurvePathJSON {
 }
 
 /**
- * A 2D {@link Path} representation.
- * @remarks
- * The class provides methods for creating paths and contours of 2D shapes similar to the 2D Canvas API.
- * @example
- * ```typescript
- * const {@link Path} = new THREE.Path();
- * path.lineTo(0, 0.8);
- * path.quadraticCurveTo(0, 1, 0.2, 1);
- * path.lineTo(1, 1);
+ * A 2D path representation. The class provides methods for creating paths
+ * and contours of 2D shapes similar to the 2D Canvas API.
+ *
+ * ```js
+ * const path = new THREE.Path();
+ *
+ * path.lineTo( 0, 0.8 );
+ * path.quadraticCurveTo( 0, 1, 0.2, 1 );
+ * path.lineTo( 1, 1 );
+ *
  * const points = path.getPoints();
- * const geometry = new THREE.BufferGeometry().setFromPoints(points);
- * const material = new THREE.LineBasicMaterial({
- *     color: 0xffffff
- * });
- * const line = new THREE.Line(geometry, material);
- * scene.add(line);
+ *
+ * const geometry = new THREE.BufferGeometry().setFromPoints( points );
+ * const material = new THREE.LineBasicMaterial( { color: 0xffffff } );
+ *
+ * const line = new THREE.Line( geometry, material );
+ * scene.add( line );
  * ```
- * @see {@link https://threejs.org/docs/index.html#api/en/extras/core/Path | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/extras/core/Path.js | Source}
+ *
+ * @augments CurvePath
  */
 export class Path extends CurvePath<Vector2> {
     /**
-     * Creates a {@link Path} from the points
-     * @remarks
-     * The first point defines the offset, then successive points are added to the {@link CurvePath.curves | curves} array as {@link LineCurve | LineCurves}.
-     * If no points are specified, an empty {@link Path} is created and the {@link .currentPoint} is set to the origin.
-     * @param points Array of {@link Vector2 | Vector2s}.
+     * Constructs a new path.
+     *
+     * @param {Array<Vector2>} [points] - An array of 2D points defining the path.
      */
-    constructor(points?: Vector2[]);
-
+    constructor(points?: Array<Vector2>);
     /**
-     * A Read-only _string_ to check if `this` object type.
-     * @remarks Sub-classes will update this value.
-     * @defaultValue `Path`
-     */
-    override readonly type: string | "Path";
-
-    /**
-     * The current offset of the path. Any new {@link THREE.Curve | Curve} added will start here.
-     * @defaultValue `new THREE.Vector2()`
+     * The current offset of the path. Any new curve added will start here.
      */
     currentPoint: Vector2;
-
     /**
-     * Adds an absolutely positioned {@link THREE.EllipseCurve | EllipseCurve} to the path.
-     * @param x Expects a `Float`
-     * @param y X, The absolute center of the arc. Expects a `Float`
-     * @param radius The radius of the arc. Expects a `Float`
-     * @param startAngle The start angle in radians. Expects a `Float`
-     * @param endAngle The end angle in radians. Expects a `Float`
-     * @param clockwise Sweep the arc clockwise. Default `false`
+     * Creates a path from the given list of points. The points are added
+     * to the path as instances of {@link LineCurve}.
+     *
+     * @param {Array<Vector2>} points - An array of 2D points.
+     * @return {Path} A reference to this path.
      */
-    absarc(aX: number, aY: number, aRadius: number, aStartAngle: number, aEndAngle: number, aClockwise?: boolean): this;
-
+    setFromPoints(points: Array<Vector2>): this;
     /**
-     * Adds an absolutely positioned {@link THREE.EllipseCurve | EllipseCurve} to the path.
-     * @param x Expects a `Float`
-     * @param y X, The absolute center of the ellipse. Expects a `Float`
-     * @param xRadius The radius of the ellipse in the x axis. Expects a `Float`
-     * @param yRadius The radius of the ellipse in the y axis. Expects a `Float`
-     * @param startAngle The start angle in radians. Expects a `Float`
-     * @param endAngle The end angle in radians. Expects a `Float`
-     * @param clockwise Sweep the ellipse clockwise. Default `false`
-     * @param rotation The rotation angle of the ellipse in radians, counterclockwise from the positive X axis. Optional, Expects a `Float`. Default `0`
-     */
-    absellipse(
-        aX: number,
-        aY: number,
-        xRadius: number,
-        yRadius: number,
-        aStartAngle: number,
-        aEndAngle: number,
-        aClockwise?: boolean,
-        aRotation?: number,
-    ): this;
-
-    /**
-     * Adds an {@link THREE.EllipseCurve | EllipseCurve} to the path, positioned relative to {@link .currentPoint}.
-     * @param x Expects a `Float`
-     * @param y X, The center of the arc offset from the last call. Expects a `Float`
-     * @param radius The radius of the arc. Expects a `Float`
-     * @param startAngle The start angle in radians. Expects a `Float`
-     * @param endAngle The end angle in radians. Expects a `Float`
-     * @param clockwise Sweep the arc clockwise. Default `false`
-     */
-    arc(aX: number, aY: number, aRadius: number, aStartAngle: number, aEndAngle: number, aClockwise?: boolean): this;
-
-    /**
-     * This creates a bezier curve from {@link .currentPoint} with (cp1X, cp1Y) and (cp2X, cp2Y) as control points and updates {@link .currentPoint} to x and y.
-     * @param cp1X Expects a `Float`
-     * @param cp1Y Expects a `Float`
-     * @param cp2X Expects a `Float`
-     * @param cp2Y Expects a `Float`
-     * @param x Expects a `Float`
-     * @param y Expects a `Float`
-     */
-    bezierCurveTo(aCP1x: number, aCP1y: number, aCP2x: number, aCP2y: number, aX: number, aY: number): this;
-
-    /**
-     * Adds an {@link THREE.EllipseCurve | EllipseCurve} to the path, positioned relative to {@link .currentPoint}.
-     * @param x Expects a `Float`
-     * @param y X, The center of the ellipse offset from the last call. Expects a `Float`
-     * @param xRadius The radius of the ellipse in the x axis. Expects a `Float`
-     * @param yRadius The radius of the ellipse in the y axis. Expects a `Float`
-     * @param startAngle The start angle in radians. Expects a `Float`
-     * @param endAngle The end angle in radians. Expects a `Float`
-     * @param clockwise Sweep the ellipse clockwise. Default `false`
-     * @param rotation The rotation angle of the ellipse in radians, counterclockwise from the positive X axis. Optional, Expects a `Float`. Default `0`
-     */
-    ellipse(
-        aX: number,
-        aY: number,
-        xRadius: number,
-        yRadius: number,
-        aStartAngle: number,
-        aEndAngle: number,
-        aClockwise?: boolean,
-        aRotation?: number,
-    ): this;
-
-    /**
-     * Connects a {@link THREE.LineCurve | LineCurve} from {@link .currentPoint} to x, y onto the path.
-     * @param x Expects a `Float`
-     * @param y Expects a `Float`
-     */
-    lineTo(x: number, y: number): this;
-
-    /**
-     * Move the {@link .currentPoint} to x, y.
-     * @param x Expects a `Float`
-     * @param y Expects a `Float`
+     * Moves {@link Path#currentPoint} to the given point.
+     *
+     * @param {number} x - The x coordinate.
+     * @param {number} y - The y coordinate.
+     * @return {Path} A reference to this path.
      */
     moveTo(x: number, y: number): this;
-
     /**
-     * Creates a quadratic curve from {@link .currentPoint} with cpX and cpY as control point and updates {@link .currentPoint} to x and y.
-     * @param cpX Expects a `Float`
-     * @param cpY Expects a `Float`
-     * @param x Expects a `Float`
-     * @param y Expects a `Float`
+     * Adds an instance of {@link LineCurve} to the path by connecting
+     * the current point with the given one.
+     *
+     * @param {number} x - The x coordinate of the end point.
+     * @param {number} y - The y coordinate of the end point.
+     * @return {Path} A reference to this path.
+     */
+    lineTo(x: number, y: number): this;
+    /**
+     * Adds an instance of {@link QuadraticBezierCurve} to the path by connecting
+     * the current point with the given one.
+     *
+     * @param {number} aCPx - The x coordinate of the control point.
+     * @param {number} aCPy - The y coordinate of the control point.
+     * @param {number} aX - The x coordinate of the end point.
+     * @param {number} aY - The y coordinate of the end point.
+     * @return {Path} A reference to this path.
      */
     quadraticCurveTo(aCPx: number, aCPy: number, aX: number, aY: number): this;
-
     /**
-     * Points are added to the {@link CurvePath.curves | curves} array as {@link THREE.LineCurve | LineCurves}.
-     * @param vector2s
+     * Adds an instance of {@link CubicBezierCurve} to the path by connecting
+     * the current point with the given one.
+     *
+     * @param {number} aCP1x - The x coordinate of the first control point.
+     * @param {number} aCP1y - The y coordinate of the first control point.
+     * @param {number} aCP2x - The x coordinate of the second control point.
+     * @param {number} aCP2y - The y coordinate of the second control point.
+     * @param {number} aX - The x coordinate of the end point.
+     * @param {number} aY - The y coordinate of the end point.
+     * @return {Path} A reference to this path.
      */
-    setFromPoints(vectors: Vector2[]): this;
-
+    bezierCurveTo(aCP1x: number, aCP1y: number, aCP2x: number, aCP2y: number, aX: number, aY: number): this;
     /**
-     * Connects a new {@link THREE.SplineCurve | SplineCurve} onto the path.
-     * @param points An array of {@link Vector2 | Vector2's}
+     * Adds an instance of {@link SplineCurve} to the path by connecting
+     * the current point with the given list of points.
+     *
+     * @param {Array<Vector2>} pts - An array of points in 2D space.
+     * @return {Path} A reference to this path.
      */
-    splineThru(pts: Vector2[]): this;
-
+    splineThru(pts: Array<Vector2>): this;
+    /**
+     * Adds an arc as an instance of {@link EllipseCurve} to the path, positioned relative
+     * to the current point.
+     *
+     * @param {number} [aX=0] - The x coordinate of the center of the arc offsetted from the previous curve.
+     * @param {number} [aY=0] - The y coordinate of the center of the arc offsetted from the previous curve.
+     * @param {number} [aRadius=1] - The radius of the arc.
+     * @param {number} [aStartAngle=0] - The start angle in radians.
+     * @param {number} [aEndAngle=Math.PI*2] - The end angle in radians.
+     * @param {boolean} [aClockwise=false] - Whether to sweep the arc clockwise or not.
+     * @return {Path} A reference to this path.
+     */
+    arc(
+        aX?: number,
+        aY?: number,
+        aRadius?: number,
+        aStartAngle?: number,
+        aEndAngle?: number,
+        aClockwise?: boolean,
+    ): this;
+    /**
+     * Adds an absolutely positioned arc as an instance of {@link EllipseCurve} to the path.
+     *
+     * @param {number} [aX=0] - The x coordinate of the center of the arc.
+     * @param {number} [aY=0] - The y coordinate of the center of the arc.
+     * @param {number} [aRadius=1] - The radius of the arc.
+     * @param {number} [aStartAngle=0] - The start angle in radians.
+     * @param {number} [aEndAngle=Math.PI*2] - The end angle in radians.
+     * @param {boolean} [aClockwise=false] - Whether to sweep the arc clockwise or not.
+     * @return {Path} A reference to this path.
+     */
+    absarc(
+        aX?: number,
+        aY?: number,
+        aRadius?: number,
+        aStartAngle?: number,
+        aEndAngle?: number,
+        aClockwise?: boolean,
+    ): this;
+    /**
+     * Adds an ellipse as an instance of {@link EllipseCurve} to the path, positioned relative
+     * to the current point
+     *
+     * @param {number} [aX=0] - The x coordinate of the center of the ellipse offsetted from the previous curve.
+     * @param {number} [aY=0] - The y coordinate of the center of the ellipse offsetted from the previous curve.
+     * @param {number} [xRadius=1] - The radius of the ellipse in the x axis.
+     * @param {number} [yRadius=1] - The radius of the ellipse in the y axis.
+     * @param {number} [aStartAngle=0] - The start angle in radians.
+     * @param {number} [aEndAngle=Math.PI*2] - The end angle in radians.
+     * @param {boolean} [aClockwise=false] - Whether to sweep the ellipse clockwise or not.
+     * @param {number} [aRotation=0] - The rotation angle of the ellipse in radians, counterclockwise from the positive X axis.
+     * @return {Path} A reference to this path.
+     */
+    ellipse(
+        aX?: number,
+        aY?: number,
+        xRadius?: number,
+        yRadius?: number,
+        aStartAngle?: number,
+        aEndAngle?: number,
+        aClockwise?: boolean,
+        aRotation?: number,
+    ): this;
+    /**
+     * Adds an absolutely positioned ellipse as an instance of {@link EllipseCurve} to the path.
+     *
+     * @param {number} [aX=0] - The x coordinate of the absolute center of the ellipse.
+     * @param {number} [aY=0] - The y coordinate of the absolute center of the ellipse.
+     * @param {number} [xRadius=1] - The radius of the ellipse in the x axis.
+     * @param {number} [yRadius=1] - The radius of the ellipse in the y axis.
+     * @param {number} [aStartAngle=0] - The start angle in radians.
+     * @param {number} [aEndAngle=Math.PI*2] - The end angle in radians.
+     * @param {boolean} [aClockwise=false] - Whether to sweep the ellipse clockwise or not.
+     * @param {number} [aRotation=0] - The rotation angle of the ellipse in radians, counterclockwise from the positive X axis.
+     * @return {Path} A reference to this path.
+     */
+    absellipse(
+        aX?: number,
+        aY?: number,
+        xRadius?: number,
+        yRadius?: number,
+        aStartAngle?: number,
+        aEndAngle?: number,
+        aClockwise?: boolean,
+        aRotation?: number,
+    ): this;
+    copy(source: Path): this;
     toJSON(): PathJSON;
     fromJSON(json: PathJSON): this;
 }

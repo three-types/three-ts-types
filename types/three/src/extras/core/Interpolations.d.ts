@@ -1,36 +1,39 @@
 /**
- * Used internally by {@link THREE.SplineCurve | SplineCurve}.
- * @param t Interpolation weight. Expects a `Float`
- * @param p0 Expects a `Float`
- * @param p1 Expects a `Float`
- * @param p2 Expects a `Float`
- * @param p3 P0, p1, p2, the points defining the spline curve. Expects a `Float`
- * @see {@link https://threejs.org/docs/index.html#api/en/extras/core/Interpolations | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/extras/core/Interpolations.js | Source}
+ * Interpolations contains spline and Bézier functions internally used by concrete curve classes.
+ *
+ * Bezier Curves formulas obtained from: https://en.wikipedia.org/wiki/B%C3%A9zier_curve
+ *
+ * @module Interpolations
  */
-declare function CatmullRom(t: number, p0: number, p1: number, p2: number, p3: number): number;
-
 /**
- * Used internally by {@link THREE.QuadraticBezierCurve3 | QuadraticBezierCurve3} and {@link THREE.QuadraticBezierCurve | QuadraticBezierCurve}.
- * @param t Interpolation weight. Expects a `Float`
- * @param p0 Expects a `Float`
- * @param p1 Expects a `Float`
- * @param p2 P0, p1, the starting, control and end points defining the curve. Expects a `Float`
- * @see {@link https://threejs.org/docs/index.html#api/en/extras/core/Interpolations | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/extras/core/Interpolations.js | Source}
+ * Computes a point on a Catmull-Rom spline.
+ *
+ * @param {number} t - The interpolation factor.
+ * @param {number} p0 - The first control point.
+ * @param {number} p1 - The second control point.
+ * @param {number} p2 - The third control point.
+ * @param {number} p3 - The fourth control point.
+ * @return {number} The calculated point on a Catmull-Rom spline.
  */
-declare function QuadraticBezier(t: number, p0: number, p1: number, p2: number): number;
-
+export function CatmullRom(t: number, p0: number, p1: number, p2: number, p3: number): number;
 /**
- * Used internally by {@link THREE.CubicBezierCurve3 | CubicBezierCurve3} and {@link THREE.CubicBezierCurve | CubicBezierCurve}.
- * @param t Interpolation weight. Expects a `Float`
- * @param p0 Expects a `Float`
- * @param p1 Expects a `Float`
- * @param p2 Expects a `Float`
- * @param p3 P0, p1, p2, the starting, control(twice) and end points defining the curve. Expects a `Float`
- * @see {@link https://threejs.org/docs/index.html#api/en/extras/core/Interpolations | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/extras/core/Interpolations.js | Source}
+ * Computes a point on a Quadratic Bezier curve.
+ *
+ * @param {number} t - The interpolation factor.
+ * @param {number} p0 - The first control point.
+ * @param {number} p1 - The second control point.
+ * @param {number} p2 - The third control point.
+ * @return {number} The calculated point on a Quadratic Bezier curve.
  */
-declare function CubicBezier(t: number, p0: number, p1: number, p2: number, p3: number): number;
-
-export { CatmullRom, CubicBezier, QuadraticBezier };
+export function QuadraticBezier(t: number, p0: number, p1: number, p2: number): number;
+/**
+ * Computes a point on a Cubic Bezier curve.
+ *
+ * @param {number} t - The interpolation factor.
+ * @param {number} p0 - The first control point.
+ * @param {number} p1 - The second control point.
+ * @param {number} p2 - The third control point.
+ * @param {number} p3 - The fourth control point.
+ * @return {number} The calculated point on a Cubic Bezier curve.
+ */
+export function CubicBezier(t: number, p0: number, p1: number, p2: number, p3: number): number;

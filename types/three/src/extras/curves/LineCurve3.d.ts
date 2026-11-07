@@ -2,41 +2,39 @@ import { Vector3 } from "../../math/Vector3.js";
 import { Curve } from "../core/Curve.js";
 
 /**
- * A curve representing a **3D** line segment.
- * @see {@link https://threejs.org/docs/index.html#api/en/extras/curves/LineCurve3 | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/extras/curves/LineCurve3.js | Source}
+ * A curve representing a 3D line segment.
+ *
+ * @augments Curve
  */
 export class LineCurve3 extends Curve<Vector3> {
     /**
-     * This constructor creates a new {@link LineCurve3}.
-     * @param v1 The start point. Default is `new THREE.Vector3()`.
-     * @param v2 The end point. Default is `new THREE.Vector3()`.
+     * Constructs a new line curve.
+     *
+     * @param {Vector3} [v1] - The start point.
+     * @param {Vector3} [v2] - The end point.
      */
     constructor(v1?: Vector3, v2?: Vector3);
-
     /**
-     * Read-only flag to check if a given object is of type {@link LineCurve3}.
-     * @remarks This is a _constant_ value
-     * @defaultValue `true`
+     * This flag can be used for type testing.
+     *
+     * @default true
      */
-    readonly isLineCurve3 = true;
-
-    /**
-     * A Read-only _string_ to check if `this` object type.
-     * @remarks Sub-classes will update this value.
-     * @defaultValue `LineCurve3`
-     */
-    override readonly type: string | "LineCurve3";
-
+    readonly isLineCurve3: true;
     /**
      * The start point.
-     * @defaultValue `new THREE.Vector3()`.
      */
     v1: Vector3;
-
     /**
      * The end point.
-     * @defaultValue `new THREE.Vector3()`.
      */
     v2: Vector3;
+    /**
+     * Returns a point on the line.
+     *
+     * @param {number} t - A interpolation factor representing a position on the line. Must be in the range `[0,1]`.
+     * @param {Vector3} [optionalTarget] - The optional target vector the result is written to.
+     * @return {Vector3} The position on the line.
+     */
+    getPoint(t: number, optionalTarget?: Vector3): Vector3;
+    copy(source: LineCurve3): this;
 }
