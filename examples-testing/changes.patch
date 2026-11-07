@@ -15363,7 +15363,7 @@ index 4ac747d71..da4bca044 100644
          return v0.add(v1).add(v2).add(v3).mul(0.25);
      })();
 diff --git a/examples-testing/examples/webgpu_compute_geometry.ts b/examples-testing/examples/webgpu_compute_geometry.ts
-index 8498121d9..be8b4bd44 100644
+index 8498121d9..bb13fa503 100644
 --- a/examples-testing/examples/webgpu_compute_geometry.ts
 +++ b/examples-testing/examples/webgpu_compute_geometry.ts
 @@ -18,8 +18,8 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -15377,14 +15377,24 @@ index 8498121d9..be8b4bd44 100644
  
  let mesh;
  
-@@ -36,7 +36,7 @@ const jelly = Fn(({ renderer, geometry, object }) => {
+@@ -32,15 +32,15 @@ const brushStrength = uniform(0.22);
+ init();
+ 
+ const jelly = Fn(({ renderer, geometry, object }) => {
+-    const count = geometry.attributes.position.count;
++    const count = geometry!.attributes.position.count;
  
      // Create storage buffer attribute for modified position.
  
 -    const positionBaseAttribute = geometry.attributes.position;
-+    const positionBaseAttribute = geometry.attributes.position as THREE.BufferAttribute;
++    const positionBaseAttribute = geometry!.attributes.position as THREE.BufferAttribute;
      const positionStorageBufferAttribute = new THREE.StorageBufferAttribute(count, 3);
      const speedBufferAttribute = new THREE.StorageBufferAttribute(count, 3);
+ 
+-    geometry.setAttribute('storagePosition', positionStorageBufferAttribute);
++    geometry!.setAttribute('storagePosition', positionStorageBufferAttribute);
+ 
+     // Attributes
  
 @@ -132,7 +132,7 @@ function init() {
  
