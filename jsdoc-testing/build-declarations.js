@@ -6,11 +6,20 @@ import * as url from 'node:url';
 
 import ts from 'typescript6';
 
-// Methods whose `this.x = ...` assignments must not be inferred as class members
-// by declaration emit (e.g. Material#fromJSON assigns derived-class-only
-// properties). Before running tsc, these are rewritten so the assignments go
-// through an `any`-cast alias, which suppresses expando-property inference.
+// Functions whose `this.x = ...` assignments must not be inferred as members by
+// declaration emit (e.g. Material#fromJSON assigns derived-class-only
+// properties, and the assignments in LoadingManager#abort and Cache.clear make
+// declaration emit fail with TS9005). Before running tsc, these are rewritten so
+// the assignments go through an `any`-cast alias, which suppresses
+// expando-property inference.
+//
+// A target is either:
+// - { className, methodName }: a class method.
+// - { className, constructorProperty }: a `this.name = function () {}` assignment in a class constructor.
+// - { objectName, propertyName }: a function-valued property of an object literal assigned to a variable.
 const targets = [
+    { file: 'src/loaders/Cache.js', objectName: 'Cache', propertyName: 'clear' },
+    { file: 'src/loaders/LoadingManager.js', className: 'LoadingManager', constructorProperty: 'abort' },
     { file: 'src/materials/Material.js', className: 'Material', methodName: 'fromJSON' },
 ];
 
@@ -29,13 +38,68 @@ function restoreTargets() {
     }
 }
 
-function findMethod(sourceFile, className, methodName) {
-    let method;
+function describeTarget(target) {
+    if (target.objectName !== undefined) return `${target.objectName}.${target.propertyName}`;
+    return `${target.className}#${target.methodName ?? target.constructorProperty}`;
+}
+
+function isFunctionLike(node) {
+    return node !== undefined && (ts.isFunctionExpression(node) || ts.isMethodDeclaration(node));
+}
+
+function findConstructorProperty(constructor, propertyName) {
+    let found;
     const visit = node => {
-        if (ts.isClassDeclaration(node) && node.name !== undefined && node.name.text === className) {
+        if (
+            ts.isBinaryExpression(node)
+            && node.operatorToken.kind === ts.SyntaxKind.EqualsToken
+            && ts.isPropertyAccessExpression(node.left)
+            && node.left.expression.kind === ts.SyntaxKind.ThisKeyword
+            && node.left.name.text === propertyName
+            && ts.isFunctionExpression(node.right)
+        ) {
+            found = node.right;
+            return;
+        }
+        ts.forEachChild(node, visit);
+    };
+    if (constructor.body !== undefined) visit(constructor.body);
+    return found;
+}
+
+function findFunction(sourceFile, target) {
+    let fn;
+    const visit = node => {
+        if (fn !== undefined) return;
+        if (
+            target.className !== undefined && ts.isClassDeclaration(node) && node.name !== undefined
+            && node.name.text === target.className
+        ) {
             for (const member of node.members) {
-                if (ts.isMethodDeclaration(member) && ts.isIdentifier(member.name) && member.name.text === methodName) {
-                    method = member;
+                if (
+                    target.methodName !== undefined && ts.isMethodDeclaration(member) && ts.isIdentifier(member.name)
+                    && member.name.text === target.methodName
+                ) {
+                    fn = member;
+                    return;
+                }
+                if (target.constructorProperty !== undefined && ts.isConstructorDeclaration(member)) {
+                    fn = findConstructorProperty(member, target.constructorProperty);
+                    if (fn !== undefined) return;
+                }
+            }
+        }
+        if (
+            target.objectName !== undefined && ts.isVariableDeclaration(node) && ts.isIdentifier(node.name)
+            && node.name.text === target.objectName && node.initializer !== undefined
+            && ts.isObjectLiteralExpression(node.initializer)
+        ) {
+            for (const property of node.initializer.properties) {
+                if (property.name === undefined || !ts.isIdentifier(property.name)) continue;
+                if (property.name.text !== target.propertyName) continue;
+                const candidate = ts.isPropertyAssignment(property) ? property.initializer : property;
+                if (isFunctionLike(candidate)) {
+                    fn = candidate;
                     return;
                 }
             }
@@ -43,18 +107,19 @@ function findMethod(sourceFile, className, methodName) {
         ts.forEachChild(node, visit);
     };
     visit(sourceFile);
-    return method;
+    return fn;
 }
 
 function transformTarget(target) {
     const filePath = path.join(threeDir, target.file);
     const source = fs.readFileSync(filePath, { encoding: 'utf-8' });
     const sourceFile = ts.createSourceFile(filePath, source, ts.ScriptTarget.Latest, true);
+    const name = describeTarget(target);
 
-    const method = findMethod(sourceFile, target.className, target.methodName);
+    const method = findFunction(sourceFile, target);
     if (method === undefined || method.body === undefined) {
         throw new Error(
-            `Could not find method ${target.className}#${target.methodName} in ${target.file}. `
+            `Could not find function ${name} in ${target.file}. `
                 + 'Update the targets list in build-declarations.js.',
         );
     }
@@ -66,7 +131,7 @@ function transformTarget(target) {
 
     if (bodyText.includes(aliasName)) {
         throw new Error(
-            `${target.className}#${target.methodName} in ${target.file} already contains "${aliasName}".`,
+            `${name} in ${target.file} already contains "${aliasName}".`,
         );
     }
 
@@ -77,7 +142,7 @@ function transformTarget(target) {
     });
     if (replacements === 0) {
         throw new Error(
-            `No \`this.\` assignments found in ${target.className}#${target.methodName} in ${target.file}. `
+            `No \`this.\` assignments found in ${name} in ${target.file}. `
                 + 'The transform may no longer be needed; update the targets list in build-declarations.js.',
         );
     }
@@ -85,7 +150,7 @@ function transformTarget(target) {
     const transformed = source.slice(0, bodyStart) + `\n\n\t\t${aliasStatement}` + transformedBody
         + source.slice(bodyEnd);
     fs.writeFileSync(filePath, transformed);
-    console.log(`Transformed ${target.className}#${target.methodName} in ${target.file} (${replacements} replacements).`);
+    console.log(`Transformed ${name} in ${target.file} (${replacements} replacements).`);
 }
 
 // Restore before transforming so a previously crashed run self-heals.
