@@ -1,29 +1,36 @@
-import { CylinderGeometry } from "./CylinderGeometry.js";
-
 /**
- * A class for generating cone geometries.
- * @example
- * ```typescript
- * const geometry = new THREE.ConeGeometry(5, 20, 32);
- * const material = new THREE.MeshBasicMaterial({
- *     color: 0xffff00
- * });
- * const cone = new THREE.Mesh(geometry, material);
- * scene.add(cone);
+ * A geometry class for representing a cone.
+ *
+ * ```js
+ * const geometry = new THREE.ConeGeometry( 5, 20, 32 );
+ * const material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
+ * const cone = new THREE.Mesh(geometry, material );
+ * scene.add( cone );
  * ```
- * @see {@link https://threejs.org/docs/index.html#api/en/geometries/ConeGeometry | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/geometries/ConeGeometry.js | Source}
+ *
+ * @augments CylinderGeometry
+ * @demo scenes/geometry-browser.html#ConeGeometry
  */
 export class ConeGeometry extends CylinderGeometry {
     /**
-     * Create a new instance of {@link ConeGeometry}
-     * @param radius Radius of the cone base. Expects a `Float`. Default `1`
-     * @param height Height of the cone. Expects a `Float`. Default `1`
-     * @param radialSegments Number of segmented faces around the circumference of the cone. Expects a `Integer`. Default `32`
-     * @param heightSegments Number of rows of faces along the height of the cone. Expects a `Integer`. Default `1`
-     * @param openEnded A Boolean indicating whether the base of the cone is open or capped. Default `false`, _meaning capped_.
-     * @param thetaStart Start angle for first segment. Expects a `Float`. Default `0`, _(three o'clock position)_.
-     * @param thetaLength The central angle, often called theta, of the circular sector. Expects a `Float`. Default `Math.PI * 2`, _which makes for a complete cone_.
+     * Factory method for creating an instance of this class from the given
+     * JSON object.
+     *
+     * @param {Object} data - A JSON object representing the serialized geometry.
+     * @return {ConeGeometry} A new instance.
+     */
+    static fromJSON(data: {}): ConeGeometry;
+    /**
+     * Constructs a new cone geometry.
+     *
+     * @param {number} [radius=1] - Radius of the cone base.
+     * @param {number} [height=1] - Height of the cone.
+     * @param {number} [radialSegments=32] - Number of segmented faces around the circumference of the cone.
+     * @param {number} [heightSegments=1] - Number of rows of faces along the height of the cone.
+     * @param {boolean} [openEnded=false] - Whether the base of the cone is open or capped.
+     * @param {number} [thetaStart=0] - Start angle for first segment, in radians.
+     * @param {number} [thetaLength=Math.PI*2] - The central angle, often called theta, of the circular sector, in radians.
+     * The default value results in a complete cone.
      */
     constructor(
         radius?: number,
@@ -34,18 +41,12 @@ export class ConeGeometry extends CylinderGeometry {
         thetaStart?: number,
         thetaLength?: number,
     );
-
     /**
-     * A Read-only _string_ to check if `this` object type.
-     * @remarks Sub-classes will update this value.
-     * @defaultValue `ConeGeometry`
-     */
-    override readonly type: string | "ConeGeometry";
-
-    /**
-     * An object with a property for each of the constructor parameters.
-     * @remarks {@link radiusTop} and {@link radiusBottom} are from base {@link THREE.CylinderGeometry} class.
-     * @remarks Any modification after instantiation does not change the geometry.
+     * Holds the constructor parameters that have been
+     * used to generate the geometry. Any modification
+     * after instantiation does not change the geometry.
+     *
+     * @type {Object}
      */
     override readonly parameters: {
         readonly radius: number;
@@ -58,7 +59,5 @@ export class ConeGeometry extends CylinderGeometry {
         readonly thetaStart: number;
         readonly thetaLength: number;
     };
-
-    /** @internal */
-    static fromJSON(data: {}): ConeGeometry;
 }
+import { CylinderGeometry } from "./CylinderGeometry.js";

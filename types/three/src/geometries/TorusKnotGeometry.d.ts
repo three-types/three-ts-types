@@ -1,29 +1,36 @@
-import { BufferGeometry } from "../core/BufferGeometry.js";
-
 /**
- * Creates a torus knot, the particular shape of which is defined by a pair of coprime integers, p and q
- * If p and q are not coprime, the result will be a torus link.
- * @example
- * ```typescript
- * const geometry = new THREE.TorusKnotGeometry(10, 3, 100, 16);
- * const material = new THREE.MeshBasicMaterial({
- *     color: 0xffff00
- * });
- * const torusKnot = new THREE.Mesh(geometry, material);
- * scene.add(torusKnot);
+ * Creates a torus knot, the particular shape of which is defined by a pair
+ * of coprime integers, p and q. If p and q are not coprime, the result will
+ * be a torus link.
+ *
+ * ```js
+ * const geometry = new THREE.TorusKnotGeometry( 10, 3, 100, 16 );
+ * const material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
+ * const torusKnot = new THREE.Mesh( geometry, material );
+ * scene.add( torusKnot );
  * ```
- * @see {@link https://threejs.org/docs/index.html#api/en/geometries/TorusKnotGeometry | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/geometries/TorusKnotGeometry.js | Source}
+ *
+ * @augments BufferGeometry
+ * @demo scenes/geometry-browser.html#TorusKnotGeometry
  */
 export class TorusKnotGeometry extends BufferGeometry {
     /**
-     * Create a new instance of {@link TorusKnotGeometry}
-     * @param radius Radius of the torus.. Default `1`.
-     * @param tube Expects a `Float`. Default `0.4`.
-     * @param tubularSegments Expects a `Integer`. Default `64`.
-     * @param radialSegments Expects a `Integer`. Default `8`.
-     * @param p This value determines, how many times the geometry winds around its axis of rotational symmetry. Expects a `Integer`. Default `2`.
-     * @param q This value determines, how many times the geometry winds around a circle in the interior of the torus. Expects a `Integer`. Default `3`.
+     * Factory method for creating an instance of this class from the given
+     * JSON object.
+     *
+     * @param {Object} data - A JSON object representing the serialized geometry.
+     * @return {TorusKnotGeometry} A new instance.
+     */
+    static fromJSON(data: {}): TorusKnotGeometry;
+    /**
+     * Constructs a new torus knot geometry.
+     *
+     * @param {number} [radius=1] - Radius of the torus knot.
+     * @param {number} [tube=0.4] - Radius of the tube.
+     * @param {number} [tubularSegments=64] - The number of tubular segments.
+     * @param {number} [radialSegments=8] - The number of radial segments.
+     * @param {number} [p=2] - This value determines, how many times the geometry winds around its axis of rotational symmetry.
+     * @param {number} [q=3] - This value determines, how many times the geometry winds around a circle in the interior of the torus.
      */
     constructor(
         radius?: number,
@@ -33,17 +40,12 @@ export class TorusKnotGeometry extends BufferGeometry {
         p?: number,
         q?: number,
     );
-
     /**
-     * A Read-only _string_ to check if `this` object type.
-     * @remarks Sub-classes will update this value.
-     * @defaultValue `TorusKnotGeometry`
-     */
-    override readonly type: string | "TorusKnotGeometry";
-
-    /**
-     * An object with a property for each of the constructor parameters.
-     * @remarks Any modification after instantiation does not change the geometry.
+     * Holds the constructor parameters that have been
+     * used to generate the geometry. Any modification
+     * after instantiation does not change the geometry.
+     *
+     * @type {Object}
      */
     readonly parameters: {
         readonly radius: number;
@@ -53,7 +55,6 @@ export class TorusKnotGeometry extends BufferGeometry {
         readonly p: number;
         readonly q: number;
     };
-
-    /** @internal */
-    static fromJSON(data: {}): TorusKnotGeometry;
+    copy(source: TorusKnotGeometry): this;
 }
+import { BufferGeometry } from "../core/BufferGeometry.js";

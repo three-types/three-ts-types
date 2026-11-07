@@ -1,25 +1,31 @@
-import { PolyhedronGeometry } from "./PolyhedronGeometry.js";
-
 /**
- * A class for generating a tetrahedron geometries.
- * @see {@link https://threejs.org/docs/index.html#api/en/geometries/TetrahedronGeometry | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/geometries/TetrahedronGeometry.js | Source}
+ * A geometry class for representing an tetrahedron.
+ *
+ * ```js
+ * const geometry = new THREE.TetrahedronGeometry();
+ * const material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
+ * const tetrahedron = new THREE.Mesh( geometry, material );
+ * scene.add( tetrahedron );
+ * ```
+ *
+ * @augments PolyhedronGeometry
+ * @demo scenes/geometry-browser.html#TetrahedronGeometry
  */
 export class TetrahedronGeometry extends PolyhedronGeometry {
     /**
-     * Create a new instance of {@link TetrahedronGeometry}
-     * @param radius Radius of the tetrahedron. Expects a `Float`. Default `1`
-     * @param detail Setting this to a value greater than 0 adds vertices making it no longer a tetrahedron. Expects a `Integer`. Default `0`
+     * Factory method for creating an instance of this class from the given
+     * JSON object.
+     *
+     * @param {Object} data - A JSON object representing the serialized geometry.
+     * @return {TetrahedronGeometry} A new instance.
+     */
+    static fromJSON(data: {}): TetrahedronGeometry;
+    /**
+     * Constructs a new tetrahedron geometry.
+     *
+     * @param {number} [radius=1] - Radius of the tetrahedron.
+     * @param {number} [detail=0] - Setting this to a value greater than `0` adds vertices making it no longer a tetrahedron.
      */
     constructor(radius?: number, detail?: number);
-
-    /**
-     * A Read-only _string_ to check if `this` object type.
-     * @remarks Sub-classes will update this value.
-     * @defaultValue `TetrahedronGeometry`
-     */
-    override readonly type: string | "TetrahedronGeometry";
-
-    /** @internal */
-    static fromJSON(data: {}): TetrahedronGeometry;
 }
+import { PolyhedronGeometry } from "./PolyhedronGeometry.js";
