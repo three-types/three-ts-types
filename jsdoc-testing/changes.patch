@@ -14356,7 +14356,7 @@ index f561855ff..0d5ada0ac 100644
 +
 +export default ProjectorLight;
 diff --git a/jsdoc-testing/jsdoc/src/loaders/AnimationLoader.d.ts b/jsdoc-testing/jsdoc/src/loaders/AnimationLoader.d.ts
-index 4bed37855..1ce6c9887 100644
+index 4bed37855..e6040dc38 100644
 --- a/jsdoc-testing/jsdoc/src/loaders/AnimationLoader.d.ts
 +++ b/jsdoc-testing/jsdoc/src/loaders/AnimationLoader.d.ts
 @@ -9,7 +9,7 @@
@@ -14373,7 +14373,7 @@ index 4bed37855..1ce6c9887 100644
       * @param {onErrorCallback} onError - Executed when errors occur.
       */
 -    load(url: string, onLoad: (arg0: Array<AnimationClip>) => any, onProgress: onProgressCallback, onError: onErrorCallback): void;
-+    load(url: string, onLoad: (data: Array<AnimationClip>) => void, onProgress?: onProgressCallback, onError?: onErrorCallback): void;
++    load(url: string, onLoad: (data: Array<AnimationClip>) => void, onProgress?: OnProgressCallback, onError?: OnErrorCallback): void;
      /**
       * Parses the given JSON object and returns an array of animation clips.
       *
@@ -14384,10 +14384,10 @@ index 4bed37855..1ce6c9887 100644
 +    parse(json: readonly unknown[]): Array<AnimationClip>;
  }
 -import { Loader } from './Loader.js';
-+import { Loader, onErrorCallback, onProgressCallback } from './Loader.js';
++import { Loader, OnErrorCallback, OnProgressCallback } from './Loader.js';
  import { AnimationClip } from '../animation/AnimationClip.js';
 diff --git a/jsdoc-testing/jsdoc/src/loaders/AudioLoader.d.ts b/jsdoc-testing/jsdoc/src/loaders/AudioLoader.d.ts
-index c9c2c4c2c..1f8a8144d 100644
+index c9c2c4c2c..de2d7b1db 100644
 --- a/jsdoc-testing/jsdoc/src/loaders/AudioLoader.d.ts
 +++ b/jsdoc-testing/jsdoc/src/loaders/AudioLoader.d.ts
 @@ -15,7 +15,7 @@
@@ -14404,12 +14404,12 @@ index c9c2c4c2c..1f8a8144d 100644
       * @param {onErrorCallback} onError - Executed when errors occur.
       */
 -    load(url: string, onLoad: (arg0: AudioBuffer) => any, onProgress: onProgressCallback, onError: onErrorCallback): void;
-+    load(url: string, onLoad: (data: AudioBuffer) => void, onProgress?: onProgressCallback, onError?: onErrorCallback): void;
++    load(url: string, onLoad: (data: AudioBuffer) => void, onProgress?: OnProgressCallback, onError?: OnErrorCallback): void;
  }
 -import { Loader } from './Loader.js';
-+import { Loader, onErrorCallback, onProgressCallback } from './Loader.js';
++import { Loader, OnErrorCallback, OnProgressCallback } from './Loader.js';
 diff --git a/jsdoc-testing/jsdoc/src/loaders/BufferGeometryLoader.d.ts b/jsdoc-testing/jsdoc/src/loaders/BufferGeometryLoader.d.ts
-index b85f471e0..85c9bc502 100644
+index b85f471e0..90da3ad74 100644
 --- a/jsdoc-testing/jsdoc/src/loaders/BufferGeometryLoader.d.ts
 +++ b/jsdoc-testing/jsdoc/src/loaders/BufferGeometryLoader.d.ts
 @@ -13,7 +13,7 @@
@@ -14426,7 +14426,7 @@ index b85f471e0..85c9bc502 100644
       * @param {onErrorCallback} onError - Executed when errors occur.
       */
 -    load(url: string, onLoad: (arg0: BufferGeometry) => any, onProgress: onProgressCallback, onError: onErrorCallback): void;
-+    load(url: string, onLoad: (data: InstancedBufferGeometry | BufferGeometry) => void, onProgress?: onProgressCallback, onError?: onErrorCallback): void;
++    load(url: string, onLoad: (data: InstancedBufferGeometry | BufferGeometry) => void, onProgress?: OnProgressCallback, onError?: OnErrorCallback): void;
      /**
       * Parses the given JSON object and returns a geometry.
       *
@@ -14437,7 +14437,7 @@ index b85f471e0..85c9bc502 100644
 +    parse(json: unknown): InstancedBufferGeometry | BufferGeometry;
  }
 -import { Loader } from './Loader.js';
-+import { Loader, onErrorCallback, onProgressCallback } from './Loader.js';
++import { Loader, OnErrorCallback, OnProgressCallback } from './Loader.js';
  import { BufferGeometry } from '../core/BufferGeometry.js';
 +import { InstancedBufferGeometry } from '../core/InstancedBufferGeometry.js';
 diff --git a/jsdoc-testing/jsdoc/src/loaders/Cache.d.ts b/jsdoc-testing/jsdoc/src/loaders/Cache.d.ts
@@ -14459,7 +14459,7 @@ index 6be70c33d..e96f44911 100644
      function clear(): void;
  }
 diff --git a/jsdoc-testing/jsdoc/src/loaders/CompressedTextureLoader.d.ts b/jsdoc-testing/jsdoc/src/loaders/CompressedTextureLoader.d.ts
-index 652d27243..62a6d440b 100644
+index 652d27243..f128e5086 100644
 --- a/jsdoc-testing/jsdoc/src/loaders/CompressedTextureLoader.d.ts
 +++ b/jsdoc-testing/jsdoc/src/loaders/CompressedTextureLoader.d.ts
 @@ -1,7 +1,7 @@
@@ -14505,15 +14505,15 @@ index 652d27243..62a6d440b 100644
       * @return {CompressedTexture} The compressed texture.
       */
 -    load(url: string, onLoad: (arg0: CompressedTexture) => any, onProgress: onProgressCallback, onError: onErrorCallback): CompressedTexture;
-+    load(url: string, onLoad?: (data: CompressedTexture) => void, onProgress?: onProgressCallback, onError?: onErrorCallback): CompressedTexture;
++    load(url: string, onLoad?: (data: CompressedTexture) => void, onProgress?: OnProgressCallback, onError?: OnErrorCallback): CompressedTexture;
  }
 -import { Loader } from './Loader.js';
 -import { CompressedTexture } from '../textures/CompressedTexture.js';
-+import { Loader, onErrorCallback, onProgressCallback } from './Loader.js';
++import { Loader, OnErrorCallback, OnProgressCallback } from './Loader.js';
 +import { CompressedTexture, CompressedTextureMipmap } from '../textures/CompressedTexture.js';
 +import { CompressedPixelFormat, PixelFormat } from '../constants.js';
 diff --git a/jsdoc-testing/jsdoc/src/loaders/CubeTextureLoader.d.ts b/jsdoc-testing/jsdoc/src/loaders/CubeTextureLoader.d.ts
-index 8ac41df2c..776e49790 100644
+index 8ac41df2c..9240574b2 100644
 --- a/jsdoc-testing/jsdoc/src/loaders/CubeTextureLoader.d.ts
 +++ b/jsdoc-testing/jsdoc/src/loaders/CubeTextureLoader.d.ts
 @@ -24,7 +24,7 @@
@@ -14530,13 +14530,13 @@ index 8ac41df2c..776e49790 100644
       * @return {CubeTexture} The cube texture.
       */
 -    load(urls: Array<string>, onLoad: (arg0: CubeTexture) => any, onProgress: onProgressCallback, onError: onErrorCallback): CubeTexture;
-+    load(urls: readonly string[], onLoad?: (data: CubeTexture) => void, onProgress?: onProgressCallback, onError?: onErrorCallback): CubeTexture;
++    load(urls: readonly string[], onLoad?: (data: CubeTexture) => void, onProgress?: OnProgressCallback, onError?: OnErrorCallback): CubeTexture;
  }
 -import { Loader } from './Loader.js';
-+import { Loader, onErrorCallback, onProgressCallback } from './Loader.js';
++import { Loader, OnErrorCallback, OnProgressCallback } from './Loader.js';
  import { CubeTexture } from '../textures/CubeTexture.js';
 diff --git a/jsdoc-testing/jsdoc/src/loaders/DataTextureLoader.d.ts b/jsdoc-testing/jsdoc/src/loaders/DataTextureLoader.d.ts
-index 62f05e621..2f3f3f2ff 100644
+index 62f05e621..9007aeefd 100644
 --- a/jsdoc-testing/jsdoc/src/loaders/DataTextureLoader.d.ts
 +++ b/jsdoc-testing/jsdoc/src/loaders/DataTextureLoader.d.ts
 @@ -1,11 +1,11 @@
@@ -14627,7 +14627,7 @@ index 62f05e621..2f3f3f2ff 100644
       * @return {DataTexture} The data texture.
       */
 -    load(url: string, onLoad: (arg0: DataTexture) => any, onProgress: onProgressCallback, onError: onErrorCallback): DataTexture;
-+    load(url: string, onLoad?: (data: DataTexture, texData: DataTextureLoaderTexData) => void, onProgress?: onProgressCallback, onError?: onErrorCallback): DataTexture;
++    load(url: string, onLoad?: (data: DataTexture, texData: DataTextureLoaderTexData) => void, onProgress?: OnProgressCallback, onError?: OnErrorCallback): DataTexture;
 +    abstract parse(buffer: ArrayBuffer): DataTextureLoaderTexData;
      /**
       * Parses the given buffer and returns a configured data texture. Use this method
@@ -14638,14 +14638,14 @@ index 62f05e621..2f3f3f2ff 100644
  }
 -import { Loader } from './Loader.js';
 -import { DataTexture } from '../textures/DataTexture.js';
-+import { Loader, onErrorCallback, onProgressCallback } from './Loader.js';
++import { Loader, OnErrorCallback, OnProgressCallback } from './Loader.js';
 +import { DataTexture, DataTextureImageData } from '../textures/DataTexture.js';
 +import { ColorSpace, MagnificationTextureFilter, MinificationTextureFilter, PixelFormat, TextureDataType, Wrapping } from '../constants.js';
 +import { TypedArray } from '../core/BufferAttribute.js';
 +import { CompressedTextureMipmap } from '../textures/CompressedTexture.js';
 +import { CubeTexture } from '../textures/CubeTexture.js';
 diff --git a/jsdoc-testing/jsdoc/src/loaders/FileLoader.d.ts b/jsdoc-testing/jsdoc/src/loaders/FileLoader.d.ts
-index bdad7b69a..35c6d5e24 100644
+index bdad7b69a..20bf4df4a 100644
 --- a/jsdoc-testing/jsdoc/src/loaders/FileLoader.d.ts
 +++ b/jsdoc-testing/jsdoc/src/loaders/FileLoader.d.ts
 @@ -13,7 +13,7 @@
@@ -14671,7 +14671,7 @@ index bdad7b69a..35c6d5e24 100644
       * @param {onErrorCallback} [onError] - Executed when errors occur.
       */
 -    load(url: string, onLoad: (arg0: any) => any, onProgress?: onProgressCallback, onError?: onErrorCallback): void;
-+    load(url: string, onLoad?: (data: TData) => void, onProgress?: onProgressCallback, onError?: onErrorCallback): void;
++    load(url: string, onLoad?: (data: TData) => void, onProgress?: OnProgressCallback, onError?: OnErrorCallback): void;
      /**
       * Sets the expected response type.
       *
@@ -14697,9 +14697,9 @@ index bdad7b69a..35c6d5e24 100644
 +    abort(): this;
  }
 -import { Loader } from './Loader.js';
-+import { Loader, onErrorCallback, onProgressCallback } from './Loader.js';
++import { Loader, OnErrorCallback, OnProgressCallback } from './Loader.js';
 diff --git a/jsdoc-testing/jsdoc/src/loaders/ImageBitmapLoader.d.ts b/jsdoc-testing/jsdoc/src/loaders/ImageBitmapLoader.d.ts
-index c060ff5b6..1d57a4fbc 100644
+index c060ff5b6..e8b0286b1 100644
 --- a/jsdoc-testing/jsdoc/src/loaders/ImageBitmapLoader.d.ts
 +++ b/jsdoc-testing/jsdoc/src/loaders/ImageBitmapLoader.d.ts
 @@ -26,7 +26,7 @@
@@ -14742,7 +14742,7 @@ index c060ff5b6..1d57a4fbc 100644
       * @param {onErrorCallback} onError - Executed when errors occur.
       */
 -    load(url: string, onLoad: (arg0: ImageBitmap) => any, onProgress: onProgressCallback, onError: onErrorCallback): void;
-+    load(url: string, onLoad?: (data: ImageBitmap) => void, onProgress?: onProgressCallback, onError?: onErrorCallback): void;
++    load(url: string, onLoad?: (data: ImageBitmap) => void, onProgress?: OnProgressCallback, onError?: OnErrorCallback): void;
      /**
       * Aborts ongoing fetch requests.
       *
@@ -14752,9 +14752,9 @@ index c060ff5b6..1d57a4fbc 100644
 +    abort(): this;
  }
 -import { Loader } from './Loader.js';
-+import { Loader, onErrorCallback, onProgressCallback } from './Loader.js';
++import { Loader, OnErrorCallback, OnProgressCallback } from './Loader.js';
 diff --git a/jsdoc-testing/jsdoc/src/loaders/ImageLoader.d.ts b/jsdoc-testing/jsdoc/src/loaders/ImageLoader.d.ts
-index 0b4296abc..d41276f37 100644
+index 0b4296abc..dcda8ff54 100644
 --- a/jsdoc-testing/jsdoc/src/loaders/ImageLoader.d.ts
 +++ b/jsdoc-testing/jsdoc/src/loaders/ImageLoader.d.ts
 @@ -11,7 +11,7 @@
@@ -14771,12 +14771,12 @@ index 0b4296abc..d41276f37 100644
       * @return {Image} The image.
       */
 -    load(url: string, onLoad: (arg0: new (width?: number, height?: number) => HTMLImageElement) => any, onProgress: onProgressCallback, onError: onErrorCallback): new (width?: number, height?: number) => HTMLImageElement;
-+    load(url: string, onLoad?: (data: HTMLImageElement) => void, onProgress?: onProgressCallback, onError?: onErrorCallback): HTMLImageElement;
++    load(url: string, onLoad?: (data: HTMLImageElement) => void, onProgress?: OnProgressCallback, onError?: OnErrorCallback): HTMLImageElement;
  }
 -import { Loader } from './Loader.js';
-+import { Loader, onErrorCallback, onProgressCallback } from './Loader.js';
++import { Loader, OnErrorCallback, OnProgressCallback } from './Loader.js';
 diff --git a/jsdoc-testing/jsdoc/src/loaders/Loader.d.ts b/jsdoc-testing/jsdoc/src/loaders/Loader.d.ts
-index bd9dd20b9..0233debcd 100644
+index bd9dd20b9..bbee56317 100644
 --- a/jsdoc-testing/jsdoc/src/loaders/Loader.d.ts
 +++ b/jsdoc-testing/jsdoc/src/loaders/Loader.d.ts
 @@ -1,17 +1,19 @@
@@ -14786,12 +14786,12 @@ index bd9dd20b9..0233debcd 100644
   * Callback for onProgress in loaders.
   */
 -export type onProgressCallback = (event: ProgressEvent) => any;
-+export type onProgressCallback = (event: ProgressEvent) => void;
++export type OnProgressCallback = (event: ProgressEvent) => void;
  /**
   * Callback for onError in loaders.
   */
 -export type onErrorCallback = (error: Error) => any;
-+export type onErrorCallback = (error: unknown) => void;
++export type OnErrorCallback = (error: unknown) => void;
  /**
   * Abstract base class for loaders.
   *
@@ -14816,29 +14816,28 @@ index bd9dd20b9..0233debcd 100644
       * @param {onErrorCallback} [onError] - Executed when errors occur.
       */
 -    load(): void;
-+    load(url: TUrl, onLoad: (data: TData) => void, onProgress?: onProgressCallback, onError?: onErrorCallback): void;
++    load(url: TUrl, onLoad: (data: TData) => void, onProgress?: OnProgressCallback, onError?: OnErrorCallback): void;
      /**
       * A async version of {@link Loader#load}.
       *
-@@ -94,7 +96,7 @@ export class Loader {
+@@ -94,15 +96,7 @@ export class Loader {
       * @param {onProgressCallback} [onProgress] - Executed while the loading is in progress.
       * @return {Promise} A Promise that resolves when the asset has been loaded.
       */
 -    loadAsync(url: string, onProgress?: onProgressCallback): Promise<any>;
-+    loadAsync(url: TUrl, onProgress?: onProgressCallback): Promise<TData>;
-     /**
-      * This method needs to be implemented by all concrete loaders. It holds the
-      * logic for parsing the asset into three.js entities.
-@@ -102,7 +104,7 @@ export class Loader {
-      * @abstract
-      * @param {any} data - The data to parse.
-      */
+-    /**
+-     * This method needs to be implemented by all concrete loaders. It holds the
+-     * logic for parsing the asset into three.js entities.
+-     *
+-     * @abstract
+-     * @param {any} data - The data to parse.
+-     */
 -    parse(): void;
-+    parse(data: unknown, ...args: any[]): unknown;
++    loadAsync(url: TUrl, onProgress?: OnProgressCallback): Promise<TData>;
      /**
       * Sets the `crossOrigin` String to implement CORS for loading the URL
       * from a different domain that allows CORS.
-@@ -110,7 +112,7 @@ export class Loader {
+@@ -110,7 +104,7 @@ export class Loader {
       * @param {string} crossOrigin - The `crossOrigin` value.
       * @return {Loader} A reference to this instance.
       */
@@ -14847,7 +14846,7 @@ index bd9dd20b9..0233debcd 100644
      /**
       * Whether the XMLHttpRequest uses credentials such as cookies, authorization
       * headers or TLS client certificates, see [XMLHttpRequest.withCredentials](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/withCredentials).
-@@ -120,21 +122,21 @@ export class Loader {
+@@ -120,21 +114,21 @@ export class Loader {
       * @param {boolean} value - The `withCredentials` value.
       * @return {Loader} A reference to this instance.
       */
@@ -14872,7 +14871,7 @@ index bd9dd20b9..0233debcd 100644
      /**
       * Sets the given request header.
       *
-@@ -142,7 +144,9 @@ export class Loader {
+@@ -142,7 +136,9 @@ export class Loader {
       * for configuring the HTTP request.
       * @return {Loader} A reference to this instance.
       */
@@ -14883,7 +14882,7 @@ index bd9dd20b9..0233debcd 100644
      /**
       * Sets a browser scheduling hint. Browsers may ignore this hint.
       * Internally created loaders inherit it. Loaders supplied by the application
-@@ -151,7 +155,7 @@ export class Loader {
+@@ -151,7 +147,7 @@ export class Loader {
       * @param {('high'|'low'|'auto')} value - The request priority hint.
       * @return {Loader} A reference to this instance.
       */
@@ -14892,7 +14891,7 @@ index bd9dd20b9..0233debcd 100644
      /**
       * Sets the HTTP cache mode for fetch requests. `no-cache` revalidates cached
       * responses; `no-store` bypasses the HTTP cache. This does not affect
-@@ -160,15 +164,13 @@ export class Loader {
+@@ -160,15 +156,13 @@ export class Loader {
       * @param {('default'|'no-store'|'reload'|'no-cache'|'force-cache')} value - The HTTP cache mode.
       * @return {Loader} A reference to this instance.
       */
@@ -14998,7 +14997,7 @@ index dc1f5c00d..97dcd605a 100644
       * Used for aborting ongoing requests in loaders using this manager.
       *
 diff --git a/jsdoc-testing/jsdoc/src/loaders/MaterialLoader.d.ts b/jsdoc-testing/jsdoc/src/loaders/MaterialLoader.d.ts
-index 9dda62756..4721d6314 100644
+index 9dda62756..2aa5fb664 100644
 --- a/jsdoc-testing/jsdoc/src/loaders/MaterialLoader.d.ts
 +++ b/jsdoc-testing/jsdoc/src/loaders/MaterialLoader.d.ts
 @@ -10,7 +10,7 @@
@@ -15024,7 +15023,7 @@ index 9dda62756..4721d6314 100644
       * @param {onErrorCallback} onError - Executed when errors occur.
       */
 -    load(url: string, onLoad: (arg0: Material) => any, onProgress: onProgressCallback, onError: onErrorCallback): void;
-+    load(url: string, onLoad: (data: Material) => void, onProgress?: onProgressCallback, onError?: onErrorCallback): void;
++    load(url: string, onLoad: (data: Material) => void, onProgress?: OnProgressCallback, onError?: OnErrorCallback): void;
      /**
       * Parses the given JSON object and returns a material.
       *
@@ -15052,11 +15051,11 @@ index 9dda62756..4721d6314 100644
      createMaterialFromType(type: string): Material;
  }
 -import { Loader } from './Loader.js';
-+import { Loader, onErrorCallback, onProgressCallback } from './Loader.js';
++import { Loader, OnErrorCallback, OnProgressCallback } from './Loader.js';
  import { Material } from '../materials/Materials.js';
 +import { Texture } from '../textures/Texture.js';
 diff --git a/jsdoc-testing/jsdoc/src/loaders/ObjectLoader.d.ts b/jsdoc-testing/jsdoc/src/loaders/ObjectLoader.d.ts
-index def8eb4b2..5e0f3a91b 100644
+index def8eb4b2..42ec58b02 100644
 --- a/jsdoc-testing/jsdoc/src/loaders/ObjectLoader.d.ts
 +++ b/jsdoc-testing/jsdoc/src/loaders/ObjectLoader.d.ts
 @@ -14,7 +14,7 @@
@@ -15086,7 +15085,7 @@ index def8eb4b2..5e0f3a91b 100644
       * @param {onErrorCallback} onError - Executed when errors occur.
       */
 -    load(url: string, onLoad: (arg0: Object3D) => any, onProgress: onProgressCallback, onError: onErrorCallback): void;
-+    load(url: string, onLoad?: (data: Object3D) => void, onProgress?: onProgressCallback, onError?: onErrorCallback): void;
++    load(url: string, onLoad?: (data: Object3D) => void, onProgress?: OnProgressCallback, onError?: OnErrorCallback): void;
      /**
       * Async version of {@link ObjectLoader#load}.
       *
@@ -15095,7 +15094,7 @@ index def8eb4b2..5e0f3a91b 100644
       * @return {Promise<Object3D>} A Promise that resolves with the loaded 3D object.
       */
 -    loadAsync(url: string, onProgress: onProgressCallback): Promise<Object3D>;
-+    loadAsync(url: string, onProgress?: onProgressCallback): Promise<Object3D>;
++    loadAsync(url: string, onProgress?: OnProgressCallback): Promise<Object3D>;
      /**
       * Parses the given JSON. This is used internally by {@link ObjectLoader#load}
       * but can also be used directly to parse a previously loaded JSON structure.
@@ -15169,7 +15168,7 @@ index def8eb4b2..5e0f3a91b 100644
 +    bindLightTargets(object: Object3D): void;
  }
 -import { Loader } from './Loader.js';
-+import { Loader, onErrorCallback, onProgressCallback } from './Loader.js';
++import { Loader, OnErrorCallback, OnProgressCallback } from './Loader.js';
  import { Object3D } from '../core/Object3D.js';
 -import { Sprite } from '../objects/Sprite.js';
 -import { LOD } from '../objects/LOD.js';
@@ -15191,7 +15190,7 @@ index def8eb4b2..5e0f3a91b 100644
 +import { TextureSource } from '../textures/TextureSource.js';
  import { LoadingManager } from './LoadingManager.js';
 diff --git a/jsdoc-testing/jsdoc/src/loaders/TextureLoader.d.ts b/jsdoc-testing/jsdoc/src/loaders/TextureLoader.d.ts
-index 6425c24d8..19d064f50 100644
+index 6425c24d8..b21a8746b 100644
 --- a/jsdoc-testing/jsdoc/src/loaders/TextureLoader.d.ts
 +++ b/jsdoc-testing/jsdoc/src/loaders/TextureLoader.d.ts
 @@ -14,7 +14,7 @@
@@ -15208,22 +15207,16 @@ index 6425c24d8..19d064f50 100644
       * @return {Texture} The texture.
       */
 -    load(url: string, onLoad?: (arg0: Texture) => any, onProgress?: onProgressCallback, onError?: onErrorCallback): Texture;
-+    load(url: string, onLoad?: (data: Texture<HTMLImageElement>) => void, onProgress?: onProgressCallback, onError?: onErrorCallback): Texture<HTMLImageElement>;
++    load(url: string, onLoad?: (data: Texture<HTMLImageElement>) => void, onProgress?: OnProgressCallback, onError?: OnErrorCallback): Texture<HTMLImageElement>;
  }
 -import { Loader } from './Loader.js';
-+import { Loader, onErrorCallback, onProgressCallback } from './Loader.js';
++import { Loader, OnErrorCallback, OnProgressCallback } from './Loader.js';
  import { Texture } from '../textures/Texture.js';
 diff --git a/jsdoc-testing/jsdoc/src/loaders/nodes/NodeLoader.d.ts b/jsdoc-testing/jsdoc/src/loaders/nodes/NodeLoader.d.ts
-index 58b362d35..41fe6d2ae 100644
+index 58b362d35..28358df73 100644
 --- a/jsdoc-testing/jsdoc/src/loaders/nodes/NodeLoader.d.ts
 +++ b/jsdoc-testing/jsdoc/src/loaders/nodes/NodeLoader.d.ts
-@@ -1,10 +1,13 @@
- export default NodeLoader;
-+export interface NodeLoaderResult {
-+    [hash: string]: Node;
-+}
- /**
-  * A loader for loading node objects in the three.js JSON Object/Scene format.
+@@ -4,7 +4,7 @@ export default NodeLoader;
   *
   * @augments Loader
   */
@@ -15232,7 +15225,7 @@ index 58b362d35..41fe6d2ae 100644
      /**
       * Represents a dictionary of textures.
       *
-@@ -19,7 +22,7 @@ declare class NodeLoader extends Loader {
+@@ -19,7 +19,7 @@ declare class NodeLoader extends Loader {
       * @type {Object<string,Node.constructor>}
       */
      nodes: {
@@ -15241,26 +15234,16 @@ index 58b362d35..41fe6d2ae 100644
      };
      /**
       * Loads the node definitions from the given URL.
-@@ -29,16 +32,14 @@ declare class NodeLoader extends Loader {
+@@ -29,7 +29,7 @@ declare class NodeLoader extends Loader {
       * @param {Function} onProgress - Will be called while load progresses.
       * @param {Function} onError - Will be called when errors are thrown during the loading process.
       */
 -    load(url: string, onLoad: Function, onProgress: Function, onError: Function): void;
-+    load(url: string, onLoad: (data: Node) => void, onProgress?: onProgressCallback, onError?: onErrorCallback): void;
++    load(url: string, onLoad: (data: Node) => void, onProgress?: OnProgressCallback, onError?: OnErrorCallback): void;
      /**
       * Parse the node dependencies for the loaded node.
       *
-      * @param {Array<Object>} [json] - The JSON definition
-      * @return {Object<string,Node>} A dictionary with node dependencies.
-      */
--    parseNodes(json?: Array<Object>): {
--        [x: string]: Node;
--    };
-+    parseNodes(json?: Array<Object>): NodeLoaderResult;
-     /**
-      * Parses the node from the given JSON.
-      *
-@@ -63,7 +64,7 @@ declare class NodeLoader extends Loader {
+@@ -63,7 +63,7 @@ declare class NodeLoader extends Loader {
       */
      setTextures(value: {
          [x: string]: Texture;
@@ -15269,7 +15252,7 @@ index 58b362d35..41fe6d2ae 100644
      /**
       * Defines the dictionary of node types.
       *
-@@ -71,8 +72,8 @@ declare class NodeLoader extends Loader {
+@@ -71,8 +71,8 @@ declare class NodeLoader extends Loader {
       * @return {NodeLoader} A reference to this loader.
       */
      setNodes(value: {
@@ -15280,12 +15263,12 @@ index 58b362d35..41fe6d2ae 100644
      /**
       * Creates a node object from the given type.
       *
-@@ -81,4 +82,6 @@ declare class NodeLoader extends Loader {
+@@ -81,4 +81,6 @@ declare class NodeLoader extends Loader {
       */
      createNodeFromType(type: string): Node;
  }
 -import { Loader } from '../Loader.js';
-+import { Loader, onErrorCallback, onProgressCallback } from '../Loader.js';
++import { Loader, OnErrorCallback, OnProgressCallback } from '../Loader.js';
 +import { Node } from '../../nodes/Nodes.js';
 +import { Texture } from '../../textures/Texture.js';
 diff --git a/jsdoc-testing/jsdoc/src/loaders/nodes/NodeMaterialLoader.d.ts b/jsdoc-testing/jsdoc/src/loaders/nodes/NodeMaterialLoader.d.ts
@@ -15351,7 +15334,7 @@ index cf350a240..9f564f2f4 100644
 +import NodeMaterial from '../../materials/nodes/NodeMaterial.js';
 +import { Node } from '../../nodes/Nodes.js';
 diff --git a/jsdoc-testing/jsdoc/src/loaders/nodes/NodeObjectLoader.d.ts b/jsdoc-testing/jsdoc/src/loaders/nodes/NodeObjectLoader.d.ts
-index b5954eab2..b99ee4e47 100644
+index b5954eab2..e539ce41e 100644
 --- a/jsdoc-testing/jsdoc/src/loaders/nodes/NodeObjectLoader.d.ts
 +++ b/jsdoc-testing/jsdoc/src/loaders/nodes/NodeObjectLoader.d.ts
 @@ -18,7 +18,7 @@ declare class NodeObjectLoader extends ObjectLoader {
@@ -15411,18 +15394,7 @@ index b5954eab2..b99ee4e47 100644
      /**
       * Parses the node objects from the given JSON and textures.
       *
-@@ -77,9 +77,7 @@ declare class NodeObjectLoader extends ObjectLoader {
-      */
-     parseNodes(json: Object[], textures: {
-         [x: string]: Texture;
--    }): {
--        [x: string]: Node;
--    };
-+    }): NodeLoaderResult;
-     /**
-      * Parses the node objects from the given JSON and textures.
-      *
-@@ -87,10 +85,16 @@ declare class NodeObjectLoader extends ObjectLoader {
+@@ -87,10 +87,15 @@ declare class NodeObjectLoader extends ObjectLoader {
       * @param {Object<string,Texture>} textures - The texture library.
       * @return {Object<string,NodeMaterial>}. The parsed materials.
       */
@@ -15439,7 +15411,6 @@ index b5954eab2..b99ee4e47 100644
 +import { Node } from '../../nodes/Nodes.js';
 +import { Texture } from '../../textures/Texture.js';
 +import { LoadingManager } from '../LoadingManager.js';
-+import { NodeLoaderResult } from './NodeLoader.js';
 diff --git a/jsdoc-testing/jsdoc/src/materials/LineBasicMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/LineBasicMaterial.d.ts
 index b7fb9b69a..04111f284 100644
 --- a/jsdoc-testing/jsdoc/src/materials/LineBasicMaterial.d.ts
