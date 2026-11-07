@@ -5,6 +5,7 @@ import { Matrix4 } from "../../math/Matrix4.js";
 import { Vector2 } from "../../math/Vector2.js";
 import { Vector3 } from "../../math/Vector3.js";
 import { Vector4 } from "../../math/Vector4.js";
+import { ElementAccess } from "../utils/ArrayElementNode.js";
 import { NodeUpdateType } from "./constants.js";
 import ConstNode from "./ConstNode.js";
 import InputNode from "./InputNode.js";
@@ -108,7 +109,7 @@ declare const UniformNode: {
 type UniformNode<
     TNodeType,
     TValue = TNodeType extends keyof UniformValue ? UniformValue[TNodeType] : unknown,
-> = UniformNodeClass<TValue> & InputNode<TNodeType, TValue>;
+> = UniformNodeClass<TValue> & InputNode<TNodeType, TValue> & ElementAccess<TNodeType>;
 
 export default UniformNode;
 
