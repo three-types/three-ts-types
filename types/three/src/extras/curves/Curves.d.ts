@@ -1,5 +1,5 @@
 export { ArcCurve } from "./ArcCurve.js";
-export { CatmullRomCurve3, CurveType } from "./CatmullRomCurve3.js";
+export { CatmullRomCurve3, CatmullRomCurve3CurveType } from "./CatmullRomCurve3.js";
 export { CubicBezierCurve } from "./CubicBezierCurve.js";
 export { CubicBezierCurve3 } from "./CubicBezierCurve3.js";
 export { EllipseCurve } from "./EllipseCurve.js";

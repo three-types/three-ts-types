@@ -1,7 +1,7 @@
 import { Vector3 } from "../../math/Vector3.js";
 import { Curve } from "../core/Curve.js";
 
-export type CurveType = "centripetal" | "chordal" | "catmullrom";
+export type CatmullRomCurve3CurveType = "centripetal" | "chordal" | "catmullrom";
 
 /**
  * A curve representing a Catmull-Rom spline.
@@ -36,7 +36,7 @@ export class CatmullRomCurve3 extends Curve<Vector3> {
      * @param {('centripetal'|'chordal'|'catmullrom')} [curveType='centripetal'] - The curve type.
      * @param {number} [tension=0.5] - Tension of the curve.
      */
-    constructor(points?: Array<Vector3>, closed?: boolean, curveType?: CurveType, tension?: number);
+    constructor(points?: Array<Vector3>, closed?: boolean, curveType?: CatmullRomCurve3CurveType, tension?: number);
     /**
      * This flag can be used for type testing.
      *
@@ -58,7 +58,7 @@ export class CatmullRomCurve3 extends Curve<Vector3> {
      *
      * @default 'centripetal'
      */
-    curveType: CurveType;
+    curveType: CatmullRomCurve3CurveType;
     /**
      * Tension of the curve.
      *
