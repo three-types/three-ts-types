@@ -1,17 +1,34 @@
-import { Loader } from "./Loader.js";
-import { LoadingManager } from "./LoadingManager.js";
-
 /**
- * A loader for loading an image.
- * Unlike other loaders, this one emits events instead of using predefined callbacks. So if you're interested in getting notified when things happen, you need to add listeners to the object.
+ * A loader for loading images. The class loads images with the HTML `Image` API.
+ *
+ * ```js
+ * const loader = new THREE.ImageLoader();
+ * const image = await loader.loadAsync( 'image.png' );
+ * ```
+ * Please note that `ImageLoader` has dropped support for progress
+ * events in `r84`. For an `ImageLoader` that supports progress events, see
+ * [this thread](https://github.com/mrdoob/three.js/issues/10439#issuecomment-275785639).
+ *
+ * @augments Loader
  */
 export class ImageLoader extends Loader<HTMLImageElement> {
-    constructor(manager?: LoadingManager);
-
+    /**
+     * Starts loading from the given URL and passes the loaded image
+     * to the `onLoad()` callback. The method also returns a new `Image` object which can
+     * directly be used for texture creation. If you do it this way, the texture
+     * may pop up in your scene once the respective loading process is finished.
+     *
+     * @param {string} url - The path/URL of the file to be loaded. This can also be a data URI.
+     * @param {function(Image)} onLoad - Executed when the loading process has been finished.
+     * @param {onProgressCallback} onProgress - Unsupported in this loader.
+     * @param {onErrorCallback} onError - Executed when errors occur.
+     * @return {Image} The image.
+     */
     load(
         url: string,
         onLoad?: (data: HTMLImageElement) => void,
-        onProgress?: (event: ProgressEvent) => void,
-        onError?: (err: unknown) => void,
+        onProgress?: onProgressCallback,
+        onError?: onErrorCallback,
     ): HTMLImageElement;
 }
+import { Loader, onErrorCallback, onProgressCallback } from "./Loader.js";

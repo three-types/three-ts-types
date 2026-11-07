@@ -1,18 +1,38 @@
-import { Texture } from "../textures/Texture.js";
-import { Loader } from "./Loader.js";
-import { LoadingManager } from "./LoadingManager.js";
-
 /**
- * Class for loading a texture.
- * Unlike other loaders, this one emits events instead of using predefined callbacks. So if you're interested in getting notified when things happen, you need to add listeners to the object.
+ * Class for loading textures. Images are internally
+ * loaded via {@link ImageLoader}.
+ *
+ * ```js
+ * const loader = new THREE.TextureLoader();
+ * const texture = await loader.loadAsync( 'textures/land_ocean_ice_cloud_2048.jpg' );
+ *
+ * const material = new THREE.MeshBasicMaterial( { map:texture } );
+ * ```
+ * Please note that `TextureLoader` has dropped support for progress
+ * events in `r84`. For a `TextureLoader` that supports progress events, see
+ * [this thread](https://github.com/mrdoob/three.js/issues/10439#issuecomment-293260145).
+ *
+ * @augments Loader
  */
 export class TextureLoader extends Loader<Texture<HTMLImageElement>> {
-    constructor(manager?: LoadingManager);
-
+    /**
+     * Starts loading from the given URL and pass the fully loaded texture
+     * to the `onLoad()` callback. The method also returns a new texture object which can
+     * directly be used for material creation. If you do it this way, the texture
+     * may pop up in your scene once the respective loading process is finished.
+     *
+     * @param {string} url - The path/URL of the file to be loaded. This can also be a data URI.
+     * @param {function(Texture)} [onLoad] - Executed when the loading process has been finished.
+     * @param {onProgressCallback} [onProgress] - Unsupported in this loader.
+     * @param {onErrorCallback} [onError] - Executed when errors occur.
+     * @return {Texture} The texture.
+     */
     load(
         url: string,
         onLoad?: (data: Texture<HTMLImageElement>) => void,
-        onProgress?: (event: ProgressEvent) => void,
-        onError?: (err: unknown) => void,
+        onProgress?: onProgressCallback,
+        onError?: onErrorCallback,
     ): Texture<HTMLImageElement>;
 }
+import { Texture } from "../textures/Texture.js";
+import { Loader, onErrorCallback, onProgressCallback } from "./Loader.js";
