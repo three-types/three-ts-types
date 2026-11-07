@@ -63,7 +63,7 @@ export class InterleavedBuffer {
     /**
      * The UUID of the interleaved buffer.
      */
-    uuid: string;
+    readonly uuid: string;
     /**
      * A callback function that is executed after the renderer has transferred the attribute array
      * data to the GPU.

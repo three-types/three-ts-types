@@ -117,7 +117,7 @@ export class Raycaster {
      *
      * @default null
      */
-    camera: Camera;
+    camera: Camera | null;
     /**
      * Allows to selectively ignore 3D objects when performing intersection tests.
      * The following code example ensures that only 3D objects on layer `1` will be

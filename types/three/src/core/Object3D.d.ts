@@ -113,7 +113,7 @@ export class Object3D<TEventMap extends Object3DEventMap = Object3DEventMap> ext
     /**
      * The UUID of the 3D object.
      */
-    uuid: string;
+    readonly uuid: string;
     /**
      * The name of the 3D object.
      */
@@ -700,7 +700,7 @@ export class Object3D<TEventMap extends Object3DEventMap = Object3DEventMap> ext
      * @param {boolean} [force=false] - When set to `true`, a recomputation of world matrices is forced even
      * when {@link Object3D#matrixWorldNeedsUpdate} is `false`.
      */
-    updateWorldMatrix(updateParents: boolean, updateChildren: boolean, force?: boolean): void;
+    updateWorldMatrix(updateParents?: boolean, updateChildren?: boolean, force?: boolean): void;
     /**
      * Serializes the 3D object into JSON.
      *

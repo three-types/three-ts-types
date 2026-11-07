@@ -107,7 +107,7 @@ export class BufferGeometry<
     /**
      * The UUID of the geometry.
      */
-    uuid: string;
+    readonly uuid: string;
     /**
      * The name of the geometry.
      */

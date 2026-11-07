@@ -73,7 +73,7 @@ declare class Timer {
      * time will be determined with `performance.now`.
      * @return {Timer} A reference to this timer.
      */
-    update(timestamp?: number): this;
+    update(timestamp: number): this;
 }
 
 export { Timer };
