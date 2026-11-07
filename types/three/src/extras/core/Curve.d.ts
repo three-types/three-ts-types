@@ -8,155 +8,157 @@ export interface CurveJSON {
 }
 
 /**
- * An abstract base class for creating a {@link Curve} object that contains methods for interpolation
- * @remarks
- * For an array of Curves see {@link THREE.CurvePath | CurvePath}.
- * @remarks
- * This following curves inherit from THREE.Curve:
+ * An abstract base class for creating an analytic curve object that contains methods
+ * for interpolation.
  *
- * **2D curves**
- *  - {@link THREE.ArcCurve}
- *  - {@link THREE.CubicBezierCurve}
- *  - {@link THREE.EllipseCurve}
- *  - {@link THREE.LineCurve}
- *  - {@link THREE.QuadraticBezierCurve}
- *  - {@link THREE.SplineCurve}
- *
- * **3D curves**
- *  - {@link THREE.CatmullRomCurve3}
- *  - {@link THREE.CubicBezierCurve3}
- *  - {@link THREE.LineCurve3}
- *  - {@link THREE.QuadraticBezierCurve3}
- *
- * @see {@link https://threejs.org/docs/index.html#api/en/extras/core/Curve | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/extras/core/Curve.js | Source}
+ * @abstract
  */
 export abstract class Curve<TVector extends Vector2 | Vector3> {
-    protected constructor();
-
     /**
-     * A Read-only _string_ to check if `this` object type.
-     * @remarks Sub-classes will update this value.
-     * @defaultValue `Curve`
+     * The type property is used for detecting the object type
+     * in context of serialization/deserialization.
      */
-    readonly type: string | "Curve";
-
+    readonly type: string;
     /**
-     * This value determines the amount of divisions when calculating the cumulative segment lengths of a {@link Curve}
-     * via {@link .getLengths}.
-     * To ensure precision when using methods like {@link .getSpacedPoints}, it is recommended to increase {@link .arcLengthDivisions} if the {@link Curve} is very large.
-     * @defaultValue `200`
-     * @remarks Expects a `Integer`
+     * This value determines the amount of divisions when calculating the
+     * cumulative segment lengths of a curve via {@link Curve#getLengths}. To ensure
+     * precision when using methods like {@link Curve#getSpacedPoints}, it is
+     * recommended to increase the value of this property if the curve is very large.
+     *
+     * @default 200
      */
     arcLengthDivisions: number;
-
     /**
-     * Returns a vector for a given position on the curve.
-     * @param t A position on the curve. Must be in the range `[ 0, 1 ]`. Expects a `Float`
-     * @param optionalTarget If specified, the result will be copied into this Vector, otherwise a new Vector will be created. Default `new T`.
+     * Must be set to `true` if the curve parameters have changed.
+     *
+     * @default false
+     */
+    needsUpdate: boolean;
+    /**
+     * This method returns a vector in 2D or 3D space (depending on the curve definition)
+     * for the given interpolation factor.
+     *
+     * @abstract
+     * @param {number} t - A interpolation factor representing a position on the curve. Must be in the range `[0,1]`.
+     * @param {(Vector2|Vector3)} [optionalTarget] - The optional target vector the result is written to.
+     * @return {(Vector2|Vector3)} The position on the curve. It can be a 2D or 3D vector depending on the curve definition.
      */
     getPoint(t: number, optionalTarget?: TVector): TVector;
-
     /**
-     * Returns a vector for a given position on the {@link Curve} according to the arc length.
-     * @param u A position on the {@link Curve} according to the arc length. Must be in the range `[ 0, 1 ]`. Expects a `Float`
-     * @param optionalTarget If specified, the result will be copied into this Vector, otherwise a new Vector will be created. Default `new T`.
+     * This method returns a vector in 2D or 3D space (depending on the curve definition)
+     * for the given interpolation factor. Unlike {@link Curve#getPoint}, this method honors the length
+     * of the curve which equidistant samples.
+     *
+     * @param {number} u - A interpolation factor representing a position on the curve. Must be in the range `[0,1]`.
+     * @param {(Vector2|Vector3)} [optionalTarget] - The optional target vector the result is written to.
+     * @return {(Vector2|Vector3)} The position on the curve. It can be a 2D or 3D vector depending on the curve definition.
      */
     getPointAt(u: number, optionalTarget?: TVector): TVector;
-
     /**
-     * Returns a set of divisions `+1` points using {@link .getPoint | getPoint(t)}.
-     * @param divisions Number of pieces to divide the {@link Curve} into. Expects a `Integer`. Default `5`
+     * This method samples the curve via {@link Curve#getPoint} and returns an array of points representing
+     * the curve shape.
+     *
+     * @param {number} [divisions=5] - The number of divisions.
+     * @return {Array<(Vector2|Vector3)>} An array holding the sampled curve values. The number of points is `divisions + 1`.
      */
-    getPoints(divisions?: number): TVector[];
-
+    getPoints(divisions?: number): Array<TVector>;
     /**
-     * Returns a set of divisions `+1` equi-spaced points using {@link .getPointAt | getPointAt(u)}.
-     * @param divisions Number of pieces to divide the {@link Curve} into. Expects a `Integer`. Default `5`
+     * This method samples the curve via {@link Curve#getPointAt} and returns an array of points representing
+     * the curve shape. Unlike {@link Curve#getPoints}, this method returns equi-spaced points across the entire
+     * curve.
+     *
+     * @param {number} [divisions=5] - The number of divisions.
+     * @return {Array<(Vector2|Vector3)>} An array holding the sampled curve values. The number of points is `divisions + 1`.
      */
-    getSpacedPoints(divisions?: number): TVector[];
-
+    getSpacedPoints(divisions?: number): Array<TVector>;
     /**
-     * Get total {@link Curve} arc length.
+     * Returns the total arc length of the curve.
+     *
+     * @return {number} The length of the curve.
      */
     getLength(): number;
-
     /**
-     * Get list of cumulative segment lengths.
-     * @param divisions Expects a `Integer`
+     * Returns an array of cumulative segment lengths of the curve.
+     *
+     * @param {number} [divisions=this.arcLengthDivisions] - The number of divisions.
+     * @return {Array<number>} An array holding the cumulative segment lengths.
      */
-    getLengths(divisions?: number): number[];
-
+    getLengths(divisions?: number): Array<number>;
     /**
-     * Update the cumulative segment distance cache
-     * @remarks
-     * The method must be called every time {@link Curve} parameters are changed
-     * If an updated {@link Curve} is part of a composed {@link Curve} like {@link THREE.CurvePath | CurvePath},
-     * {@link .updateArcLengths}() must be called on the composed curve, too.
+     * Update the cumulative segment distance cache. The method must be called
+     * every time curve parameters are changed. If an updated curve is part of a
+     * composed curve like {@link CurvePath}, this method must be called on the
+     * composed curve, too.
      */
     updateArcLengths(): void;
-
     /**
-     * Given u in the range `[ 0, 1 ]`,
-     * @remarks
-     * `u` and `t` can then be used to give you points which are equidistant from the ends of the curve, using {@link .getPoint}.
-     * @param u Expects a `Float`
-     * @param distance Expects a `Float`
-     * @returns `t` also in the range `[ 0, 1 ]`. Expects a `Float`.
+     * Given an interpolation factor in the range `[0,1]`, this method returns an updated
+     * interpolation factor in the same range that can be ued to sample equidistant points
+     * from a curve.
+     *
+     * @param {number} u - The interpolation factor.
+     * @param {?number} distance - An optional distance on the curve.
+     * @return {number} The updated interpolation factor.
      */
-    getUtoTmapping(u: number, distance: number): number;
-
+    getUtoTmapping(u: number, distance?: number | null): number;
     /**
-     * Returns a unit vector tangent at t
-     * @remarks
-     * If the derived {@link Curve} does not implement its tangent derivation, two points a small delta apart will be used to find its gradient which seems to give a reasonable approximation.
-     * @param t A position on the curve. Must be in the range `[ 0, 1 ]`. Expects a `Float`
-     * @param optionalTarget If specified, the result will be copied into this Vector, otherwise a new Vector will be created.
+     * Returns a unit vector tangent for the given interpolation factor.
+     * If the derived curve does not implement its tangent derivation,
+     * two points a small delta apart will be used to find its gradient
+     * which seems to give a reasonable approximation.
+     *
+     * @param {number} t - The interpolation factor.
+     * @param {(Vector2|Vector3)} [optionalTarget] - The optional target vector the result is written to.
+     * @return {(Vector2|Vector3)} The tangent vector.
      */
     getTangent(t: number, optionalTarget?: TVector): TVector;
-
     /**
-     * Returns tangent at a point which is equidistant to the ends of the {@link Curve} from the point given in {@link .getTangent}.
-     * @param u A position on the {@link Curve} according to the arc length. Must be in the range `[ 0, 1 ]`. Expects a `Float`
-     * @param optionalTarget If specified, the result will be copied into this Vector, otherwise a new Vector will be created.
+     * Same as {@link Curve#getTangent} but with equidistant samples.
+     *
+     * @param {number} u - The interpolation factor.
+     * @param {(Vector2|Vector3)} [optionalTarget] - The optional target vector the result is written to.
+     * @return {(Vector2|Vector3)} The tangent vector.
+     * @see {@link Curve#getPointAt}
      */
     getTangentAt(u: number, optionalTarget?: TVector): TVector;
-
     /**
-     * Generates the Frenet Frames
-     * @remarks
-     * Requires a {@link Curve} definition in 3D space
-     * Used in geometries like {@link THREE.TubeGeometry | TubeGeometry} or {@link THREE.ExtrudeGeometry | ExtrudeGeometry}.
-     * @param segments Expects a `Integer`
-     * @param closed
+     * Generates the Frenet Frames. Requires a curve definition in 3D space. Used
+     * in geometries like {@link TubeGeometry} or {@link ExtrudeGeometry}.
+     *
+     * @param {number} segments - The number of segments.
+     * @param {boolean} [closed=false] - Whether the curve is closed or not.
+     * @return {{tangents: Array<Vector3>, normals: Array<Vector3>, binormals: Array<Vector3>}} The Frenet Frames.
      */
-    computeFrenetFrames(
-        segments: number,
-        closed?: boolean,
-    ): {
-        tangents: Vector3[];
-        normals: Vector3[];
-        binormals: Vector3[];
+    computeFrenetFrames(segments: number, closed?: boolean): {
+        tangents: Array<Vector3>;
+        normals: Array<Vector3>;
+        binormals: Array<Vector3>;
     };
-
     /**
-     * Creates a clone of this instance.
+     * Returns a new curve with copied values from this instance.
+     *
+     * @return {Curve} A clone of this instance.
      */
     clone(): this;
     /**
-     * Copies another {@link Curve} object to this instance.
-     * @param source
+     * Copies the values of the given curve to this instance.
+     *
+     * @param {Curve} source - The curve to copy.
+     * @return {Curve} A reference to this curve.
      */
     copy(source: Curve<TVector>): this;
-
     /**
-     * Returns a JSON object representation of this instance.
+     * Serializes the curve into JSON.
+     *
+     * @return {Object} A JSON object representing the serialized curve.
+     * @see {@link ObjectLoader#parse}
      */
     toJSON(): CurveJSON;
-
     /**
-     * Copies the data from the given JSON object to this instance.
-     * @param json
+     * Deserializes the curve from the given JSON.
+     *
+     * @param {Object} json - The JSON holding the serialized curve.
+     * @return {Curve} A reference to this curve.
      */
     fromJSON(json: CurveJSON): this;
 }

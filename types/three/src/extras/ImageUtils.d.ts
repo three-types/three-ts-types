@@ -1,27 +1,32 @@
 /**
  * A class containing utility functions for images.
- * @see {@link https://threejs.org/docs/index.html#api/en/extras/ImageUtils | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/extras/ImageUtils.js | Source}
+ *
+ * @hideconstructor
  */
-declare class ImageUtils {
+export class ImageUtils {
     /**
      * Returns a data URI containing a representation of the given image.
-     * @param image The image object.
+     *
+     * @param {(HTMLImageElement|HTMLCanvasElement)} image - The image object.
+     * @param {string} [type='image/png'] - Indicates the image format.
+     * @return {string} The data URI.
      */
     static getDataURL(
         image: HTMLImageElement | HTMLCanvasElement | CanvasImageSource | ImageBitmap | ImageData,
         type?: string,
     ): string;
-
     /**
      * Converts the given sRGB image data to linear color space.
-     * @param image
+     *
+     * @param {(HTMLImageElement|HTMLCanvasElement|ImageBitmap|Object)} image - The image object.
+     * @return {HTMLCanvasElement|Object} The converted image.
      */
     static sRGBToLinear(image: HTMLImageElement | HTMLCanvasElement | ImageBitmap): HTMLCanvasElement;
-
     /**
      * Converts the given sRGB image data to linear color space.
-     * @param image
+     *
+     * @param {(HTMLImageElement|HTMLCanvasElement|ImageBitmap|Object)} image - The image object.
+     * @return {HTMLCanvasElement|Object} The converted image.
      */
     static sRGBToLinear(image: ImageData): {
         data: ImageData["data"];
@@ -29,5 +34,3 @@ declare class ImageUtils {
         height: ImageData["height"];
     };
 }
-
-export { ImageUtils };

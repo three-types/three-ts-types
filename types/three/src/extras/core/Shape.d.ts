@@ -7,80 +7,72 @@ export interface ShapeJSON extends PathJSON {
 }
 
 /**
- * Defines an arbitrary 2d {@link Shape} plane using paths with optional holes
- * @remarks
- * It can be used with {@link THREE.ExtrudeGeometry | ExtrudeGeometry}, {@link THREE.ShapeGeometry | ShapeGeometry}, to get points, or to get triangulated faces.
- * @example
- * ```typescript
+ * Defines an arbitrary 2d shape plane using paths with optional holes. It
+ * can be used with {@link ExtrudeGeometry}, {@link ShapeGeometry}, to get
+ * points, or to get triangulated faces.
+ *
+ * ```js
  * const heartShape = new THREE.Shape();
- * heartShape.moveTo(25, 25);
- * heartShape.bezierCurveTo(25, 25, 20, 0, 0, 0);
- * heartShape.bezierCurveTo(-30, 0, -30, 35, -30, 35);
- * heartShape.bezierCurveTo(-30, 55, -10, 77, 25, 95);
- * heartShape.bezierCurveTo(60, 77, 80, 55, 80, 35);
- * heartShape.bezierCurveTo(80, 35, 80, 0, 50, 0);
- * heartShape.bezierCurveTo(35, 0, 25, 25, 25, 25);
+ *
+ * heartShape.moveTo( 25, 25 );
+ * heartShape.bezierCurveTo( 25, 25, 20, 0, 0, 0 );
+ * heartShape.bezierCurveTo( - 30, 0, - 30, 35, - 30, 35 );
+ * heartShape.bezierCurveTo( - 30, 55, - 10, 77, 25, 95 );
+ * heartShape.bezierCurveTo( 60, 77, 80, 55, 80, 35 );
+ * heartShape.bezierCurveTo( 80, 35, 80, 0, 50, 0 );
+ * heartShape.bezierCurveTo( 35, 0, 25, 25, 25, 25 );
+ *
  * const extrudeSettings = {
- *     depth: 8,
- *     bevelEnabled: true,
- *     bevelSegments: 2,
- *     steps: 2,
- *     bevelSize: 1,
- *     bevelThickness: 1
+ * 	depth: 8,
+ * 	bevelEnabled: true,
+ * 	bevelSegments: 2,
+ * 	steps: 2,
+ * 	bevelSize: 1,
+ * 	bevelThickness: 1
  * };
- * const geometry = new THREE.ExtrudeGeometry(heartShape, extrudeSettings);
- * const mesh = new THREE.Mesh(geometry, new THREE.MeshPhongMaterial());
+ *
+ * const geometry = new THREE.ExtrudeGeometry( heartShape, extrudeSettings );
+ * const mesh = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial() );
  * ```
- * @see Example: {@link https://threejs.org/examples/#webgl_geometry_shapes | geometry / shapes }
- * @see Example: {@link https://threejs.org/examples/#webgl_geometry_extrude_shapes | geometry / extrude / shapes }
- * @see Example: {@link https://threejs.org/examples/#webgl_geometry_extrude_shapes2 | geometry / extrude / shapes2 }
- * @see {@link https://threejs.org/docs/index.html#api/en/extras/core/Shape | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/extras/core/Shape.js | Source}
+ *
+ * @augments Path
  */
 export class Shape extends Path {
     /**
-     * Creates a {@link Shape} from the points
-     * @remarks
-     * The first point defines the offset, then successive points are added to the {@link CurvePath.curves | curves} array as {@link THREE.LineCurve | LineCurves}.
-     * If no points are specified, an empty {@link Shape} is created and the {@link .currentPoint} is set to the origin.
-     * @param points Array of {@link Vector2 | Vector2s}.
+     * Constructs a new shape.
+     *
+     * @param {Array<Vector2>} [points] - An array of 2D points defining the shape.
      */
-    constructor(points?: Vector2[]);
-
+    constructor(points?: Array<Vector2>);
     /**
-     * A Read-only _string_ to check if `this` object type.
-     * @remarks Sub-classes will update this value.
-     * @defaultValue `Shape`
+     * The UUID of the shape.
      */
-    override readonly type: string | "Shape";
-
+    readonly uuid: string;
     /**
-     * {@link http://en.wikipedia.org/wiki/Universally_unique_identifier | UUID} of this object instance.
-     * @remarks This gets automatically assigned and shouldn't be edited.
+     * Defines the holes in the shape. Hole definitions must use the
+     * opposite winding order (CW/CCW) than the outer shape.
      */
-    uuid: string;
-
+    readonly holes: Array<Path>;
     /**
-     * An array of {@link Path | paths} that define the holes in the shape.
-     * @defaultValue `[]`
+     * Returns an array representing each contour of the holes
+     * as a list of 2D points.
+     *
+     * @param {number} divisions - The fineness of the result.
+     * @return {Array<Array<Vector2>>} The holes as a series of 2D points.
      */
-    holes: Path[];
-
+    getPointsHoles(divisions: number): Array<Array<Vector2>>;
     /**
-     * Call {@link THREE.Curve.getPoints | getPoints} on the {@link Shape} and the {@link holes} array
-     * @param divisions The fineness of the result. Expects a `Integer`
+     * Returns an object that holds contour data for the shape and its holes as
+     * arrays of 2D points.
+     *
+     * @param {number} divisions - The fineness of the result.
+     * @return {{shape:Array<Vector2>,holes:Array<Array<Vector2>>}} An object with contour data.
      */
     extractPoints(divisions: number): {
-        shape: Vector2[];
-        holes: Vector2[][];
+        shape: Array<Vector2>;
+        holes: Array<Array<Vector2>>;
     };
-
-    /**
-     * Get an array of {@link Vector2 | Vector2's} that represent the holes in the shape.
-     * @param divisions The fineness of the result. Expects a `Integer`
-     */
-    getPointsHoles(divisions: number): Vector2[][];
-
+    copy(source: Shape): this;
     toJSON(): ShapeJSON;
     fromJSON(json: ShapeJSON): this;
 }
