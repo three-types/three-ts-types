@@ -4,12 +4,15 @@ import { Object3D } from "../../core/Object3D.js";
 import { Material } from "../../materials/Material.js";
 import Renderer from "../../renderers/common/Renderer.js";
 import RenderPipeline from "../../renderers/common/RenderPipeline.js";
+import { Scene } from "../../scenes/Scene.js";
 import ComputeNode from "../gpgpu/ComputeNode.js";
 
 export default abstract class NodeBuilder {
     object: Object3D;
-    material: Material;
-    geometry: BufferGeometry;
+    material: Material | null;
+    geometry: BufferGeometry | null;
+    camera: Camera | null;
+    scene: Scene | null;
 
     /**
      * The camera the 3D object is rendered with.
