@@ -34,7 +34,7 @@ export class LatheGeometry extends BufferGeometry {
      * @param {number} [phiLength=Math.PI*2] - The radian (0 to 2PI) range of the lathed section 2PI is a
      * closed lathe, less than 2PI is a portion.
      */
-    constructor(points?: Array<Vector2 | Vector3>, segments?: number, phiStart?: number, phiLength?: number);
+    constructor(points?: Vector2[], segments?: number, phiStart?: number, phiLength?: number);
     /**
      * Holds the constructor parameters that have been
      * used to generate the geometry. Any modification
@@ -43,7 +43,7 @@ export class LatheGeometry extends BufferGeometry {
      * @type {Object}
      */
     readonly parameters: {
-        readonly points: Array<Vector2 | Vector3>;
+        readonly points: Vector2[];
         readonly segments: number;
         readonly phiStart: number;
         readonly phiLength: number;
@@ -52,4 +52,3 @@ export class LatheGeometry extends BufferGeometry {
 }
 import { BufferGeometry } from "../core/BufferGeometry.js";
 import { Vector2 } from "../math/Vector2.js";
-import { Vector3 } from "../math/Vector3.js";
