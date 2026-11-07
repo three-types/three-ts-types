@@ -1,9 +1,24 @@
 import { RenderTarget, RenderTargetOptions } from "./RenderTarget.js";
 
+/**
+ * Represents a 3D render target.
+ */
 declare class RenderTarget3D extends RenderTarget {
-    readonly isRenderTarget3D: true;
-
+    /**
+     * Constructs a new 3D render target.
+     *
+     * @param {number} [width=1] - The width of the render target.
+     * @param {number} [height=1] - The height of the render target.
+     * @param {number} [depth=1] - The height of the render target.
+     * @param {RenderTarget~Options} [options] - The configuration object.
+     */
     constructor(width?: number, height?: number, depth?: number, options?: RenderTargetOptions);
+    /**
+     * This flag can be used for type testing.
+     *
+     * @default true
+     */
+    readonly isRenderTarget3D: true;
 }
 
 export { RenderTarget3D };

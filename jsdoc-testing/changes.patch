@@ -7121,6 +7121,3154 @@ index 929bf5258..c4d22b7da 100644
      update(camera: PerspectiveCamera): void;
  }
 -import { PerspectiveCamera } from './PerspectiveCamera.js';
+diff --git a/jsdoc-testing/jsdoc/src/core/BufferAttribute.d.ts b/jsdoc-testing/jsdoc/src/core/BufferAttribute.d.ts
+index 27bb1fefd..24299167b 100644
+--- a/jsdoc-testing/jsdoc/src/core/BufferAttribute.d.ts
++++ b/jsdoc-testing/jsdoc/src/core/BufferAttribute.d.ts
+@@ -1,8 +1,47 @@
++import { AttributeGPUType, Usage } from "../constants.js";
++import { Matrix3 } from "../math/Matrix3.js";
++import { Matrix4 } from "../math/Matrix4.js";
++import { EventDispatcher } from "./EventDispatcher.js";
++
++export type TypedArray =
++    | Int8Array
++    | Uint8Array
++    | Uint8ClampedArray
++    | Int16Array
++    | Uint16Array
++    | Int32Array
++    | Uint32Array
++    | Float32Array
++    | Float64Array;
++
++export type TypedArrayConstructor =
++    | Int8ArrayConstructor
++    | Uint8ArrayConstructor
++    | Uint8ClampedArrayConstructor
++    | Int16ArrayConstructor
++    | Uint16ArrayConstructor
++    | Int32ArrayConstructor
++    | Uint32ArrayConstructor
++    | Float32ArrayConstructor
++    | Float64ArrayConstructor;
++
++export interface BufferAttributeJSON {
++    itemSize: number;
++    type: string;
++    array: number[];
++    normalized: boolean;
++
++    name?: string;
++    usage?: Usage;
++}
++
++export interface BufferAttributeEventMap {
++    dispose: {};
++}
++
+ /**
+  * Convenient class that can be used when creating a `Float32` buffer attribute with
+  * a plain `Array` instance.
+- *
+- * @augments BufferAttribute
+  */
+ export class Float32BufferAttribute extends BufferAttribute {
+     /**
+@@ -12,7 +51,11 @@ export class Float32BufferAttribute extends BufferAttribute {
+      * @param {number} itemSize - The item size.
+      * @param {boolean} [normalized=false] - Whether the data are normalized or not.
+      */
+-    constructor(array: (Array<number> | Float32Array), itemSize: number, normalized?: boolean);
++    constructor(
++        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
++        itemSize: number,
++        normalized?: boolean,
++    );
+ }
+ /**
+  * Convenient class that can be used when creating a `Float16` buffer attribute with
+@@ -20,8 +63,6 @@ export class Float32BufferAttribute extends BufferAttribute {
+  *
+  * This class automatically converts to and from FP16 via `Uint16Array` since `Float16Array`
+  * browser support is still problematic.
+- *
+- * @augments BufferAttribute
+  */
+ export class Float16BufferAttribute extends BufferAttribute {
+     /**
+@@ -31,25 +72,16 @@ export class Float16BufferAttribute extends BufferAttribute {
+      * @param {number} itemSize - The item size.
+      * @param {boolean} [normalized=false] - Whether the data are normalized or not.
+      */
+-    constructor(array: (Array<number> | Uint16Array), itemSize: number, normalized?: boolean);
+-    isFloat16BufferAttribute: boolean;
+-    getX(index: any): number;
+-    setX(index: any, x: any): this;
+-    getY(index: any): number;
+-    setY(index: any, y: any): this;
+-    getZ(index: any): number;
+-    setZ(index: any, z: any): this;
+-    getW(index: any): number;
+-    setW(index: any, w: any): this;
+-    setXY(index: any, x: any, y: any): this;
+-    setXYZ(index: any, x: any, y: any, z: any): this;
+-    setXYZW(index: any, x: any, y: any, z: any, w: any): this;
++    constructor(
++        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
++        itemSize: number,
++        normalized?: boolean,
++    );
++    readonly isFloat16BufferAttribute: true;
+ }
+ /**
+  * Convenient class that can be used when creating a `UInt32` buffer attribute with
+  * a plain `Array` instance.
+- *
+- * @augments BufferAttribute
+  */
+ export class Uint32BufferAttribute extends BufferAttribute {
+     /**
+@@ -59,13 +91,15 @@ export class Uint32BufferAttribute extends BufferAttribute {
+      * @param {number} itemSize - The item size.
+      * @param {boolean} [normalized=false] - Whether the data are normalized or not.
+      */
+-    constructor(array: (Array<number> | Uint32Array), itemSize: number, normalized?: boolean);
++    constructor(
++        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
++        itemSize: number,
++        normalized?: boolean,
++    );
+ }
+ /**
+  * Convenient class that can be used when creating a `Int32` buffer attribute with
+  * a plain `Array` instance.
+- *
+- * @augments BufferAttribute
+  */
+ export class Int32BufferAttribute extends BufferAttribute {
+     /**
+@@ -75,13 +109,15 @@ export class Int32BufferAttribute extends BufferAttribute {
+      * @param {number} itemSize - The item size.
+      * @param {boolean} [normalized=false] - Whether the data are normalized or not.
+      */
+-    constructor(array: (Array<number> | Int32Array), itemSize: number, normalized?: boolean);
++    constructor(
++        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
++        itemSize: number,
++        normalized?: boolean,
++    );
+ }
+ /**
+  * Convenient class that can be used when creating a `UInt16` buffer attribute with
+  * a plain `Array` instance.
+- *
+- * @augments BufferAttribute
+  */
+ export class Uint16BufferAttribute extends BufferAttribute {
+     /**
+@@ -91,13 +127,15 @@ export class Uint16BufferAttribute extends BufferAttribute {
+      * @param {number} itemSize - The item size.
+      * @param {boolean} [normalized=false] - Whether the data are normalized or not.
+      */
+-    constructor(array: (Array<number> | Uint16Array), itemSize: number, normalized?: boolean);
++    constructor(
++        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
++        itemSize: number,
++        normalized?: boolean,
++    );
+ }
+ /**
+  * Convenient class that can be used when creating a `Int16` buffer attribute with
+  * a plain `Array` instance.
+- *
+- * @augments BufferAttribute
+  */
+ export class Int16BufferAttribute extends BufferAttribute {
+     /**
+@@ -107,13 +145,15 @@ export class Int16BufferAttribute extends BufferAttribute {
+      * @param {number} itemSize - The item size.
+      * @param {boolean} [normalized=false] - Whether the data are normalized or not.
+      */
+-    constructor(array: (Array<number> | Int16Array), itemSize: number, normalized?: boolean);
++    constructor(
++        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
++        itemSize: number,
++        normalized?: boolean,
++    );
+ }
+ /**
+  * Convenient class that can be used when creating a `UInt8Clamped` buffer attribute with
+  * a plain `Array` instance.
+- *
+- * @augments BufferAttribute
+  */
+ export class Uint8ClampedBufferAttribute extends BufferAttribute {
+     /**
+@@ -123,13 +163,15 @@ export class Uint8ClampedBufferAttribute extends BufferAttribute {
+      * @param {number} itemSize - The item size.
+      * @param {boolean} [normalized=false] - Whether the data are normalized or not.
+      */
+-    constructor(array: (Array<number> | Uint8ClampedArray), itemSize: number, normalized?: boolean);
++    constructor(
++        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
++        itemSize: number,
++        normalized?: boolean,
++    );
+ }
+ /**
+  * Convenient class that can be used when creating a `UInt8` buffer attribute with
+  * a plain `Array` instance.
+- *
+- * @augments BufferAttribute
+  */
+ export class Uint8BufferAttribute extends BufferAttribute {
+     /**
+@@ -139,13 +181,15 @@ export class Uint8BufferAttribute extends BufferAttribute {
+      * @param {number} itemSize - The item size.
+      * @param {boolean} [normalized=false] - Whether the data are normalized or not.
+      */
+-    constructor(array: (Array<number> | Uint8Array), itemSize: number, normalized?: boolean);
++    constructor(
++        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
++        itemSize: number,
++        normalized?: boolean,
++    );
+ }
+ /**
+  * Convenient class that can be used when creating a `Int8` buffer attribute with
+  * a plain `Array` instance.
+- *
+- * @augments BufferAttribute
+  */
+ export class Int8BufferAttribute extends BufferAttribute {
+     /**
+@@ -155,7 +199,11 @@ export class Int8BufferAttribute extends BufferAttribute {
+      * @param {number} itemSize - The item size.
+      * @param {boolean} [normalized=false] - Whether the data are normalized or not.
+      */
+-    constructor(array: (Array<number> | Int8Array), itemSize: number, normalized?: boolean);
++    constructor(
++        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
++        itemSize: number,
++        normalized?: boolean,
++    );
+ }
+ /**
+  * This class stores data for an attribute (such as vertex positions, face
+@@ -165,7 +213,9 @@ export class Int8BufferAttribute extends BufferAttribute {
+  * When working with vector-like data, the `fromBufferAttribute( attribute, index )`
+  * helper methods on vector and color class might be helpful. E.g. {@link Vector3#fromBufferAttribute}.
+  */
+-export class BufferAttribute extends EventDispatcher {
++export class BufferAttribute<TEventMap extends BufferAttributeEventMap = BufferAttributeEventMap>
++    extends EventDispatcher<TEventMap>
++{
+     /**
+      * Constructs a new buffer attribute.
+      *
+@@ -177,38 +227,31 @@ export class BufferAttribute extends EventDispatcher {
+     /**
+      * This flag can be used for type testing.
+      *
+-     * @type {boolean}
+-     * @readonly
+      * @default true
+      */
+-    readonly isBufferAttribute: boolean;
++    readonly isBufferAttribute: true;
++    /**
++     * The ID of the buffer attribute.
++     */
++    readonly id: number;
+     /**
+      * The name of the buffer attribute.
+-     *
+-     * @type {string}
+      */
+     name: string;
+     /**
+      * The array holding the attribute data. It should have `itemSize * numVertices`
+      * elements, where `numVertices` is the number of vertices in the associated geometry.
+-     *
+-     * @type {TypedArray}
+      */
+     array: TypedArray;
+     /**
+      * The number of values of the array that should be associated with a particular vertex.
+      * For instance, if this attribute is storing a 3-component vector (such as a position,
+      * normal, or color), then the value should be `3`.
+-     *
+-     * @type {number}
+      */
+     itemSize: number;
+     /**
+      * Represents the number of items this buffer attribute stores. It is internally computed
+      * by dividing the `array` length by the `itemSize`.
+-     *
+-     * @type {number}
+-     * @readonly
+      */
+     readonly count: number;
+     /**
+@@ -217,8 +260,6 @@ export class BufferAttribute extends EventDispatcher {
+      * and `normalized` is `true`, the values `0 - +65535` in the array data will be mapped to
+      * `0.0f - +1.0f` in the GLSL attribute. If `normalized` is `false`, the values will be converted
+      * to floats unmodified, i.e. `65535` becomes `65535.0f`.
+-     *
+-     * @type {boolean}
+      */
+     normalized: boolean;
+     /**
+@@ -227,50 +268,39 @@ export class BufferAttribute extends EventDispatcher {
+      * Note: After the initial use of a buffer, its usage cannot be changed. Instead,
+      * instantiate a new one and set the desired usage before the next render.
+      *
+-     * @type {(StaticDrawUsage|DynamicDrawUsage|StreamDrawUsage|StaticReadUsage|DynamicReadUsage|StreamReadUsage|StaticCopyUsage|DynamicCopyUsage|StreamCopyUsage)}
+      * @default StaticDrawUsage
+      */
+-    usage: (number | DynamicDrawUsage | StreamDrawUsage | StaticReadUsage | DynamicReadUsage | StreamReadUsage | StaticCopyUsage | DynamicCopyUsage | StreamCopyUsage);
++    usage: Usage;
+     /**
+      * This can be used to only update some components of stored vectors (for example, just the
+      * component related to color). Use the `addUpdateRange()` function to add ranges to this array.
+-     *
+-     * @type {Array<Object>}
+      */
+-    updateRanges: Array<Object>;
++    updateRanges: Array<{
++        start: number;
++        count: number;
++    }>;
+     /**
+      * Configures the bound GPU type for use in shaders.
+      *
+      * Note: this only has an effect for integer arrays and is not configurable for float arrays.
+      * For lower precision float types, use `Float16BufferAttribute`.
+      *
+-     * @type {(FloatType|IntType)}
+      * @default FloatType
+      */
+-    gpuType: (number | IntType);
++    gpuType: AttributeGPUType;
+     /**
+      * A version number, incremented every time the `needsUpdate` is set to `true`.
+-     *
+-     * @type {number}
+      */
+     version: number;
+-    /**
+-     * Cached normalization factor, see {@link MathUtils#getNormalizationScale}.
+-     *
+-     * @private
+-     * @type {number|undefined}
+-     */
+-    private _normalizationScale;
+     /**
+      * A callback function that is executed after the renderer has transferred the attribute
+      * array data to the GPU.
+      */
+-    onUploadCallback(): void;
++    onUploadCallback: () => void;
+     /**
+      * Flag to indicate that this attribute has changed and should be re-sent to
+      * the GPU. Set this to `true` when you modify the value of the array.
+      *
+-     * @type {number}
+      * @default false
+      * @param {boolean} value
+      */
+@@ -281,7 +311,7 @@ export class BufferAttribute extends EventDispatcher {
+      * @param {(StaticDrawUsage|DynamicDrawUsage|StreamDrawUsage|StaticReadUsage|DynamicReadUsage|StreamReadUsage|StaticCopyUsage|DynamicCopyUsage|StreamCopyUsage)} value - The usage to set.
+      * @return {BufferAttribute} A reference to this buffer attribute.
+      */
+-    setUsage(value: (number | DynamicDrawUsage | StreamDrawUsage | StaticReadUsage | DynamicReadUsage | StreamReadUsage | StaticCopyUsage | DynamicCopyUsage | StreamCopyUsage)): BufferAttribute;
++    setUsage(value: Usage): this;
+     /**
+      * Adds a range of data in the data array to be updated on the GPU.
+      *
+@@ -299,7 +329,7 @@ export class BufferAttribute extends EventDispatcher {
+      * @param {BufferAttribute} source - The buffer attribute to copy.
+      * @return {BufferAttribute} A reference to this instance.
+      */
+-    copy(source: BufferAttribute): BufferAttribute;
++    copy(source: BufferAttribute): this;
+     /**
+      * Copies a vector from the given buffer attribute to this one. The start
+      * and destination position in the attribute buffers are represented by the
+@@ -310,14 +340,14 @@ export class BufferAttribute extends EventDispatcher {
+      * @param {number} index2 - The source index into the given buffer attribute.
+      * @return {BufferAttribute} A reference to this instance.
+      */
+-    copyAt(index1: number, attribute: BufferAttribute, index2: number): BufferAttribute;
++    copyAt(index1: number, attribute: BufferAttribute, index2: number): this;
+     /**
+      * Copies the given array data into this buffer attribute.
+      *
+      * @param {(TypedArray|Array)} array - The array to copy.
+      * @return {BufferAttribute} A reference to this instance.
+      */
+-    copyArray(array: (TypedArray | any[])): BufferAttribute;
++    copyArray(array: ArrayLike<number>): this;
+     /**
+      * Applies the given 3x3 matrix to the given attribute. Works with
+      * item size `2` and `3`.
+@@ -325,7 +355,7 @@ export class BufferAttribute extends EventDispatcher {
+      * @param {Matrix3} m - The matrix to apply.
+      * @return {BufferAttribute} A reference to this instance.
+      */
+-    applyMatrix3(m: Matrix3): BufferAttribute;
++    applyMatrix3(m: Matrix3): this;
+     /**
+      * Applies the given 4x4 matrix to the given attribute. Only works with
+      * item size `3`.
+@@ -333,7 +363,7 @@ export class BufferAttribute extends EventDispatcher {
+      * @param {Matrix4} m - The matrix to apply.
+      * @return {BufferAttribute} A reference to this instance.
+      */
+-    applyMatrix4(m: Matrix4): BufferAttribute;
++    applyMatrix4(m: Matrix4): this;
+     /**
+      * Applies the given 3x3 normal matrix to the given attribute. Only works with
+      * item size `3`.
+@@ -341,7 +371,7 @@ export class BufferAttribute extends EventDispatcher {
+      * @param {Matrix3} m - The normal matrix to apply.
+      * @return {BufferAttribute} A reference to this instance.
+      */
+-    applyNormalMatrix(m: Matrix3): BufferAttribute;
++    applyNormalMatrix(m: Matrix3): this;
+     /**
+      * Applies the given 4x4 matrix to the given attribute. Only works with
+      * item size `3` and with direction vectors.
+@@ -349,7 +379,7 @@ export class BufferAttribute extends EventDispatcher {
+      * @param {Matrix4} m - The matrix to apply.
+      * @return {BufferAttribute} A reference to this instance.
+      */
+-    transformDirection(m: Matrix4): BufferAttribute;
++    transformDirection(m: Matrix4): this;
+     /**
+      * Sets the given array data in the buffer attribute.
+      *
+@@ -357,7 +387,7 @@ export class BufferAttribute extends EventDispatcher {
+      * @param {number} [offset=0] - The offset in this buffer attribute's array.
+      * @return {BufferAttribute} A reference to this instance.
+      */
+-    set(value: (TypedArray | any[]), offset?: number): BufferAttribute;
++    set(value: ArrayLike<number> | ArrayBufferView, offset?: number): this;
+     /**
+      * Returns the given component of the vector at the given index.
+      *
+@@ -374,7 +404,7 @@ export class BufferAttribute extends EventDispatcher {
+      * @param {number} value - The value to set.
+      * @return {BufferAttribute} A reference to this instance.
+      */
+-    setComponent(index: number, component: number, value: number): BufferAttribute;
++    setComponent(index: number, component: number, value: number): void;
+     /**
+      * Returns the x component of the vector at the given index.
+      *
+@@ -389,7 +419,7 @@ export class BufferAttribute extends EventDispatcher {
+      * @param {number} x - The value to set.
+      * @return {BufferAttribute} A reference to this instance.
+      */
+-    setX(index: number, x: number): BufferAttribute;
++    setX(index: number, x: number): this;
+     /**
+      * Returns the y component of the vector at the given index.
+      *
+@@ -404,7 +434,7 @@ export class BufferAttribute extends EventDispatcher {
+      * @param {number} y - The value to set.
+      * @return {BufferAttribute} A reference to this instance.
+      */
+-    setY(index: number, y: number): BufferAttribute;
++    setY(index: number, y: number): this;
+     /**
+      * Returns the z component of the vector at the given index.
+      *
+@@ -419,7 +449,7 @@ export class BufferAttribute extends EventDispatcher {
+      * @param {number} z - The value to set.
+      * @return {BufferAttribute} A reference to this instance.
+      */
+-    setZ(index: number, z: number): BufferAttribute;
++    setZ(index: number, z: number): this;
+     /**
+      * Returns the w component of the vector at the given index.
+      *
+@@ -434,7 +464,7 @@ export class BufferAttribute extends EventDispatcher {
+      * @param {number} w - The value to set.
+      * @return {BufferAttribute} A reference to this instance.
+      */
+-    setW(index: number, w: number): BufferAttribute;
++    setW(index: number, w: number): this;
+     /**
+      * Sets the x and y component of the vector at the given index.
+      *
+@@ -443,7 +473,7 @@ export class BufferAttribute extends EventDispatcher {
+      * @param {number} y - The value for the y component to set.
+      * @return {BufferAttribute} A reference to this instance.
+      */
+-    setXY(index: number, x: number, y: number): BufferAttribute;
++    setXY(index: number, x: number, y: number): this;
+     /**
+      * Sets the x, y and z component of the vector at the given index.
+      *
+@@ -453,7 +483,7 @@ export class BufferAttribute extends EventDispatcher {
+      * @param {number} z - The value for the z component to set.
+      * @return {BufferAttribute} A reference to this instance.
+      */
+-    setXYZ(index: number, x: number, y: number, z: number): BufferAttribute;
++    setXYZ(index: number, x: number, y: number, z: number): this;
+     /**
+      * Sets the x, y, z and w component of the vector at the given index.
+      *
+@@ -464,7 +494,7 @@ export class BufferAttribute extends EventDispatcher {
+      * @param {number} w - The value for the w component to set.
+      * @return {BufferAttribute} A reference to this instance.
+      */
+-    setXYZW(index: number, x: number, y: number, z: number, w: number): BufferAttribute;
++    setXYZW(index: number, x: number, y: number, z: number, w: number): this;
+     /**
+      * Sets the given callback function that is executed after the Renderer has transferred
+      * the attribute array data to the GPU. Can be used to perform clean-up operations after
+@@ -473,7 +503,7 @@ export class BufferAttribute extends EventDispatcher {
+      * @param {Function} callback - The `onUpload()` callback.
+      * @return {BufferAttribute} A reference to this instance.
+      */
+-    onUpload(callback: Function): BufferAttribute;
++    onUpload(callback: () => void): this;
+     /**
+      * Returns a new buffer attribute with copied values from this instance.
+      *
+@@ -485,22 +515,9 @@ export class BufferAttribute extends EventDispatcher {
+      *
+      * @return {Object} A JSON object representing the serialized buffer attribute.
+      */
+-    toJSON(): Object;
++    toJSON(): BufferAttributeJSON;
+     /**
+      * Frees the GPU-related resources allocated by this instance. Available only in {@link WebGPURenderer}.
+      */
+     dispose(): void;
+-    /**
+-     * Denormalizes the value using cached normalization factor.
+-     *
+-     * @private
+-     */
+-    private _denormalize;
+-    /**
+-     * Normalizes the value using cached normalization factor.
+-     *
+-     * @private
+-     */
+-    private _normalize;
+ }
+-import { EventDispatcher } from './EventDispatcher.js';
+diff --git a/jsdoc-testing/jsdoc/src/core/BufferGeometry.d.ts b/jsdoc-testing/jsdoc/src/core/BufferGeometry.d.ts
+index 9906f15d4..0b47c3667 100644
+--- a/jsdoc-testing/jsdoc/src/core/BufferGeometry.d.ts
++++ b/jsdoc-testing/jsdoc/src/core/BufferGeometry.d.ts
+@@ -1,3 +1,66 @@
++import { Box3 } from "../math/Box3.js";
++import { Matrix4 } from "../math/Matrix4.js";
++import { Quaternion } from "../math/Quaternion.js";
++import { Sphere } from "../math/Sphere.js";
++import { Vector2 } from "../math/Vector2.js";
++import { Vector3, Vector3Tuple } from "../math/Vector3.js";
++import IndirectStorageBufferAttribute from "../renderers/common/IndirectStorageBufferAttribute.js";
++import { BufferAttribute, BufferAttributeJSON } from "./BufferAttribute.js";
++import { EventDispatcher } from "./EventDispatcher.js";
++import { GLBufferAttribute } from "./GLBufferAttribute.js";
++import { InterleavedBufferAttribute } from "./InterleavedBufferAttribute.js";
++
++export type NormalBufferAttributes = Record<string, BufferAttribute | InterleavedBufferAttribute>;
++export type NormalOrGLBufferAttributes = Record<
++    string,
++    BufferAttribute | InterleavedBufferAttribute | GLBufferAttribute
++>;
++
++export interface BufferGeometryJSON {
++    metadata?: { version: number; type: string; generator: string };
++
++    uuid: string;
++    type: string;
++
++    name?: string;
++    userData?: Record<string, unknown>;
++
++    data?: {
++        attributes: Record<string, BufferAttributeJSON>;
++
++        index?: { type: string; array: number[] };
++
++        morphAttributes?: Record<string, BufferAttributeJSON[]>;
++        morphTargetsRelative?: boolean;
++
++        groups?: GeometryGroup[];
++
++        boundingSphere?: { center: Vector3Tuple; radius: number };
++    };
++}
++
++export interface GeometryGroup {
++    /**
++     * Specifies the first element in this draw call – the first vertex for non-indexed geometry, otherwise the first triangle index.
++     * @remarks Expects a `Integer`
++     */
++    start: number;
++    /**
++     * Specifies how many vertices (or indices) are included.
++     * @remarks Expects a `Integer`
++     */
++    count: number;
++    /**
++     * Specifies the material array index to use.
++     * @remarks Expects a `Integer`
++     */
++    materialIndex?: number | undefined;
++}
++
++export interface BufferGeometryEventMap {
++    dispose: {};
++}
++
+ /**
+  * A representation of mesh, line, or point geometry. Includes vertex
+  * positions, face indices, normals, colors, UVs, and custom attributes
+@@ -21,32 +84,40 @@
+  * const material = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
+  * const mesh = new THREE.Mesh( geometry, material );
+  * ```
+- *
+- * @augments EventDispatcher
+  */
+-export class BufferGeometry extends EventDispatcher {
++export class BufferGeometry<
++    Attributes extends NormalOrGLBufferAttributes = NormalBufferAttributes,
++    TEventMap extends BufferGeometryEventMap = BufferGeometryEventMap,
++> extends EventDispatcher<TEventMap> {
++    /**
++     * This creates a new {@link THREE.BufferGeometry | BufferGeometry} object.
++     */
++    constructor();
+     /**
+      * This flag can be used for type testing.
+      *
+-     * @type {boolean}
+-     * @readonly
+      * @default true
+      */
+-    readonly isBufferGeometry: boolean;
++    readonly isBufferGeometry: true;
++    /**
++     * Unique number for this {@link THREE.BufferGeometry | BufferGeometry} instance.
++     * @remarks Expects a `Integer`
++     */
++    id: number;
+     /**
+      * The UUID of the geometry.
+-     *
+-     * @type {string}
+-     * @readonly
+      */
+     readonly uuid: string;
+     /**
+      * The name of the geometry.
+-     *
+-     * @type {string}
+      */
+     name: string;
+-    type: string;
++    /**
++     * A Read-only _string_ to check if `this` object type.
++     * @remarks Sub-classes will update this value.
++     * @defaultValue `BufferGeometry`
++     */
++    readonly type: string | "BufferGeometry";
+     /**
+      * Allows for vertices to be re-used across multiple triangles; this is
+      * called using "indexed triangles". Each triangle is associated with the
+@@ -54,7 +125,6 @@ export class BufferGeometry extends EventDispatcher {
+      * each vertex for each triangular face. If this attribute is not set, the
+      * renderer assumes that each three contiguous positions represent a single triangle.
+      *
+-     * @type {?BufferAttribute}
+      * @default null
+      */
+     index: BufferAttribute | null;
+@@ -64,44 +134,39 @@ export class BufferGeometry extends EventDispatcher {
+      *
+      * Can only be used with {@link WebGPURenderer} and a WebGPU backend.
+      *
+-     * @type {?BufferAttribute}
+      * @default null
+      */
+-    indirect: BufferAttribute | null;
++    indirect: IndirectStorageBufferAttribute | null;
+     /**
+      * The offset, in bytes, into the indirect drawing buffer where the value data begins. If an array is provided, multiple indirect draw calls will be made for each offset.
+      *
+      * Can only be used with {@link WebGPURenderer} and a WebGPU backend.
+      *
+-     * @type {number|Array<number>}
+      * @default 0
+      */
+-    indirectOffset: number | Array<number>;
++    indirectOffset: number | number[];
+     /**
+      * This dictionary has as id the name of the attribute to be set and as value
+      * the buffer attribute to set it to. Rather than accessing this property directly,
+      * use `setAttribute()` and `getAttribute()` to access attributes of this geometry.
+-     *
+-     * @type {Object<string,(BufferAttribute|InterleavedBufferAttribute)>}
+      */
+-    attributes: {
+-        [x: string]: any;
+-    };
++    attributes: Attributes;
+     /**
+      * This dictionary holds the morph targets of the geometry.
+      *
+      * Note: Once the geometry has been rendered, the morph attribute data cannot
+      * be changed. You will have to call `dispose()`, and create a new geometry instance.
+-     *
+-     * @type {Object}
+      */
+-    morphAttributes: Object;
++    morphAttributes: {
++        position?: Array<BufferAttribute | InterleavedBufferAttribute> | undefined;
++        normal?: Array<BufferAttribute | InterleavedBufferAttribute> | undefined;
++        color?: Array<BufferAttribute | InterleavedBufferAttribute> | undefined;
++    };
+     /**
+      * Used to control the morph target behavior; when set to `true`, the morph
+      * target data is treated as relative offsets, rather than as absolute
+      * positions/normals.
+      *
+-     * @type {boolean}
+      * @default false
+      */
+     morphTargetsRelative: boolean;
+@@ -113,29 +178,23 @@ export class BufferGeometry extends EventDispatcher {
+      *
+      * Every vertex and index must belong to exactly one group — groups must not share vertices or
+      * indices, and must not leave vertices or indices unused.
+-     *
+-     * @type {Array<Object>}
+      */
+-    groups: Array<Object>;
++    groups: GeometryGroup[];
+     /**
+      * Bounding box for the geometry which can be calculated with `computeBoundingBox()`.
+      *
+-     * @type {?Box3}
+      * @default null
+      */
+     boundingBox: Box3 | null;
+     /**
+      * Bounding sphere for the geometry which can be calculated with `computeBoundingSphere()`.
+      *
+-     * @type {?Sphere}
+      * @default null
+      */
+     boundingSphere: Sphere | null;
+     /**
+      * Determines the part of the geometry to render. This should not be set directly,
+      * instead use `setDrawRange()`.
+-     *
+-     * @type {{start:number,count:number}}
+      */
+     drawRange: {
+         start: number;
+@@ -144,22 +203,8 @@ export class BufferGeometry extends EventDispatcher {
+     /**
+      * An object that can be used to store custom data about the geometry.
+      * It should not hold references to functions as these will not be cloned.
+-     *
+-     * @type {Object}
+-     */
+-    userData: Object;
+-    /**
+-     * `true` when the geometry has been transformed since construction
+-     * (e.g. via {@link BufferGeometry#applyMatrix4}). Only relevant for
+-     * geometry generators (subclasses that populate `parameters`): when set,
+-     * {@link BufferGeometry#toJSON} omits `parameters` since they no longer
+-     * describe the geometry.
+-     *
+-     * @private
+-     * @type {boolean}
+-     * @default false
+      */
+-    private _transformed;
++    userData: Record<string, any>;
+     /**
+      * Returns the index of this geometry.
+      *
+@@ -172,7 +217,7 @@ export class BufferGeometry extends EventDispatcher {
+      * @param {Array<number>|BufferAttribute} index - The index to set.
+      * @return {BufferGeometry} A reference to this instance.
+      */
+-    setIndex(index: Array<number> | BufferAttribute): BufferGeometry;
++    setIndex(index: BufferAttribute | number[] | null): this;
+     /**
+      * Sets the given indirect attribute to this geometry.
+      *
+@@ -180,13 +225,13 @@ export class BufferGeometry extends EventDispatcher {
+      * @param {number|Array<number>} [indirectOffset=0] - The offset, in bytes, into the indirect drawing buffer where the value data begins. If an array is provided, multiple indirect draw calls will be made for each offset.
+      * @return {BufferGeometry} A reference to this instance.
+      */
+-    setIndirect(indirect: BufferAttribute, indirectOffset?: number | Array<number>): BufferGeometry;
++    setIndirect(indirect: IndirectStorageBufferAttribute | null, indirectOffset?: number | number[]): this;
+     /**
+      * Returns the indirect attribute of this geometry.
+      *
+      * @return {?BufferAttribute} The indirect attribute. Returns `null` if no indirect attribute is defined.
+      */
+-    getIndirect(): BufferAttribute | null;
++    getIndirect(): IndirectStorageBufferAttribute | null;
+     /**
+      * Returns the buffer attribute for the given name.
+      *
+@@ -194,7 +239,7 @@ export class BufferGeometry extends EventDispatcher {
+      * @return {BufferAttribute|InterleavedBufferAttribute|undefined} The buffer attribute.
+      * Returns `undefined` if not attribute has been found.
+      */
+-    getAttribute(name: string): BufferAttribute | InterleavedBufferAttribute | undefined;
++    getAttribute<K extends keyof Attributes>(name: K): Attributes[K];
+     /**
+      * Sets the given attribute for the given name.
+      *
+@@ -202,21 +247,21 @@ export class BufferGeometry extends EventDispatcher {
+      * @param {BufferAttribute|InterleavedBufferAttribute} attribute - The attribute to set.
+      * @return {BufferGeometry} A reference to this instance.
+      */
+-    setAttribute(name: string, attribute: BufferAttribute | InterleavedBufferAttribute): BufferGeometry;
++    setAttribute<K extends keyof Attributes>(name: K, attribute: Attributes[K]): this;
+     /**
+      * Deletes the attribute for the given name.
+      *
+      * @param {string} name - The attribute name to delete.
+      * @return {BufferGeometry} A reference to this instance.
+      */
+-    deleteAttribute(name: string): BufferGeometry;
++    deleteAttribute(name: keyof Attributes): this;
+     /**
+      * Returns `true` if this geometry has an attribute for the given name.
+      *
+      * @param {string} name - The attribute name.
+      * @return {boolean} Whether this geometry has an attribute for the given name or not.
+      */
+-    hasAttribute(name: string): boolean;
++    hasAttribute(name: keyof Attributes): boolean;
+     /**
+      * Adds a group to this geometry.
+      *
+@@ -244,14 +289,14 @@ export class BufferGeometry extends EventDispatcher {
+      * @param {Matrix4} matrix - The matrix to apply.
+      * @return {BufferGeometry} A reference to this instance.
+      */
+-    applyMatrix4(matrix: Matrix4): BufferGeometry;
++    applyMatrix4(matrix: Matrix4): this;
+     /**
+      * Applies the rotation represented by the Quaternion to the geometry.
+      *
+      * @param {Quaternion} q - The Quaternion to apply.
+      * @return {BufferGeometry} A reference to this instance.
+      */
+-    applyQuaternion(q: Quaternion): BufferGeometry;
++    applyQuaternion(q: Quaternion): this;
+     /**
+      * Rotates the geometry about the X axis. This is typically done as a one time
+      * operation, and not during a loop. Use {@link Object3D#rotation} for typical
+@@ -260,7 +305,7 @@ export class BufferGeometry extends EventDispatcher {
+      * @param {number} angle - The angle in radians.
+      * @return {BufferGeometry} A reference to this instance.
+      */
+-    rotateX(angle: number): BufferGeometry;
++    rotateX(angle: number): this;
+     /**
+      * Rotates the geometry about the Y axis. This is typically done as a one time
+      * operation, and not during a loop. Use {@link Object3D#rotation} for typical
+@@ -269,7 +314,7 @@ export class BufferGeometry extends EventDispatcher {
+      * @param {number} angle - The angle in radians.
+      * @return {BufferGeometry} A reference to this instance.
+      */
+-    rotateY(angle: number): BufferGeometry;
++    rotateY(angle: number): this;
+     /**
+      * Rotates the geometry about the Z axis. This is typically done as a one time
+      * operation, and not during a loop. Use {@link Object3D#rotation} for typical
+@@ -278,7 +323,7 @@ export class BufferGeometry extends EventDispatcher {
+      * @param {number} angle - The angle in radians.
+      * @return {BufferGeometry} A reference to this instance.
+      */
+-    rotateZ(angle: number): BufferGeometry;
++    rotateZ(angle: number): this;
+     /**
+      * Translates the geometry. This is typically done as a one time
+      * operation, and not during a loop. Use {@link Object3D#position} for typical
+@@ -289,7 +334,7 @@ export class BufferGeometry extends EventDispatcher {
+      * @param {number} z - The z offset.
+      * @return {BufferGeometry} A reference to this instance.
+      */
+-    translate(x: number, y: number, z: number): BufferGeometry;
++    translate(x: number, y: number, z: number): this;
+     /**
+      * Scales the geometry. This is typically done as a one time
+      * operation, and not during a loop. Use {@link Object3D#scale} for typical
+@@ -300,7 +345,7 @@ export class BufferGeometry extends EventDispatcher {
+      * @param {number} z - The z scale.
+      * @return {BufferGeometry} A reference to this instance.
+      */
+-    scale(x: number, y: number, z: number): BufferGeometry;
++    scale(x: number, y: number, z: number): this;
+     /**
+      * Rotates the geometry to face a point in 3D space. This is typically done as a one time
+      * operation, and not during a loop. Use {@link Object3D#lookAt} for typical
+@@ -309,13 +354,13 @@ export class BufferGeometry extends EventDispatcher {
+      * @param {Vector3} vector - The target point.
+      * @return {BufferGeometry} A reference to this instance.
+      */
+-    lookAt(vector: Vector3): BufferGeometry;
++    lookAt(vector: Vector3): this;
+     /**
+      * Center the geometry based on its bounding box.
+      *
+      * @return {BufferGeometry} A reference to this instance.
+      */
+-    center(): BufferGeometry;
++    center(): this;
+     /**
+      * Defines a geometry by creating a `position` attribute based on the given array of points. The array
+      * can hold 2D or 3D vectors. When using two-dimensional data, the `z` coordinate for all vertices is
+@@ -327,7 +372,7 @@ export class BufferGeometry extends EventDispatcher {
+      * @param {Array<Vector2>|Array<Vector3>} points - The points.
+      * @return {BufferGeometry} A reference to this instance.
+      */
+-    setFromPoints(points: Array<Vector2> | Array<Vector3>): BufferGeometry;
++    setFromPoints(points: Vector3[] | Vector2[]): this;
+     /**
+      * Computes the bounding box of the geometry, and updates the `boundingBox` member.
+      * The bounding box is not computed by the engine; it must be computed by your app.
+@@ -372,20 +417,20 @@ export class BufferGeometry extends EventDispatcher {
+      *
+      * @return {Object} A JSON object representing the serialized geometry.
+      */
+-    toJSON(): Object;
++    toJSON(): BufferGeometryJSON;
+     /**
+      * Returns a new geometry with copied values from this instance.
+      *
+      * @return {BufferGeometry} A clone of this instance.
+      */
+-    clone(): BufferGeometry;
++    clone(): this;
+     /**
+      * Copies the values of the given geometry to this instance.
+      *
+      * @param {BufferGeometry} source - The geometry to copy.
+      * @return {BufferGeometry} A reference to this instance.
+      */
+-    copy(source: BufferGeometry): BufferGeometry;
++    copy(source: BufferGeometry): this;
+     /**
+      * Frees the GPU-related resources allocated by this instance. Call this
+      * method whenever this instance is no longer used in your app.
+@@ -394,10 +439,3 @@ export class BufferGeometry extends EventDispatcher {
+      */
+     dispose(): void;
+ }
+-import { EventDispatcher } from './EventDispatcher.js';
+-import { BufferAttribute } from './BufferAttribute.js';
+-import { Box3 } from '../math/Box3.js';
+-import { Sphere } from '../math/Sphere.js';
+-import { Matrix4 } from '../math/Matrix4.js';
+-import { Vector3 } from '../math/Vector3.js';
+-import { Vector2 } from '../math/Vector2.js';
+diff --git a/jsdoc-testing/jsdoc/src/core/Clock.d.ts b/jsdoc-testing/jsdoc/src/core/Clock.d.ts
+index d151f9371..d787bf475 100644
+--- a/jsdoc-testing/jsdoc/src/core/Clock.d.ts
++++ b/jsdoc-testing/jsdoc/src/core/Clock.d.ts
+@@ -16,14 +16,12 @@ export class Clock {
+      * If set to `true`, the clock starts automatically when `getDelta()` is called
+      * for the first time.
+      *
+-     * @type {boolean}
+      * @default true
+      */
+     autoStart: boolean;
+     /**
+      * Holds the time at which the clock's `start()` method was last called.
+      *
+-     * @type {number}
+      * @default 0
+      */
+     startTime: number;
+@@ -31,21 +29,18 @@ export class Clock {
+      * Holds the time at which the clock's `start()`, `getElapsedTime()` or
+      * `getDelta()` methods were last called.
+      *
+-     * @type {number}
+      * @default 0
+      */
+     oldTime: number;
+     /**
+      * Keeps track of the total time that the clock has been running.
+      *
+-     * @type {number}
+      * @default 0
+      */
+     elapsedTime: number;
+     /**
+      * Whether the clock is running or not.
+      *
+-     * @type {boolean}
+      * @default false
+      */
+     running: boolean;
+diff --git a/jsdoc-testing/jsdoc/src/core/EventDispatcher.d.ts b/jsdoc-testing/jsdoc/src/core/EventDispatcher.d.ts
+index b53482ecc..a13b14b08 100644
+--- a/jsdoc-testing/jsdoc/src/core/EventDispatcher.d.ts
++++ b/jsdoc-testing/jsdoc/src/core/EventDispatcher.d.ts
+@@ -1,3 +1,22 @@
++/**
++ * The minimal basic Event that can be dispatched by a {@link EventDispatcher<>}.
++ */
++export interface BaseEvent<TEventType extends string = string> {
++    readonly type: TEventType;
++}
++
++/**
++ * The minimal expected contract of a fired Event that was dispatched by a {@link EventDispatcher<>}.
++ */
++export interface Event<TEventType extends string = string, TTarget = unknown> {
++    readonly type: TEventType;
++    readonly target: TTarget;
++}
++
++export type EventListener<TEventData, TEventType extends string, TTarget> = (
++    event: TEventData & Event<TEventType, TTarget>,
++) => void;
++
+ /**
+  * This modules allows to dispatch event objects on custom JavaScript objects.
+  *
+@@ -7,9 +26,9 @@
+  * ```js
+  * class Car extends EventDispatcher {
+  * 	start() {
+- *		this.dispatchEvent( { type: 'start', message: 'vroom vroom!' } );
+- *	}
+- *};
++ * 		this.dispatchEvent( { type: 'start', message: 'vroom vroom!' } );
++ * 	}
++ * };
+  *
+  * // Using events with the custom object
+  * const car = new Car();
+@@ -20,15 +39,21 @@
+  * car.start();
+  * ```
+  */
+-export class EventDispatcher {
++export class EventDispatcher<TEventMap extends {} = {}> {
++    /**
++     * Creates {@link THREE.EventDispatcher | EventDispatcher} object.
++     */
++    constructor();
+     /**
+      * Adds the given event listener to the given event type.
+      *
+      * @param {string} type - The type of event to listen to.
+      * @param {Function} listener - The function that gets called when the event is fired.
+      */
+-    addEventListener(type: string, listener: Function): void;
+-    _listeners: {} | undefined;
++    addEventListener<T extends Extract<keyof TEventMap, string>>(
++        type: T,
++        listener: EventListener<TEventMap[T], T, this>,
++    ): void;
+     /**
+      * Returns `true` if the given event listener has been added to the given event type.
+      *
+@@ -36,18 +61,24 @@ export class EventDispatcher {
+      * @param {Function} listener - The listener to check.
+      * @return {boolean} Whether the given event listener has been added to the given event type.
+      */
+-    hasEventListener(type: string, listener: Function): boolean;
++    hasEventListener<T extends Extract<keyof TEventMap, string>>(
++        type: T,
++        listener: EventListener<TEventMap[T], T, this>,
++    ): boolean;
+     /**
+      * Removes the given event listener from the given event type.
+      *
+      * @param {string} type - The type of event.
+      * @param {Function} listener - The listener to remove.
+      */
+-    removeEventListener(type: string, listener: Function): void;
++    removeEventListener<T extends Extract<keyof TEventMap, string>>(
++        type: T,
++        listener: EventListener<TEventMap[T], T, this>,
++    ): void;
+     /**
+      * Dispatches an event object.
+      *
+      * @param {Object} event - The event that gets fired.
+      */
+-    dispatchEvent(event: Object): void;
++    dispatchEvent<T extends Extract<keyof TEventMap, string>>(event: BaseEvent<T> & TEventMap[T]): void;
+ }
+diff --git a/jsdoc-testing/jsdoc/src/core/GLBufferAttribute.d.ts b/jsdoc-testing/jsdoc/src/core/GLBufferAttribute.d.ts
+index 636d7b1e6..b5f118200 100644
+--- a/jsdoc-testing/jsdoc/src/core/GLBufferAttribute.d.ts
++++ b/jsdoc-testing/jsdoc/src/core/GLBufferAttribute.d.ts
+@@ -20,49 +20,42 @@ export class GLBufferAttribute {
+      * @param {number} count - The expected number of vertices in VBO.
+      * @param {boolean} [normalized=false] - Whether the data are normalized or not.
+      */
+-    constructor(buffer: WebGLBuffer, type: number, itemSize: number, elementSize: number, count: number, normalized?: boolean);
++    constructor(
++        buffer: WebGLBuffer,
++        type: GLenum,
++        itemSize: number,
++        elementSize: 1 | 2 | 4,
++        count: number,
++        normalized?: boolean,
++    );
+     /**
+      * This flag can be used for type testing.
+      *
+-     * @type {boolean}
+-     * @readonly
+      * @default true
+      */
+-    readonly isGLBufferAttribute: boolean;
++    readonly isGLBufferAttribute: true;
+     /**
+      * The name of the buffer attribute.
+-     *
+-     * @type {string}
+      */
+     name: string;
+     /**
+      * The native WebGL buffer.
+-     *
+-     * @type {WebGLBuffer}
+      */
+     buffer: WebGLBuffer;
+     /**
+      * The native data type.
+-     *
+-     * @type {number}
+      */
+-    type: number;
++    type: GLenum;
+     /**
+      * The item size, see {@link BufferAttribute#itemSize}.
+-     *
+-     * @type {number}
+      */
+     itemSize: number;
+     /**
+      * The corresponding size (in bytes) for the given `type` parameter.
+-     *
+-     * @type {number}
+      */
+-    elementSize: number;
++    elementSize: 1 | 2 | 4;
+     /**
+      * The expected number of vertices in VBO.
+-     *
+-     * @type {number}
+      */
+     count: number;
+     /**
+@@ -71,21 +64,16 @@ export class GLBufferAttribute {
+      * and `normalized` is `true`, the values `0 - +65535` in the buffer data will be mapped to
+      * `0.0f - +1.0f` in the GLSL attribute. If `normalized` is `false`, the values will be converted
+      * to floats unmodified, i.e. `65535` becomes `65535.0f`.
+-     *
+-     * @type {boolean}
+      */
+     normalized: boolean;
+     /**
+      * A version number, incremented every time the `needsUpdate` is set to `true`.
+-     *
+-     * @type {number}
+      */
+     version: number;
+     /**
+      * Flag to indicate that this attribute has changed and should be re-sent to
+      * the GPU. Set this to `true` when you modify the value of the array.
+      *
+-     * @type {number}
+      * @default false
+      * @param {boolean} value
+      */
+@@ -96,7 +84,7 @@ export class GLBufferAttribute {
+      * @param {WebGLBuffer} buffer - The buffer to set.
+      * @return {BufferAttribute} A reference to this instance.
+      */
+-    setBuffer(buffer: WebGLBuffer): BufferAttribute;
++    setBuffer(buffer: WebGLBuffer): this;
+     /**
+      * Sets the given native data type and element size.
+      *
+@@ -104,19 +92,19 @@ export class GLBufferAttribute {
+      * @param {number} elementSize - The corresponding size (in bytes) for the given `type` parameter.
+      * @return {BufferAttribute} A reference to this instance.
+      */
+-    setType(type: number, elementSize: number): BufferAttribute;
++    setType(type: GLenum, elementSize: 1 | 2 | 4): this;
+     /**
+      * Sets the item size.
+      *
+      * @param {number} itemSize - The item size.
+      * @return {BufferAttribute} A reference to this instance.
+      */
+-    setItemSize(itemSize: number): BufferAttribute;
++    setItemSize(itemSize: number): this;
+     /**
+      * Sets the count (the expected number of vertices in VBO).
+      *
+      * @param {number} count - The count.
+      * @return {BufferAttribute} A reference to this instance.
+      */
+-    setCount(count: number): BufferAttribute;
++    setCount(count: number): this;
+ }
+diff --git a/jsdoc-testing/jsdoc/src/core/InstancedBufferAttribute.d.ts b/jsdoc-testing/jsdoc/src/core/InstancedBufferAttribute.d.ts
+index aed6b3ff4..52e09f764 100644
+--- a/jsdoc-testing/jsdoc/src/core/InstancedBufferAttribute.d.ts
++++ b/jsdoc-testing/jsdoc/src/core/InstancedBufferAttribute.d.ts
+@@ -1,7 +1,7 @@
++import { BufferAttribute, TypedArray } from "./BufferAttribute.js";
++
+ /**
+  * An instanced version of a buffer attribute.
+- *
+- * @augments BufferAttribute
+  */
+ export class InstancedBufferAttribute extends BufferAttribute {
+     /**
+@@ -16,21 +16,16 @@ export class InstancedBufferAttribute extends BufferAttribute {
+     /**
+      * This flag can be used for type testing.
+      *
+-     * @type {boolean}
+-     * @readonly
+      * @default true
+      */
+-    readonly isInstancedBufferAttribute: boolean;
++    readonly isInstancedBufferAttribute: true;
+     /**
+      * Defines how often a value of this buffer attribute should be repeated. A
+      * value of one means that each value of the instanced attribute is used for
+      * a single instance. A value of two means that each value is used for two
+      * consecutive instances (and so on).
+      *
+-     * @type {number}
+      * @default 1
+      */
+     meshPerAttribute: number;
+-    copy(source: any): this;
+ }
+-import { BufferAttribute } from './BufferAttribute.js';
+diff --git a/jsdoc-testing/jsdoc/src/core/InstancedBufferGeometry.d.ts b/jsdoc-testing/jsdoc/src/core/InstancedBufferGeometry.d.ts
+index 4ea16abdd..4506b53d3 100644
+--- a/jsdoc-testing/jsdoc/src/core/InstancedBufferGeometry.d.ts
++++ b/jsdoc-testing/jsdoc/src/core/InstancedBufferGeometry.d.ts
+@@ -1,22 +1,24 @@
++import { BufferGeometry } from "./BufferGeometry.js";
++
+ /**
+  * An instanced version of a geometry.
+  */
+ export class InstancedBufferGeometry extends BufferGeometry {
++    /**
++     * Create a new instance of {@link InstancedBufferGeometry}
++     */
++    constructor();
+     /**
+      * This flag can be used for type testing.
+      *
+-     * @type {boolean}
+-     * @readonly
+      * @default true
+      */
+-    readonly isInstancedBufferGeometry: boolean;
++    readonly isInstancedBufferGeometry: true;
+     /**
+      * The instance count.
+      *
+-     * @type {number}
+      * @default Infinity
+      */
+     instanceCount: number;
+-    copy(source: any): this;
++    copy(source: InstancedBufferGeometry): this;
+ }
+-import { BufferGeometry } from './BufferGeometry.js';
+diff --git a/jsdoc-testing/jsdoc/src/core/InstancedInterleavedBuffer.d.ts b/jsdoc-testing/jsdoc/src/core/InstancedInterleavedBuffer.d.ts
+index 3f95ae1bb..0aec7fd4d 100644
+--- a/jsdoc-testing/jsdoc/src/core/InstancedInterleavedBuffer.d.ts
++++ b/jsdoc-testing/jsdoc/src/core/InstancedInterleavedBuffer.d.ts
+@@ -1,7 +1,8 @@
++import { TypedArray } from "./BufferAttribute.js";
++import { InterleavedBuffer } from "./InterleavedBuffer.js";
++
+ /**
+  * An instanced version of an interleaved buffer.
+- *
+- * @augments InterleavedBuffer
+  */
+ export class InstancedInterleavedBuffer extends InterleavedBuffer {
+     /**
+@@ -15,21 +16,14 @@ export class InstancedInterleavedBuffer extends InterleavedBuffer {
+     /**
+      * This flag can be used for type testing.
+      *
+-     * @type {boolean}
+-     * @readonly
+      * @default true
+      */
+-    readonly isInstancedInterleavedBuffer: boolean;
++    readonly isInstancedInterleavedBuffer: true;
+     /**
+      * Defines how often a value of this buffer attribute should be repeated,
+      * see {@link InstancedBufferAttribute#meshPerAttribute}.
+      *
+-     * @type {number}
+      * @default 1
+      */
+     meshPerAttribute: number;
+-    copy(source: any): this;
+-    clone(data: any): InterleavedBuffer;
+-    toJSON(data: any): Object;
+ }
+-import { InterleavedBuffer } from './InterleavedBuffer.js';
+diff --git a/jsdoc-testing/jsdoc/src/core/InterleavedBuffer.d.ts b/jsdoc-testing/jsdoc/src/core/InterleavedBuffer.d.ts
+index c6054ce83..6b0aa349d 100644
+--- a/jsdoc-testing/jsdoc/src/core/InterleavedBuffer.d.ts
++++ b/jsdoc-testing/jsdoc/src/core/InterleavedBuffer.d.ts
+@@ -1,3 +1,6 @@
++import { Usage } from "../constants.js";
++import { TypedArray } from "./BufferAttribute.js";
++
+ /**
+  * "Interleaved" means that multiple attributes, possibly of different types,
+  * (e.g., position, normal, uv, color) are packed into a single array buffer.
+@@ -15,70 +18,61 @@ export class InterleavedBuffer {
+     /**
+      * This flag can be used for type testing.
+      *
+-     * @type {boolean}
+-     * @readonly
+      * @default true
+      */
+-    readonly isInterleavedBuffer: boolean;
++    readonly isInterleavedBuffer: true;
+     /**
+      * A typed array with a shared buffer storing attribute data.
+-     *
+-     * @type {TypedArray}
+      */
+     array: TypedArray;
+     /**
+      * The number of typed-array elements per vertex.
+-     *
+-     * @type {number}
+      */
+     stride: number;
+     /**
+      * The total number of elements in the array
+-     *
+-     * @type {number}
+-     * @readonly
+      */
+-    readonly count: number;
++    count: number;
+     /**
+      * Defines the intended usage pattern of the data store for optimization purposes.
+      *
+      * Note: After the initial use of a buffer, its usage cannot be changed. Instead,
+      * instantiate a new one and set the desired usage before the next render.
+      *
+-     * @type {(StaticDrawUsage|DynamicDrawUsage|StreamDrawUsage|StaticReadUsage|DynamicReadUsage|StreamReadUsage|StaticCopyUsage|DynamicCopyUsage|StreamCopyUsage)}
+      * @default StaticDrawUsage
+      */
+-    usage: (number | DynamicDrawUsage | StreamDrawUsage | StaticReadUsage | DynamicReadUsage | StreamReadUsage | StaticCopyUsage | DynamicCopyUsage | StreamCopyUsage);
++    usage: Usage;
+     /**
+      * This can be used to only update some components of stored vectors (for example, just the
+      * component related to color). Use the `addUpdateRange()` function to add ranges to this array.
+-     *
+-     * @type {Array<Object>}
+      */
+-    updateRanges: Array<Object>;
++    updateRanges: Array<{
++        /**
++         * Position at which to start update.
++         */
++        start: number;
++        /**
++         * The number of components to update.
++         */
++        count: number;
++    }>;
+     /**
+      * A version number, incremented every time the `needsUpdate` is set to `true`.
+-     *
+-     * @type {number}
+      */
+     version: number;
+     /**
+      * The UUID of the interleaved buffer.
+-     *
+-     * @type {string}
+-     * @readonly
+      */
+     readonly uuid: string;
+     /**
+      * A callback function that is executed after the renderer has transferred the attribute array
+      * data to the GPU.
+      */
+-    onUploadCallback(): void;
++    onUploadCallback: () => void;
+     /**
+      * Flag to indicate that this attribute has changed and should be re-sent to
+      * the GPU. Set this to `true` when you modify the value of the array.
+      *
+-     * @type {number}
+      * @default false
+      * @param {boolean} value
+      */
+@@ -89,7 +83,7 @@ export class InterleavedBuffer {
+      * @param {(StaticDrawUsage|DynamicDrawUsage|StreamDrawUsage|StaticReadUsage|DynamicReadUsage|StreamReadUsage|StaticCopyUsage|DynamicCopyUsage|StreamCopyUsage)} value - The usage to set.
+      * @return {InterleavedBuffer} A reference to this interleaved buffer.
+      */
+-    setUsage(value: (number | DynamicDrawUsage | StreamDrawUsage | StaticReadUsage | DynamicReadUsage | StreamReadUsage | StaticCopyUsage | DynamicCopyUsage | StreamCopyUsage)): InterleavedBuffer;
++    setUsage(value: Usage): this;
+     /**
+      * Adds a range of data in the data array to be updated on the GPU.
+      *
+@@ -107,7 +101,7 @@ export class InterleavedBuffer {
+      * @param {InterleavedBuffer} source - The interleaved buffer to copy.
+      * @return {InterleavedBuffer} A reference to this instance.
+      */
+-    copy(source: InterleavedBuffer): InterleavedBuffer;
++    copy(source: InterleavedBuffer): this;
+     /**
+      * Copies a vector from the given interleaved buffer to this one. The start
+      * and destination position in the attribute buffers are represented by the
+@@ -118,7 +112,7 @@ export class InterleavedBuffer {
+      * @param {number} index2 - The source index into the given interleaved buffer.
+      * @return {InterleavedBuffer} A reference to this instance.
+      */
+-    copyAt(index1: number, interleavedBuffer: InterleavedBuffer, index2: number): InterleavedBuffer;
++    copyAt(index1: number, interleavedBuffer: InterleavedBuffer, index2: number): this;
+     /**
+      * Sets the given array data in the interleaved buffer.
+      *
+@@ -126,14 +120,14 @@ export class InterleavedBuffer {
+      * @param {number} [offset=0] - The offset in this interleaved buffer's array.
+      * @return {InterleavedBuffer} A reference to this instance.
+      */
+-    set(value: (TypedArray | any[]), offset?: number): InterleavedBuffer;
++    set(value: ArrayLike<number>, offset?: number): this;
+     /**
+      * Returns a new interleaved buffer with copied values from this instance.
+      *
+      * @param {Object} [data] - An object with shared array buffers that allows to retain shared structures.
+      * @return {InterleavedBuffer} A clone of this instance.
+      */
+-    clone(data?: Object): InterleavedBuffer;
++    clone(data: {}): InterleavedBuffer;
+     /**
+      * Sets the given callback function that is executed after the Renderer has transferred
+      * the array data to the GPU. Can be used to perform clean-up operations after
+@@ -142,12 +136,17 @@ export class InterleavedBuffer {
+      * @param {Function} callback - The `onUpload()` callback.
+      * @return {InterleavedBuffer} A reference to this instance.
+      */
+-    onUpload(callback: Function): InterleavedBuffer;
++    onUpload(callback: () => void): this;
+     /**
+      * Serializes the interleaved buffer into JSON.
+      *
+      * @param {Object} [data] - An optional value holding meta information about the serialization.
+      * @return {Object} A JSON object representing the serialized interleaved buffer.
+      */
+-    toJSON(data?: Object): Object;
++    toJSON(data: {}): {
++        uuid: string;
++        buffer: string;
++        type: string;
++        stride: number;
++    };
+ }
+diff --git a/jsdoc-testing/jsdoc/src/core/InterleavedBufferAttribute.d.ts b/jsdoc-testing/jsdoc/src/core/InterleavedBufferAttribute.d.ts
+index 67fed6c46..e67fe4bfb 100644
+--- a/jsdoc-testing/jsdoc/src/core/InterleavedBufferAttribute.d.ts
++++ b/jsdoc-testing/jsdoc/src/core/InterleavedBufferAttribute.d.ts
+@@ -1,3 +1,8 @@
++import { Matrix3 } from "../math/Matrix3.js";
++import { Matrix4 } from "../math/Matrix4.js";
++import { BufferAttribute, TypedArray } from "./BufferAttribute.js";
++import { InterleavedBuffer } from "./InterleavedBuffer.js";
++
+ /**
+  * An alternative version of a buffer attribute with interleaved data. Interleaved
+  * attributes share a common interleaved data storage ({@link InterleavedBuffer}) and refer with
+@@ -16,66 +21,41 @@ export class InterleavedBufferAttribute {
+     /**
+      * This flag can be used for type testing.
+      *
+-     * @type {boolean}
+-     * @readonly
+      * @default true
+      */
+-    readonly isInterleavedBufferAttribute: boolean;
++    readonly isInterleavedBufferAttribute: true;
+     /**
+      * The name of the buffer attribute.
+-     *
+-     * @type {string}
+      */
+     name: string;
+     /**
+      * The buffer holding the interleaved data.
+-     *
+-     * @type {InterleavedBuffer}
+      */
+     data: InterleavedBuffer;
+     /**
+      * The item size, see {@link BufferAttribute#itemSize}.
+-     *
+-     * @type {number}
+      */
+     itemSize: number;
+     /**
+      * The attribute offset into the buffer.
+-     *
+-     * @type {number}
+      */
+     offset: number;
+     /**
+      * Whether the data are normalized or not, see {@link BufferAttribute#normalized}
+-     *
+-     * @type {InterleavedBuffer}
+-     */
+-    normalized: InterleavedBuffer;
+-    /**
+-     * Cached normalization factor, see {@link MathUtils#getNormalizationScale}.
+-     *
+-     * @private
+-     * @type {number|undefined}
+      */
+-    private _normalizationScale;
++    normalized: boolean;
+     /**
+      * The item count of this buffer attribute.
+-     *
+-     * @type {number}
+-     * @readonly
+      */
+-    readonly get count(): number;
++    get count(): number;
+     /**
+      * The array holding the interleaved buffer attribute data.
+-     *
+-     * @type {TypedArray}
+      */
+     get array(): TypedArray;
+     /**
+      * Flag to indicate that this attribute has changed and should be re-sent to
+      * the GPU. Set this to `true` when you modify the value of the array.
+      *
+-     * @type {number}
+      * @default false
+      * @param {boolean} value
+      */
+@@ -87,7 +67,7 @@ export class InterleavedBufferAttribute {
+      * @param {Matrix4} m - The matrix to apply.
+      * @return {InterleavedBufferAttribute} A reference to this instance.
+      */
+-    applyMatrix4(m: Matrix4): InterleavedBufferAttribute;
++    applyMatrix4(m: Matrix4): this;
+     /**
+      * Applies the given 3x3 normal matrix to the given attribute. Only works with
+      * item size `3`.
+@@ -95,7 +75,7 @@ export class InterleavedBufferAttribute {
+      * @param {Matrix3} m - The normal matrix to apply.
+      * @return {InterleavedBufferAttribute} A reference to this instance.
+      */
+-    applyNormalMatrix(m: Matrix3): InterleavedBufferAttribute;
++    applyNormalMatrix(m: Matrix3): this;
+     /**
+      * Applies the given 4x4 matrix to the given attribute. Only works with
+      * item size `3` and with direction vectors.
+@@ -103,7 +83,7 @@ export class InterleavedBufferAttribute {
+      * @param {Matrix4} m - The matrix to apply.
+      * @return {InterleavedBufferAttribute} A reference to this instance.
+      */
+-    transformDirection(m: Matrix4): InterleavedBufferAttribute;
++    transformDirection(m: Matrix4): this;
+     /**
+      * Returns the given component of the vector at the given index.
+      *
+@@ -120,7 +100,7 @@ export class InterleavedBufferAttribute {
+      * @param {number} value - The value to set.
+      * @return {InterleavedBufferAttribute} A reference to this instance.
+      */
+-    setComponent(index: number, component: number, value: number): InterleavedBufferAttribute;
++    setComponent(index: number, component: number, value: number): this;
+     /**
+      * Sets the x component of the vector at the given index.
+      *
+@@ -128,7 +108,7 @@ export class InterleavedBufferAttribute {
+      * @param {number} x - The value to set.
+      * @return {InterleavedBufferAttribute} A reference to this instance.
+      */
+-    setX(index: number, x: number): InterleavedBufferAttribute;
++    setX(index: number, x: number): this;
+     /**
+      * Sets the y component of the vector at the given index.
+      *
+@@ -136,7 +116,7 @@ export class InterleavedBufferAttribute {
+      * @param {number} y - The value to set.
+      * @return {InterleavedBufferAttribute} A reference to this instance.
+      */
+-    setY(index: number, y: number): InterleavedBufferAttribute;
++    setY(index: number, y: number): this;
+     /**
+      * Sets the z component of the vector at the given index.
+      *
+@@ -144,7 +124,7 @@ export class InterleavedBufferAttribute {
+      * @param {number} z - The value to set.
+      * @return {InterleavedBufferAttribute} A reference to this instance.
+      */
+-    setZ(index: number, z: number): InterleavedBufferAttribute;
++    setZ(index: number, z: number): this;
+     /**
+      * Sets the w component of the vector at the given index.
+      *
+@@ -152,7 +132,7 @@ export class InterleavedBufferAttribute {
+      * @param {number} w - The value to set.
+      * @return {InterleavedBufferAttribute} A reference to this instance.
+      */
+-    setW(index: number, w: number): InterleavedBufferAttribute;
++    setW(index: number, w: number): this;
+     /**
+      * Returns the x component of the vector at the given index.
+      *
+@@ -189,7 +169,7 @@ export class InterleavedBufferAttribute {
+      * @param {number} y - The value for the y component to set.
+      * @return {InterleavedBufferAttribute} A reference to this instance.
+      */
+-    setXY(index: number, x: number, y: number): InterleavedBufferAttribute;
++    setXY(index: number, x: number, y: number): this;
+     /**
+      * Sets the x, y and z component of the vector at the given index.
+      *
+@@ -199,7 +179,7 @@ export class InterleavedBufferAttribute {
+      * @param {number} z - The value for the z component to set.
+      * @return {InterleavedBufferAttribute} A reference to this instance.
+      */
+-    setXYZ(index: number, x: number, y: number, z: number): InterleavedBufferAttribute;
++    setXYZ(index: number, x: number, y: number, z: number): this;
+     /**
+      * Sets the x, y, z and w component of the vector at the given index.
+      *
+@@ -210,7 +190,7 @@ export class InterleavedBufferAttribute {
+      * @param {number} w - The value for the w component to set.
+      * @return {InterleavedBufferAttribute} A reference to this instance.
+      */
+-    setXYZW(index: number, x: number, y: number, z: number, w: number): InterleavedBufferAttribute;
++    setXYZW(index: number, x: number, y: number, z: number, w: number): this;
+     /**
+      * Returns a new buffer attribute with copied values from this instance.
+      *
+@@ -219,7 +199,7 @@ export class InterleavedBufferAttribute {
+      * @param {Object} [data] - An object with interleaved buffers that allows to retain the interleaved property.
+      * @return {BufferAttribute|InterleavedBufferAttribute} A clone of this instance.
+      */
+-    clone(data?: Object): BufferAttribute | InterleavedBufferAttribute;
++    clone(data?: {}): BufferAttribute;
+     /**
+      * Serializes the buffer attribute into JSON.
+      *
+@@ -228,18 +208,11 @@ export class InterleavedBufferAttribute {
+      * @param {Object} [data] - An optional value holding meta information about the serialization.
+      * @return {Object} A JSON object representing the serialized buffer attribute.
+      */
+-    toJSON(data?: Object): Object;
+-    /**
+-     * Denormalizes the value using cached normalization factor.
+-     *
+-     * @private
+-     */
+-    private _denormalize;
+-    /**
+-     * Normalizes the value using cached normalization factor.
+-     *
+-     * @private
+-     */
+-    private _normalize;
++    toJSON(data?: {}): {
++        isInterleavedBufferAttribute: true;
++        itemSize: number;
++        data: string;
++        offset: number;
++        normalized: boolean;
++    };
+ }
+-import { BufferAttribute } from './BufferAttribute.js';
+diff --git a/jsdoc-testing/jsdoc/src/core/Layers.d.ts b/jsdoc-testing/jsdoc/src/core/Layers.d.ts
+index 34b3c6175..7345c28ca 100644
+--- a/jsdoc-testing/jsdoc/src/core/Layers.d.ts
++++ b/jsdoc-testing/jsdoc/src/core/Layers.d.ts
+@@ -11,11 +11,14 @@
+  * is an instance of this class.
+  */
+ export class Layers {
++    /**
++     * Constructs a new layers instance, with membership
++     * initially set to layer `0`.
++     */
++    constructor();
+     /**
+      * A bit mask storing which of the 32 layers this layers object is currently
+      * a member of.
+-     *
+-     * @type {number}
+      */
+     mask: number;
+     /**
+diff --git a/jsdoc-testing/jsdoc/src/core/Object3D.d.ts b/jsdoc-testing/jsdoc/src/core/Object3D.d.ts
+index 4685b6f52..128b87f82 100644
+--- a/jsdoc-testing/jsdoc/src/core/Object3D.d.ts
++++ b/jsdoc-testing/jsdoc/src/core/Object3D.d.ts
+@@ -1,72 +1,182 @@
++import { AnimationClip, AnimationClipJSON } from "../animation/AnimationClip.js";
++import { Camera } from "../cameras/Camera.js";
++import { ShapeJSON } from "../extras/core/Shape.js";
++import { Material, MaterialJSON } from "../materials/Material.js";
++import { Euler } from "../math/Euler.js";
++import { Frustum } from "../math/Frustum.js";
++import { FrustumArray } from "../math/FrustumArray.js";
++import { Matrix3 } from "../math/Matrix3.js";
++import { Matrix4, Matrix4Tuple } from "../math/Matrix4.js";
++import { Quaternion } from "../math/Quaternion.js";
++import { Vector3, Vector3Tuple } from "../math/Vector3.js";
++import { Group } from "../objects/Group.js";
++import { SkeletonJSON } from "../objects/Skeleton.js";
++import { WebGLRenderer } from "../renderers/WebGLRenderer.js";
++import { Scene } from "../scenes/Scene.js";
++import { TextureJSON } from "../textures/Texture.js";
++import { TextureSourceJSON } from "../textures/TextureSource.js";
++import { BufferGeometry, BufferGeometryJSON } from "./BufferGeometry.js";
++import { EventDispatcher } from "./EventDispatcher.js";
++import { Layers } from "./Layers.js";
++import { Intersection, Raycaster } from "./Raycaster.js";
++
++export interface Object3DJSONObject {
++    uuid: string;
++    type: string;
++
++    name?: string;
++    castShadow?: boolean;
++    receiveShadow?: boolean;
++    visible?: boolean;
++    frustumCulled?: boolean;
++    renderOrder?: number;
++    static?: boolean;
++    userData?: Record<string, unknown>;
++
++    layers: number;
++    matrix: Matrix4Tuple;
++    up: Vector3Tuple;
++
++    pivot?: Vector3Tuple;
++
++    matrixAutoUpdate?: boolean;
++
++    material?: string | string[];
++
++    children?: string[];
++
++    animations?: string[];
++}
++
++export interface Object3DJSON {
++    metadata?: { version: number; type: string; generator: string };
++    object: Object3DJSONObject;
++}
++
++export interface JSONMeta {
++    geometries: Record<string, BufferGeometryJSON>;
++    materials: Record<string, MaterialJSON>;
++    textures: Record<string, TextureJSON>;
++    images: Record<string, TextureSourceJSON>;
++    shapes: Record<string, ShapeJSON>;
++    skeletons: Record<string, SkeletonJSON>;
++    animations: Record<string, AnimationClipJSON>;
++    nodes: Record<string, unknown>;
++}
++
++export interface Object3DEventMap {
++    /**
++     * Fires when the object has been added to its parent object.
++     */
++    added: {};
++
++    /**
++     * Fires when the object has been removed from its parent object.
++     */
++    removed: {};
++
++    /**
++     * Fires when a new child object has been added.
++     */
++    childadded: { child: Object3D };
++
++    /**
++     * Fires when a new child object has been removed.
++     */
++    childremoved: { child: Object3D };
++
++    /**
++     * Fires when the 3D object has been disposed of.
++     */
++    dispose: {};
++}
++
+ /**
+  * This is the base class for most objects in three.js and provides a set of
+  * properties and methods for manipulating objects in 3D space.
+- *
+- * @augments EventDispatcher
+  */
+-export class Object3D extends EventDispatcher {
++export class Object3D<TEventMap extends Object3DEventMap = Object3DEventMap> extends EventDispatcher<TEventMap> {
++    /**
++     * Constructs a new 3D object.
++     */
++    constructor();
+     /**
+      * This flag can be used for type testing.
+      *
+-     * @type {boolean}
+-     * @readonly
+      * @default true
+      */
+-    readonly isObject3D: boolean;
++    readonly isObject3D: true;
++    /**
++     * The ID of the 3D object.
++     */
++    readonly id: number;
+     /**
+      * The UUID of the 3D object.
+-     *
+-     * @type {string}
+-     * @readonly
+      */
+     readonly uuid: string;
+     /**
+      * The name of the 3D object.
+-     *
+-     * @type {string}
+      */
+     name: string;
+     /**
+      * The type property is used for detecting the object type
+      * in context of serialization/deserialization.
+-     *
+-     * @type {string}
+-     * @readonly
+      */
+     readonly type: string;
+     /**
+      * A reference to the parent object.
+      *
+-     * @type {?Object3D}
+      * @default null
+      */
+     parent: Object3D | null;
+     /**
+      * An array holding the child 3D objects of this instance.
+-     *
+-     * @type {Array<Object3D>}
+      */
+-    children: Array<Object3D>;
++    children: Object3D[];
+     /**
+      * Defines the `up` direction of the 3D object which influences
+      * the orientation via methods like {@link Object3D#lookAt}.
+      *
+      * The default values for all 3D objects is defined by `Object3D.DEFAULT_UP`.
+-     *
+-     * @type {Vector3}
+      */
+     up: Vector3;
+     /**
+-     * Represents the object's transformation matrix in local space.
++     * Represents the object's local position.
+      *
+-     * @type {Matrix4}
++     * @default (0,0,0)
++     */
++    readonly position: Vector3;
++    /**
++     * Represents the object's local rotation as Euler angles, in radians.
++     *
++     * @default (0,0,0)
++     */
++    readonly rotation: Euler;
++    /**
++     * Represents the object's local rotation as Quaternions.
++     */
++    readonly quaternion: Quaternion;
++    /**
++     * Represents the object's local scale.
++     *
++     * @default (1,1,1)
++     */
++    readonly scale: Vector3;
++    /**
++     * Represents the object's model-view matrix.
++     */
++    readonly modelViewMatrix: Matrix4;
++    /**
++     * Represents the object's normal matrix.
++     */
++    readonly normalMatrix: Matrix3;
++    /**
++     * Represents the object's transformation matrix in local space.
+      */
+     matrix: Matrix4;
+     /**
+      * Represents the object's transformation matrix in world space.
+      * If the 3D object has no parent, then it's identical to the local transformation matrix
+-     *
+-     * @type {Matrix4}
+      */
+     matrixWorld: Matrix4;
+     /**
+@@ -76,7 +186,6 @@ export class Object3D extends EventDispatcher {
+      *
+      * The default values for all 3D objects is defined by `Object3D.DEFAULT_MATRIX_AUTO_UPDATE`.
+      *
+-     * @type {boolean}
+      * @default true
+      */
+     matrixAutoUpdate: boolean;
+@@ -87,7 +196,6 @@ export class Object3D extends EventDispatcher {
+      *
+      * The default values for all 3D objects is defined by `Object3D.DEFAULT_MATRIX_WORLD_AUTO_UPDATE`.
+      *
+-     * @type {boolean}
+      * @default true
+      */
+     matrixWorldAutoUpdate: boolean;
+@@ -95,7 +203,6 @@ export class Object3D extends EventDispatcher {
+      * When set to `true`, it calculates the world matrix in that frame and resets this property
+      * to `false`.
+      *
+-     * @type {boolean}
+      * @default false
+      */
+     matrixWorldNeedsUpdate: boolean;
+@@ -103,35 +210,29 @@ export class Object3D extends EventDispatcher {
+      * The layer membership of the 3D object. The 3D object is only visible if it has
+      * at least one layer in common with the camera in use. This property can also be
+      * used to filter out unwanted objects in ray-intersection tests when using {@link Raycaster}.
+-     *
+-     * @type {Layers}
+      */
+     layers: Layers;
+     /**
+      * When set to `true`, the 3D object gets rendered.
+      *
+-     * @type {boolean}
+      * @default true
+      */
+     visible: boolean;
+     /**
+      * When set to `true`, the 3D object gets rendered into shadow maps.
+      *
+-     * @type {boolean}
+      * @default false
+      */
+     castShadow: boolean;
+     /**
+      * When set to `true`, the 3D object is affected by shadows in the scene.
+      *
+-     * @type {boolean}
+      * @default false
+      */
+     receiveShadow: boolean;
+     /**
+      * When set to `true`, the 3D object is honored by view frustum culling.
+      *
+-     * @type {boolean}
+      * @default true
+      */
+     frustumCulled: boolean;
+@@ -142,16 +243,13 @@ export class Object3D extends EventDispatcher {
+      * objects will be sorted and rendered together. Sorting is from lowest to highest
+      * render order.
+      *
+-     * @type {number}
+      * @default 0
+      */
+     renderOrder: number;
+     /**
+      * An array holding the animation clips of the 3D object.
+-     *
+-     * @type {Array<AnimationClip>}
+      */
+-    animations: Array<AnimationClip>;
++    animations: AnimationClip[];
+     /**
+      * Custom depth material to be used when rendering to the depth map. Can only be used
+      * in context of meshes. When shadow-casting with a {@link DirectionalLight} or {@link SpotLight},
+@@ -160,19 +258,17 @@ export class Object3D extends EventDispatcher {
+      *
+      * Only relevant in context of {@link WebGLRenderer}.
+      *
+-     * @type {(Material|undefined)}
+      * @default undefined
+      */
+-    customDepthMaterial: (Material | undefined);
++    customDepthMaterial?: Material | undefined;
+     /**
+      * Same as {@link Object3D#customDepthMaterial}, but used with {@link PointLight}.
+      *
+      * Only relevant in context of {@link WebGLRenderer}.
+      *
+-     * @type {(Material|undefined)}
+      * @default undefined
+      */
+-    customDistanceMaterial: (Material | undefined);
++    customDistanceMaterial?: Material | undefined;
+     /**
+      * Whether the 3D object is supposed to be static or not. If set to `true`, it means
+      * the 3D object is not going to be changed after the first render. This includes
+@@ -181,23 +277,19 @@ export class Object3D extends EventDispatcher {
+      *
+      * Only relevant in context of {@link WebGPURenderer}.
+      *
+-     * @type {boolean}
+      * @default false
+      */
+     static: boolean;
+     /**
+      * An object that can be used to store custom data about the 3D object. It
+      * should not hold references to functions as these will not be cloned.
+-     *
+-     * @type {Object}
+      */
+-    userData: Object;
++    userData: Record<string, any>;
+     /**
+      * The pivot point for rotation and scale transformations.
+      * When set, rotation and scale are applied around this point
+      * instead of the object's origin.
+      *
+-     * @type {?Vector3}
+      * @default null
+      */
+     pivot: Vector3 | null;
+@@ -212,7 +304,15 @@ export class Object3D extends EventDispatcher {
+      * @param {Material} depthMaterial - The depth material.
+      * @param {Object} group - The geometry group data.
+      */
+-    onBeforeShadow(): void;
++    onBeforeShadow(
++        renderer: WebGLRenderer,
++        scene: Scene,
++        camera: Camera,
++        shadowCamera: Camera,
++        geometry: BufferGeometry,
++        depthMaterial: Material,
++        group: Group,
++    ): void;
+     /**
+      * A callback that is executed immediately after a 3D object is rendered to a shadow map.
+      *
+@@ -224,7 +324,15 @@ export class Object3D extends EventDispatcher {
+      * @param {Material} depthMaterial - The depth material.
+      * @param {Object} group - The geometry group data.
+      */
+-    onAfterShadow(): void;
++    onAfterShadow(
++        renderer: WebGLRenderer,
++        scene: Scene,
++        camera: Camera,
++        shadowCamera: Camera,
++        geometry: BufferGeometry,
++        depthMaterial: Material,
++        group: Group,
++    ): void;
+     /**
+      * A callback that is executed immediately before a 3D object is rendered.
+      *
+@@ -235,7 +343,14 @@ export class Object3D extends EventDispatcher {
+      * @param {Material} material - The 3D object's material.
+      * @param {Object} group - The geometry group data.
+      */
+-    onBeforeRender(): void;
++    onBeforeRender(
++        renderer: WebGLRenderer,
++        scene: Scene,
++        camera: Camera,
++        geometry: BufferGeometry,
++        material: Material,
++        group: Group,
++    ): void;
+     /**
+      * A callback that is executed immediately after a 3D object is rendered.
+      *
+@@ -246,7 +361,35 @@ export class Object3D extends EventDispatcher {
+      * @param {Material} material - The 3D object's material.
+      * @param {Object} group - The geometry group data.
+      */
+-    onAfterRender(): void;
++    onAfterRender(
++        renderer: WebGLRenderer,
++        scene: Scene,
++        camera: Camera,
++        geometry: BufferGeometry,
++        material: Material,
++        group: Group,
++    ): void;
++    /**
++     * The default up direction for objects, also used as the default
++     * position for {@link DirectionalLight} and {@link HemisphereLight}.
++     *
++     * @default (0,1,0)
++     */
++    static DEFAULT_UP: Vector3;
++    /**
++     * The default setting for {@link Object3D#matrixAutoUpdate} for
++     * newly created 3D objects.
++     *
++     * @default true
++     */
++    static DEFAULT_MATRIX_AUTO_UPDATE: boolean;
++    /**
++     * The default setting for {@link Object3D#matrixWorldAutoUpdate} for
++     * newly created 3D objects.
++     *
++     * @default true
++     */
++    static DEFAULT_MATRIX_WORLD_AUTO_UPDATE: boolean;
+     /**
+      * Applies the given transformation matrix to the object and updates the object's position,
+      * rotation and scale.
+@@ -260,7 +403,7 @@ export class Object3D extends EventDispatcher {
+      * @param {Quaternion} q - The quaternion.
+      * @return {Object3D} A reference to this instance.
+      */
+-    applyQuaternion(q: Quaternion): Object3D;
++    applyQuaternion(q: Quaternion): this;
+     /**
+      * Sets the given rotation represented as an axis/angle couple to the 3D object.
+      *
+@@ -294,7 +437,7 @@ export class Object3D extends EventDispatcher {
+      * @param {number} angle - The angle in radians.
+      * @return {Object3D} A reference to this instance.
+      */
+-    rotateOnAxis(axis: Vector3, angle: number): Object3D;
++    rotateOnAxis(axis: Vector3, angle: number): this;
+     /**
+      * Rotates the 3D object along an axis in world space.
+      *
+@@ -302,28 +445,28 @@ export class Object3D extends EventDispatcher {
+      * @param {number} angle - The angle in radians.
+      * @return {Object3D} A reference to this instance.
+      */
+-    rotateOnWorldAxis(axis: Vector3, angle: number): Object3D;
++    rotateOnWorldAxis(axis: Vector3, angle: number): this;
+     /**
+      * Rotates the 3D object around its X axis in local space.
+      *
+      * @param {number} angle - The angle in radians.
+      * @return {Object3D} A reference to this instance.
+      */
+-    rotateX(angle: number): Object3D;
++    rotateX(angle: number): this;
+     /**
+      * Rotates the 3D object around its Y axis in local space.
+      *
+      * @param {number} angle - The angle in radians.
+      * @return {Object3D} A reference to this instance.
+      */
+-    rotateY(angle: number): Object3D;
++    rotateY(angle: number): this;
+     /**
+      * Rotates the 3D object around its Z axis in local space.
+      *
+      * @param {number} angle - The angle in radians.
+      * @return {Object3D} A reference to this instance.
+      */
+-    rotateZ(angle: number): Object3D;
++    rotateZ(angle: number): this;
+     /**
+      * Translate the 3D object by a distance along the given axis in local space.
+      *
+@@ -331,28 +474,28 @@ export class Object3D extends EventDispatcher {
+      * @param {number} distance - The distance in world units.
+      * @return {Object3D} A reference to this instance.
+      */
+-    translateOnAxis(axis: Vector3, distance: number): Object3D;
++    translateOnAxis(axis: Vector3, distance: number): this;
+     /**
+      * Translate the 3D object by a distance along its X-axis in local space.
+      *
+      * @param {number} distance - The distance in world units.
+      * @return {Object3D} A reference to this instance.
+      */
+-    translateX(distance: number): Object3D;
++    translateX(distance: number): this;
+     /**
+      * Translate the 3D object by a distance along its Y-axis in local space.
+      *
+      * @param {number} distance - The distance in world units.
+      * @return {Object3D} A reference to this instance.
+      */
+-    translateY(distance: number): Object3D;
++    translateY(distance: number): this;
+     /**
+      * Translate the 3D object by a distance along its Z-axis in local space.
+      *
+      * @param {number} distance - The distance in world units.
+      * @return {Object3D} A reference to this instance.
+      */
+-    translateZ(distance: number): Object3D;
++    translateZ(distance: number): this;
+     /**
+      * Converts the given vector from this 3D object's local space to world space.
+      *
+@@ -376,7 +519,8 @@ export class Object3D extends EventDispatcher {
+      * @param {number} [y] - The y coordinate in world space.
+      * @param {number} [z] - The z coordinate in world space.
+      */
+-    lookAt(x: number | Vector3, y?: number, z?: number): void;
++    lookAt(vector: Vector3): void;
++    lookAt(x: number, y: number, z: number): void;
+     /**
+      * Adds the given 3D object as a child to this 3D object. An arbitrary number of
+      * objects may be added. Any current parent on an object passed in here will be
+@@ -387,7 +531,7 @@ export class Object3D extends EventDispatcher {
+      * @param {Object3D} object - The 3D object to add.
+      * @return {Object3D} A reference to this instance.
+      */
+-    add(object: Object3D, ...args: any[]): Object3D;
++    add(...object: Object3D[]): this;
+     /**
+      * Removes the given 3D object as child from this 3D object.
+      * An arbitrary number of objects may be removed.
+@@ -397,7 +541,7 @@ export class Object3D extends EventDispatcher {
+      * @param {Object3D} object - The 3D object to remove.
+      * @return {Object3D} A reference to this instance.
+      */
+-    remove(object: Object3D, ...args: any[]): Object3D;
++    remove(...object: Object3D[]): this;
+     /**
+      * Removes this 3D object from its current parent.
+      *
+@@ -405,7 +549,7 @@ export class Object3D extends EventDispatcher {
+      * @fires Object3D#childremoved
+      * @return {Object3D} A reference to this instance.
+      */
+-    removeFromParent(): Object3D;
++    removeFromParent(): this;
+     /**
+      * Removes all child objects.
+      *
+@@ -413,7 +557,7 @@ export class Object3D extends EventDispatcher {
+      * @fires Object3D#childremoved
+      * @return {Object3D} A reference to this instance.
+      */
+-    clear(): Object3D;
++    clear(): this;
+     /**
+      * Adds the given 3D object as a child of this 3D object, while maintaining the object's world
+      * transform. This method does not support scene graphs having non-uniformly-scaled nodes(s).
+@@ -423,7 +567,7 @@ export class Object3D extends EventDispatcher {
+      * @param {Object3D} object - The 3D object to attach.
+      * @return {Object3D} A reference to this instance.
+      */
+-    attach(object: Object3D): Object3D;
++    attach(object: Object3D): this;
+     /**
+      * Searches through the 3D object and its children, starting with the 3D object
+      * itself, and returns the first with a matching ID.
+@@ -458,7 +602,7 @@ export class Object3D extends EventDispatcher {
+      * @param {Array<Object3D>} result - The method stores the result in this array.
+      * @return {Array<Object3D>} The found 3D objects.
+      */
+-    getObjectsByProperty(name: string, value: any, result?: Array<Object3D>): Array<Object3D>;
++    getObjectsByProperty(name: string, value: any, result?: Object3D[]): Object3D[];
+     /**
+      * Returns a vector representing the position of the 3D object in world space.
+      *
+@@ -492,11 +636,10 @@ export class Object3D extends EventDispatcher {
+      * 3D object. Renderable 3D objects such as {@link Mesh}, {@link Line} or {@link Points}
+      * implement this method in order to use raycasting.
+      *
+-     * @abstract
+      * @param {Raycaster} raycaster - The raycaster.
+      * @param {Array<Object>} intersects - An array holding the result of the method.
+      */
+-    raycast(): void;
++    raycast(raycaster: Raycaster, intersects: Intersection[]): void;
+     /**
+      * Returns `true` if this 3D object intersects the given frustum. Renderable 3D objects
+      * such as {@link Mesh}, {@link Line} or {@link Points} override this method in order
+@@ -505,7 +648,7 @@ export class Object3D extends EventDispatcher {
+      * @param {Frustum|FrustumArray} frustum - The frustum to test.
+      * @return {boolean} Whether this 3D object intersects the given frustum or not.
+      */
+-    intersectsFrustum(): boolean;
++    intersectsFrustum(frustum: Frustum | FrustumArray): boolean;
+     /**
+      * Executes the callback on this 3D object and all descendants.
+      *
+@@ -513,7 +656,7 @@ export class Object3D extends EventDispatcher {
+      *
+      * @param {Function} callback - A callback function that allows to process the current 3D object.
+      */
+-    traverse(callback: Function): void;
++    traverse(callback: (object: Object3D) => any): void;
+     /**
+      * Like {@link Object3D#traverse}, but the callback will only be executed for visible 3D objects.
+      * Descendants of invisible 3D objects are not traversed.
+@@ -522,7 +665,7 @@ export class Object3D extends EventDispatcher {
+      *
+      * @param {Function} callback - A callback function that allows to process the current 3D object.
+      */
+-    traverseVisible(callback: Function): void;
++    traverseVisible(callback: (object: Object3D) => any): void;
+     /**
+      * Like {@link Object3D#traverse}, but the callback will only be executed for all ancestors.
+      *
+@@ -530,7 +673,7 @@ export class Object3D extends EventDispatcher {
+      *
+      * @param {Function} callback - A callback function that allows to process the current 3D object.
+      */
+-    traverseAncestors(callback: Function): void;
++    traverseAncestors(callback: (object: Object3D) => any): void;
+     /**
+      * Updates the transformation matrix in local space by computing it from the current
+      * position, rotation and scale values.
+@@ -565,14 +708,14 @@ export class Object3D extends EventDispatcher {
+      * @return {Object} A JSON object representing the serialized 3D object.
+      * @see {@link ObjectLoader#parse}
+      */
+-    toJSON(meta: (Object | string) | null): Object;
++    toJSON(meta?: JSONMeta): Object3DJSON;
+     /**
+      * Returns a new 3D object with copied values from this instance.
+      *
+      * @param {boolean} [recursive=true] - When set to `true`, descendants of the 3D object are also cloned.
+      * @return {Object3D} A clone of this instance.
+      */
+-    clone(recursive?: boolean): Object3D;
++    clone(recursive?: boolean): this;
+     /**
+      * Copies the values of the given 3D object to this instance.
+      *
+@@ -580,7 +723,7 @@ export class Object3D extends EventDispatcher {
+      * @param {boolean} [recursive=true] - When set to `true`, descendants of the 3D object are cloned.
+      * @return {Object3D} A reference to this instance.
+      */
+-    copy(source: Object3D, recursive?: boolean): Object3D;
++    copy(source: Object3D, recursive?: boolean): this;
+     /**
+      * Frees the GPU-related resources allocated by this instance. Call this
+      * method whenever this instance is no longer used in your app.
+@@ -592,14 +735,3 @@ export class Object3D extends EventDispatcher {
+      */
+     dispose(): void;
+ }
+-export namespace Object3D {
+-    let DEFAULT_UP: Vector3;
+-    let DEFAULT_MATRIX_AUTO_UPDATE: boolean;
+-    let DEFAULT_MATRIX_WORLD_AUTO_UPDATE: boolean;
+-}
+-import { EventDispatcher } from './EventDispatcher.js';
+-import { Vector3 } from '../math/Vector3.js';
+-import { Matrix4 } from '../math/Matrix4.js';
+-import { Layers } from './Layers.js';
+-import { Quaternion } from '../math/Quaternion.js';
+-import { Euler } from '../math/Euler.js';
+diff --git a/jsdoc-testing/jsdoc/src/core/Raycaster.d.ts b/jsdoc-testing/jsdoc/src/core/Raycaster.d.ts
+index 5dacc4d2f..3a9768651 100644
+--- a/jsdoc-testing/jsdoc/src/core/Raycaster.d.ts
++++ b/jsdoc-testing/jsdoc/src/core/Raycaster.d.ts
+@@ -1,3 +1,84 @@
++import { Camera } from "../cameras/Camera.js";
++import { Ray } from "../math/Ray.js";
++import { Vector2 } from "../math/Vector2.js";
++import { Vector3 } from "../math/Vector3.js";
++import { XRTargetRaySpace } from "../renderers/webxr/WebXRController.js";
++import { Layers } from "./Layers.js";
++import { Object3D } from "./Object3D.js";
++
++export interface Face {
++    a: number;
++    b: number;
++    c: number;
++    normal: Vector3;
++    materialIndex: number;
++}
++
++/**
++ * The intersection point of a raycaster intersection test.
++ */
++export interface Intersection<TIntersected extends Object3D = Object3D> {
++    /**
++     * The distance from the ray's origin to the intersection point.
++     */
++    distance: number;
++    /**
++     * Some 3D objects e.g. {@link Points} provide the distance of the
++     * intersection to the nearest point on the ray. For other objects it will be `undefined`.
++     */
++    distanceToRay?: number | undefined;
++    /**
++     * The intersection point, in world coordinates.
++     */
++    point: Vector3;
++    index?: number | undefined;
++    /**
++     * The face that has been intersected.
++     */
++    face?: Face | null | undefined;
++    /**
++     * The face index.
++     */
++    faceIndex?: number | null | undefined;
++    barycoord?: Vector3 | null;
++    /**
++     * The 3D object that has been intersected.
++     */
++    object: TIntersected;
++    /**
++     * U,V coordinates at point of intersection.
++     */
++    uv?: Vector2 | undefined;
++    /**
++     * Second set of U,V coordinates at point of intersection.
++     */
++    uv1?: Vector2 | undefined;
++    /**
++     * Interpolated normal vector at point of intersection.
++     */
++    normal?: Vector3;
++    /**
++     * The index number of the instance where the ray
++     * intersects the {@link InstancedMesh}.
++     */
++    instanceId?: number | undefined;
++    pointOnLine?: Vector3;
++    /**
++     * The index number of the instance where the ray
++     * intersects the {@link BatchedMesh}.
++     */
++    batchId?: number;
++}
++
++export interface RaycasterParameters {
++    Mesh: any;
++    Line: { threshold: number };
++    Line2?: { threshold: number };
++    LOD: any;
++    Points: { threshold: number };
++    Sprite: any;
++}
++
+ /**
+  * This class is designed to assist with raycasting. Raycasting is used for
+  * mouse picking (working out what objects in the 3d space the mouse is over)
+@@ -12,24 +93,20 @@ export class Raycaster {
+      * @param {number} [near=0] - All results returned are further away than near. Near can't be negative.
+      * @param {number} [far=Infinity] - All results returned are closer than far. Far can't be lower than near.
+      */
+-    constructor(origin: Vector3, direction: Vector3, near?: number, far?: number);
++    constructor(origin?: Vector3, direction?: Vector3, near?: number, far?: number);
+     /**
+      * The ray used for raycasting.
+-     *
+-     * @type {Ray}
+      */
+     ray: Ray;
+     /**
+      * All results returned are further away than near. Near can't be negative.
+      *
+-     * @type {number}
+      * @default 0
+      */
+     near: number;
+     /**
+      * All results returned are closer than far. Far can't be lower than near.
+      *
+-     * @type {number}
+      * @default Infinity
+      */
+     far: number;
+@@ -38,7 +115,6 @@ export class Raycaster {
+      * billboarded objects like sprites. This field can be set manually or
+      * is set when calling `setFromCamera()`.
+      *
+-     * @type {?Camera}
+      * @default null
+      */
+     camera: Camera | null;
+@@ -50,8 +126,6 @@ export class Raycaster {
+      * raycaster.layers.set( 1 );
+      * object.layers.enable( 1 );
+      * ```
+-     *
+-     * @type {Layers}
+      */
+     layers: Layers;
+     /**
+@@ -67,10 +141,8 @@ export class Raycaster {
+      * }
+      * ```
+      * Where `threshold` is the precision of the raycaster when intersecting objects, in world units.
+-     *
+-     * @type {Object}
+      */
+-    params: Object;
++    params: RaycasterParameters;
+     /**
+      * Updates the ray with a new origin and direction by copying the values from the arguments.
+      *
+@@ -92,25 +164,7 @@ export class Raycaster {
+      * @param {WebXRController} controller - The controller to copy the position and direction from.
+      * @return {Raycaster} A reference to this raycaster.
+      */
+-    setFromXRController(controller: WebXRController): Raycaster;
+-    /**
+-     * The intersection point of a raycaster intersection test.
+-     * @typedef {Object} Raycaster~Intersection
+-     * @property {number} distance - The distance from the ray's origin to the intersection point.
+-     * @property {number} distanceToRay -  Some 3D objects e.g. {@link Points} provide the distance of the
+-     * intersection to the nearest point on the ray. For other objects it will be `undefined`.
+-     * @property {Vector3} point - The intersection point, in world coordinates.
+-     * @property {Object} face - The face that has been intersected.
+-     * @property {number} faceIndex - The face index.
+-     * @property {Object3D} object - The 3D object that has been intersected.
+-     * @property {Vector2} uv - U,V coordinates at point of intersection.
+-     * @property {Vector2} uv1 - Second set of U,V coordinates at point of intersection.
+-     * @property {Vector3} normal - Interpolated normal vector at point of intersection.
+-     * @property {number} instanceId - The index number of the instance where the ray
+-     * intersects the {@link InstancedMesh}.
+-     * @property {number} batchId - The index number of the instance where the ray
+-     * intersects the {@link BatchedMesh}.
+-     */
++    setFromXRController(controller: XRTargetRaySpace): this;
+     /**
+      * Checks all intersection between the ray and the object with or without the
+      * descendants. Intersections are returned sorted by distance, closest first.
+@@ -134,7 +188,11 @@ export class Raycaster {
+      * @param {Array<Raycaster~Intersection>} [intersects=[]] The target array that holds the result of the method.
+      * @return {Array<Raycaster~Intersection>} An array holding the intersection points.
+      */
+-    intersectObject(object: Object3D, recursive?: boolean, intersects?: any[]): Array<Raycaster>;
++    intersectObject<TIntersected extends Object3D>(
++        object: Object3D,
++        recursive?: boolean,
++        intersects?: Array<Intersection<TIntersected>>,
++    ): Array<Intersection<TIntersected>>;
+     /**
+      * Checks all intersection between the ray and the objects with or without
+      * the descendants. Intersections are returned sorted by distance, closest first.
+@@ -145,7 +203,9 @@ export class Raycaster {
+      * @param {Array<Raycaster~Intersection>} [intersects=[]] The target array that holds the result of the method.
+      * @return {Array<Raycaster~Intersection>} An array holding the intersection points.
+      */
+-    intersectObjects(objects: Array<Object3D>, recursive?: boolean, intersects?: any[]): Array<Raycaster>;
++    intersectObjects<TIntersected extends Object3D>(
++        objects: Object3D[],
++        recursive?: boolean,
++        intersects?: Array<Intersection<TIntersected>>,
++    ): Array<Intersection<TIntersected>>;
+ }
+-import { Ray } from '../math/Ray.js';
+-import { Layers } from './Layers.js';
+diff --git a/jsdoc-testing/jsdoc/src/core/RenderTarget.d.ts b/jsdoc-testing/jsdoc/src/core/RenderTarget.d.ts
+index 92f848615..9cc25f68b 100644
+--- a/jsdoc-testing/jsdoc/src/core/RenderTarget.d.ts
++++ b/jsdoc-testing/jsdoc/src/core/RenderTarget.d.ts
+@@ -1,42 +1,102 @@
++import { Vector4 } from "../math/Vector4.js";
++import { DepthTexture } from "../textures/DepthTexture.js";
++import { Texture, TextureParameters } from "../textures/Texture.js";
++import { EventDispatcher } from "./EventDispatcher.js";
++
++/**
++ * Render target options.
++ */
++export interface RenderTargetOptions extends TextureParameters {
++    /**
++     * Whether to allocate a depth buffer or not.
++     * @default true
++     */
++    depthBuffer?: boolean | undefined;
++    /**
++     * Whether to allocate a stencil buffer or not.
++     * @default false
++     */
++    stencilBuffer?: boolean | undefined;
++    /**
++     * Whether to resolve the color buffer or not. Only relevant for multisampled render targets.
++     * @default true
++     */
++    resolveColorBuffer?: boolean | undefined;
++    /**
++     * Whether to resolve the depth buffer or not. Only relevant for multisampled render targets.
++     * @default true
++     */
++    resolveDepthBuffer?: boolean | undefined;
++    /**
++     * Whether to resolve the stencil buffer or not. Only relevant for multisampled render targets.
++     * @default true
++     */
++    resolveStencilBuffer?: boolean | undefined;
++    /**
++     * Whether to store the multisampled color buffer or not. Setting to `false` saves memory bandwidth when the
++     * multisampled data are not needed after a render pass.
++     * @default true
++     */
++    storeMultisampledColorBuffer?: boolean | undefined;
++    /**
++     * Whether to store the multisampled depth buffer or not. Setting to `false` saves memory bandwidth when the
++     * multisampled data are not needed after a render pass.
++     * @default true
++     */
++    storeMultisampledDepthBuffer?: boolean | undefined;
++    /**
++     * Whether to store the multisampled stencil buffer or not. Setting to `false` saves memory bandwidth when the
++     * multisampled data are not needed after a render pass.
++     * @default true
++     */
++    storeMultisampledStencilBuffer?: boolean | undefined;
++    /**
++     * Reference to a depth texture.
++     * @default null
++     */
++    depthTexture?: DepthTexture | null | undefined;
++    /**
++     * The MSAA samples count.
++     * @default 0
++     */
++    samples?: number | undefined;
++    /**
++     * Defines the number of color attachments. Use `0` for a depth-only render target (WebGPURenderer).
++     * @default 1
++     */
++    count?: number | undefined;
++    /**
++     * The texture depth.
++     * @default 1
++     */
++    depth?: number | undefined;
++    /**
++     * Whether this target is used for multiview rendering (WebGL OVR_multiview2 extension).
++     * @default false
++     */
++    multiview?: boolean | undefined;
++    /**
++     * Whether to create the depth texture as an array texture for per-layer depth testing. This is separate from
++     * multiview so layered render targets can use array depth without the multiview extension.
++     * @default false
++     */
++    useArrayDepthTexture?: boolean | undefined;
++}
++
++export interface RenderTargetEventMap {
++    dispose: {};
++}
++
+ /**
+  * A render target is a buffer where the video card draws pixels for a scene
+  * that is being rendered in the background. It is used in different effects,
+  * such as applying postprocessing to a rendered image before displaying it
+  * on the screen.
+- *
+- * @augments EventDispatcher
+  */
+-export class RenderTarget extends EventDispatcher {
+-    /**
+-     * Render target options.
+-     *
+-     * @typedef {Object} RenderTarget~Options
+-     * @property {boolean} [generateMipmaps=false] - Whether to generate mipmaps or not.
+-     * @property {boolean} [mipmapsAutoUpdate=true] - Whether to regenerate mipmaps automatically after rendering or not.
+-     * @property {number} [magFilter=LinearFilter] - The mag filter.
+-     * @property {number} [minFilter=LinearFilter] - The min filter.
+-     * @property {number} [format=RGBAFormat] - The texture format.
+-     * @property {number} [type=UnsignedByteType] - The texture type.
+-     * @property {?string} [internalFormat=null] - The texture's internal format.
+-     * @property {number} [wrapS=ClampToEdgeWrapping] - The texture's uv wrapping mode.
+-     * @property {number} [wrapT=ClampToEdgeWrapping] - The texture's uv wrapping mode.
+-     * @property {number} [anisotropy=1] - The texture's anisotropy value.
+-     * @property {string} [colorSpace=NoColorSpace] - The texture's color space.
+-     * @property {boolean} [depthBuffer=true] - Whether to allocate a depth buffer or not.
+-     * @property {boolean} [stencilBuffer=false] - Whether to allocate a stencil buffer or not.
+-     * @property {boolean} [resolveColorBuffer=true] - Whether to resolve the color buffer or not. Only relevant for multisampled render targets.
+-     * @property {boolean} [resolveDepthBuffer=true] - Whether to resolve the depth buffer or not. Only relevant for multisampled render targets.
+-     * @property {boolean} [resolveStencilBuffer=true] - Whether to resolve the stencil buffer or not. Only relevant for multisampled render targets.
+-     * @property {boolean} [storeMultisampledColorBuffer=true] - Whether to store the multisampled color buffer or not. Setting to `false` saves memory bandwidth when the multisampled data are not needed after a render pass.
+-     * @property {boolean} [storeMultisampledDepthBuffer=true] - Whether to store the multisampled depth buffer or not. Setting to `false` saves memory bandwidth when the multisampled data are not needed after a render pass.
+-     * @property {boolean} [storeMultisampledStencilBuffer=true] - Whether to store the multisampled stencil buffer or not. Setting to `false` saves memory bandwidth when the multisampled data are not needed after a render pass.
+-     * @property {?Texture} [depthTexture=null] - Reference to a depth texture.
+-     * @property {number} [samples=0] - The MSAA samples count.
+-     * @property {number} [count=1] - Defines the number of color attachments. Use `0` for a depth-only render target (WebGPURenderer).
+-     * @property {number} [depth=1] - The texture depth.
+-     * @property {boolean} [multiview=false] - Whether this target is used for multiview rendering (WebGL OVR_multiview2 extension).
+-     * @property {boolean} [useArrayDepthTexture=false] - Whether to create the depth texture as an array texture for per-layer depth testing. This is separate from multiview so layered render targets can use array depth without the multiview extension.
+-     */
++export class RenderTarget<
++    TTexture extends Texture | Texture[] = Texture,
++    TEventMap extends RenderTargetEventMap = RenderTargetEventMap,
++> extends EventDispatcher<TEventMap> {
+     /**
+      * Constructs a new render target.
+      *
+@@ -44,33 +104,28 @@ export class RenderTarget extends EventDispatcher {
+      * @param {number} [height=1] - The height of the render target.
+      * @param {RenderTarget~Options} [options] - The configuration object.
+      */
+-    constructor(width?: number, height?: number, options?: {});
++    constructor(width?: number, height?: number, options?: RenderTargetOptions);
+     /**
+      * This flag can be used for type testing.
+      *
+-     * @type {boolean}
+-     * @readonly
+      * @default true
+      */
+-    readonly isRenderTarget: boolean;
++    readonly isRenderTarget: true;
+     /**
+      * The width of the render target.
+      *
+-     * @type {number}
+      * @default 1
+      */
+     width: number;
+     /**
+      * The height of the render target.
+      *
+-     * @type {number}
+      * @default 1
+      */
+     height: number;
+     /**
+      * The depth of the render target.
+      *
+-     * @type {number}
+      * @default 1
+      */
+     depth: number;
+@@ -78,7 +133,6 @@ export class RenderTarget extends EventDispatcher {
+      * A rectangular area inside the render target's viewport. Fragments that are
+      * outside the area will be discarded.
+      *
+-     * @type {Vector4}
+      * @default (0,0,width,height)
+      */
+     scissor: Vector4;
+@@ -86,35 +140,29 @@ export class RenderTarget extends EventDispatcher {
+      * Indicates whether the scissor test should be enabled when rendering into
+      * this render target or not.
+      *
+-     * @type {boolean}
+      * @default false
+      */
+     scissorTest: boolean;
+     /**
+      * A rectangular area representing the render target's viewport.
+      *
+-     * @type {Vector4}
+      * @default (0,0,width,height)
+      */
+     viewport: Vector4;
+     /**
+      * An array of textures. Each color attachment is represented as a separate texture.
+      * Has at least a single entry for the default color attachment.
+-     *
+-     * @type {Array<Texture>}
+      */
+-    textures: Array<Texture>;
++    textures: TTexture[];
+     /**
+      * Whether to allocate a depth buffer or not.
+      *
+-     * @type {boolean}
+      * @default true
+      */
+     depthBuffer: boolean;
+     /**
+      * Whether to allocate a stencil buffer or not.
+      *
+-     * @type {boolean}
+      * @default false
+      */
+     stencilBuffer: boolean;
+@@ -126,7 +174,6 @@ export class RenderTarget extends EventDispatcher {
+      *
+      * Only relevant for multisampled render targets.
+      *
+-     * @type {boolean}
+      * @default true
+      */
+     resolveColorBuffer: boolean;
+@@ -141,7 +188,6 @@ export class RenderTarget extends EventDispatcher {
+      * target accesses the multisampled data directly, see
+      * {@link RenderTarget#storeMultisampledDepthBuffer}.
+      *
+-     * @type {boolean}
+      * @default true
+      */
+     resolveDepthBuffer: boolean;
+@@ -149,7 +195,6 @@ export class RenderTarget extends EventDispatcher {
+      * Whether to resolve the stencil buffer or not. Analogous to
+      * {@link RenderTarget#resolveDepthBuffer} but for the stencil aspect.
+      *
+-     * @type {boolean}
+      * @default true
+      */
+     resolveStencilBuffer: boolean;
+@@ -165,7 +210,6 @@ export class RenderTarget extends EventDispatcher {
+      * pass ends, e.g. when rendering into the target without clearing or when the
+      * scene contains transmissive objects which require a mid-pass framebuffer copy.
+      *
+-     * @type {boolean}
+      * @default true
+      */
+     storeMultisampledColorBuffer: boolean;
+@@ -178,7 +222,6 @@ export class RenderTarget extends EventDispatcher {
+      * target is sampled (e.g. by depth-based post-processing effects) since depth
+      * is read directly from the multisampled data.
+      *
+-     * @type {boolean}
+      * @default true
+      */
+     storeMultisampledDepthBuffer: boolean;
+@@ -186,18 +229,15 @@ export class RenderTarget extends EventDispatcher {
+      * Whether to store the multisampled stencil buffer or not. Analogous to
+      * {@link RenderTarget#storeMultisampledDepthBuffer} but for the stencil aspect.
+      *
+-     * @type {boolean}
+      * @default true
+      */
+     storeMultisampledStencilBuffer: boolean;
+-    _depthTexture: any;
+     set depthTexture(current: DepthTexture | null);
+     /**
+      * Instead of saving the depth in a renderbuffer, a texture
+      * can be used instead which is useful for further processing
+      * e.g. in context of post-processing.
+      *
+-     * @type {?DepthTexture}
+      * @default null
+      */
+     get depthTexture(): DepthTexture | null;
+@@ -206,14 +246,12 @@ export class RenderTarget extends EventDispatcher {
+      *
+      * A value of `0` disables MSAA.
+      *
+-     * @type {number}
+      * @default 0
+      */
+     samples: number;
+     /**
+      * Whether to this target is used in multiview rendering.
+      *
+-     * @type {boolean}
+      * @default false
+      */
+     multiview: boolean;
+@@ -222,18 +260,14 @@ export class RenderTarget extends EventDispatcher {
+      * This is separate from multiview so layered render targets can use array depth without
+      * the multiview extension.
+      *
+-     * @type {boolean}
+      * @default false
+      */
+     useArrayDepthTexture: boolean;
+-    _setTextureOptions(options?: {}): void;
+-    set texture(value: Texture);
++    set texture(value: TTexture);
+     /**
+      * The texture representing the default color attachment.
+-     *
+-     * @type {Texture}
+      */
+-    get texture(): Texture;
++    get texture(): TTexture;
+     /**
+      * Sets the size of this render target.
+      *
+@@ -247,7 +281,7 @@ export class RenderTarget extends EventDispatcher {
+      *
+      * @return {RenderTarget} A clone of this instance.
+      */
+-    clone(): RenderTarget;
++    clone(): this;
+     /**
+      * Copies the settings of the given render target. This is a structural copy so
+      * no resources are shared between render targets after the copy. That includes
+@@ -256,7 +290,7 @@ export class RenderTarget extends EventDispatcher {
+      * @param {RenderTarget} source - The render target to copy.
+      * @return {RenderTarget} A reference to this instance.
+      */
+-    copy(source: RenderTarget): RenderTarget;
++    copy(source: RenderTarget): this;
+     /**
+      * Frees the GPU-related resources allocated by this instance. Call this
+      * method whenever this instance is no longer used in your app.
+@@ -268,6 +302,3 @@ export class RenderTarget extends EventDispatcher {
+      */
+     dispose(): void;
+ }
+-import { EventDispatcher } from './EventDispatcher.js';
+-import { Vector4 } from '../math/Vector4.js';
+-import { Texture } from '../textures/Texture.js';
+diff --git a/jsdoc-testing/jsdoc/src/core/RenderTarget3D.d.ts b/jsdoc-testing/jsdoc/src/core/RenderTarget3D.d.ts
+index 11621efd2..4b6aa0a6d 100644
+--- a/jsdoc-testing/jsdoc/src/core/RenderTarget3D.d.ts
++++ b/jsdoc-testing/jsdoc/src/core/RenderTarget3D.d.ts
+@@ -1,9 +1,9 @@
++import { RenderTarget, RenderTargetOptions } from "./RenderTarget.js";
++
+ /**
+  * Represents a 3D render target.
+- *
+- * @augments RenderTarget
+  */
+-export class RenderTarget3D extends RenderTarget {
++declare class RenderTarget3D extends RenderTarget {
+     /**
+      * Constructs a new 3D render target.
+      *
+@@ -12,14 +12,13 @@ export class RenderTarget3D extends RenderTarget {
+      * @param {number} [depth=1] - The height of the render target.
+      * @param {RenderTarget~Options} [options] - The configuration object.
+      */
+-    constructor(width?: number, height?: number, depth?: number, options?: {});
++    constructor(width?: number, height?: number, depth?: number, options?: RenderTargetOptions);
+     /**
+      * This flag can be used for type testing.
+      *
+-     * @type {boolean}
+-     * @readonly
+      * @default true
+      */
+-    readonly isRenderTarget3D: boolean;
++    readonly isRenderTarget3D: true;
+ }
+-import { RenderTarget } from './RenderTarget.js';
++
++export { RenderTarget3D };
+diff --git a/jsdoc-testing/jsdoc/src/core/Timer.d.ts b/jsdoc-testing/jsdoc/src/core/Timer.d.ts
+index d47c2d4bd..51a0a26ae 100644
+--- a/jsdoc-testing/jsdoc/src/core/Timer.d.ts
++++ b/jsdoc-testing/jsdoc/src/core/Timer.d.ts
+@@ -12,15 +12,8 @@
+  * timer.connect( document ); // use Page Visibility API
+  * ```
+  */
+-export class Timer {
+-    _previousTime: number;
+-    _currentTime: number;
+-    _startTime: number;
+-    _delta: number;
+-    _elapsed: number;
+-    _timescale: number;
+-    _document: Document | null;
+-    _pageVisibilityHandler: typeof handleVisibilityChange | null;
++declare class Timer {
++    constructor();
+     /**
+      * Connect the timer to the given document.Calling this method is not mandatory to
+      * use the timer but enables the usage of the Page Visibility API to avoid large time
+@@ -58,13 +51,13 @@ export class Timer {
+      * @param {number} timescale - The timescale to set.
+      * @return {Timer} A reference to this timer.
+      */
+-    setTimescale(timescale: number): Timer;
++    setTimescale(timescale: number): this;
+     /**
+      * Resets the time computation for the current simulation step.
+      *
+      * @return {Timer} A reference to this timer.
+      */
+-    reset(): Timer;
++    reset(): this;
+     /**
+      * Can be used to free all internal resources. Usually called when
+      * the timer instance isn't required anymore.
+@@ -80,7 +73,7 @@ export class Timer {
+      * time will be determined with `performance.now`.
+      * @return {Timer} A reference to this timer.
+      */
+-    update(timestamp: number): Timer;
++    update(timestamp?: number): this;
+ }
+-declare function handleVisibilityChange(): void;
+-export {};
++
++export { Timer };
+diff --git a/jsdoc-testing/jsdoc/src/core/Uniform.d.ts b/jsdoc-testing/jsdoc/src/core/Uniform.d.ts
+index 4febfde95..1bb37f160 100644
+--- a/jsdoc-testing/jsdoc/src/core/Uniform.d.ts
++++ b/jsdoc-testing/jsdoc/src/core/Uniform.d.ts
+@@ -11,24 +11,22 @@
+  * Since this class can only be used in context of {@link ShaderMaterial}, it is only supported
+  * in {@link WebGLRenderer}.
+  */
+-export class Uniform {
++export class Uniform<T = any> {
+     /**
+      * Constructs a new uniform.
+      *
+      * @param {any} value - The uniform value.
+      */
+-    constructor(value: any);
++    constructor(value: T);
+     /**
+      * The uniform value.
+-     *
+-     * @type {any}
+      */
+-    value: any;
++    value: T;
+     /**
+      * Returns a new uniform with copied values from this instance.
+      * If the value has a `clone()` method, the value is cloned as well.
+      *
+      * @return {Uniform} A clone of this instance.
+      */
+-    clone(): Uniform;
++    clone(): Uniform<T>;
+ }
+diff --git a/jsdoc-testing/jsdoc/src/core/UniformsGroup.d.ts b/jsdoc-testing/jsdoc/src/core/UniformsGroup.d.ts
+index fd08bb44b..1f64f2959 100644
+--- a/jsdoc-testing/jsdoc/src/core/UniformsGroup.d.ts
++++ b/jsdoc-testing/jsdoc/src/core/UniformsGroup.d.ts
+@@ -1,68 +1,71 @@
++import { Usage } from "../constants.js";
++import { EventDispatcher } from "./EventDispatcher.js";
++import { Uniform } from "./Uniform.js";
++
++export interface UniformsGroupEventMap {
++    dispose: {};
++}
++
+ /**
+  * A class for managing multiple uniforms in a single group. The renderer will process
+  * such a definition as a single UBO.
+  *
+  * Since this class can only be used in context of {@link ShaderMaterial}, it is only supported
+  * in {@link WebGLRenderer}.
+- *
+- * @augments EventDispatcher
+  */
+-export class UniformsGroup extends EventDispatcher {
++export class UniformsGroup<TEventMap extends UniformsGroupEventMap = UniformsGroupEventMap>
++    extends EventDispatcher<TEventMap>
++{
++    constructor();
+     /**
+      * This flag can be used for type testing.
+      *
+-     * @type {boolean}
+-     * @readonly
+      * @default true
+      */
+-    readonly isUniformsGroup: boolean;
++    readonly isUniformsGroup: true;
++    id: number;
+     /**
+      * The name of the uniforms group.
+-     *
+-     * @type {string}
+      */
+     name: string;
+     /**
+      * The buffer usage.
+      *
+-     * @type {(StaticDrawUsage|DynamicDrawUsage|StreamDrawUsage|StaticReadUsage|DynamicReadUsage|StreamReadUsage|StaticCopyUsage|DynamicCopyUsage|StreamCopyUsage)}
+      * @default StaticDrawUsage
+      */
+-    usage: (number | DynamicDrawUsage | StreamDrawUsage | StaticReadUsage | DynamicReadUsage | StreamReadUsage | StaticCopyUsage | DynamicCopyUsage | StreamCopyUsage);
++    usage: Usage;
+     /**
+      * An array holding the uniforms.
+-     *
+-     * @type {Array<Uniform>}
+      */
+-    uniforms: Array<Uniform>;
++    uniforms: Array<Uniform | Uniform[]>;
+     /**
+      * Adds the given uniform to this uniforms group.
+      *
+      * @param {Uniform} uniform - The uniform to add.
+      * @return {UniformsGroup} A reference to this uniforms group.
+      */
+-    add(uniform: Uniform): UniformsGroup;
++    add(uniform: Uniform | Uniform[]): this;
+     /**
+      * Removes the given uniform from this uniforms group.
+      *
+      * @param {Uniform} uniform - The uniform to remove.
+      * @return {UniformsGroup} A reference to this uniforms group.
+      */
+-    remove(uniform: Uniform): UniformsGroup;
++    remove(uniform: Uniform | Uniform[]): this;
+     /**
+      * Sets the name of this uniforms group.
+      *
+      * @param {string} name - The name to set.
+      * @return {UniformsGroup} A reference to this uniforms group.
+      */
+-    setName(name: string): UniformsGroup;
++    setName(name: string): this;
+     /**
+      * Sets the usage of this uniforms group.
+      *
+      * @param {(StaticDrawUsage|DynamicDrawUsage|StreamDrawUsage|StaticReadUsage|DynamicReadUsage|StreamReadUsage|StaticCopyUsage|DynamicCopyUsage|StreamCopyUsage)} value - The usage to set.
+      * @return {UniformsGroup} A reference to this uniforms group.
+      */
+-    setUsage(value: (number | DynamicDrawUsage | StreamDrawUsage | StaticReadUsage | DynamicReadUsage | StreamReadUsage | StaticCopyUsage | DynamicCopyUsage | StreamCopyUsage)): UniformsGroup;
++    setUsage(value: Usage): this;
+     /**
+      * Frees the GPU-related resources allocated by this instance. Call this
+      * method whenever this instance is no longer used in your app.
+@@ -76,7 +79,7 @@ export class UniformsGroup extends EventDispatcher {
+      * @param {UniformsGroup} source - The uniforms group to copy.
+      * @return {UniformsGroup} A reference to this uniforms group.
+      */
+-    copy(source: UniformsGroup): UniformsGroup;
++    copy(source: UniformsGroup): this;
+     /**
+      * Returns a new uniforms group with copied values from this instance.
+      *
+@@ -84,4 +87,3 @@ export class UniformsGroup extends EventDispatcher {
+      */
+     clone(): UniformsGroup;
+ }
+-import { EventDispatcher } from './EventDispatcher.js';
 diff --git a/jsdoc-testing/jsdoc/src/extras/core/ShapePath.d.ts b/jsdoc-testing/jsdoc/src/extras/core/ShapePath.d.ts
 index fef0c558e..8f48716ce 100644
 --- a/jsdoc-testing/jsdoc/src/extras/core/ShapePath.d.ts
