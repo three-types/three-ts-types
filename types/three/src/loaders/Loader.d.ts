@@ -1,65 +1,168 @@
 import { LoadingManager } from "./LoadingManager.js";
 
 /**
- * Base class for implementing loaders.
+ * Callback for onProgress in loaders.
+ */
+export type OnProgressCallback = (event: ProgressEvent) => void;
+/**
+ * Callback for onError in loaders.
+ */
+export type OnErrorCallback = (error: unknown) => void;
+/**
+ * Abstract base class for loaders.
+ *
+ * @abstract
  */
 export class Loader<TData = unknown, TUrl = string> {
-    constructor(manager?: LoadingManager);
-
     /**
+     * Constructs a new loader.
+     *
+     * @param {LoadingManager} [manager] - The loading manager.
+     */
+    constructor(manager?: LoadingManager);
+    /**
+     * The loading manager.
+     *
+     * @type {LoadingManager}
+     * @default DefaultLoadingManager
+     */
+    manager: LoadingManager;
+    /**
+     * The crossOrigin string to implement CORS for loading the url from a
+     * different domain that allows CORS.
+     *
+     * @type {string}
      * @default 'anonymous'
      */
     crossOrigin: string;
-
     /**
+     * Whether the XMLHttpRequest uses credentials.
+     *
+     * @type {boolean}
      * @default false
      */
     withCredentials: boolean;
-
     /**
-     * @default ''
+     * The base path from which the asset will be loaded.
+     *
+     * @type {string}
      */
     path: string;
-
     /**
-     * @default ''
+     * The base path from which additional resources like textures will be loaded.
+     *
+     * @type {string}
      */
     resourcePath: string;
-    manager: LoadingManager;
-
     /**
-     * @default {}
+     * The [request header](https://developer.mozilla.org/en-US/docs/Glossary/Request_header)
+     * used in HTTP request.
+     *
+     * @type {Object<string, any>}
      */
-    requestHeader: { [header: string]: string };
-
+    requestHeader: {
+        [header: string]: string;
+    };
     /**
      * The request priority hint. Image loaders use `HTMLImageElement.fetchPriority`.
+     *
+     * @type {('high'|'low'|'auto')}
      * @default 'auto'
      */
     priority: "high" | "low" | "auto";
-
     /**
-     * The HTTP cache mode passed to `fetch()`. This does not affect {@link Cache} or loaders using `HTMLImageElement`.
+     * The HTTP cache mode passed to `fetch()`. This does not affect {@link Cache}
+     * or loaders using `HTMLImageElement`.
+     *
+     * @type {('default'|'no-store'|'reload'|'no-cache'|'force-cache')}
      * @default 'default'
      */
     cache: "default" | "no-store" | "reload" | "no-cache" | "force-cache";
-
-    load(
-        url: TUrl,
-        onLoad: (data: TData) => void,
-        onProgress?: (event: ProgressEvent) => void,
-        onError?: (err: unknown) => void,
-    ): void;
-    loadAsync(url: TUrl, onProgress?: (event: ProgressEvent) => void): Promise<TData>;
-
+    /**
+     * This method needs to be implemented by all concrete loaders. It holds the
+     * logic for loading assets from the backend.
+     *
+     * @abstract
+     * @param {string} url - The path/URL of the file to be loaded.
+     * @param {Function} onLoad - Executed when the loading process has been finished.
+     * @param {onProgressCallback} [onProgress] - Executed while the loading is in progress.
+     * @param {onErrorCallback} [onError] - Executed when errors occur.
+     */
+    load(url: TUrl, onLoad: (data: TData) => void, onProgress?: OnProgressCallback, onError?: OnErrorCallback): void;
+    /**
+     * A async version of {@link Loader#load}.
+     *
+     * @param {string} url - The path/URL of the file to be loaded.
+     * @param {onProgressCallback} [onProgress] - Executed while the loading is in progress.
+     * @return {Promise} A Promise that resolves when the asset has been loaded.
+     */
+    loadAsync(url: TUrl, onProgress?: OnProgressCallback): Promise<TData>;
+    /**
+     * Sets the `crossOrigin` String to implement CORS for loading the URL
+     * from a different domain that allows CORS.
+     *
+     * @param {string} crossOrigin - The `crossOrigin` value.
+     * @return {Loader} A reference to this instance.
+     */
     setCrossOrigin(crossOrigin: string): this;
+    /**
+     * Whether the XMLHttpRequest uses credentials such as cookies, authorization
+     * headers or TLS client certificates, see [XMLHttpRequest.withCredentials](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/withCredentials).
+     *
+     * Note: This setting has no effect if you are loading files locally or from the same domain.
+     *
+     * @param {boolean} value - The `withCredentials` value.
+     * @return {Loader} A reference to this instance.
+     */
     setWithCredentials(value: boolean): this;
+    /**
+     * Sets the base path for the asset.
+     *
+     * @param {string} path - The base path.
+     * @return {Loader} A reference to this instance.
+     */
     setPath(path: string): this;
+    /**
+     * Sets the base path for dependent resources like textures.
+     *
+     * @param {string} resourcePath - The resource path.
+     * @return {Loader} A reference to this instance.
+     */
     setResourcePath(resourcePath: string): this;
-    setRequestHeader(requestHeader: { [header: string]: string }): this;
+    /**
+     * Sets the given request header.
+     *
+     * @param {Object} requestHeader - A [request header](https://developer.mozilla.org/en-US/docs/Glossary/Request_header)
+     * for configuring the HTTP request.
+     * @return {Loader} A reference to this instance.
+     */
+    setRequestHeader(requestHeader: {
+        [header: string]: string;
+    }): this;
+    /**
+     * Sets a browser scheduling hint. Browsers may ignore this hint.
+     * Internally created loaders inherit it. Loaders supplied by the application
+     * (for example decoder loaders or loading manager handlers) retain their own settings.
+     *
+     * @param {('high'|'low'|'auto')} value - The request priority hint.
+     * @return {Loader} A reference to this instance.
+     */
     setPriority(value: "high" | "low" | "auto"): this;
+    /**
+     * Sets the HTTP cache mode for fetch requests. `no-cache` revalidates cached
+     * responses; `no-store` bypasses the HTTP cache. This does not affect
+     * {@link Cache} or image element requests.
+     *
+     * @param {('default'|'no-store'|'reload'|'no-cache'|'force-cache')} value - The HTTP cache mode.
+     * @return {Loader} A reference to this instance.
+     */
     setCache(value: "default" | "no-store" | "reload" | "no-cache" | "force-cache"): this;
+    /**
+     * This method can be implemented in loaders for aborting ongoing requests.
+     *
+     * @abstract
+     * @return {Loader} A reference to this instance.
+     */
     abort(): this;
-
     static DEFAULT_MATERIAL_NAME: string;
 }
