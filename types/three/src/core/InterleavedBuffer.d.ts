@@ -1,50 +1,50 @@
 import { Usage } from "../constants.js";
 import { TypedArray } from "./BufferAttribute.js";
-import { InterleavedBufferAttribute } from "./InterleavedBufferAttribute.js";
 
 /**
- * **"Interleaved"** means that multiple attributes, possibly of different types, (e.g., _position, normal, uv, color_) are packed into a single array buffer.
- * An introduction into interleaved arrays can be found here: {@link https://blog.tojicode.com/2011/05/interleaved-array-basics.html | Interleaved array basics}
- * @see Example: {@link https://threejs.org/examples/#webgl_buffergeometry_points_interleaved | webgl / buffergeometry / points / interleaved}
- * @see {@link https://threejs.org/docs/index.html#api/en/core/InterleavedBuffer | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/core/InterleavedBuffer.js | Source}
+ * "Interleaved" means that multiple attributes, possibly of different types,
+ * (e.g., position, normal, uv, color) are packed into a single array buffer.
+ *
+ * An introduction into interleaved arrays can be found here: [Interleaved array basics](https://blog.tojicode.com/2011/05/interleaved-array-basics.html)
  */
 export class InterleavedBuffer {
-    readonly isInterleavedBuffer: true;
-
     /**
-     * Create a new instance of {@link InterleavedBuffer}
-     * @param array A {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray | TypedArray} with a shared buffer. Stores the geometry data.
-     * @param stride The number of typed-array elements per vertex. Expects a `Integer`
+     * Constructs a new interleaved buffer.
+     *
+     * @param {TypedArray} array - A typed array with a shared buffer storing attribute data.
+     * @param {number} stride - The number of typed-array elements per vertex.
      */
     constructor(array: TypedArray, stride: number);
-
     /**
-     * A {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray | TypedArray} with a shared buffer. Stores the geometry data.
+     * This flag can be used for type testing.
+     *
+     * @default true
+     */
+    readonly isInterleavedBuffer: true;
+    /**
+     * A typed array with a shared buffer storing attribute data.
      */
     array: TypedArray;
-
     /**
-     * The number of {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray | TypedArray} elements per vertex.
-     * @remarks Expects a `Integer`
+     * The number of typed-array elements per vertex.
      */
     stride: number;
-
+    /**
+     * The total number of elements in the array
+     */
+    count: number;
     /**
      * Defines the intended usage pattern of the data store for optimization purposes.
-     * Corresponds to the {@link BufferAttribute.usage | usage} parameter of
-     * {@link https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/bufferData | WebGLRenderingContext.bufferData}.
-     * @remarks
-     * After the initial use of a buffer, its usage cannot be changed. Instead, instantiate a new one and set the desired usage before the next render.
-     * @see {@link https://threejs.org/docs/index.html#api/en/constants/BufferAttributeUsage | Buffer Attribute Usage Constants} for all possible values.
-     * @see {@link BufferAttribute.setUsage | setUsage}
-     * @defaultValue {@link THREE.StaticDrawUsage | THREE.StaticDrawUsage}.
+     *
+     * Note: After the initial use of a buffer, its usage cannot be changed. Instead,
+     * instantiate a new one and set the desired usage before the next render.
+     *
+     * @default StaticDrawUsage
      */
     usage: Usage;
-
     /**
-     * This can be used to only update some components of stored data. Use the {@link .addUpdateRange} function to add
-     * ranges to this array.
+     * This can be used to only update some components of stored vectors (for example, just the
+     * component related to color). Use the `addUpdateRange()` function to add ranges to this array.
      */
     updateRanges: Array<{
         /**
@@ -56,102 +56,92 @@ export class InterleavedBuffer {
          */
         count: number;
     }>;
-
     /**
-     * A version number, incremented every time the {@link BufferAttribute.needsUpdate | needsUpdate} property is set to true.
-     * @remarks Expects a `Integer`
-     * @defaultValue `0`
+     * A version number, incremented every time the `needsUpdate` is set to `true`.
      */
     version: number;
-
     /**
-     * Gives the total number of elements in the array.
-     * @remarks Expects a `Integer`
-     * @defaultValue 0
-     */
-    count: number;
-
-    /**
-     * Flag to indicate that this attribute has changed and should be re-sent to the GPU.
-     * Set this to true when you modify the value of the array.
-     * @remarks Setting this to true also increments the {@link BufferAttribute.version | version}.
-     * @remarks _set-only property_.
-     */
-    set needsUpdate(value: boolean);
-
-    /**
-     * {@link http://en.wikipedia.org/wiki/Universally_unique_identifier | UUID} of this object instance.
-     * @remarks This gets automatically assigned and shouldn't be edited.
+     * The UUID of the interleaved buffer.
      */
     uuid: string;
-
     /**
-     * A callback function that is executed after the Renderer has transferred the geometry data to the GPU.
+     * A callback function that is executed after the renderer has transferred the attribute array
+     * data to the GPU.
      */
     onUploadCallback: () => void;
-
     /**
-     * Sets the value of the {@link onUploadCallback} property.
-     * @see {@link onUploadCallback}
-     * @param callback function that is executed after the Renderer has transferred the geometry data to the GPU.
+     * Flag to indicate that this attribute has changed and should be re-sent to
+     * the GPU. Set this to `true` when you modify the value of the array.
+     *
+     * @default false
+     * @param {boolean} value
      */
-    onUpload(callback: () => void): this;
-
+    set needsUpdate(value: boolean);
     /**
-     * Calls {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray/set | TypedArray.set}( {@link value}, {@link offset} )
-     * on the {@link BufferAttribute.array | array}.
-     * @param value The source `TypedArray`.
-     * @param offset index of the {@link BufferAttribute.array | array} at which to start copying. Expects a `Integer`. Default `0`.
-     * @throws `RangeError` When {@link offset} is negative or is too large.
-     */
-    set(value: ArrayLike<number>, offset?: number): this;
-
-    /**
-     * Set {@link BufferAttribute.usage | usage}
-     * @remarks
-     * After the initial use of a buffer, its usage cannot be changed. Instead, instantiate a new one and set the desired usage before the next render.
-     * @see {@link https://threejs.org/docs/index.html#api/en/constants/BufferAttributeUsage | Buffer Attribute Usage Constants} for all possible values.
-     * @see {@link BufferAttribute.usage | usage}
-     * @param value Corresponds to the {@link BufferAttribute.usage | usage} parameter of
-     * {@link https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/bufferData | WebGLRenderingContext.bufferData}.
+     * Sets the usage of this interleaved buffer.
+     *
+     * @param {(StaticDrawUsage|DynamicDrawUsage|StreamDrawUsage|StaticReadUsage|DynamicReadUsage|StreamReadUsage|StaticCopyUsage|DynamicCopyUsage|StreamCopyUsage)} value - The usage to set.
+     * @return {InterleavedBuffer} A reference to this interleaved buffer.
      */
     setUsage(value: Usage): this;
-
     /**
-     * Adds a range of data in the data array to be updated on the GPU. Adds an object describing the range to the
-     * {@link .updateRanges} array.
+     * Adds a range of data in the data array to be updated on the GPU.
+     *
+     * @param {number} start - Position at which to start update.
+     * @param {number} count - The number of components to update.
      */
     addUpdateRange(start: number, count: number): void;
-
     /**
-     * Clears the {@link .updateRanges} array.
+     * Clears the update ranges.
      */
     clearUpdateRanges(): void;
-
     /**
-     * Copies another {@link InterleavedBuffer} to this {@link InterleavedBuffer} instance.
-     * @param source
+     * Copies the values of the given interleaved buffer to this instance.
+     *
+     * @param {InterleavedBuffer} source - The interleaved buffer to copy.
+     * @return {InterleavedBuffer} A reference to this instance.
      */
     copy(source: InterleavedBuffer): this;
-
     /**
-     * Copies data from {@link attribute}[{@link index2}] to {@link InterleavedBuffer.array | array}[{@link index1}].
-     * @param index1 Expects a `Integer`
-     * @param attribute
-     * @param index2 Expects a `Integer`
+     * Copies a vector from the given interleaved buffer to this one. The start
+     * and destination position in the attribute buffers are represented by the
+     * given indices.
+     *
+     * @param {number} index1 - The destination index into this interleaved buffer.
+     * @param {InterleavedBuffer} interleavedBuffer - The interleaved buffer to copy from.
+     * @param {number} index2 - The source index into the given interleaved buffer.
+     * @return {InterleavedBuffer} A reference to this instance.
      */
-    copyAt(index1: number, attribute: InterleavedBufferAttribute, index2: number): this;
-
+    copyAt(index1: number, interleavedBuffer: InterleavedBuffer, index2: number): this;
     /**
-     * Creates a clone of this {@link InterleavedBuffer}.
-     * @param data This object holds shared array buffers required for properly cloning geometries with interleaved attributes.
+     * Sets the given array data in the interleaved buffer.
+     *
+     * @param {(TypedArray|Array)} value - The array data to set.
+     * @param {number} [offset=0] - The offset in this interleaved buffer's array.
+     * @return {InterleavedBuffer} A reference to this instance.
+     */
+    set(value: ArrayLike<number>, offset?: number): this;
+    /**
+     * Returns a new interleaved buffer with copied values from this instance.
+     *
+     * @param {Object} [data] - An object with shared array buffers that allows to retain shared structures.
+     * @return {InterleavedBuffer} A clone of this instance.
      */
     clone(data: {}): InterleavedBuffer;
-
     /**
-     * Serializes this {@link InterleavedBuffer}.
-     * Converting to {@link https://github.com/mrdoob/three.js/wiki/JSON-Geometry-format-4 | JSON Geometry format v4},
-     * @param data This object holds shared array buffers required for properly serializing geometries with interleaved attributes.
+     * Sets the given callback function that is executed after the Renderer has transferred
+     * the array data to the GPU. Can be used to perform clean-up operations after
+     * the upload when data are not needed anymore on the CPU side.
+     *
+     * @param {Function} callback - The `onUpload()` callback.
+     * @return {InterleavedBuffer} A reference to this instance.
+     */
+    onUpload(callback: () => void): this;
+    /**
+     * Serializes the interleaved buffer into JSON.
+     *
+     * @param {Object} [data] - An optional value holding meta information about the serialization.
+     * @return {Object} A JSON object representing the serialized interleaved buffer.
      */
     toJSON(data: {}): {
         uuid: string;

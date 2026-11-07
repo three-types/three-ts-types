@@ -1,38 +1,32 @@
 /**
- * Uniforms are global GLSL variables.
- * They are passed to shader programs.
- * @example
- * When declaring a uniform of a {@link THREE.ShaderMaterial | ShaderMaterial}, it is declared by value or by object.
- * ```typescript
+ * Represents a uniform which is a global shader variable. They are passed to shader programs.
+ *
+ * When declaring a uniform of a {@link ShaderMaterial}, it is declared by value or by object.
+ * ```js
  * uniforms: {
- *     time: {
- *         value: 1.0
- *     },
- *     resolution: new Uniform(new Vector2())
+ * 	time: { value: 1.0 },
+ * 	resolution: new Uniform( new Vector2() )
  * };
  * ```
- * @see Example: {@link https://threejs.org/examples/#webgl_nodes_materials_instance_uniform | WebGL2 / nodes / materials / instance / uniform}
- * @see Example: {@link https://threejs.org/examples/#webgpu_instance_uniform| WebGPU / instance / uniform}
- * @see {@link https://threejs.org/docs/index.html#api/en/core/Uniform | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/core/Uniform.js | Source}
+ * Since this class can only be used in context of {@link ShaderMaterial}, it is only supported
+ * in {@link WebGLRenderer}.
  */
 export class Uniform<T = any> {
     /**
-     * Create a new instance of {@link THREE.Uniform | Uniform}
-     * @param value An object containing the value to set up the uniform. It's type must be one of the Uniform Types described above.
+     * Constructs a new uniform.
+     *
+     * @param {any} value - The uniform value.
      */
     constructor(value: T);
-
     /**
-     * Current value of the uniform.
+     * The uniform value.
      */
     value: T;
-
     /**
-     * Returns a clone of this uniform.
-     * @remarks
-     * If the uniform's {@link value} property is an {@link Object | Object} with a `clone()` method, this is used,
-     * otherwise the value is copied by assignment Array values are **shared** between cloned {@link THREE.UniformUniform | Uniform}s.
+     * Returns a new uniform with copied values from this instance.
+     * If the value has a `clone()` method, the value is cloned as well.
+     *
+     * @return {Uniform} A clone of this instance.
      */
     clone(): Uniform<T>;
 }
