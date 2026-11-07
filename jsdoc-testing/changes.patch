@@ -14536,7 +14536,7 @@ index 8ac41df2c..9240574b2 100644
 +import { Loader, OnErrorCallback, OnProgressCallback } from './Loader.js';
  import { CubeTexture } from '../textures/CubeTexture.js';
 diff --git a/jsdoc-testing/jsdoc/src/loaders/DataTextureLoader.d.ts b/jsdoc-testing/jsdoc/src/loaders/DataTextureLoader.d.ts
-index 62f05e621..9007aeefd 100644
+index 62f05e621..8a7cc57e2 100644
 --- a/jsdoc-testing/jsdoc/src/loaders/DataTextureLoader.d.ts
 +++ b/jsdoc-testing/jsdoc/src/loaders/DataTextureLoader.d.ts
 @@ -1,11 +1,11 @@
@@ -14632,9 +14632,18 @@ index 62f05e621..9007aeefd 100644
      /**
       * Parses the given buffer and returns a configured data texture. Use this method
       * for parsing texture data that is already in memory (e.g. drag and drop or data
-@@ -105,5 +107,9 @@ export class DataTextureLoader extends Loader {
+@@ -96,14 +98,10 @@ export class DataTextureLoader extends Loader {
+      * @return {DataTexture} The data texture.
       */
-     private _applyTexData;
+     createDataTexture(buffer: ArrayBuffer): DataTexture;
+-    /**
+-     * Applies the given parsed texture data to the given data texture.
+-     *
+-     * @private
+-     * @param {DataTexture} texture - The data texture.
+-     * @param {DataTextureLoader~TexData} texData - The parsed texture data.
+-     */
+-    private _applyTexData;
  }
 -import { Loader } from './Loader.js';
 -import { DataTexture } from '../textures/DataTexture.js';
@@ -14645,7 +14654,7 @@ index 62f05e621..9007aeefd 100644
 +import { CompressedTextureMipmap } from '../textures/CompressedTexture.js';
 +import { CubeTexture } from '../textures/CubeTexture.js';
 diff --git a/jsdoc-testing/jsdoc/src/loaders/FileLoader.d.ts b/jsdoc-testing/jsdoc/src/loaders/FileLoader.d.ts
-index bdad7b69a..20bf4df4a 100644
+index bdad7b69a..1152d0c85 100644
 --- a/jsdoc-testing/jsdoc/src/loaders/FileLoader.d.ts
 +++ b/jsdoc-testing/jsdoc/src/loaders/FileLoader.d.ts
 @@ -13,7 +13,7 @@
@@ -14657,16 +14666,23 @@ index bdad7b69a..20bf4df4a 100644
      /**
       * The expected mime type. Valid values can be found
       * [here](https://developer.mozilla.org/en-US/docs/Web/API/DOMParser/parseFromString#mimetype)
-@@ -27,7 +27,7 @@ export class FileLoader extends Loader {
+@@ -27,14 +27,7 @@ export class FileLoader extends Loader {
       * @type {('arraybuffer'|'blob'|'document'|'json'|'')}
       * @default ''
       */
 -    responseType: ("arraybuffer" | "blob" | "document" | "json" | "");
+-    /**
+-     * Used for aborting requests.
+-     *
+-     * @private
+-     * @type {AbortController}
+-     */
+-    private _abortController;
 +    responseType: string;
      /**
-      * Used for aborting requests.
+      * Starts loading from the given URL and pass the loaded response to the `onLoad()` callback.
       *
-@@ -43,26 +43,26 @@ export class FileLoader extends Loader {
+@@ -43,26 +36,26 @@ export class FileLoader extends Loader {
       * @param {onProgressCallback} [onProgress] - Executed while the loading is in progress.
       * @param {onErrorCallback} [onError] - Executed when errors occur.
       */
@@ -14699,7 +14715,7 @@ index bdad7b69a..20bf4df4a 100644
 -import { Loader } from './Loader.js';
 +import { Loader, OnErrorCallback, OnProgressCallback } from './Loader.js';
 diff --git a/jsdoc-testing/jsdoc/src/loaders/ImageBitmapLoader.d.ts b/jsdoc-testing/jsdoc/src/loaders/ImageBitmapLoader.d.ts
-index c060ff5b6..e8b0286b1 100644
+index c060ff5b6..49c3c5ea0 100644
 --- a/jsdoc-testing/jsdoc/src/loaders/ImageBitmapLoader.d.ts
 +++ b/jsdoc-testing/jsdoc/src/loaders/ImageBitmapLoader.d.ts
 @@ -26,7 +26,7 @@
@@ -14711,7 +14727,7 @@ index c060ff5b6..e8b0286b1 100644
      /**
       * This flag can be used for type testing.
       *
-@@ -34,14 +34,14 @@ export class ImageBitmapLoader extends Loader {
+@@ -34,21 +34,14 @@ export class ImageBitmapLoader extends Loader {
       * @readonly
       * @default true
       */
@@ -14724,11 +14740,18 @@ index c060ff5b6..e8b0286b1 100644
       * @default {premultiplyAlpha:'none'}
       */
 -    options: Object;
+-    /**
+-     * Used for aborting requests.
+-     *
+-     * @private
+-     * @type {AbortController}
+-     */
+-    private _abortController;
 +    options: ImageBitmapOptions;
      /**
-      * Used for aborting requests.
-      *
-@@ -59,7 +59,7 @@ export class ImageBitmapLoader extends Loader {
+      * Sets the given loader options. The structure of the object must match the `options` parameter of
+      * [createImageBitmap](https://developer.mozilla.org/en-US/docs/Web/API/Window/createImageBitmap).
+@@ -59,7 +52,7 @@ export class ImageBitmapLoader extends Loader {
       * @param {Object} options - The loader options to set.
       * @return {ImageBitmapLoader} A reference to this image bitmap loader.
       */
@@ -14737,7 +14760,7 @@ index c060ff5b6..e8b0286b1 100644
      /**
       * Starts loading from the given URL and pass the loaded image bitmap to the `onLoad()` callback.
       *
-@@ -68,12 +68,12 @@ export class ImageBitmapLoader extends Loader {
+@@ -68,12 +61,12 @@ export class ImageBitmapLoader extends Loader {
       * @param {onProgressCallback} onProgress - Unsupported in this loader.
       * @param {onErrorCallback} onError - Executed when errors occur.
       */
@@ -14911,7 +14934,7 @@ index bd9dd20b9..bbee56317 100644
 +    static DEFAULT_MATERIAL_NAME: string;
  }
 diff --git a/jsdoc-testing/jsdoc/src/loaders/LoadingManager.d.ts b/jsdoc-testing/jsdoc/src/loaders/LoadingManager.d.ts
-index dc1f5c00d..97dcd605a 100644
+index dc1f5c00d..6b5d5820f 100644
 --- a/jsdoc-testing/jsdoc/src/loaders/LoadingManager.d.ts
 +++ b/jsdoc-testing/jsdoc/src/loaders/LoadingManager.d.ts
 @@ -1,3 +1,5 @@
@@ -14920,7 +14943,7 @@ index dc1f5c00d..97dcd605a 100644
  /**
   * The global default loading manager.
   *
-@@ -30,35 +32,35 @@ export class LoadingManager {
+@@ -30,42 +32,35 @@ export class LoadingManager {
       * @param {Function} [onProgress] - Executes when single items have been loaded.
       * @param {Function} [onError] - Executes when an error occurs.
       */
@@ -14957,11 +14980,18 @@ index dc1f5c00d..97dcd605a 100644
       * @default undefined
       */
 -    onError: Function | undefined;
+-    /**
+-     * Used for aborting ongoing requests in loaders using this manager.
+-     *
+-     * @private
+-     * @type {AbortController | null}
+-     */
+-    private _abortController;
 +    onError: ((url: string) => void) | undefined;
      /**
-      * Used for aborting ongoing requests in loaders using this manager.
-      *
-@@ -129,7 +131,7 @@ export class LoadingManager {
+      * This should be called by any loader using the manager when the loader
+      * starts loading an item.
+@@ -129,7 +124,7 @@ export class LoadingManager {
       * @param {function(string):string} transform - URL modifier callback. Called with an URL and must return a resolved URL.
       * @return {LoadingManager} A reference to this loading manager.
       */
@@ -14970,7 +15000,7 @@ index dc1f5c00d..97dcd605a 100644
      /**
       * Registers a loader with the given regular expression. Can be used to
       * define what loader should be used in order to load specific files. A
-@@ -144,14 +146,14 @@ export class LoadingManager {
+@@ -144,14 +139,14 @@ export class LoadingManager {
       * @param {Loader} loader - A loader that should handle matched cases.
       * @return {LoadingManager} A reference to this loading manager.
       */
@@ -14987,7 +15017,7 @@ index dc1f5c00d..97dcd605a 100644
      /**
       * Can be used to retrieve the registered loader for the given file path.
       *
-@@ -166,7 +168,7 @@ export class LoadingManager {
+@@ -166,7 +161,7 @@ export class LoadingManager {
       *
       * @return {LoadingManager} A reference to this loading manager.
       */
@@ -15334,7 +15364,7 @@ index cf350a240..9f564f2f4 100644
 +import NodeMaterial from '../../materials/nodes/NodeMaterial.js';
 +import { Node } from '../../nodes/Nodes.js';
 diff --git a/jsdoc-testing/jsdoc/src/loaders/nodes/NodeObjectLoader.d.ts b/jsdoc-testing/jsdoc/src/loaders/nodes/NodeObjectLoader.d.ts
-index b5954eab2..e539ce41e 100644
+index b5954eab2..efeb40edf 100644
 --- a/jsdoc-testing/jsdoc/src/loaders/nodes/NodeObjectLoader.d.ts
 +++ b/jsdoc-testing/jsdoc/src/loaders/nodes/NodeObjectLoader.d.ts
 @@ -18,7 +18,7 @@ declare class NodeObjectLoader extends ObjectLoader {
@@ -15346,16 +15376,24 @@ index b5954eab2..e539ce41e 100644
      };
      /**
       * Represents a dictionary of node material types.
-@@ -26,7 +26,7 @@ declare class NodeObjectLoader extends ObjectLoader {
+@@ -26,15 +26,8 @@ declare class NodeObjectLoader extends ObjectLoader {
       * @type {Object<string,NodeMaterial.constructor>}
       */
      nodeMaterials: {
 -        [x: string]: NodeMaterial.constructor;
 +        [x: string]: new() => NodeMaterial;
      };
+-    /**
+-     * A reference to hold the `nodes` JSON property.
+-     *
+-     * @private
+-     * @type {?Object[]}
+-     */
+-    private _nodesJSON;
      /**
-      * A reference to hold the `nodes` JSON property.
-@@ -42,8 +42,8 @@ declare class NodeObjectLoader extends ObjectLoader {
+      * Defines the dictionary of node types.
+      *
+@@ -42,8 +35,8 @@ declare class NodeObjectLoader extends ObjectLoader {
       * @return {NodeObjectLoader} A reference to this loader.
       */
      setNodes(value: {
@@ -15366,7 +15404,7 @@ index b5954eab2..e539ce41e 100644
      /**
       * Defines the dictionary of node material types.
       *
-@@ -51,8 +51,8 @@ declare class NodeObjectLoader extends ObjectLoader {
+@@ -51,8 +44,8 @@ declare class NodeObjectLoader extends ObjectLoader {
       * @return {NodeObjectLoader} A reference to this loader.
       */
      setNodeMaterials(value: {
@@ -15377,7 +15415,7 @@ index b5954eab2..e539ce41e 100644
      /**
       * Parses the node objects from the given JSON.
       *
-@@ -60,14 +60,14 @@ declare class NodeObjectLoader extends ObjectLoader {
+@@ -60,14 +53,14 @@ declare class NodeObjectLoader extends ObjectLoader {
       * @param {Function} onLoad - The onLoad callback function.
       * @return {Object3D}. The parsed 3D object.
       */
@@ -15394,7 +15432,7 @@ index b5954eab2..e539ce41e 100644
      /**
       * Parses the node objects from the given JSON and textures.
       *
-@@ -87,10 +87,15 @@ declare class NodeObjectLoader extends ObjectLoader {
+@@ -87,10 +80,15 @@ declare class NodeObjectLoader extends ObjectLoader {
       * @param {Object<string,Texture>} textures - The texture library.
       * @return {Object<string,NodeMaterial>}. The parsed materials.
       */
