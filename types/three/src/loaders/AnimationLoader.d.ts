@@ -22,8 +22,8 @@ export class AnimationLoader extends Loader<AnimationClip[]> {
     load(
         url: string,
         onLoad: (data: Array<AnimationClip>) => void,
-        onProgress?: onProgressCallback,
-        onError?: onErrorCallback,
+        onProgress?: OnProgressCallback,
+        onError?: OnErrorCallback,
     ): void;
     /**
      * Parses the given JSON object and returns an array of animation clips.
@@ -34,4 +34,4 @@ export class AnimationLoader extends Loader<AnimationClip[]> {
     parse(json: readonly unknown[]): Array<AnimationClip>;
 }
 import { AnimationClip } from "../animation/AnimationClip.js";
-import { Loader, onErrorCallback, onProgressCallback } from "./Loader.js";
+import { Loader, OnErrorCallback, OnProgressCallback } from "./Loader.js";

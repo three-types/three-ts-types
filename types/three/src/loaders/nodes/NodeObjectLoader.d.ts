@@ -77,7 +77,9 @@ declare class NodeObjectLoader extends ObjectLoader {
      */
     parseNodes(json: Object[], textures: {
         [x: string]: Texture;
-    }): NodeLoaderResult;
+    }): {
+        [x: string]: Node;
+    };
     /**
      * Parses the node objects from the given JSON and textures.
      *
@@ -97,4 +99,3 @@ import NodeMaterial from "../../materials/nodes/NodeMaterial.js";
 import { Node } from "../../nodes/Nodes.js";
 import { Texture } from "../../textures/Texture.js";
 import { LoadingManager } from "../LoadingManager.js";
-import { NodeLoaderResult } from "./NodeLoader.js";

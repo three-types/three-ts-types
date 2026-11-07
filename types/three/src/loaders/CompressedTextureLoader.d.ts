@@ -54,10 +54,10 @@ export class CompressedTextureLoader extends Loader<CompressedTexture> {
     load(
         url: string,
         onLoad?: (data: CompressedTexture) => void,
-        onProgress?: onProgressCallback,
-        onError?: onErrorCallback,
+        onProgress?: OnProgressCallback,
+        onError?: OnErrorCallback,
     ): CompressedTexture;
 }
 import { CompressedPixelFormat, PixelFormat } from "../constants.js";
 import { CompressedTexture, CompressedTextureMipmap } from "../textures/CompressedTexture.js";
-import { Loader, onErrorCallback, onProgressCallback } from "./Loader.js";
+import { Loader, OnErrorCallback, OnProgressCallback } from "./Loader.js";

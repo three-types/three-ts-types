@@ -42,9 +42,9 @@ export class CubeTextureLoader extends Loader<CubeTexture, readonly string[]> {
     load(
         urls: readonly string[],
         onLoad?: (data: CubeTexture) => void,
-        onProgress?: onProgressCallback,
-        onError?: onErrorCallback,
+        onProgress?: OnProgressCallback,
+        onError?: OnErrorCallback,
     ): CubeTexture;
 }
 import { CubeTexture } from "../textures/CubeTexture.js";
-import { Loader, onErrorCallback, onProgressCallback } from "./Loader.js";
+import { Loader, OnErrorCallback, OnProgressCallback } from "./Loader.js";

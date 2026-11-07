@@ -45,8 +45,8 @@ export class ObjectLoader extends Loader<Object3D> {
     load(
         url: string,
         onLoad?: (data: Object3D) => void,
-        onProgress?: onProgressCallback,
-        onError?: onErrorCallback,
+        onProgress?: OnProgressCallback,
+        onError?: OnErrorCallback,
     ): void;
     /**
      * Async version of {@link ObjectLoader#load}.
@@ -56,7 +56,7 @@ export class ObjectLoader extends Loader<Object3D> {
      * @param {onProgressCallback} onProgress - Executed while the loading is in progress.
      * @return {Promise<Object3D>} A Promise that resolves with the loaded 3D object.
      */
-    loadAsync(url: string, onProgress?: onProgressCallback): Promise<Object3D>;
+    loadAsync(url: string, onProgress?: OnProgressCallback): Promise<Object3D>;
     /**
      * Parses the given JSON. This is used internally by {@link ObjectLoader#load}
      * but can also be used directly to parse a previously loaded JSON structure.
@@ -126,5 +126,5 @@ import { Material } from "../materials/Material.js";
 import { Skeleton } from "../objects/Skeleton.js";
 import { Texture } from "../textures/Texture.js";
 import { TextureSource } from "../textures/TextureSource.js";
-import { Loader, onErrorCallback, onProgressCallback } from "./Loader.js";
+import { Loader, OnErrorCallback, OnProgressCallback } from "./Loader.js";
 import { LoadingManager } from "./LoadingManager.js";

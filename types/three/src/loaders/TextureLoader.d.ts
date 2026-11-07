@@ -30,9 +30,9 @@ export class TextureLoader extends Loader<Texture<HTMLImageElement>> {
     load(
         url: string,
         onLoad?: (data: Texture<HTMLImageElement>) => void,
-        onProgress?: onProgressCallback,
-        onError?: onErrorCallback,
+        onProgress?: OnProgressCallback,
+        onError?: OnErrorCallback,
     ): Texture<HTMLImageElement>;
 }
 import { Texture } from "../textures/Texture.js";
-import { Loader, onErrorCallback, onProgressCallback } from "./Loader.js";
+import { Loader, OnErrorCallback, OnProgressCallback } from "./Loader.js";

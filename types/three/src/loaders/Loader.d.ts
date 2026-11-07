@@ -3,11 +3,11 @@ import { LoadingManager } from "./LoadingManager.js";
 /**
  * Callback for onProgress in loaders.
  */
-export type onProgressCallback = (event: ProgressEvent) => void;
+export type OnProgressCallback = (event: ProgressEvent) => void;
 /**
  * Callback for onError in loaders.
  */
-export type onErrorCallback = (error: unknown) => void;
+export type OnErrorCallback = (error: unknown) => void;
 /**
  * Abstract base class for loaders.
  *
@@ -88,7 +88,7 @@ export class Loader<TData = unknown, TUrl = string> {
      * @param {onProgressCallback} [onProgress] - Executed while the loading is in progress.
      * @param {onErrorCallback} [onError] - Executed when errors occur.
      */
-    load(url: TUrl, onLoad: (data: TData) => void, onProgress?: onProgressCallback, onError?: onErrorCallback): void;
+    load(url: TUrl, onLoad: (data: TData) => void, onProgress?: OnProgressCallback, onError?: OnErrorCallback): void;
     /**
      * A async version of {@link Loader#load}.
      *
@@ -96,15 +96,7 @@ export class Loader<TData = unknown, TUrl = string> {
      * @param {onProgressCallback} [onProgress] - Executed while the loading is in progress.
      * @return {Promise} A Promise that resolves when the asset has been loaded.
      */
-    loadAsync(url: TUrl, onProgress?: onProgressCallback): Promise<TData>;
-    /**
-     * This method needs to be implemented by all concrete loaders. It holds the
-     * logic for parsing the asset into three.js entities.
-     *
-     * @abstract
-     * @param {any} data - The data to parse.
-     */
-    parse(data: unknown, ...args: any[]): unknown;
+    loadAsync(url: TUrl, onProgress?: OnProgressCallback): Promise<TData>;
     /**
      * Sets the `crossOrigin` String to implement CORS for loading the URL
      * from a different domain that allows CORS.

@@ -25,8 +25,8 @@ export class BufferGeometryLoader extends Loader<InstancedBufferGeometry | Buffe
     load(
         url: string,
         onLoad: (data: InstancedBufferGeometry | BufferGeometry) => void,
-        onProgress?: onProgressCallback,
-        onError?: onErrorCallback,
+        onProgress?: OnProgressCallback,
+        onError?: OnErrorCallback,
     ): void;
     /**
      * Parses the given JSON object and returns a geometry.
@@ -38,4 +38,4 @@ export class BufferGeometryLoader extends Loader<InstancedBufferGeometry | Buffe
 }
 import { BufferGeometry } from "../core/BufferGeometry.js";
 import { InstancedBufferGeometry } from "../core/InstancedBufferGeometry.js";
-import { Loader, onErrorCallback, onProgressCallback } from "./Loader.js";
+import { Loader, OnErrorCallback, OnProgressCallback } from "./Loader.js";

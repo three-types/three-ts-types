@@ -1,7 +1,4 @@
 export default NodeLoader;
-export interface NodeLoaderResult {
-    [hash: string]: Node;
-}
 /**
  * A loader for loading node objects in the three.js JSON Object/Scene format.
  *
@@ -32,14 +29,16 @@ declare class NodeLoader extends Loader<Node> {
      * @param {Function} onProgress - Will be called while load progresses.
      * @param {Function} onError - Will be called when errors are thrown during the loading process.
      */
-    load(url: string, onLoad: (data: Node) => void, onProgress?: onProgressCallback, onError?: onErrorCallback): void;
+    load(url: string, onLoad: (data: Node) => void, onProgress?: OnProgressCallback, onError?: OnErrorCallback): void;
     /**
      * Parse the node dependencies for the loaded node.
      *
      * @param {Array<Object>} [json] - The JSON definition
      * @return {Object<string,Node>} A dictionary with node dependencies.
      */
-    parseNodes(json?: Array<Object>): NodeLoaderResult;
+    parseNodes(json?: Array<Object>): {
+        [x: string]: Node;
+    };
     /**
      * Parses the node from the given JSON.
      *
@@ -84,4 +83,4 @@ declare class NodeLoader extends Loader<Node> {
 }
 import { Node } from "../../nodes/Nodes.js";
 import { Texture } from "../../textures/Texture.js";
-import { Loader, onErrorCallback, onProgressCallback } from "../Loader.js";
+import { Loader, OnErrorCallback, OnProgressCallback } from "../Loader.js";

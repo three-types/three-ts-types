@@ -28,8 +28,8 @@ export class AudioLoader extends Loader<AudioBuffer> {
     load(
         url: string,
         onLoad: (data: AudioBuffer) => void,
-        onProgress?: onProgressCallback,
-        onError?: onErrorCallback,
+        onProgress?: OnProgressCallback,
+        onError?: OnErrorCallback,
     ): void;
 }
-import { Loader, onErrorCallback, onProgressCallback } from "./Loader.js";
+import { Loader, OnErrorCallback, OnProgressCallback } from "./Loader.js";

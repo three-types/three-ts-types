@@ -27,8 +27,8 @@ export class ImageLoader extends Loader<HTMLImageElement> {
     load(
         url: string,
         onLoad?: (data: HTMLImageElement) => void,
-        onProgress?: onProgressCallback,
-        onError?: onErrorCallback,
+        onProgress?: OnProgressCallback,
+        onError?: OnErrorCallback,
     ): HTMLImageElement;
 }
-import { Loader, onErrorCallback, onProgressCallback } from "./Loader.js";
+import { Loader, OnErrorCallback, OnProgressCallback } from "./Loader.js";

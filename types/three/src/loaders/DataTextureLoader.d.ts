@@ -90,8 +90,8 @@ export abstract class DataTextureLoader extends Loader<DataTexture> {
     load(
         url: string,
         onLoad?: (data: DataTexture, texData: DataTextureLoaderTexData) => void,
-        onProgress?: onProgressCallback,
-        onError?: onErrorCallback,
+        onProgress?: OnProgressCallback,
+        onError?: OnErrorCallback,
     ): DataTexture;
     abstract parse(buffer: ArrayBuffer): DataTextureLoaderTexData;
     /**
@@ -124,4 +124,4 @@ import { TypedArray } from "../core/BufferAttribute.js";
 import { CompressedTextureMipmap } from "../textures/CompressedTexture.js";
 import { CubeTexture } from "../textures/CubeTexture.js";
 import { DataTexture, DataTextureImageData } from "../textures/DataTexture.js";
-import { Loader, onErrorCallback, onProgressCallback } from "./Loader.js";
+import { Loader, OnErrorCallback, OnProgressCallback } from "./Loader.js";

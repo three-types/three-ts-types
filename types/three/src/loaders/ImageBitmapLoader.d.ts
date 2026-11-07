@@ -71,8 +71,8 @@ export class ImageBitmapLoader extends Loader<ImageBitmap> {
     load(
         url: string,
         onLoad?: (data: ImageBitmap) => void,
-        onProgress?: onProgressCallback,
-        onError?: onErrorCallback,
+        onProgress?: OnProgressCallback,
+        onError?: OnErrorCallback,
     ): void;
     /**
      * Aborts ongoing fetch requests.
@@ -81,4 +81,4 @@ export class ImageBitmapLoader extends Loader<ImageBitmap> {
      */
     abort(): this;
 }
-import { Loader, onErrorCallback, onProgressCallback } from "./Loader.js";
+import { Loader, OnErrorCallback, OnProgressCallback } from "./Loader.js";

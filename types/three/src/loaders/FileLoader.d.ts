@@ -43,7 +43,7 @@ export class FileLoader<TData = string | ArrayBuffer> extends Loader<TData> {
      * @param {onProgressCallback} [onProgress] - Executed while the loading is in progress.
      * @param {onErrorCallback} [onError] - Executed when errors occur.
      */
-    load(url: string, onLoad?: (data: TData) => void, onProgress?: onProgressCallback, onError?: onErrorCallback): void;
+    load(url: string, onLoad?: (data: TData) => void, onProgress?: OnProgressCallback, onError?: OnErrorCallback): void;
     /**
      * Sets the expected response type.
      *
@@ -65,4 +65,4 @@ export class FileLoader<TData = string | ArrayBuffer> extends Loader<TData> {
      */
     abort(): this;
 }
-import { Loader, onErrorCallback, onProgressCallback } from "./Loader.js";
+import { Loader, OnErrorCallback, OnProgressCallback } from "./Loader.js";

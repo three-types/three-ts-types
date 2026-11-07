@@ -47,8 +47,8 @@ export class MaterialLoader extends Loader<Material> {
     load(
         url: string,
         onLoad: (data: Material) => void,
-        onProgress?: onProgressCallback,
-        onError?: onErrorCallback,
+        onProgress?: OnProgressCallback,
+        onError?: OnErrorCallback,
     ): void;
     /**
      * Parses the given JSON object and returns a material.
@@ -77,4 +77,4 @@ export class MaterialLoader extends Loader<Material> {
 }
 import { Material } from "../materials/Materials.js";
 import { Texture } from "../textures/Texture.js";
-import { Loader, onErrorCallback, onProgressCallback } from "./Loader.js";
+import { Loader, OnErrorCallback, OnProgressCallback } from "./Loader.js";
