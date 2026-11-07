@@ -21669,6 +21669,56 @@ index f0b539d37..dbe45bcee 100644
  }
 +
 +export default NodeMaterialObserver;
+diff --git a/jsdoc-testing/jsdoc/src/math/Box2.d.ts b/jsdoc-testing/jsdoc/src/math/Box2.d.ts
+index cc99e0f2f..1b12cf307 100644
+--- a/jsdoc-testing/jsdoc/src/math/Box2.d.ts
++++ b/jsdoc-testing/jsdoc/src/math/Box2.d.ts
+@@ -1,3 +1,5 @@
++import { Vector2, Vector2Like } from "./Vector2.js";
++
+ /**
+  * Represents an axis-aligned bounding box (AABB) in 2D space.
+  */
+@@ -45,7 +47,7 @@ export class Box2 {
+      * @param {Array<Vector2>} points - An array holding 2D position data as instances of {@link Vector2}.
+      * @return {Box2} A reference to this bounding box.
+      */
+-    setFromPoints(points: Array<Vector2>): Box2;
++    setFromPoints(points: Vector2Like[]): Box2;
+     /**
+      * Centers this box on the given center vector and sets this box's width, height and
+      * depth to the given size values.
+@@ -60,14 +62,14 @@ export class Box2 {
+      *
+      * @return {Box2} A clone of this instance.
+      */
+-    clone(): Box2;
++    clone(): this;
+     /**
+      * Copies the values of the given box to this instance.
+      *
+      * @param {Box2} box - The box to copy.
+      * @return {Box2} A reference to this bounding box.
+      */
+-    copy(box: Box2): Box2;
++    copy(box: Box2): this;
+     /**
+      * Makes this box empty which means in encloses a zero space in 2D.
+      *
+@@ -102,7 +104,7 @@ export class Box2 {
+      * @param {Vector2} point - The point that should be included by the bounding box.
+      * @return {Box2} A reference to this bounding box.
+      */
+-    expandByPoint(point: Vector2): Box2;
++    expandByPoint(point: Vector2Like): Box2;
+     /**
+      * Expands this box equilaterally by the given vector. The width of this
+      * box will be expanded by the x component of the vector in both
+@@ -202,4 +204,3 @@ export class Box2 {
+      */
+     equals(box: Box2): boolean;
+ }
+-import { Vector2 } from './Vector2.js';
 diff --git a/jsdoc-testing/jsdoc/src/math/Box3.d.ts b/jsdoc-testing/jsdoc/src/math/Box3.d.ts
 index b1c152106..f8b310764 100644
 --- a/jsdoc-testing/jsdoc/src/math/Box3.d.ts
@@ -21853,6 +21903,639 @@ index b1c152106..f8b310764 100644
 +    max: number[];
  }
 -import { Vector3 } from './Vector3.js';
+diff --git a/jsdoc-testing/jsdoc/src/math/Color.d.ts b/jsdoc-testing/jsdoc/src/math/Color.d.ts
+index 88445d822..79de84649 100644
+--- a/jsdoc-testing/jsdoc/src/math/Color.d.ts
++++ b/jsdoc-testing/jsdoc/src/math/Color.d.ts
+@@ -1,3 +1,22 @@
++import { Matrix3 } from "./Matrix3.js";
++import { Vector3 } from "./Vector3.js";
++import { BufferAttribute } from "../core/BufferAttribute.js";
++import { InterleavedBufferAttribute } from "../core/InterleavedBufferAttribute.js";
++
++export type ColorRepresentation = Color | string | number;
++
++export interface HSL {
++    h: number;
++    s: number;
++    l: number;
++}
++
++export interface RGB {
++    r: number;
++    g: number;
++    b: number;
++}
++
+ /**
+  * A Color instance is represented by RGB components in the linear <i>working
+  * color space</i>, which defaults to `LinearSRGBColorSpace`. Inputs
+@@ -53,7 +72,19 @@ export class Color {
+      * @param {number} [g] - The green component.
+      * @param {number} [b] - The blue component.
+      */
+-    constructor(r?: (number | string | Color), g?: number, b?: number);
++    constructor(color?: ColorRepresentation);
++    /**
++     * Constructs a new color.
++     *
++     * Note that standard method of specifying color in three.js is with a hexadecimal triplet,
++     * and that method is used throughout the rest of the documentation.
++     *
++     * @param {(number|string|Color)} [r] - The red component of the color. If `g` and `b` are
++     * not provided, it can be hexadecimal triplet, a CSS-style string or another `Color` instance.
++     * @param {number} [g] - The green component.
++     * @param {number} [b] - The blue component.
++     */
++    constructor(r: number, g: number, b: number);
+     /**
+      * This flag can be used for type testing.
+      *
+@@ -61,7 +92,7 @@ export class Color {
+      * @readonly
+      * @default true
+      */
+-    readonly isColor: boolean;
++    readonly isColor: true;
+     /**
+      * The red component.
+      *
+@@ -92,14 +123,14 @@ export class Color {
+      * @param {number} [b] - The blue component.
+      * @return {Color} A reference to this color.
+      */
+-    set(r?: (number | string | Color), g?: number, b?: number): Color;
++    set(...args: [color: ColorRepresentation] | [r: number, g: number, b: number]): this;
+     /**
+      * Sets the colors's components to the given scalar value.
+      *
+      * @param {number} scalar - The scalar value.
+      * @return {Color} A reference to this color.
+      */
+-    setScalar(scalar: number): Color;
++    setScalar(scalar: number): this;
+     /**
+      * Sets this color from a hexadecimal value.
+      *
+@@ -107,7 +138,7 @@ export class Color {
+      * @param {string} [colorSpace=SRGBColorSpace] - The color space.
+      * @return {Color} A reference to this color.
+      */
+-    setHex(hex: number, colorSpace?: string): Color;
++    setHex(hex: number, colorSpace?: string): this;
+     /**
+      * Sets this color from RGB values.
+      *
+@@ -117,7 +148,7 @@ export class Color {
+      * @param {string} [colorSpace=ColorManagement.workingColorSpace] - The color space.
+      * @return {Color} A reference to this color.
+      */
+-    setRGB(r: number, g: number, b: number, colorSpace?: string): Color;
++    setRGB(r: number, g: number, b: number, colorSpace?: string): this;
+     /**
+      * Sets this color from RGB values.
+      *
+@@ -127,7 +158,7 @@ export class Color {
+      * @param {string} [colorSpace=ColorManagement.workingColorSpace] - The color space.
+      * @return {Color} A reference to this color.
+      */
+-    setHSL(h: number, s: number, l: number, colorSpace?: string): Color;
++    setHSL(h: number, s: number, l: number, colorSpace?: string): this;
+     /**
+      * Sets this color from a CSS-style string. For example, `rgb(250, 0,0)`,
+      * `rgb(100%, 0%, 0%)`, `hsl(0, 100%, 50%)`, `#ff0000`, `#f00`, or `red` ( or
+@@ -138,7 +169,7 @@ export class Color {
+      * @param {string} [colorSpace=SRGBColorSpace] - The color space.
+      * @return {Color} A reference to this color.
+      */
+-    setStyle(style: string, colorSpace?: string): Color;
++    setStyle(style: string, colorSpace?: string): this;
+     /**
+      * Sets this color from a color name. Faster than {@link Color#setStyle} if
+      * you don't need the other CSS-style formats.
+@@ -152,20 +183,20 @@ export class Color {
+      * @param {string} [colorSpace=SRGBColorSpace] - The color space.
+      * @return {Color} A reference to this color.
+      */
+-    setColorName(style: string, colorSpace?: string): Color;
++    setColorName(style: string, colorSpace?: string): this;
+     /**
+      * Returns a new color with copied values from this instance.
+      *
+      * @return {Color} A clone of this instance.
+      */
+-    clone(): Color;
++    clone(): this;
+     /**
+      * Copies the values of the given color to this instance.
+      *
+      * @param {Color} color - The color to copy.
+      * @return {Color} A reference to this color.
+      */
+-    copy(color: Color): Color;
++    copy(color: Color): this;
+     /**
+      * Copies the given color into this color, and then converts this color from
+      * `SRGBColorSpace` to `LinearSRGBColorSpace`.
+@@ -173,7 +204,7 @@ export class Color {
+      * @param {Color} color - The color to copy/convert.
+      * @return {Color} A reference to this color.
+      */
+-    copySRGBToLinear(color: Color): Color;
++    copySRGBToLinear(color: Color): this;
+     /**
+      * Copies the given color into this color, and then converts this color from
+      * `LinearSRGBColorSpace` to `SRGBColorSpace`.
+@@ -181,19 +212,19 @@ export class Color {
+      * @param {Color} color - The color to copy/convert.
+      * @return {Color} A reference to this color.
+      */
+-    copyLinearToSRGB(color: Color): Color;
++    copyLinearToSRGB(color: Color): this;
+     /**
+      * Converts this color from `SRGBColorSpace` to `LinearSRGBColorSpace`.
+      *
+      * @return {Color} A reference to this color.
+      */
+-    convertSRGBToLinear(): Color;
++    convertSRGBToLinear(): this;
+     /**
+      * Converts this color from `LinearSRGBColorSpace` to `SRGBColorSpace`.
+      *
+      * @return {Color} A reference to this color.
+      */
+-    convertLinearToSRGB(): Color;
++    convertLinearToSRGB(): this;
+     /**
+      * Returns the hexadecimal value of this color.
+      *
+@@ -216,15 +247,7 @@ export class Color {
+      * @param {string} [colorSpace=ColorManagement.workingColorSpace] - The color space.
+      * @return {{h:number,s:number,l:number}} The HSL representation of this color.
+      */
+-    getHSL(target: {
+-        h: number;
+-        s: number;
+-        l: number;
+-    }, colorSpace?: string): {
+-        h: number;
+-        s: number;
+-        l: number;
+-    };
++    getHSL(target: HSL, colorSpace?: string): HSL;
+     /**
+      * Returns the RGB values of this color and stores them into the given target object.
+      *
+@@ -232,7 +255,7 @@ export class Color {
+      * @param {string} [colorSpace=ColorManagement.workingColorSpace] - The color space.
+      * @return {Color} The RGB representation of this color.
+      */
+-    getRGB(target: Color, colorSpace?: string): Color;
++    getRGB(target: RGB, colorSpace?: string): RGB;
+     /**
+      * Returns the value of this color as a CSS style string. Example: `rgb(255,0,0)`.
+      *
+@@ -250,14 +273,14 @@ export class Color {
+      * @param {number} l - Lightness value between `0.0` and `1.0`.
+      * @return {Color} A reference to this color.
+      */
+-    offsetHSL(h: number, s: number, l: number): Color;
++    offsetHSL(h: number, s: number, l: number): this;
+     /**
+      * Adds the RGB values of the given color to the RGB values of this color.
+      *
+      * @param {Color} color - The color to add.
+      * @return {Color} A reference to this color.
+      */
+-    add(color: Color): Color;
++    add(color: Color): this;
+     /**
+      * Adds the RGB values of the given colors and stores the result in this instance.
+      *
+@@ -265,35 +288,35 @@ export class Color {
+      * @param {Color} color2 - The second color.
+      * @return {Color} A reference to this color.
+      */
+-    addColors(color1: Color, color2: Color): Color;
++    addColors(color1: Color, color2: Color): this;
+     /**
+      * Adds the given scalar value to the RGB values of this color.
+      *
+      * @param {number} s - The scalar to add.
+      * @return {Color} A reference to this color.
+      */
+-    addScalar(s: number): Color;
++    addScalar(s: number): this;
+     /**
+      * Subtracts the RGB values of the given color from the RGB values of this color.
+      *
+      * @param {Color} color - The color to subtract.
+      * @return {Color} A reference to this color.
+      */
+-    sub(color: Color): Color;
++    sub(color: Color): this;
+     /**
+      * Multiplies the RGB values of the given color with the RGB values of this color.
+      *
+      * @param {Color} color - The color to multiply.
+      * @return {Color} A reference to this color.
+      */
+-    multiply(color: Color): Color;
++    multiply(color: Color): this;
+     /**
+      * Multiplies the given scalar value with the RGB values of this color.
+      *
+      * @param {number} s - The scalar to multiply.
+      * @return {Color} A reference to this color.
+      */
+-    multiplyScalar(s: number): Color;
++    multiplyScalar(s: number): this;
+     /**
+      * Linearly interpolates this color's RGB values toward the RGB values of the
+      * given color. The alpha argument can be thought of as the ratio between
+@@ -303,7 +326,7 @@ export class Color {
+      * @param {number} alpha - The interpolation factor in the closed interval `[0,1]`.
+      * @return {Color} A reference to this color.
+      */
+-    lerp(color: Color, alpha: number): Color;
++    lerp(color: Color, alpha: number): this;
+     /**
+      * Linearly interpolates between the given colors and stores the result in this instance.
+      * The alpha argument can be thought of as the ratio between the two colors, where `0.0`
+@@ -314,7 +337,7 @@ export class Color {
+      * @param {number} alpha - The interpolation factor in the closed interval `[0,1]`.
+      * @return {Color} A reference to this color.
+      */
+-    lerpColors(color1: Color, color2: Color, alpha: number): Color;
++    lerpColors(color1: Color, color2: Color, alpha: number): this;
+     /**
+      * Linearly interpolates this color's HSL values toward the HSL values of the
+      * given color. It differs from {@link Color#lerp} by not interpolating straight
+@@ -326,21 +349,21 @@ export class Color {
+      * @param {number} alpha - The interpolation factor in the closed interval `[0,1]`.
+      * @return {Color} A reference to this color.
+      */
+-    lerpHSL(color: Color, alpha: number): Color;
++    lerpHSL(color: Color, alpha: number): this;
+     /**
+      * Sets the color's RGB components from the given 3D vector.
+      *
+      * @param {Vector3} v - The vector to set.
+      * @return {Color} A reference to this color.
+      */
+-    setFromVector3(v: Vector3): Color;
++    setFromVector3(v: Vector3): this;
+     /**
+      * Transforms this color with the given 3x3 matrix.
+      *
+      * @param {Matrix3} m - The matrix.
+      * @return {Color} A reference to this color.
+      */
+-    applyMatrix3(m: Matrix3): Color;
++    applyMatrix3(m: Matrix3): this;
+     /**
+      * Returns `true` if this color is equal with the given one.
+      *
+@@ -355,7 +378,16 @@ export class Color {
+      * @param {number} [offset=0] - The offset into the array.
+      * @return {Color} A reference to this color.
+      */
+-    fromArray(array: Array<number>, offset?: number): Color;
++    fromArray(array: number[] | ArrayLike<number>, offset?: number): this;
++    /**
++     * Writes the RGB components of this color to the given array. If no array is provided,
++     * the method returns a new instance.
++     *
++     * @param {Array<number>} [array=[]] - The target array holding the color components.
++     * @param {number} [offset=0] - Index of the first element in the array.
++     * @return {Array<number>} The color components.
++     */
++    toArray(array?: number[], offset?: number): number[];
+     /**
+      * Writes the RGB components of this color to the given array. If no array is provided,
+      * the method returns a new instance.
+@@ -364,7 +396,7 @@ export class Color {
+      * @param {number} [offset=0] - Index of the first element in the array.
+      * @return {Array<number>} The color components.
+      */
+-    toArray(array?: Array<number>, offset?: number): Array<number>;
++    toArray(xyz: ArrayLike<number>, offset?: number): ArrayLike<number>;
+     /**
+      * Sets the components of this color from the given buffer attribute.
+      *
+@@ -372,7 +404,7 @@ export class Color {
+      * @param {number} index - The index into the attribute.
+      * @return {Color} A reference to this color.
+      */
+-    fromBufferAttribute(attribute: BufferAttribute, index: number): Color;
++    fromBufferAttribute(attribute: BufferAttribute | InterleavedBufferAttribute, index: number): this;
+     /**
+      * This methods defines the serialization result of this class. Returns the color
+      * as a hexadecimal value.
+diff --git a/jsdoc-testing/jsdoc/src/math/ColorManagement.d.ts b/jsdoc-testing/jsdoc/src/math/ColorManagement.d.ts
+index a45023bf1..720e7a5f3 100644
+--- a/jsdoc-testing/jsdoc/src/math/ColorManagement.d.ts
++++ b/jsdoc-testing/jsdoc/src/math/ColorManagement.d.ts
+@@ -1,19 +1,35 @@
+-export function SRGBToLinear(c: any): number;
+-export function LinearToSRGB(c: any): number;
+-export namespace ColorManagement {
+-    export let enabled: boolean;
+-    export { LinearSRGBColorSpace as workingColorSpace };
+-    export let spaces: {};
+-    export function convert(color: any, sourceColorSpace: any, targetColorSpace: any): any;
+-    export function workingToColorSpace(color: any, targetColorSpace: any): any;
+-    export function colorSpaceToWorking(color: any, sourceColorSpace: any): any;
+-    export function getPrimaries(colorSpace: any): any;
+-    export function getTransfer(colorSpace: any): any;
+-    export function getToneMappingMode(colorSpace: any): any;
+-    export function getLuminanceCoefficients(target: any, colorSpace?: any): any;
+-    export function define(colorSpaces: any): void;
+-    export function _getMatrix(targetMatrix: any, sourceColorSpace: any, targetColorSpace: any): any;
+-    export function _getDrawingBufferColorSpace(colorSpace: any): any;
+-    export function _getUnpackColorSpace(colorSpace?: any): any;
++import { ColorSpaceTransfer } from "../constants.js";
++import { Color } from "./Color.js";
++import { Matrix3 } from "./Matrix3.js";
++import { Vector3 } from "./Vector3.js";
++
++export interface ColorSpaceDefinition {
++    primaries: [number, number, number, number, number, number];
++    whitePoint: [number, number];
++    transfer: ColorSpaceTransfer;
++    toXYZ: Matrix3;
++    fromXYZ: Matrix3;
++    luminanceCoefficients: [number, number, number];
++    workingColorSpaceConfig?: { unpackColorSpace: string };
++    outputColorSpaceConfig?: { drawingBufferColorSpace: string; toneMappingMode?: "extended" | "standard" };
+ }
+-import { LinearSRGBColorSpace } from '../constants.js';
++
++export function SRGBToLinear(c: number): number;
++export function LinearToSRGB(c: number): number;
++export interface ColorManagement {
++    enabled: boolean;
++    workingColorSpace: string;
++    spaces: Record<string, ColorSpaceDefinition>;
++    convert: (color: Color, sourceColorSpace: string, targetColorSpace: string) => Color;
++    workingToColorSpace: (color: Color, targetColorSpace: string) => Color;
++    colorSpaceToWorking: (color: Color, sourceColorSpace: string) => Color;
++    getPrimaries: (colorSpace: string) => [number, number, number, number, number, number];
++    getTransfer: (colorSpace: string) => ColorSpaceTransfer;
++    getToneMappingMode: (colorSpace: string) => "extended" | "standard";
++    getLuminanceCoefficients: (target: Vector3, colorSpace?: string) => Vector3;
++    define: (colorSpaces: Record<string, ColorSpaceDefinition>) => void;
++    _getMatrix: (targetMatrix: Matrix3, sourceColorSpace: string, targetColorSpace: string) => Matrix3;
++    _getDrawingBufferColorSpace: (colorSpace: string) => string;
++    _getUnpackColorSpace: (colorSpace?: string) => string;
++}
++export const ColorManagement: ColorManagement;
+diff --git a/jsdoc-testing/jsdoc/src/math/Cylindrical.d.ts b/jsdoc-testing/jsdoc/src/math/Cylindrical.d.ts
+index 8c5d91627..18b17e11d 100644
+--- a/jsdoc-testing/jsdoc/src/math/Cylindrical.d.ts
++++ b/jsdoc-testing/jsdoc/src/math/Cylindrical.d.ts
+@@ -1,3 +1,5 @@
++import { Vector3 } from "./Vector3.js";
++
+ /**
+  * This class can be used to represent points in 3D space as
+  * [Cylindrical coordinates](https://en.wikipedia.org/wiki/Cylindrical_coordinate_system).
+@@ -40,14 +42,14 @@ export class Cylindrical {
+      * @param {number} y - The height value.
+      * @return {Cylindrical} A reference to this cylindrical.
+      */
+-    set(radius: number, theta: number, y: number): Cylindrical;
++    set(radius: number, theta: number, y: number): this;
+     /**
+      * Copies the values of the given cylindrical to this instance.
+      *
+      * @param {Cylindrical} other - The cylindrical to copy.
+      * @return {Cylindrical} A reference to this cylindrical.
+      */
+-    copy(other: Cylindrical): Cylindrical;
++    copy(other: Cylindrical): this;
+     /**
+      * Sets the cylindrical components from the given vector which is assumed to hold
+      * Cartesian coordinates.
+@@ -55,7 +57,7 @@ export class Cylindrical {
+      * @param {Vector3} v - The vector to set.
+      * @return {Cylindrical} A reference to this cylindrical.
+      */
+-    setFromVector3(v: Vector3): Cylindrical;
++    setFromVector3(v: Vector3): this;
+     /**
+      * Sets the cylindrical components from the given Cartesian coordinates.
+      *
+@@ -64,11 +66,11 @@ export class Cylindrical {
+      * @param {number} z - The x value.
+      * @return {Cylindrical} A reference to this cylindrical.
+      */
+-    setFromCartesianCoords(x: number, y: number, z: number): Cylindrical;
++    setFromCartesianCoords(x: number, y: number, z: number): this;
+     /**
+      * Returns a new cylindrical with copied values from this instance.
+      *
+      * @return {Cylindrical} A clone of this instance.
+      */
+-    clone(): Cylindrical;
++    clone(): this;
+ }
+diff --git a/jsdoc-testing/jsdoc/src/math/Euler.d.ts b/jsdoc-testing/jsdoc/src/math/Euler.d.ts
+index 8ba21b0f2..57d1089b7 100644
+--- a/jsdoc-testing/jsdoc/src/math/Euler.d.ts
++++ b/jsdoc-testing/jsdoc/src/math/Euler.d.ts
+@@ -1,3 +1,11 @@
++import { Matrix4 } from "./Matrix4.js";
++import { Quaternion } from "./Quaternion.js";
++import { Vector3 } from "./Vector3.js";
++
++export type EulerOrder = "XYZ" | "YXZ" | "ZXY" | "ZYX" | "YZX" | "XZY";
++
++export type EulerTuple = [x: number, y: number, z: number, order?: EulerOrder];
++
+ /**
+  * A class representing Euler angles.
+  *
+@@ -23,7 +31,7 @@ export class Euler {
+      * @param {number} [z=0] - The angle of the z axis in radians.
+      * @param {string} [order=Euler.DEFAULT_ORDER] - A string representing the order that the rotations are applied.
+      */
+-    constructor(x?: number, y?: number, z?: number, order?: string);
++    constructor(x?: number, y?: number, z?: number, order?: EulerOrder);
+     /**
+      * This flag can be used for type testing.
+      *
+@@ -31,11 +39,11 @@ export class Euler {
+      * @readonly
+      * @default true
+      */
+-    readonly isEuler: boolean;
++    readonly isEuler: true;
+     _x: number;
+     _y: number;
+     _z: number;
+-    _order: string;
++    _order: EulerOrder;
+     set x(value: number);
+     /**
+      * The angle of the x axis in radians.
+@@ -60,14 +68,14 @@ export class Euler {
+      * @default 0
+      */
+     get z(): number;
+-    set order(value: string);
++    set order(value: EulerOrder);
+     /**
+      * A string representing the order that the rotations are applied.
+      *
+      * @type {string}
+      * @default 'XYZ'
+      */
+-    get order(): string;
++    get order(): EulerOrder;
+     /**
+      * Sets the Euler components.
+      *
+@@ -77,20 +85,20 @@ export class Euler {
+      * @param {string} [order] - A string representing the order that the rotations are applied.
+      * @return {Euler} A reference to this Euler instance.
+      */
+-    set(x: number, y: number, z: number, order?: string): Euler;
++    set(x: number, y: number, z: number, order?: EulerOrder): Euler;
+     /**
+      * Returns a new Euler instance with copied values from this instance.
+      *
+      * @return {Euler} A clone of this instance.
+      */
+-    clone(): Euler;
++    clone(): this;
+     /**
+      * Copies the values of the given Euler instance to this instance.
+      *
+      * @param {Euler} euler - The Euler instance to copy.
+      * @return {Euler} A reference to this Euler instance.
+      */
+-    copy(euler: Euler): Euler;
++    copy(euler: Euler): this;
+     /**
+      * Sets the angles of this Euler instance from a pure rotation matrix.
+      *
+@@ -99,7 +107,7 @@ export class Euler {
+      * @param {boolean} [update=true] - Whether the internal `onChange` callback should be executed or not.
+      * @return {Euler} A reference to this Euler instance.
+      */
+-    setFromRotationMatrix(m: Matrix4, order?: string, update?: boolean): Euler;
++    setFromRotationMatrix(m: Matrix4, order?: EulerOrder, update?: boolean): Euler;
+     /**
+      * Sets the angles of this Euler instance from a normalized quaternion.
+      *
+@@ -108,7 +116,7 @@ export class Euler {
+      * @param {boolean} [update=true] - Whether the internal `onChange` callback should be executed or not.
+      * @return {Euler} A reference to this Euler instance.
+      */
+-    setFromQuaternion(q: Quaternion, order?: string, update?: boolean): Euler;
++    setFromQuaternion(q: Quaternion, order?: EulerOrder, update?: boolean): Euler;
+     /**
+      * Sets the angles of this Euler instance from the given vector.
+      *
+@@ -116,7 +124,7 @@ export class Euler {
+      * @param {string} [order] - A string representing the order that the rotations are applied.
+      * @return {Euler} A reference to this Euler instance.
+      */
+-    setFromVector3(v: Vector3, order?: string): Euler;
++    setFromVector3(v: Vector3, order?: EulerOrder): Euler;
+     /**
+      * Resets the euler angle with a new order by creating a quaternion from this
+      * euler angle and then setting this euler angle with the quaternion and the
+@@ -127,7 +135,7 @@ export class Euler {
+      * @param {string} [newOrder] - A string representing the new order that the rotations are applied.
+      * @return {Euler} A reference to this Euler instance.
+      */
+-    reorder(newOrder?: string): Euler;
++    reorder(newOrder?: EulerOrder): Euler;
+     /**
+      * Returns `true` if this Euler instance is equal with the given one.
+      *
+@@ -143,7 +151,7 @@ export class Euler {
+      * @param {Array<number,number,number,?string>} array - An array holding the Euler component values.
+      * @return {Euler} A reference to this Euler instance.
+      */
+-    fromArray(array: Array<number, number, number, string | null>): Euler;
++    fromArray(array: EulerTuple): Euler;
+     /**
+      * Writes the components of this Euler instance to the given array. If no array is provided,
+      * the method returns a new instance.
+@@ -152,13 +160,11 @@ export class Euler {
+      * @param {number} [offset=0] - Index of the first element in the array.
+      * @return {Array<number,number,number,string>} The Euler components.
+      */
+-    toArray(array?: Array<number, number, number, string>, offset?: number): Array<number, number, number, string>;
+-    _onChange(callback: any): this;
+-    _onChangeCallback(): void;
++    toArray(array?: Partial<EulerTuple>, offset?: number): EulerTuple;
++    _onChange(callback: () => void): this;
++    _onChangeCallback: () => void;
+     [Symbol.iterator](): Generator<string | number, void, unknown>;
+ }
+ export namespace Euler {
+-    let DEFAULT_ORDER: string;
++    let DEFAULT_ORDER: EulerOrder;
+ }
+-import { Matrix4 } from './Matrix4.js';
+-import { Quaternion } from './Quaternion.js';
+diff --git a/jsdoc-testing/jsdoc/src/math/Frustum.d.ts b/jsdoc-testing/jsdoc/src/math/Frustum.d.ts
+index b75731203..c56ce4b6c 100644
+--- a/jsdoc-testing/jsdoc/src/math/Frustum.d.ts
++++ b/jsdoc-testing/jsdoc/src/math/Frustum.d.ts
+@@ -1,3 +1,12 @@
++import { CoordinateSystem } from "../constants.js";
++import { Object3D } from "../core/Object3D.js";
++import { Sprite } from "../objects/Sprite.js";
++import { Box3 } from "./Box3.js";
++import { Matrix4 } from "./Matrix4.js";
++import { Plane } from "./Plane.js";
++import { Sphere } from "./Sphere.js";
++import { Vector3 } from "./Vector3.js";
++
+ /**
+  * Frustums are used to determine what is inside the camera's field of view.
+  * They help speed up the rendering process - objects which lie outside a camera's
+@@ -34,14 +43,14 @@ export class Frustum {
+      * @param {Plane} [p5] - The sixth plane that encloses the frustum.
+      * @return {Frustum} A reference to this frustum.
+      */
+-    set(p0?: Plane, p1?: Plane, p2?: Plane, p3?: Plane, p4?: Plane, p5?: Plane): Frustum;
++    set(p0: Plane, p1: Plane, p2: Plane, p3: Plane, p4: Plane, p5: Plane): Frustum;
+     /**
+      * Copies the values of the given frustum to this instance.
+      *
+      * @param {Frustum} frustum - The frustum to copy.
+      * @return {Frustum} A reference to this frustum.
+      */
+-    copy(frustum: Frustum): Frustum;
++    copy(frustum: Frustum): this;
+     /**
+      * Sets the frustum planes from the given projection matrix.
+      *
+@@ -50,7 +59,7 @@ export class Frustum {
+      * @param {boolean} [reversedDepth=false] - Whether to use a reversed depth.
+      * @return {Frustum} A reference to this frustum.
+      */
+-    setFromProjectionMatrix(m: Matrix4, coordinateSystem?: (number | number), reversedDepth?: boolean): Frustum;
++    setFromProjectionMatrix(m: Matrix4, coordinateSystem?: CoordinateSystem, reversedDepth?: boolean): this;
+     /**
+      * Returns `true` if the 3D object's bounding sphere is intersecting this frustum.
+      *
+@@ -102,8 +111,5 @@ export class Frustum {
+      *
+      * @return {Frustum} A clone of this instance.
+      */
+-    clone(): Frustum;
++    clone(): this;
+ }
+-import { Plane } from './Plane.js';
+-import { Sphere } from './Sphere.js';
+-import { Vector3 } from './Vector3.js';
 diff --git a/jsdoc-testing/jsdoc/src/math/FrustumArray.d.ts b/jsdoc-testing/jsdoc/src/math/FrustumArray.d.ts
 index 182934d39..e6735f564 100644
 --- a/jsdoc-testing/jsdoc/src/math/FrustumArray.d.ts
@@ -21993,6 +22676,406 @@ index dffd8e0d4..8e785e7ee 100644
       */
 -    intervalChanged_(): void;
 +    intervalChanged_(i1: number, t0: number, t1: number): void;
+ }
+diff --git a/jsdoc-testing/jsdoc/src/math/Line3.d.ts b/jsdoc-testing/jsdoc/src/math/Line3.d.ts
+index 3c6ddd020..7cb778c5a 100644
+--- a/jsdoc-testing/jsdoc/src/math/Line3.d.ts
++++ b/jsdoc-testing/jsdoc/src/math/Line3.d.ts
+@@ -1,3 +1,6 @@
++import { Matrix4 } from "./Matrix4.js";
++import { Vector3 } from "./Vector3.js";
++
+ /**
+  * An analytical line segment in 3D space represented by a start and end point.
+  */
+@@ -35,7 +38,7 @@ export class Line3 {
+      * @param {Line3} line - The line segment to copy.
+      * @return {Line3} A reference to this line segment.
+      */
+-    copy(line: Line3): Line3;
++    copy(line: Line3): this;
+     /**
+      * Returns the center of the line segment.
+      *
+@@ -77,7 +80,7 @@ export class Line3 {
+      * @param {boolean} clampToLine - Whether to clamp the result to the range `[0,1]` or not.
+      * @return {number} The point parameter.
+      */
+-    closestPointToPointParameter(point: Vector3, clampToLine: boolean): number;
++    closestPointToPointParameter(point: Vector3, clampToLine?: boolean): number;
+     /**
+      * Returns the closest point on the line for a given point.
+      *
+@@ -115,6 +118,5 @@ export class Line3 {
+      *
+      * @return {Line3} A clone of this instance.
+      */
+-    clone(): Line3;
++    clone(): this;
+ }
+-import { Vector3 } from './Vector3.js';
+diff --git a/jsdoc-testing/jsdoc/src/math/MathUtils.d.ts b/jsdoc-testing/jsdoc/src/math/MathUtils.d.ts
+index e59fc8c95..9ba4f8317 100644
+--- a/jsdoc-testing/jsdoc/src/math/MathUtils.d.ts
++++ b/jsdoc-testing/jsdoc/src/math/MathUtils.d.ts
+@@ -1,3 +1,6 @@
++import { TypedArray } from "../core/BufferAttribute.js";
++import { Quaternion } from "./Quaternion.js";
++
+ export const DEG2RAD: number;
+ export const RAD2DEG: number;
+ /**
+@@ -187,7 +190,7 @@ export function setQuaternionFromProperEuler(q: Quaternion, a: number, b: number
+  * @param {TypedArray} array - The typed array that defines the data type of the value.
+  * @return {number} The normalized value.
+  */
+-export function normalize(value: number, array: TypedArray): number;
++export function normalize(value: number, array: Float32Array | Uint32Array | Uint16Array | Uint8Array | Uint8ClampedArray | Int32Array | Int16Array | Int8Array): number;
+ /**
+  * Denormalizes the given value according to the given typed array.
+  *
+@@ -195,7 +198,7 @@ export function normalize(value: number, array: TypedArray): number;
+  * @param {TypedArray} array - The typed array that defines the data type of the value.
+  * @return {number} The denormalized (float) value in the range `[0,1]` or `[-1,1]`
+  */
+-export function denormalize(value: number, array: TypedArray): number;
++export function denormalize(value: number, array: Float32Array | Uint32Array | Uint16Array | Uint8Array | Uint8ClampedArray | Int32Array | Int16Array | Int8Array): number;
+ /**
+  * Returns the factor used by {@link normalize} and {@link denormalize} for the given typed array,
+  * or `undefined` if the values are not scaled (float arrays) or the array type is not supported.
+diff --git a/jsdoc-testing/jsdoc/src/math/Matrix2.d.ts b/jsdoc-testing/jsdoc/src/math/Matrix2.d.ts
+index 7eac72d0b..9fd5dac0a 100644
+--- a/jsdoc-testing/jsdoc/src/math/Matrix2.d.ts
++++ b/jsdoc-testing/jsdoc/src/math/Matrix2.d.ts
+@@ -1,3 +1,10 @@
++export type Matrix2Tuple = [
++    n11: number,
++    n12: number,
++    n21: number,
++    n22: number,
++];
++
+ /**
+  * Represents a 2x2 matrix.
+  *
+@@ -26,28 +33,40 @@
+  */
+ export class Matrix2 {
+     /**
+-     * Constructs a new 2x2 matrix. The arguments are supposed to be
+-     * in row-major order. If no arguments are provided, the constructor
++     * This flag can be used for type testing.
++     *
++     * @type {boolean}
++     * @readonly
++     * @default true
++     */
++    readonly isMatrix2: true;
++    /**
++     * Constructs a new 2x2 matrix. This constructor
+      * initializes the matrix as an identity matrix.
++     */
++    constructor();
++    /**
++     * Constructs a new 2x2 matrix. The arguments are supposed to be
++     * in row-major order.
+      *
+      * @param {number} [n11] - 1-1 matrix element.
+      * @param {number} [n12] - 1-2 matrix element.
+      * @param {number} [n21] - 2-1 matrix element.
+      * @param {number} [n22] - 2-2 matrix element.
+      */
+-    constructor(n11?: number, n12?: number, n21?: number, n22?: number);
++    constructor(n11: number, n12: number, n21: number, n22: number);
+     /**
+      * A column-major list of matrix values.
+      *
+      * @type {Array<number>}
+      */
+-    elements: Array<number>;
++    elements: Matrix2Tuple;
+     /**
+      * Sets this matrix to the 2x2 identity matrix.
+      *
+      * @return {Matrix2} A reference to this matrix.
+      */
+-    identity(): Matrix2;
++    identity(): this;
+     /**
+      * Sets the elements of the matrix from the given array.
+      *
+@@ -55,7 +74,7 @@ export class Matrix2 {
+      * @param {number} [offset=0] - Index of the first element in the array.
+      * @return {Matrix2} A reference to this matrix.
+      */
+-    fromArray(array: Array<number>, offset?: number): Matrix2;
++    fromArray(array: ArrayLike<number>, offset?: number): this;
+     /**
+      * Sets the elements of the matrix.The arguments are supposed to be
+      * in row-major order.
+@@ -66,5 +85,5 @@ export class Matrix2 {
+      * @param {number} n22 - 2-2 matrix element.
+      * @return {Matrix2} A reference to this matrix.
+      */
+-    set(n11: number, n12: number, n21: number, n22: number): Matrix2;
++    set(n11: number, n12: number, n21: number, n22: number): this;
+ }
+diff --git a/jsdoc-testing/jsdoc/src/math/Matrix3.d.ts b/jsdoc-testing/jsdoc/src/math/Matrix3.d.ts
+index 659ea41a3..f8cd21c4f 100644
+--- a/jsdoc-testing/jsdoc/src/math/Matrix3.d.ts
++++ b/jsdoc-testing/jsdoc/src/math/Matrix3.d.ts
+@@ -1,3 +1,19 @@
++import { Matrix4 } from "./Matrix4.js";
++import { Vector2 } from "./Vector2.js";
++import { Vector3 } from "./Vector3.js";
++
++export type Matrix3Tuple = [
++    n11: number,
++    n12: number,
++    n13: number,
++    n21: number,
++    n22: number,
++    n23: number,
++    n31: number,
++    n32: number,
++    n33: number,
++];
++
+ /**
+  * Represents a 3x3 matrix.
+  *
+@@ -28,9 +44,21 @@
+  */
+ export class Matrix3 {
+     /**
+-     * Constructs a new 3x3 matrix. The arguments are supposed to be
+-     * in row-major order. If no arguments are provided, the constructor
++     * This flag can be used for type testing.
++     *
++     * @type {boolean}
++     * @readonly
++     * @default true
++     */
++    readonly isMatrix3: true;
++    /**
++     * Constructs a new 3x3 matrix. This constructor
+      * initializes the matrix as an identity matrix.
++     */
++    constructor();
++    /**
++     * Constructs a new 3x3 matrix. The arguments are supposed to be
++     * in row-major order.
+      *
+      * @param {number} [n11] - 1-1 matrix element.
+      * @param {number} [n12] - 1-2 matrix element.
+@@ -42,13 +70,13 @@ export class Matrix3 {
+      * @param {number} [n32] - 3-2 matrix element.
+      * @param {number} [n33] - 3-3 matrix element.
+      */
+-    constructor(n11?: number, n12?: number, n13?: number, n21?: number, n22?: number, n23?: number, n31?: number, n32?: number, n33?: number);
++    constructor(n11: number, n12: number, n13: number, n21: number, n22: number, n23: number, n31: number, n32: number, n33: number);
+     /**
+      * A column-major list of matrix values.
+      *
+      * @type {Array<number>}
+      */
+-    elements: Array<number>;
++    elements: Matrix3Tuple;
+     /**
+      * Sets the elements of the matrix.The arguments are supposed to be
+      * in row-major order.
+@@ -64,20 +92,20 @@ export class Matrix3 {
+      * @param {number} [n33] - 3-3 matrix element.
+      * @return {Matrix3} A reference to this matrix.
+      */
+-    set(n11?: number, n12?: number, n13?: number, n21?: number, n22?: number, n23?: number, n31?: number, n32?: number, n33?: number): Matrix3;
++    set(n11: number, n12: number, n13: number, n21: number, n22: number, n23: number, n31: number, n32: number, n33: number): Matrix3;
+     /**
+      * Sets this matrix to the 3x3 identity matrix.
+      *
+      * @return {Matrix3} A reference to this matrix.
+      */
+-    identity(): Matrix3;
++    identity(): this;
+     /**
+      * Copies the values of the given matrix to this instance.
+      *
+      * @param {Matrix3} m - The matrix to copy.
+      * @return {Matrix3} A reference to this matrix.
+      */
+-    copy(m: Matrix3): Matrix3;
++    copy(m: Matrix3): this;
+     /**
+      * Extracts the basis of this matrix into the three axis vectors provided.
+      *
+@@ -86,7 +114,7 @@ export class Matrix3 {
+      * @param {Vector3} zAxis - The basis's z axis.
+      * @return {Matrix3} A reference to this matrix.
+      */
+-    extractBasis(xAxis: Vector3, yAxis: Vector3, zAxis: Vector3): Matrix3;
++    extractBasis(xAxis: Vector3, yAxis: Vector3, zAxis: Vector3): this;
+     /**
+      * Set this matrix to the upper 3x3 matrix of the given 4x4 matrix.
+      *
+@@ -100,14 +128,14 @@ export class Matrix3 {
+      * @param {Matrix3} m - The matrix to multiply with.
+      * @return {Matrix3} A reference to this matrix.
+      */
+-    multiply(m: Matrix3): Matrix3;
++    multiply(m: Matrix3): this;
+     /**
+      * Pre-multiplies this matrix by the given 3x3 matrix.
+      *
+      * @param {Matrix3} m - The matrix to multiply with.
+      * @return {Matrix3} A reference to this matrix.
+      */
+-    premultiply(m: Matrix3): Matrix3;
++    premultiply(m: Matrix3): this;
+     /**
+      * Multiples the given 3x3 matrices and stores the result
+      * in this matrix.
+@@ -116,14 +144,14 @@ export class Matrix3 {
+      * @param {Matrix3} b - The second matrix.
+      * @return {Matrix3} A reference to this matrix.
+      */
+-    multiplyMatrices(a: Matrix3, b: Matrix3): Matrix3;
++    multiplyMatrices(a: Matrix3, b: Matrix3): this;
+     /**
+      * Multiplies every component of the matrix by the given scalar.
+      *
+      * @param {number} s - The scalar.
+      * @return {Matrix3} A reference to this matrix.
+      */
+-    multiplyScalar(s: number): Matrix3;
++    multiplyScalar(s: number): this;
+     /**
+      * Computes and returns the determinant of this matrix.
+      *
+@@ -137,13 +165,13 @@ export class Matrix3 {
+      *
+      * @return {Matrix3} A reference to this matrix.
+      */
+-    invert(): Matrix3;
++    invert(): this;
+     /**
+      * Transposes this matrix in place.
+      *
+      * @return {Matrix3} A reference to this matrix.
+      */
+-    transpose(): Matrix3;
++    transpose(): this;
+     /**
+      * Computes the normal matrix which is the inverse transpose of the upper
+      * left 3x3 portion of the given 4x4 matrix.
+@@ -151,14 +179,14 @@ export class Matrix3 {
+      * @param {Matrix4} matrix4 - The 4x4 matrix.
+      * @return {Matrix3} A reference to this matrix.
+      */
+-    getNormalMatrix(matrix4: Matrix4): Matrix3;
++    getNormalMatrix(matrix4: Matrix4): this;
+     /**
+      * Transposes this matrix into the supplied array, and returns itself unchanged.
+      *
+      * @param {Array<number>} r - An array to store the transposed matrix elements.
+      * @return {Matrix3} A reference to this matrix.
+      */
+-    transposeIntoArray(r: Array<number>): Matrix3;
++    transposeIntoArray(r: number[]): this;
+     /**
+      * Sets the UV transform matrix from offset, repeat, rotation, and center.
+      *
+@@ -171,7 +199,7 @@ export class Matrix3 {
+      * @param {number} cy - Center y of rotation
+      * @return {Matrix3} A reference to this matrix.
+      */
+-    setUvTransform(tx: number, ty: number, sx: number, sy: number, rotation: number, cx: number, cy: number): Matrix3;
++    setUvTransform(tx: number, ty: number, sx: number, sy: number, rotation: number, cx: number, cy: number): this;
+     /**
+      * Scales this matrix with the given scalar values.
+      *
+@@ -180,7 +208,7 @@ export class Matrix3 {
+      * @param {number} sy - The amount to scale in the Y axis.
+      * @return {Matrix3} A reference to this matrix.
+      */
+-    scale(sx: number, sy: number): Matrix3;
++    scale(sx: number, sy: number): this;
+     /**
+      * Rotates this matrix by the given angle.
+      *
+@@ -188,7 +216,7 @@ export class Matrix3 {
+      * @param {number} theta - The rotation in radians.
+      * @return {Matrix3} A reference to this matrix.
+      */
+-    rotate(theta: number): Matrix3;
++    rotate(theta: number): this;
+     /**
+      * Translates this matrix by the given scalar values.
+      *
+@@ -197,7 +225,15 @@ export class Matrix3 {
+      * @param {number} ty - The amount to translate in the Y axis.
+      * @return {Matrix3} A reference to this matrix.
+      */
+-    translate(tx: number, ty: number): Matrix3;
++    translate(tx: number, ty: number): this;
++    /**
++     * Sets this matrix as a 2D translation transform.
++     *
++     * @param {number|Vector2} x - The amount to translate in the X axis or alternatively a translation vector.
++     * @param {number} y - The amount to translate in the Y axis.
++     * @return {Matrix3} A reference to this matrix.
++     */
++    makeTranslation(v: Vector2): this;
+     /**
+      * Sets this matrix as a 2D translation transform.
+      *
+@@ -205,14 +241,14 @@ export class Matrix3 {
+      * @param {number} y - The amount to translate in the Y axis.
+      * @return {Matrix3} A reference to this matrix.
+      */
+-    makeTranslation(x: number | Vector2, y: number): Matrix3;
++    makeTranslation(x: number, y: number): this;
+     /**
+      * Sets this matrix as a 2D rotational transformation.
+      *
+      * @param {number} theta - The rotation in radians.
+      * @return {Matrix3} A reference to this matrix.
+      */
+-    makeRotation(theta: number): Matrix3;
++    makeRotation(theta: number): this;
+     /**
+      * Sets this matrix as a 2D scale transform.
+      *
+@@ -220,7 +256,7 @@ export class Matrix3 {
+      * @param {number} y - The amount to scale in the Y axis.
+      * @return {Matrix3} A reference to this matrix.
+      */
+-    makeScale(x: number, y: number): Matrix3;
++    makeScale(x: number, y: number): this;
+     /**
+      * Returns `true` if this matrix is equal with the given one.
+      *
+@@ -235,7 +271,7 @@ export class Matrix3 {
+      * @param {number} [offset=0] - Index of the first element in the array.
+      * @return {Matrix3} A reference to this matrix.
+      */
+-    fromArray(array: Array<number>, offset?: number): Matrix3;
++    fromArray(array: ArrayLike<number>, offset?: number): this;
+     /**
+      * Writes the elements of this matrix to the given array. If no array is provided,
+      * the method returns a new instance.
+@@ -244,11 +280,11 @@ export class Matrix3 {
+      * @param {number} [offset=0] - Index of the first element in the array.
+      * @return {Array<number>} The matrix elements in column-major order.
+      */
+-    toArray(array?: Array<number>, offset?: number): Array<number>;
++    toArray<TArray extends ArrayLike<number> = Matrix3Tuple>(array?: TArray, offset?: number): TArray;
+     /**
+      * Returns a matrix with copied values from this instance.
+      *
+      * @return {Matrix3} A clone of this instance.
+      */
+-    clone(): Matrix3;
++    clone(): this;
  }
 diff --git a/jsdoc-testing/jsdoc/src/math/Matrix4.d.ts b/jsdoc-testing/jsdoc/src/math/Matrix4.d.ts
 index e6e246bc2..87578f7fd 100644
@@ -22363,6 +23446,2185 @@ index e6e246bc2..87578f7fd 100644
 +    toArray<TArray extends ArrayLike<number> = Matrix4Tuple>(array?: TArray, offset?: number): TArray;
  }
 -import { Vector3 } from './Vector3.js';
+diff --git a/jsdoc-testing/jsdoc/src/math/Plane.d.ts b/jsdoc-testing/jsdoc/src/math/Plane.d.ts
+index b98878577..79013f05f 100644
+--- a/jsdoc-testing/jsdoc/src/math/Plane.d.ts
++++ b/jsdoc-testing/jsdoc/src/math/Plane.d.ts
+@@ -1,3 +1,10 @@
++import { Box3 } from "./Box3.js";
++import { Line3 } from "./Line3.js";
++import { Matrix3 } from "./Matrix3.js";
++import { Matrix4 } from "./Matrix4.js";
++import { Sphere } from "./Sphere.js";
++import { Vector3 } from "./Vector3.js";
++
+ /**
+  * A two dimensional surface that extends infinitely in 3D space, represented
+  * in [Hessian normal form](https://mathworld.wolfram.com/HessianNormalForm.html)
+@@ -18,7 +25,7 @@ export class Plane {
+      * @readonly
+      * @default true
+      */
+-    readonly isPlane: boolean;
++    readonly isPlane: true;
+     /**
+      * A unit length vector defining the normal of the plane.
+      *
+@@ -77,7 +84,7 @@ export class Plane {
+      * @param {Plane} plane - The plane to copy.
+      * @return {Plane} A reference to this plane.
+      */
+-    copy(plane: Plane): Plane;
++    copy(plane: Plane): this;
+     /**
+      * Normalizes the plane normal and adjusts the constant accordingly.
+      *
+@@ -164,7 +171,7 @@ export class Plane {
+      * @param {Matrix4} [optionalNormalMatrix] - A pre-computed normal matrix.
+      * @return {Plane} A reference to this plane.
+      */
+-    applyMatrix4(matrix: Matrix4, optionalNormalMatrix?: Matrix4): Plane;
++    applyMatrix4(matrix: Matrix4, optionalNormalMatrix?: Matrix3): Plane;
+     /**
+      * Translates the plane by the distance defined by the given offset vector.
+      * Note that this only affects the plane constant and will not affect the normal vector.
+@@ -185,19 +192,23 @@ export class Plane {
+      *
+      * @return {Plane} A clone of this instance.
+      */
+-    clone(): Plane;
++    clone(): this;
+     /**
+      * Returns a serialized structure of the plane.
+      *
+      * @return {Object} Serialized structure with fields representing the object state.
+      */
+-    toJSON(): Object;
++    toJSON(): PlaneJSON;
+     /**
+      * Sets the plane properties from the given JSON.
+      *
+      * @param {Object} json - The serialized json to set the plane from.
+      * @return {Plane} A reference to this plane.
+      */
+-    fromJSON(json: Object): Plane;
++    fromJSON(json: PlaneJSON): this;
++}
++
++export interface PlaneJSON {
++    normal: number[];
++    constant: number;
+ }
+-import { Vector3 } from './Vector3.js';
+diff --git a/jsdoc-testing/jsdoc/src/math/Quaternion.d.ts b/jsdoc-testing/jsdoc/src/math/Quaternion.d.ts
+index 214548cde..b4ebb1929 100644
+--- a/jsdoc-testing/jsdoc/src/math/Quaternion.d.ts
++++ b/jsdoc-testing/jsdoc/src/math/Quaternion.d.ts
+@@ -1,3 +1,18 @@
++import { BufferAttribute } from "../core/BufferAttribute.js";
++import { InterleavedBufferAttribute } from "../core/InterleavedBufferAttribute.js";
++import { Euler } from "./Euler.js";
++import { Matrix4 } from "./Matrix4.js";
++import { Vector3, Vector3Like } from "./Vector3.js";
++
++export interface QuaternionLike {
++    readonly x: number;
++    readonly y: number;
++    readonly z: number;
++    readonly w: number;
++}
++
++export type QuaternionTuple = [x: number, y: number, z: number, w: number];
++
+ /**
+  * Class for representing a Quaternion. Quaternions are used in three.js to represent rotations.
+  *
+@@ -58,7 +73,7 @@ export class Quaternion {
+      * @readonly
+      * @default true
+      */
+-    readonly isQuaternion: boolean;
++    readonly isQuaternion: true;
+     _x: number;
+     _y: number;
+     _z: number;
+@@ -104,20 +119,20 @@ export class Quaternion {
+      * @param {number} w - The w value of this quaternion.
+      * @return {Quaternion} A reference to this quaternion.
+      */
+-    set(x: number, y: number, z: number, w: number): Quaternion;
++    set(x: number, y: number, z: number, w: number): this;
+     /**
+      * Returns a new quaternion with copied values from this instance.
+      *
+      * @return {Quaternion} A clone of this instance.
+      */
+-    clone(): Quaternion;
++    clone(): this;
+     /**
+      * Copies the values of the given quaternion to this instance.
+      *
+      * @param {Quaternion} quaternion - The quaternion to copy.
+      * @return {Quaternion} A reference to this quaternion.
+      */
+-    copy(quaternion: Quaternion): Quaternion;
++    copy(quaternion: QuaternionLike): this;
+     /**
+      * Sets this quaternion from the rotation specified by the given
+      * Euler angles.
+@@ -126,7 +141,7 @@ export class Quaternion {
+      * @param {boolean} [update=true] - Whether the internal `onChange` callback should be executed or not.
+      * @return {Quaternion} A reference to this quaternion.
+      */
+-    setFromEuler(euler: Euler, update?: boolean): Quaternion;
++    setFromEuler(euler: Euler, update?: boolean): this;
+     /**
+      * Sets this quaternion from the given axis and angle.
+      *
+@@ -134,14 +149,14 @@ export class Quaternion {
+      * @param {number} angle - The angle in radians.
+      * @return {Quaternion} A reference to this quaternion.
+      */
+-    setFromAxisAngle(axis: Vector3, angle: number): Quaternion;
++    setFromAxisAngle(axis: Vector3Like, angle: number): this;
+     /**
+      * Sets this quaternion from the given rotation matrix.
+      *
+      * @param {Matrix4} m - A 4x4 matrix of which the upper 3x3 of matrix is a pure rotation matrix (i.e. unscaled).
+      * @return {Quaternion} A reference to this quaternion.
+      */
+-    setFromRotationMatrix(m: Matrix4): Quaternion;
++    setFromRotationMatrix(m: Matrix4): this;
+     /**
+      * Sets this quaternion to the rotation required to rotate the direction vector
+      * `vFrom` to the direction vector `vTo`.
+@@ -150,7 +165,7 @@ export class Quaternion {
+      * @param {Vector3} vTo - The second (normalized) direction vector.
+      * @return {Quaternion} A reference to this quaternion.
+      */
+-    setFromUnitVectors(vFrom: Vector3, vTo: Vector3): Quaternion;
++    setFromUnitVectors(vFrom: Vector3, vTo: Vector3Like): this;
+     /**
+      * Returns the angle between this quaternion and the given one in radians.
+      *
+@@ -166,21 +181,21 @@ export class Quaternion {
+      * @param {number} step - The angular step in radians.
+      * @return {Quaternion} A reference to this quaternion.
+      */
+-    rotateTowards(q: Quaternion, step: number): Quaternion;
++    rotateTowards(q: Quaternion, step: number): this;
+     /**
+      * Sets this quaternion to the identity quaternion; that is, to the
+      * quaternion that represents "no rotation".
+      *
+      * @return {Quaternion} A reference to this quaternion.
+      */
+-    identity(): Quaternion;
++    identity(): this;
+     /**
+      * Inverts this quaternion via {@link Quaternion#conjugate}. The
+      * quaternion is assumed to have unit length.
+      *
+      * @return {Quaternion} A reference to this quaternion.
+      */
+-    invert(): Quaternion;
++    invert(): this;
+     /**
+      * Returns the rotational conjugate of this quaternion. The conjugate of a
+      * quaternion represents the same rotation in the opposite direction about
+@@ -188,7 +203,7 @@ export class Quaternion {
+      *
+      * @return {Quaternion} A reference to this quaternion.
+      */
+-    conjugate(): Quaternion;
++    conjugate(): this;
+     /**
+      * Calculates the dot product of this quaternion and the given one.
+      *
+@@ -218,21 +233,21 @@ export class Quaternion {
+      *
+      * @return {Quaternion} A reference to this quaternion.
+      */
+-    normalize(): Quaternion;
++    normalize(): this;
+     /**
+      * Multiplies this quaternion by the given one.
+      *
+      * @param {Quaternion} q - The quaternion.
+      * @return {Quaternion} A reference to this quaternion.
+      */
+-    multiply(q: Quaternion): Quaternion;
++    multiply(q: Quaternion): this;
+     /**
+      * Pre-multiplies this quaternion by the given one.
+      *
+      * @param {Quaternion} q - The quaternion.
+      * @return {Quaternion} A reference to this quaternion.
+      */
+-    premultiply(q: Quaternion): Quaternion;
++    premultiply(q: Quaternion): this;
+     /**
+      * Multiplies the given quaternions and stores the result in this instance.
+      *
+@@ -240,7 +255,7 @@ export class Quaternion {
+      * @param {Quaternion} b - The second quaternion.
+      * @return {Quaternion} A reference to this quaternion.
+      */
+-    multiplyQuaternions(a: Quaternion, b: Quaternion): Quaternion;
++    multiplyQuaternions(a: Quaternion, b: Quaternion): this;
+     /**
+      * Performs a spherical linear interpolation between this quaternion and the target quaternion.
+      *
+@@ -248,7 +263,7 @@ export class Quaternion {
+      * @param {number} t - The interpolation factor. A value in the range `[0,1]` will interpolate. A value outside the range `[0,1]` will extrapolate.
+      * @return {Quaternion} A reference to this quaternion.
+      */
+-    slerp(qb: Quaternion, t: number): Quaternion;
++    slerp(qb: Quaternion, t: number): this;
+     /**
+      * Performs a spherical linear interpolation between the given quaternions
+      * and stores the result in this quaternion.
+@@ -258,13 +273,13 @@ export class Quaternion {
+      * @param {number} t - The interpolation factor in the closed interval `[0, 1]`.
+      * @return {Quaternion} A reference to this quaternion.
+      */
+-    slerpQuaternions(qa: Quaternion, qb: Quaternion, t: number): Quaternion;
++    slerpQuaternions(qa: Quaternion, qb: Quaternion, t: number): this;
+     /**
+      * Sets this quaternion to a uniformly random, normalized quaternion.
+      *
+      * @return {Quaternion} A reference to this quaternion.
+      */
+-    random(): Quaternion;
++    random(): this;
+     /**
+      * Returns `true` if this quaternion is equal with the given one.
+      *
+@@ -279,7 +294,25 @@ export class Quaternion {
+      * @param {number} [offset=0] - The offset into the array.
+      * @return {Quaternion} A reference to this quaternion.
+      */
+-    fromArray(array: Array<number>, offset?: number): Quaternion;
++    fromArray(array: number[] | ArrayLike<number>, offset?: number): this;
++    /**
++     * Writes the components of this quaternion to the given array. If no array is provided,
++     * the method returns a new instance.
++     *
++     * @param {Array<number>} [array=[]] - The target array holding the quaternion components.
++     * @param {number} [offset=0] - Index of the first element in the array.
++     * @return {Array<number>} The quaternion components.
++     */
++    toArray(array?: number[], offset?: number): number[];
++    /**
++     * Writes the components of this quaternion to the given array. If no array is provided,
++     * the method returns a new instance.
++     *
++     * @param {Array<number>} [array=[]] - The target array holding the quaternion components.
++     * @param {number} [offset=0] - Index of the first element in the array.
++     * @return {Array<number>} The quaternion components.
++     */
++    toArray(array?: QuaternionTuple, offset?: 0): QuaternionTuple;
+     /**
+      * Writes the components of this quaternion to the given array. If no array is provided,
+      * the method returns a new instance.
+@@ -288,7 +321,7 @@ export class Quaternion {
+      * @param {number} [offset=0] - Index of the first element in the array.
+      * @return {Array<number>} The quaternion components.
+      */
+-    toArray(array?: Array<number>, offset?: number): Array<number>;
++    toArray(array: ArrayLike<number>, offset?: number): ArrayLike<number>;
+     /**
+      * Sets the components of this quaternion from the given buffer attribute.
+      *
+@@ -296,15 +329,15 @@ export class Quaternion {
+      * @param {number} index - The index into the attribute.
+      * @return {Quaternion} A reference to this quaternion.
+      */
+-    fromBufferAttribute(attribute: BufferAttribute, index: number): Quaternion;
++    fromBufferAttribute(attribute: BufferAttribute | InterleavedBufferAttribute, index: number): this;
+     /**
+      * This methods defines the serialization result of this class. Returns the
+      * numerical elements of this quaternion in an array of format `[x, y, z, w]`.
+      *
+      * @return {Array<number>} The serialized quaternion.
+      */
+-    toJSON(): Array<number>;
+-    _onChange(callback: any): this;
+-    _onChangeCallback(): void;
++    toJSON(): [number, number, number, number];
++    _onChange(callback: () => void): this;
++    _onChangeCallback: () => void;
+     [Symbol.iterator](): Generator<number, void, unknown>;
+ }
+diff --git a/jsdoc-testing/jsdoc/src/math/Ray.d.ts b/jsdoc-testing/jsdoc/src/math/Ray.d.ts
+index 02531c54e..bf2019b5d 100644
+--- a/jsdoc-testing/jsdoc/src/math/Ray.d.ts
++++ b/jsdoc-testing/jsdoc/src/math/Ray.d.ts
+@@ -1,3 +1,9 @@
++import { Box3 } from "./Box3.js";
++import { Matrix4 } from "./Matrix4.js";
++import { Plane } from "./Plane.js";
++import { Sphere } from "./Sphere.js";
++import { Vector3 } from "./Vector3.js";
++
+ /**
+  * A ray that emits from an origin in a certain direction. The class is used by
+  * {@link Raycaster} to assist with raycasting. Raycasting is used for
+@@ -38,7 +44,7 @@ export class Ray {
+      * @param {Ray} ray - The ray to copy.
+      * @return {Ray} A reference to this ray.
+      */
+-    copy(ray: Ray): Ray;
++    copy(ray: Ray): this;
+     /**
+      * Returns a vector that is located at a given distance along this ray.
+      *
+@@ -180,6 +186,5 @@ export class Ray {
+      *
+      * @return {Ray} A clone of this instance.
+      */
+-    clone(): Ray;
++    clone(): this;
+ }
+-import { Vector3 } from './Vector3.js';
+diff --git a/jsdoc-testing/jsdoc/src/math/Sphere.d.ts b/jsdoc-testing/jsdoc/src/math/Sphere.d.ts
+index 5d7e4ac67..e39ebce2d 100644
+--- a/jsdoc-testing/jsdoc/src/math/Sphere.d.ts
++++ b/jsdoc-testing/jsdoc/src/math/Sphere.d.ts
+@@ -1,3 +1,8 @@
++import { Box3 } from "./Box3.js";
++import { Matrix4 } from "./Matrix4.js";
++import { Plane } from "./Plane.js";
++import { Vector3 } from "./Vector3.js";
++
+ /**
+  * An analytical 3D sphere defined by a center and radius. This class is mainly
+  * used as a Bounding Sphere for 3D objects.
+@@ -17,7 +22,7 @@ export class Sphere {
+      * @readonly
+      * @default true
+      */
+-    readonly isSphere: boolean;
++    readonly isSphere: true;
+     /**
+      * The center of the sphere
+      *
+@@ -55,7 +60,7 @@ export class Sphere {
+      * @param {Sphere} sphere - The sphere to copy.
+      * @return {Sphere} A reference to this sphere.
+      */
+-    copy(sphere: Sphere): Sphere;
++    copy(sphere: Sphere): this;
+     /**
+      * Returns `true` if the sphere is empty (the radius set to a negative number).
+      *
+@@ -70,7 +75,7 @@ export class Sphere {
+      *
+      * @return {Sphere} A reference to this sphere.
+      */
+-    makeEmpty(): Sphere;
++    makeEmpty(): this;
+     /**
+      * Returns `true` if this sphere contains the given point inclusive of
+      * the surface of the sphere.
+@@ -146,14 +151,14 @@ export class Sphere {
+      * @param {Vector3} point - The point to include.
+      * @return {Sphere} A reference to this sphere.
+      */
+-    expandByPoint(point: Vector3): Sphere;
++    expandByPoint(point: Vector3): this;
+     /**
+      * Expands this sphere to enclose both the original sphere and the given sphere.
+      *
+      * @param {Sphere} sphere - The sphere to include.
+      * @return {Sphere} A reference to this sphere.
+      */
+-    union(sphere: Sphere): Sphere;
++    union(sphere: Sphere): this;
+     /**
+      * Returns `true` if this sphere is equal with the given one.
+      *
+@@ -166,20 +171,23 @@ export class Sphere {
+      *
+      * @return {Sphere} A clone of this instance.
+      */
+-    clone(): Sphere;
++    clone(): this;
+     /**
+      * Returns a serialized structure of the bounding sphere.
+      *
+      * @return {Object} Serialized structure with fields representing the object state.
+      */
+-    toJSON(): Object;
++    toJSON(): SphereJSON;
+     /**
+      * Returns a serialized structure of the bounding sphere.
+      *
+      * @param {Object} json - The serialized json to set the sphere from.
+      * @return {Sphere} A reference to this bounding sphere.
+      */
+-    fromJSON(json: Object): Sphere;
++    fromJSON(json: SphereJSON): this;
++}
++
++export interface SphereJSON {
++    radius: number;
++    center: number[];
+ }
+-import { Vector3 } from './Vector3.js';
+-import { Box3 } from './Box3.js';
+diff --git a/jsdoc-testing/jsdoc/src/math/Spherical.d.ts b/jsdoc-testing/jsdoc/src/math/Spherical.d.ts
+index 300c0481a..547662e92 100644
+--- a/jsdoc-testing/jsdoc/src/math/Spherical.d.ts
++++ b/jsdoc-testing/jsdoc/src/math/Spherical.d.ts
+@@ -1,3 +1,5 @@
++import { Vector3 } from "./Vector3.js";
++
+ /**
+  * This class can be used to represent points in 3D space as
+  * [Spherical coordinates](https://en.wikipedia.org/wiki/Spherical_coordinate_system).
+@@ -40,21 +42,21 @@ export class Spherical {
+      * @param {number} theta - The azimuthal angle.
+      * @return {Spherical} A reference to this spherical.
+      */
+-    set(radius: number, phi: number, theta: number): Spherical;
++    set(radius: number, phi: number, theta: number): this;
+     /**
+      * Copies the values of the given spherical to this instance.
+      *
+      * @param {Spherical} other - The spherical to copy.
+      * @return {Spherical} A reference to this spherical.
+      */
+-    copy(other: Spherical): Spherical;
++    copy(other: Spherical): this;
+     /**
+      * Restricts the polar angle [page:.phi phi] to be between `0.000001` and pi -
+      * `0.000001`.
+      *
+      * @return {Spherical} A reference to this spherical.
+      */
+-    makeSafe(): Spherical;
++    makeSafe(): this;
+     /**
+      * Sets the spherical components from the given vector which is assumed to hold
+      * Cartesian coordinates.
+@@ -62,7 +64,7 @@ export class Spherical {
+      * @param {Vector3} v - The vector to set.
+      * @return {Spherical} A reference to this spherical.
+      */
+-    setFromVector3(v: Vector3): Spherical;
++    setFromVector3(v: Vector3): this;
+     /**
+      * Sets the spherical components from the given Cartesian coordinates.
+      *
+@@ -71,11 +73,11 @@ export class Spherical {
+      * @param {number} z - The z value.
+      * @return {Spherical} A reference to this spherical.
+      */
+-    setFromCartesianCoords(x: number, y: number, z: number): Spherical;
++    setFromCartesianCoords(x: number, y: number, z: number): this;
+     /**
+      * Returns a new spherical with copied values from this instance.
+      *
+      * @return {Spherical} A clone of this instance.
+      */
+-    clone(): Spherical;
++    clone(): this;
+ }
+diff --git a/jsdoc-testing/jsdoc/src/math/SphericalHarmonics3.d.ts b/jsdoc-testing/jsdoc/src/math/SphericalHarmonics3.d.ts
+index 307ff49fa..a2ec24e3b 100644
+--- a/jsdoc-testing/jsdoc/src/math/SphericalHarmonics3.d.ts
++++ b/jsdoc-testing/jsdoc/src/math/SphericalHarmonics3.d.ts
+@@ -1,3 +1,5 @@
++import { Vector3 } from "./Vector3.js";
++
+ /**
+  * Represents a third-order spherical harmonics (SH). Light probes use this class
+  * to encode lighting information.
+@@ -20,7 +22,7 @@ export class SphericalHarmonics3 {
+      * @readonly
+      * @default true
+      */
+-    readonly isSphericalHarmonics3: boolean;
++    readonly isSphericalHarmonics3: true;
+     /**
+      * An array holding the (9) SH coefficients.
+      *
+@@ -109,7 +111,7 @@ export class SphericalHarmonics3 {
+      *
+      * @return {SphericalHarmonics3} A clone of this instance.
+      */
+-    clone(): SphericalHarmonics3;
++    clone(): this;
+     /**
+      * Sets the SH coefficients of this instance from the given array.
+      *
+@@ -117,7 +119,7 @@ export class SphericalHarmonics3 {
+      * @param {number} [offset=0] - The array offset where to start copying.
+      * @return {SphericalHarmonics3} A clone of this instance.
+      */
+-    fromArray(array: Array<number>, offset?: number): SphericalHarmonics3;
++    fromArray(array: number[] | ArrayLike<number>, offset?: number): this;
+     /**
+      * Returns an array with the SH coefficients, or copies them into the provided
+      * array. The coefficients are represented as numbers.
+@@ -126,6 +128,14 @@ export class SphericalHarmonics3 {
+      * @param {number} [offset=0] - The array offset where to start copying.
+      * @return {Array<number>} An array with flat SH coefficients.
+      */
+-    toArray(array?: Array<number>, offset?: number): Array<number>;
++    toArray(array?: number[], offset?: number): number[];
++    /**
++     * Returns an array with the SH coefficients, or copies them into the provided
++     * array. The coefficients are represented as numbers.
++     *
++     * @param {Array<number>} [array=[]] - The target array.
++     * @param {number} [offset=0] - The array offset where to start copying.
++     * @return {Array<number>} An array with flat SH coefficients.
++     */
++    toArray(array: ArrayLike<number>, offset?: number): ArrayLike<number>;
+ }
+-import { Vector3 } from './Vector3.js';
+diff --git a/jsdoc-testing/jsdoc/src/math/Triangle.d.ts b/jsdoc-testing/jsdoc/src/math/Triangle.d.ts
+index 3841d3852..571a6c08b 100644
+--- a/jsdoc-testing/jsdoc/src/math/Triangle.d.ts
++++ b/jsdoc-testing/jsdoc/src/math/Triangle.d.ts
+@@ -1,3 +1,11 @@
++import { Box3 } from "./Box3.js";
++import { Plane } from "./Plane.js";
++import { Vector2 } from "./Vector2.js";
++import { Vector3 } from "./Vector3.js";
++import { Vector4 } from "./Vector4.js";
++import { BufferAttribute } from "../core/BufferAttribute.js";
++import { InterleavedBufferAttribute } from "../core/InterleavedBufferAttribute.js";
++
+ /**
+  * A geometric triangle as defined by three vectors representing its three corners.
+  */
+@@ -36,6 +44,21 @@ export class Triangle {
+      * triangle, lies within the triangle or not.
+      */
+     static containsPoint(point: Vector3, a: Vector3, b: Vector3, c: Vector3): boolean;
++    /**
++     * Computes the value barycentrically interpolated for the given point on the
++     * triangle. Returns `null` if the triangle is degenerate.
++     *
++     * @param {Vector3} point - Position of interpolated point.
++     * @param {Vector3} p1 - The first corner of the triangle.
++     * @param {Vector3} p2 - The second corner of the triangle.
++     * @param {Vector3} p3 - The third corner of the triangle.
++     * @param {Vector3} v1 - Value to interpolate of first vertex.
++     * @param {Vector3} v2 - Value to interpolate of second vertex.
++     * @param {Vector3} v3 - Value to interpolate of third vertex.
++     * @param {Vector3} target - The target vector that is used to store the method's result.
++     * @return {?Vector3} The interpolated value.
++     */
++    static getInterpolation(point: Vector3, p1: Vector3, p2: Vector3, p3: Vector3, v1: Vector2, v2: Vector2, v3: Vector2, target: Vector2): Vector2 | null;
+     /**
+      * Computes the value barycentrically interpolated for the given point on the
+      * triangle. Returns `null` if the triangle is degenerate.
+@@ -51,6 +74,45 @@ export class Triangle {
+      * @return {?Vector3} The interpolated value.
+      */
+     static getInterpolation(point: Vector3, p1: Vector3, p2: Vector3, p3: Vector3, v1: Vector3, v2: Vector3, v3: Vector3, target: Vector3): Vector3 | null;
++    /**
++     * Computes the value barycentrically interpolated for the given point on the
++     * triangle. Returns `null` if the triangle is degenerate.
++     *
++     * @param {Vector3} point - Position of interpolated point.
++     * @param {Vector3} p1 - The first corner of the triangle.
++     * @param {Vector3} p2 - The second corner of the triangle.
++     * @param {Vector3} p3 - The third corner of the triangle.
++     * @param {Vector3} v1 - Value to interpolate of first vertex.
++     * @param {Vector3} v2 - Value to interpolate of second vertex.
++     * @param {Vector3} v3 - Value to interpolate of third vertex.
++     * @param {Vector3} target - The target vector that is used to store the method's result.
++     * @return {?Vector3} The interpolated value.
++     */
++    static getInterpolation(point: Vector3, p1: Vector3, p2: Vector3, p3: Vector3, v1: Vector4, v2: Vector4, v3: Vector4, target: Vector4): Vector4 | null;
++    /**
++     * Computes the value barycentrically interpolated for the given attribute and indices.
++     *
++     * @param {BufferAttribute} attr - The attribute to interpolate.
++     * @param {number} i1 - Index of first vertex.
++     * @param {number} i2 - Index of second vertex.
++     * @param {number} i3 - Index of third vertex.
++     * @param {Vector3} barycoord - The barycoordinate value to use to interpolate.
++     * @param {Vector3} target - The target vector that is used to store the method's result.
++     * @return {Vector3} The interpolated attribute value.
++     */
++    static getInterpolatedAttribute(attr: BufferAttribute | InterleavedBufferAttribute, i1: number, i2: number, i3: number, barycoord: Vector3, target: Vector2): Vector2;
++    /**
++     * Computes the value barycentrically interpolated for the given attribute and indices.
++     *
++     * @param {BufferAttribute} attr - The attribute to interpolate.
++     * @param {number} i1 - Index of first vertex.
++     * @param {number} i2 - Index of second vertex.
++     * @param {number} i3 - Index of third vertex.
++     * @param {Vector3} barycoord - The barycoordinate value to use to interpolate.
++     * @param {Vector3} target - The target vector that is used to store the method's result.
++     * @return {Vector3} The interpolated attribute value.
++     */
++    static getInterpolatedAttribute(attr: BufferAttribute | InterleavedBufferAttribute, i1: number, i2: number, i3: number, barycoord: Vector3, target: Vector3): Vector3;
+     /**
+      * Computes the value barycentrically interpolated for the given attribute and indices.
+      *
+@@ -62,7 +124,7 @@ export class Triangle {
+      * @param {Vector3} target - The target vector that is used to store the method's result.
+      * @return {Vector3} The interpolated attribute value.
+      */
+-    static getInterpolatedAttribute(attr: BufferAttribute, i1: number, i2: number, i3: number, barycoord: Vector3, target: Vector3): Vector3;
++    static getInterpolatedAttribute(attr: BufferAttribute | InterleavedBufferAttribute, i1: number, i2: number, i3: number, barycoord: Vector3, target: Vector4): Vector4;
+     /**
+      * Returns `true` if the triangle is oriented towards the given direction.
+      *
+@@ -117,7 +179,7 @@ export class Triangle {
+      * @param {number} i2 - The array index representing the third corner of the triangle.
+      * @return {Triangle} A reference to this triangle.
+      */
+-    setFromPointsAndIndices(points: Array<Vector3>, i0: number, i1: number, i2: number): Triangle;
++    setFromPointsAndIndices(points: Vector3[], i0: number, i1: number, i2: number): this;
+     /**
+      * Sets the triangle's vertices by copying the given attribute values.
+      *
+@@ -127,20 +189,20 @@ export class Triangle {
+      * @param {number} i2 - The attribute index representing the third corner of the triangle.
+      * @return {Triangle} A reference to this triangle.
+      */
+-    setFromAttributeAndIndices(attribute: BufferAttribute, i0: number, i1: number, i2: number): Triangle;
++    setFromAttributeAndIndices(attribute: BufferAttribute | InterleavedBufferAttribute, i0: number, i1: number, i2: number): this;
+     /**
+      * Returns a new triangle with copied values from this instance.
+      *
+      * @return {Triangle} A clone of this instance.
+      */
+-    clone(): Triangle;
++    clone(): this;
+     /**
+      * Copies the values of the given triangle to this instance.
+      *
+      * @param {Triangle} triangle - The triangle to copy.
+      * @return {Triangle} A reference to this triangle.
+      */
+-    copy(triangle: Triangle): Triangle;
++    copy(triangle: Triangle): this;
+     /**
+      * Computes the area of the triangle.
+      *
+@@ -177,6 +239,18 @@ export class Triangle {
+      * @return {?Vector3} The barycentric coordinates for the given point
+      */
+     getBarycoord(point: Vector3, target: Vector3): Vector3 | null;
++    /**
++     * Computes the value barycentrically interpolated for the given point on the
++     * triangle. Returns `null` if the triangle is degenerate.
++     *
++     * @param {Vector3} point - Position of interpolated point.
++     * @param {Vector3} v1 - Value to interpolate of first vertex.
++     * @param {Vector3} v2 - Value to interpolate of second vertex.
++     * @param {Vector3} v3 - Value to interpolate of third vertex.
++     * @param {Vector3} target - The target vector that is used to store the method's result.
++     * @return {?Vector3} The interpolated value.
++     */
++    getInterpolation(point: Vector3, v1: Vector2, v2: Vector2, v3: Vector2, target: Vector2): Vector2 | null;
+     /**
+      * Computes the value barycentrically interpolated for the given point on the
+      * triangle. Returns `null` if the triangle is degenerate.
+@@ -189,6 +263,18 @@ export class Triangle {
+      * @return {?Vector3} The interpolated value.
+      */
+     getInterpolation(point: Vector3, v1: Vector3, v2: Vector3, v3: Vector3, target: Vector3): Vector3 | null;
++    /**
++     * Computes the value barycentrically interpolated for the given point on the
++     * triangle. Returns `null` if the triangle is degenerate.
++     *
++     * @param {Vector3} point - Position of interpolated point.
++     * @param {Vector3} v1 - Value to interpolate of first vertex.
++     * @param {Vector3} v2 - Value to interpolate of second vertex.
++     * @param {Vector3} v3 - Value to interpolate of third vertex.
++     * @param {Vector3} target - The target vector that is used to store the method's result.
++     * @return {?Vector3} The interpolated value.
++     */
++    getInterpolation(point: Vector3, v1: Vector4, v2: Vector4, v3: Vector4, target: Vector4): Vector4 | null;
+     /**
+      * Returns `true` if the given point, when projected onto the plane of the
+      * triangle, lies within the triangle.
+@@ -228,4 +314,3 @@ export class Triangle {
+      */
+     equals(triangle: Triangle): boolean;
+ }
+-import { Vector3 } from './Vector3.js';
+diff --git a/jsdoc-testing/jsdoc/src/math/Vector2.d.ts b/jsdoc-testing/jsdoc/src/math/Vector2.d.ts
+index aeaeb509d..e4b93c06a 100644
+--- a/jsdoc-testing/jsdoc/src/math/Vector2.d.ts
++++ b/jsdoc-testing/jsdoc/src/math/Vector2.d.ts
+@@ -1,3 +1,13 @@
++import { BufferAttribute } from "../core/BufferAttribute.js";
++import { Matrix3 } from "./Matrix3.js";
++
++export type Vector2Tuple = [x: number, y: number];
++
++export interface Vector2Like {
++    readonly x: number;
++    readonly y: number;
++}
++
+ /**
+  * Class representing a 2D vector. A 2D vector is an ordered pair of numbers
+  * (labeled x and y), which can be used to represent a number of things, such as:
+@@ -24,6 +34,14 @@
+  * ```
+  */
+ export class Vector2 {
++    /**
++     * This flag can be used for type testing.
++     *
++     * @type {boolean}
++     * @readonly
++     * @default true
++     */
++    readonly isVector2: true;
+     /**
+      * Constructs a new 2D vector.
+      *
+@@ -64,28 +82,28 @@ export class Vector2 {
+      * @param {number} y - The value of the y component.
+      * @return {Vector2} A reference to this vector.
+      */
+-    set(x: number, y: number): Vector2;
++    set(x: number, y: number): this;
+     /**
+      * Sets the vector components to the same value.
+      *
+      * @param {number} scalar - The value to set for all vector components.
+      * @return {Vector2} A reference to this vector.
+      */
+-    setScalar(scalar: number): Vector2;
++    setScalar(scalar: number): this;
+     /**
+      * Sets the vector's x component to the given value
+      *
+      * @param {number} x - The value to set.
+      * @return {Vector2} A reference to this vector.
+      */
+-    setX(x: number): Vector2;
++    setX(x: number): this;
+     /**
+      * Sets the vector's y component to the given value
+      *
+      * @param {number} y - The value to set.
+      * @return {Vector2} A reference to this vector.
+      */
+-    setY(y: number): Vector2;
++    setY(y: number): this;
+     /**
+      * Allows to set a vector component with an index.
+      *
+@@ -93,7 +111,7 @@ export class Vector2 {
+      * @param {number} value - The value to set.
+      * @return {Vector2} A reference to this vector.
+      */
+-    setComponent(index: number, value: number): Vector2;
++    setComponent(index: number, value: number): this;
+     /**
+      * Returns the value of the vector component which matches the given index.
+      *
+@@ -106,28 +124,28 @@ export class Vector2 {
+      *
+      * @return {Vector2} A clone of this instance.
+      */
+-    clone(): Vector2;
++    clone(): this;
+     /**
+      * Copies the values of the given vector to this instance.
+      *
+      * @param {Vector2} v - The vector to copy.
+      * @return {Vector2} A reference to this vector.
+      */
+-    copy(v: Vector2): Vector2;
++    copy(v: Vector2Like): this;
+     /**
+      * Adds the given vector to this instance.
+      *
+      * @param {Vector2} v - The vector to add.
+      * @return {Vector2} A reference to this vector.
+      */
+-    add(v: Vector2): Vector2;
++    add(v: Vector2Like): this;
+     /**
+      * Adds the given scalar value to all components of this instance.
+      *
+      * @param {number} s - The scalar to add.
+      * @return {Vector2} A reference to this vector.
+      */
+-    addScalar(s: number): Vector2;
++    addScalar(s: number): this;
+     /**
+      * Adds the given vectors and stores the result in this instance.
+      *
+@@ -135,7 +153,7 @@ export class Vector2 {
+      * @param {Vector2} b - The second vector.
+      * @return {Vector2} A reference to this vector.
+      */
+-    addVectors(a: Vector2, b: Vector2): Vector2;
++    addVectors(a: Vector2Like, b: Vector2Like): this;
+     /**
+      * Adds the given vector scaled by the given factor to this instance.
+      *
+@@ -143,21 +161,21 @@ export class Vector2 {
+      * @param {number} s - The factor that scales `v`.
+      * @return {Vector2} A reference to this vector.
+      */
+-    addScaledVector(v: Vector2, s: number): Vector2;
++    addScaledVector(v: Vector2Like, s: number): this;
+     /**
+      * Subtracts the given vector from this instance.
+      *
+      * @param {Vector2} v - The vector to subtract.
+      * @return {Vector2} A reference to this vector.
+      */
+-    sub(v: Vector2): Vector2;
++    sub(v: Vector2Like): this;
+     /**
+      * Subtracts the given scalar value from all components of this instance.
+      *
+      * @param {number} s - The scalar to subtract.
+      * @return {Vector2} A reference to this vector.
+      */
+-    subScalar(s: number): Vector2;
++    subScalar(s: number): this;
+     /**
+      * Subtracts the given vectors and stores the result in this instance.
+      *
+@@ -165,35 +183,35 @@ export class Vector2 {
+      * @param {Vector2} b - The second vector.
+      * @return {Vector2} A reference to this vector.
+      */
+-    subVectors(a: Vector2, b: Vector2): Vector2;
++    subVectors(a: Vector2Like, b: Vector2Like): this;
+     /**
+      * Multiplies the given vector with this instance.
+      *
+      * @param {Vector2} v - The vector to multiply.
+      * @return {Vector2} A reference to this vector.
+      */
+-    multiply(v: Vector2): Vector2;
++    multiply(v: Vector2Like): this;
+     /**
+      * Multiplies the given scalar value with all components of this instance.
+      *
+      * @param {number} scalar - The scalar to multiply.
+      * @return {Vector2} A reference to this vector.
+      */
+-    multiplyScalar(scalar: number): Vector2;
++    multiplyScalar(scalar: number): this;
+     /**
+      * Divides this instance by the given vector.
+      *
+      * @param {Vector2} v - The vector to divide.
+      * @return {Vector2} A reference to this vector.
+      */
+-    divide(v: Vector2): Vector2;
++    divide(v: Vector2Like): this;
+     /**
+      * Divides this vector by the given scalar.
+      *
+      * @param {number} scalar - The scalar to divide.
+      * @return {Vector2} A reference to this vector.
+      */
+-    divideScalar(scalar: number): Vector2;
++    divideScalar(scalar: number): this;
+     /**
+      * Multiplies this vector (with an implicit 1 as the 3rd component) by
+      * the given 3x3 matrix.
+@@ -201,7 +219,7 @@ export class Vector2 {
+      * @param {Matrix3} m - The matrix to apply.
+      * @return {Vector2} A reference to this vector.
+      */
+-    applyMatrix3(m: Matrix3): Vector2;
++    applyMatrix3(m: Matrix3): this;
+     /**
+      * If this vector's x or y value is greater than the given vector's x or y
+      * value, replace that value with the corresponding min value.
+@@ -209,7 +227,7 @@ export class Vector2 {
+      * @param {Vector2} v - The vector.
+      * @return {Vector2} A reference to this vector.
+      */
+-    min(v: Vector2): Vector2;
++    min(v: Vector2Like): this;
+     /**
+      * If this vector's x or y value is less than the given vector's x or y
+      * value, replace that value with the corresponding max value.
+@@ -217,7 +235,7 @@ export class Vector2 {
+      * @param {Vector2} v - The vector.
+      * @return {Vector2} A reference to this vector.
+      */
+-    max(v: Vector2): Vector2;
++    max(v: Vector2Like): this;
+     /**
+      * If this vector's x or y value is greater than the max vector's x or y
+      * value, it is replaced by the corresponding value.
+@@ -228,7 +246,7 @@ export class Vector2 {
+      * @param {Vector2} max - The maximum x and y values in the desired range.
+      * @return {Vector2} A reference to this vector.
+      */
+-    clamp(min: Vector2, max: Vector2): Vector2;
++    clamp(min: Vector2Like, max: Vector2Like): this;
+     /**
+      * If this vector's x or y values are greater than the max value, they are
+      * replaced by the max value.
+@@ -239,7 +257,7 @@ export class Vector2 {
+      * @param {number} maxVal - The maximum value the components will be clamped to.
+      * @return {Vector2} A reference to this vector.
+      */
+-    clampScalar(minVal: number, maxVal: number): Vector2;
++    clampScalar(minVal: number, maxVal: number): this;
+     /**
+      * If this vector's length is greater than the max value, it is replaced by
+      * the max value.
+@@ -250,52 +268,52 @@ export class Vector2 {
+      * @param {number} max - The maximum value the vector length will be clamped to.
+      * @return {Vector2} A reference to this vector.
+      */
+-    clampLength(min: number, max: number): Vector2;
++    clampLength(min: number, max: number): this;
+     /**
+      * The components of this vector are rounded down to the nearest integer value.
+      *
+      * @return {Vector2} A reference to this vector.
+      */
+-    floor(): Vector2;
++    floor(): this;
+     /**
+      * The components of this vector are rounded up to the nearest integer value.
+      *
+      * @return {Vector2} A reference to this vector.
+      */
+-    ceil(): Vector2;
++    ceil(): this;
+     /**
+      * The components of this vector are rounded to the nearest integer value
+      *
+      * @return {Vector2} A reference to this vector.
+      */
+-    round(): Vector2;
++    round(): this;
+     /**
+      * The components of this vector are rounded towards zero (up if negative,
+      * down if positive) to an integer value.
+      *
+      * @return {Vector2} A reference to this vector.
+      */
+-    roundToZero(): Vector2;
++    roundToZero(): this;
+     /**
+      * Inverts this vector - i.e. sets x = -x and y = -y.
+      *
+      * @return {Vector2} A reference to this vector.
+      */
+-    negate(): Vector2;
++    negate(): this;
+     /**
+      * Calculates the dot product of the given vector with this instance.
+      *
+      * @param {Vector2} v - The vector to compute the dot product with.
+      * @return {number} The result of the dot product.
+      */
+-    dot(v: Vector2): number;
++    dot(v: Vector2Like): number;
+     /**
+      * Calculates the cross product of the given vector with this instance.
+      *
+      * @param {Vector2} v - The vector to compute the cross product with.
+      * @return {number} The result of the cross product.
+      */
+-    cross(v: Vector2): number;
++    cross(v: Vector2Like): number;
+     /**
+      * Computes the square of the Euclidean length (straight-line length) from
+      * (0, 0) to (x, y). If you are comparing the lengths of vectors, you should
+@@ -322,7 +340,7 @@ export class Vector2 {
+      *
+      * @return {Vector2} A reference to this vector.
+      */
+-    normalize(): Vector2;
++    normalize(): this;
+     /**
+      * Computes the angle in radians of this vector with respect to the positive x-axis.
+      *
+@@ -342,7 +360,7 @@ export class Vector2 {
+      * @param {Vector2} v - The vector to compute the distance to.
+      * @return {number} The distance.
+      */
+-    distanceTo(v: Vector2): number;
++    distanceTo(v: Vector2Like): number;
+     /**
+      * Computes the squared distance from the given vector to this instance.
+      * If you are just comparing the distance with another distance, you should compare
+@@ -351,14 +369,14 @@ export class Vector2 {
+      * @param {Vector2} v - The vector to compute the squared distance to.
+      * @return {number} The squared distance.
+      */
+-    distanceToSquared(v: Vector2): number;
++    distanceToSquared(v: Vector2Like): number;
+     /**
+      * Computes the Manhattan distance from the given vector to this instance.
+      *
+      * @param {Vector2} v - The vector to compute the Manhattan distance to.
+      * @return {number} The Manhattan distance.
+      */
+-    manhattanDistanceTo(v: Vector2): number;
++    manhattanDistanceTo(v: Vector2Like): number;
+     /**
+      * Sets this vector to a vector with the same direction as this one, but
+      * with the specified length.
+@@ -366,7 +384,7 @@ export class Vector2 {
+      * @param {number} length - The new length of this vector.
+      * @return {Vector2} A reference to this vector.
+      */
+-    setLength(length: number): Vector2;
++    setLength(length: number): this;
+     /**
+      * Linearly interpolates between the given vector and this instance, where
+      * alpha is the percent distance along the line - alpha = 0 will be this
+@@ -376,7 +394,7 @@ export class Vector2 {
+      * @param {number} alpha - The interpolation factor, typically in the closed interval `[0, 1]`.
+      * @return {Vector2} A reference to this vector.
+      */
+-    lerp(v: Vector2, alpha: number): Vector2;
++    lerp(v: Vector2Like, alpha: number): this;
+     /**
+      * Linearly interpolates between the given vectors, where alpha is the percent
+      * distance along the line - alpha = 0 will be first vector, and alpha = 1 will
+@@ -387,14 +405,14 @@ export class Vector2 {
+      * @param {number} alpha - The interpolation factor, typically in the closed interval `[0, 1]`.
+      * @return {Vector2} A reference to this vector.
+      */
+-    lerpVectors(v1: Vector2, v2: Vector2, alpha: number): Vector2;
++    lerpVectors(v1: Vector2Like, v2: Vector2Like, alpha: number): this;
+     /**
+      * Returns `true` if this vector is equal with the given one.
+      *
+      * @param {Vector2} v - The vector to test for equality.
+      * @return {boolean} Whether this vector is equal with the given one.
+      */
+-    equals(v: Vector2): boolean;
++    equals(v: Vector2Like): boolean;
+     /**
+      * Sets this vector's x value to be `array[ offset ]` and y
+      * value to be `array[ offset + 1 ]`.
+@@ -403,7 +421,25 @@ export class Vector2 {
+      * @param {number} [offset=0] - The offset into the array.
+      * @return {Vector2} A reference to this vector.
+      */
+-    fromArray(array: Array<number>, offset?: number): Vector2;
++    fromArray(array: number[] | ArrayLike<number>, offset?: number): this;
++    /**
++     * Writes the components of this vector to the given array. If no array is provided,
++     * the method returns a new instance.
++     *
++     * @param {Array<number>} [array=[]] - The target array holding the vector components.
++     * @param {number} [offset=0] - Index of the first element in the array.
++     * @return {Array<number>} The vector components.
++     */
++    toArray(array?: number[], offset?: number): number[];
++    /**
++     * Writes the components of this vector to the given array. If no array is provided,
++     * the method returns a new instance.
++     *
++     * @param {Array<number>} [array=[]] - The target array holding the vector components.
++     * @param {number} [offset=0] - Index of the first element in the array.
++     * @return {Array<number>} The vector components.
++     */
++    toArray(array?: Vector2Tuple, offset?: 0): Vector2Tuple;
+     /**
+      * Writes the components of this vector to the given array. If no array is provided,
+      * the method returns a new instance.
+@@ -412,7 +448,7 @@ export class Vector2 {
+      * @param {number} [offset=0] - Index of the first element in the array.
+      * @return {Array<number>} The vector components.
+      */
+-    toArray(array?: Array<number>, offset?: number): Array<number>;
++    toArray(array: ArrayLike<number>, offset?: number): ArrayLike<number>;
+     /**
+      * Sets the components of this vector from the given buffer attribute.
+      *
+@@ -420,7 +456,7 @@ export class Vector2 {
+      * @param {number} index - The index into the attribute.
+      * @return {Vector2} A reference to this vector.
+      */
+-    fromBufferAttribute(attribute: BufferAttribute, index: number): Vector2;
++    fromBufferAttribute(attribute: BufferAttribute, index: number): this;
+     /**
+      * Rotates this vector around the given center by the given angle.
+      *
+@@ -428,13 +464,13 @@ export class Vector2 {
+      * @param {number} angle - The angle to rotate, in radians.
+      * @return {Vector2} A reference to this vector.
+      */
+-    rotateAround(center: Vector2, angle: number): Vector2;
++    rotateAround(center: Vector2Like, angle: number): this;
+     /**
+      * Sets each component of this vector to a pseudo-random value between `0` and
+      * `1`, excluding `1`.
+      *
+      * @return {Vector2} A reference to this vector.
+      */
+-    random(): Vector2;
++    random(): this;
+     [Symbol.iterator](): Generator<number, void, unknown>;
+ }
+diff --git a/jsdoc-testing/jsdoc/src/math/Vector3.d.ts b/jsdoc-testing/jsdoc/src/math/Vector3.d.ts
+index c102e1d72..4d6be0260 100644
+--- a/jsdoc-testing/jsdoc/src/math/Vector3.d.ts
++++ b/jsdoc-testing/jsdoc/src/math/Vector3.d.ts
+@@ -1,3 +1,22 @@
++import { Camera } from "../cameras/Camera.js";
++import { BufferAttribute } from "../core/BufferAttribute.js";
++import { InterleavedBufferAttribute } from "../core/InterleavedBufferAttribute.js";
++import { RGB } from "./Color.js";
++import { Cylindrical } from "./Cylindrical.js";
++import { Euler } from "./Euler.js";
++import { Matrix3 } from "./Matrix3.js";
++import { Matrix4 } from "./Matrix4.js";
++import { QuaternionLike } from "./Quaternion.js";
++import { Spherical } from "./Spherical.js";
++
++export type Vector3Tuple = [number, number, number];
++
++export interface Vector3Like {
++    readonly x: number;
++    readonly y: number;
++    readonly z: number;
++}
++
+ /**
+  * Class representing a 3D vector. A 3D vector is an ordered triplet of numbers
+  * (labeled x, y and z), which can be used to represent a number of things, such as:
+@@ -24,6 +43,14 @@
+  * ```
+  */
+ export class Vector3 {
++    /**
++     * This flag can be used for type testing.
++     *
++     * @type {boolean}
++     * @readonly
++     * @default true
++     */
++    readonly isVector3: true;
+     /**
+      * Constructs a new 3D vector.
+      *
+@@ -58,35 +85,35 @@ export class Vector3 {
+      * @param {number} z - The value of the z component.
+      * @return {Vector3} A reference to this vector.
+      */
+-    set(x: number, y: number, z: number): Vector3;
++    set(x: number, y: number, z?: number): this;
+     /**
+      * Sets the vector components to the same value.
+      *
+      * @param {number} scalar - The value to set for all vector components.
+      * @return {Vector3} A reference to this vector.
+      */
+-    setScalar(scalar: number): Vector3;
++    setScalar(scalar: number): this;
+     /**
+      * Sets the vector's x component to the given value.
+      *
+      * @param {number} x - The value to set.
+      * @return {Vector3} A reference to this vector.
+      */
+-    setX(x: number): Vector3;
++    setX(x: number): this;
+     /**
+      * Sets the vector's y component to the given value.
+      *
+      * @param {number} y - The value to set.
+      * @return {Vector3} A reference to this vector.
+      */
+-    setY(y: number): Vector3;
++    setY(y: number): this;
+     /**
+      * Sets the vector's z component to the given value.
+      *
+      * @param {number} z - The value to set.
+      * @return {Vector3} A reference to this vector.
+      */
+-    setZ(z: number): Vector3;
++    setZ(z: number): this;
+     /**
+      * Allows to set a vector component with an index.
+      *
+@@ -94,7 +121,7 @@ export class Vector3 {
+      * @param {number} value - The value to set.
+      * @return {Vector3} A reference to this vector.
+      */
+-    setComponent(index: number, value: number): Vector3;
++    setComponent(index: number, value: number): this;
+     /**
+      * Returns the value of the vector component which matches the given index.
+      *
+@@ -107,28 +134,28 @@ export class Vector3 {
+      *
+      * @return {Vector3} A clone of this instance.
+      */
+-    clone(): Vector3;
++    clone(): this;
+     /**
+      * Copies the values of the given vector to this instance.
+      *
+      * @param {Vector3} v - The vector to copy.
+      * @return {Vector3} A reference to this vector.
+      */
+-    copy(v: Vector3): Vector3;
++    copy(v: Vector3Like): this;
+     /**
+      * Adds the given vector to this instance.
+      *
+      * @param {Vector3} v - The vector to add.
+      * @return {Vector3} A reference to this vector.
+      */
+-    add(v: Vector3): Vector3;
++    add(v: Vector3Like): this;
+     /**
+      * Adds the given scalar value to all components of this instance.
+      *
+      * @param {number} s - The scalar to add.
+      * @return {Vector3} A reference to this vector.
+      */
+-    addScalar(s: number): Vector3;
++    addScalar(s: number): this;
+     /**
+      * Adds the given vectors and stores the result in this instance.
+      *
+@@ -136,7 +163,7 @@ export class Vector3 {
+      * @param {Vector3} b - The second vector.
+      * @return {Vector3} A reference to this vector.
+      */
+-    addVectors(a: Vector3, b: Vector3): Vector3;
++    addVectors(a: Vector3Like, b: Vector3Like): this;
+     /**
+      * Adds the given vector scaled by the given factor to this instance.
+      *
+@@ -144,21 +171,21 @@ export class Vector3 {
+      * @param {number} s - The factor that scales `v`.
+      * @return {Vector3} A reference to this vector.
+      */
+-    addScaledVector(v: Vector3 | Vector4, s: number): Vector3;
++    addScaledVector(v: Vector3Like, s: number): this;
+     /**
+      * Subtracts the given vector from this instance.
+      *
+      * @param {Vector3} v - The vector to subtract.
+      * @return {Vector3} A reference to this vector.
+      */
+-    sub(v: Vector3): Vector3;
++    sub(v: Vector3Like): this;
+     /**
+      * Subtracts the given scalar value from all components of this instance.
+      *
+      * @param {number} s - The scalar to subtract.
+      * @return {Vector3} A reference to this vector.
+      */
+-    subScalar(s: number): Vector3;
++    subScalar(s: number): this;
+     /**
+      * Subtracts the given vectors and stores the result in this instance.
+      *
+@@ -166,21 +193,21 @@ export class Vector3 {
+      * @param {Vector3} b - The second vector.
+      * @return {Vector3} A reference to this vector.
+      */
+-    subVectors(a: Vector3, b: Vector3): Vector3;
++    subVectors(a: Vector3Like, b: Vector3Like): this;
+     /**
+      * Multiplies the given vector with this instance.
+      *
+      * @param {Vector3} v - The vector to multiply.
+      * @return {Vector3} A reference to this vector.
+      */
+-    multiply(v: Vector3): Vector3;
++    multiply(v: Vector3Like): this;
+     /**
+      * Multiplies the given scalar value with all components of this instance.
+      *
+      * @param {number} scalar - The scalar to multiply.
+      * @return {Vector3} A reference to this vector.
+      */
+-    multiplyScalar(scalar: number): Vector3;
++    multiplyScalar(scalar: number): this;
+     /**
+      * Multiplies the given vectors and stores the result in this instance.
+      *
+@@ -188,14 +215,14 @@ export class Vector3 {
+      * @param {Vector3} b - The second vector.
+      * @return {Vector3} A reference to this vector.
+      */
+-    multiplyVectors(a: Vector3, b: Vector3): Vector3;
++    multiplyVectors(a: Vector3Like, b: Vector3Like): this;
+     /**
+      * Applies the given Euler rotation to this vector.
+      *
+      * @param {Euler} euler - The Euler angles.
+      * @return {Vector3} A reference to this vector.
+      */
+-    applyEuler(euler: Euler): Vector3;
++    applyEuler(euler: Euler): this;
+     /**
+      * Applies a rotation specified by an axis and an angle to this vector.
+      *
+@@ -203,14 +230,14 @@ export class Vector3 {
+      * @param {number} angle - The angle in radians.
+      * @return {Vector3} A reference to this vector.
+      */
+-    applyAxisAngle(axis: Vector3, angle: number): Vector3;
++    applyAxisAngle(axis: Vector3Like, angle: number): this;
+     /**
+      * Multiplies this vector with the given 3x3 matrix.
+      *
+      * @param {Matrix3} m - The 3x3 matrix.
+      * @return {Vector3} A reference to this vector.
+      */
+-    applyMatrix3(m: Matrix3): Vector3;
++    applyMatrix3(m: Matrix3): this;
+     /**
+      * Multiplies this vector by the given normal matrix and normalizes
+      * the result.
+@@ -218,7 +245,7 @@ export class Vector3 {
+      * @param {Matrix3} m - The normal matrix.
+      * @return {Vector3} A reference to this vector.
+      */
+-    applyNormalMatrix(m: Matrix3): Vector3;
++    applyNormalMatrix(m: Matrix3): this;
+     /**
+      * Multiplies this vector (with an implicit 1 in the 4th dimension) by m, and
+      * divides by perspective.
+@@ -226,14 +253,14 @@ export class Vector3 {
+      * @param {Matrix4} m - The matrix to apply.
+      * @return {Vector3} A reference to this vector.
+      */
+-    applyMatrix4(m: Matrix4): Vector3;
++    applyMatrix4(m: Matrix4): this;
+     /**
+      * Applies the given Quaternion to this vector.
+      *
+      * @param {Quaternion} q - The Quaternion.
+      * @return {Vector3} A reference to this vector.
+      */
+-    applyQuaternion(q: Quaternion): Vector3;
++    applyQuaternion(q: QuaternionLike): this;
+     /**
+      * Projects this vector from world space into the camera's normalized
+      * device coordinate (NDC) space.
+@@ -241,7 +268,7 @@ export class Vector3 {
+      * @param {Camera} camera - The camera.
+      * @return {Vector3} A reference to this vector.
+      */
+-    project(camera: Camera): Vector3;
++    project(camera: Camera): this;
+     /**
+      * Unprojects this vector from the camera's normalized device coordinate (NDC)
+      * space into world space.
+@@ -249,7 +276,7 @@ export class Vector3 {
+      * @param {Camera} camera - The camera.
+      * @return {Vector3} A reference to this vector.
+      */
+-    unproject(camera: Camera): Vector3;
++    unproject(camera: Camera): this;
+     /**
+      * Transforms this vector by the upper left 3x3 sub-matrix of the given 4x4 matrix,
+      * and normalizes the result.
+@@ -257,21 +284,21 @@ export class Vector3 {
+      * @param {Matrix4} m - The matrix.
+      * @return {Vector3} A reference to this vector.
+      */
+-    transformDirection(m: Matrix4): Vector3;
++    transformDirection(m: Matrix4): this;
+     /**
+      * Divides this instance by the given vector.
+      *
+      * @param {Vector3} v - The vector to divide.
+      * @return {Vector3} A reference to this vector.
+      */
+-    divide(v: Vector3): Vector3;
++    divide(v: Vector3Like): this;
+     /**
+      * Divides this vector by the given scalar.
+      *
+      * @param {number} scalar - The scalar to divide.
+      * @return {Vector3} A reference to this vector.
+      */
+-    divideScalar(scalar: number): Vector3;
++    divideScalar(scalar: number): this;
+     /**
+      * If this vector's x, y or z value is greater than the given vector's x, y or z
+      * value, replace that value with the corresponding min value.
+@@ -279,7 +306,7 @@ export class Vector3 {
+      * @param {Vector3} v - The vector.
+      * @return {Vector3} A reference to this vector.
+      */
+-    min(v: Vector3): Vector3;
++    min(v: Vector3Like): this;
+     /**
+      * If this vector's x, y or z value is less than the given vector's x, y or z
+      * value, replace that value with the corresponding max value.
+@@ -287,7 +314,7 @@ export class Vector3 {
+      * @param {Vector3} v - The vector.
+      * @return {Vector3} A reference to this vector.
+      */
+-    max(v: Vector3): Vector3;
++    max(v: Vector3Like): this;
+     /**
+      * If this vector's x, y or z value is greater than the max vector's x, y or z
+      * value, it is replaced by the corresponding value.
+@@ -298,7 +325,7 @@ export class Vector3 {
+      * @param {Vector3} max - The maximum x, y and z values in the desired range.
+      * @return {Vector3} A reference to this vector.
+      */
+-    clamp(min: Vector3, max: Vector3): Vector3;
++    clamp(min: Vector3Like, max: Vector3Like): this;
+     /**
+      * If this vector's x, y or z values are greater than the max value, they are
+      * replaced by the max value.
+@@ -309,7 +336,7 @@ export class Vector3 {
+      * @param {number} maxVal - The maximum value the components will be clamped to.
+      * @return {Vector3} A reference to this vector.
+      */
+-    clampScalar(minVal: number, maxVal: number): Vector3;
++    clampScalar(minVal: number, maxVal: number): this;
+     /**
+      * If this vector's length is greater than the max value, it is replaced by
+      * the max value.
+@@ -320,45 +347,45 @@ export class Vector3 {
+      * @param {number} max - The maximum value the vector length will be clamped to.
+      * @return {Vector3} A reference to this vector.
+      */
+-    clampLength(min: number, max: number): Vector3;
++    clampLength(min: number, max: number): this;
+     /**
+      * The components of this vector are rounded down to the nearest integer value.
+      *
+      * @return {Vector3} A reference to this vector.
+      */
+-    floor(): Vector3;
++    floor(): this;
+     /**
+      * The components of this vector are rounded up to the nearest integer value.
+      *
+      * @return {Vector3} A reference to this vector.
+      */
+-    ceil(): Vector3;
++    ceil(): this;
+     /**
+      * The components of this vector are rounded to the nearest integer value
+      *
+      * @return {Vector3} A reference to this vector.
+      */
+-    round(): Vector3;
++    round(): this;
+     /**
+      * The components of this vector are rounded towards zero (up if negative,
+      * down if positive) to an integer value.
+      *
+      * @return {Vector3} A reference to this vector.
+      */
+-    roundToZero(): Vector3;
++    roundToZero(): this;
+     /**
+      * Inverts this vector - i.e. sets x = -x, y = -y and z = -z.
+      *
+      * @return {Vector3} A reference to this vector.
+      */
+-    negate(): Vector3;
++    negate(): this;
+     /**
+      * Calculates the dot product of the given vector with this instance.
+      *
+      * @param {Vector3} v - The vector to compute the dot product with.
+      * @return {number} The result of the dot product.
+      */
+-    dot(v: Vector3): number;
++    dot(v: Vector3Like): number;
+     /**
+      * Computes the square of the Euclidean length (straight-line length) from
+      * (0, 0, 0) to (x, y, z). If you are comparing the lengths of vectors, you should
+@@ -385,7 +412,7 @@ export class Vector3 {
+      *
+      * @return {Vector3} A reference to this vector.
+      */
+-    normalize(): Vector3;
++    normalize(): this;
+     /**
+      * Sets this vector to a vector with the same direction as this one, but
+      * with the specified length.
+@@ -393,7 +420,7 @@ export class Vector3 {
+      * @param {number} length - The new length of this vector.
+      * @return {Vector3} A reference to this vector.
+      */
+-    setLength(length: number): Vector3;
++    setLength(length: number): this;
+     /**
+      * Linearly interpolates between the given vector and this instance, where
+      * alpha is the percent distance along the line - alpha = 0 will be this
+@@ -403,7 +430,7 @@ export class Vector3 {
+      * @param {number} alpha - The interpolation factor, typically in the closed interval `[0, 1]`.
+      * @return {Vector3} A reference to this vector.
+      */
+-    lerp(v: Vector3, alpha: number): Vector3;
++    lerp(v: Vector3Like, alpha: number): this;
+     /**
+      * Linearly interpolates between the given vectors, where alpha is the percent
+      * distance along the line - alpha = 0 will be first vector, and alpha = 1 will
+@@ -414,14 +441,14 @@ export class Vector3 {
+      * @param {number} alpha - The interpolation factor, typically in the closed interval `[0, 1]`.
+      * @return {Vector3} A reference to this vector.
+      */
+-    lerpVectors(v1: Vector3, v2: Vector3, alpha: number): Vector3;
++    lerpVectors(v1: Vector3Like, v2: Vector3Like, alpha: number): this;
+     /**
+      * Calculates the cross product of the given vector with this instance.
+      *
+      * @param {Vector3} v - The vector to compute the cross product with.
+      * @return {Vector3} The result of the cross product.
+      */
+-    cross(v: Vector3): Vector3;
++    cross(v: Vector3Like): this;
+     /**
+      * Calculates the cross product of the given vectors and stores the result
+      * in this instance.
+@@ -430,14 +457,14 @@ export class Vector3 {
+      * @param {Vector3} b - The second vector.
+      * @return {Vector3} A reference to this vector.
+      */
+-    crossVectors(a: Vector3, b: Vector3): Vector3;
++    crossVectors(a: Vector3Like, b: Vector3Like): this;
+     /**
+      * Projects this vector onto the given one.
+      *
+      * @param {Vector3} v - The vector to project to.
+      * @return {Vector3} A reference to this vector.
+      */
+-    projectOnVector(v: Vector3): Vector3;
++    projectOnVector(v: Vector3): this;
+     /**
+      * Projects this vector onto a plane by subtracting this
+      * vector projected onto the plane's normal from this vector.
+@@ -445,14 +472,14 @@ export class Vector3 {
+      * @param {Vector3} planeNormal - The plane normal.
+      * @return {Vector3} A reference to this vector.
+      */
+-    projectOnPlane(planeNormal: Vector3): Vector3;
++    projectOnPlane(planeNormal: Vector3): this;
+     /**
+      * Reflects this vector off a plane orthogonal to the given normal vector.
+      *
+      * @param {Vector3} normal - The (normalized) normal vector.
+      * @return {Vector3} A reference to this vector.
+      */
+-    reflect(normal: Vector3): Vector3;
++    reflect(normal: Vector3Like): this;
+     /**
+      * Returns the angle between the given vector and this instance in radians.
+      *
+@@ -466,7 +493,7 @@ export class Vector3 {
+      * @param {Vector3} v - The vector to compute the distance to.
+      * @return {number} The distance.
+      */
+-    distanceTo(v: Vector3): number;
++    distanceTo(v: Vector3Like): number;
+     /**
+      * Computes the squared distance from the given vector to this instance.
+      * If you are just comparing the distance with another distance, you should compare
+@@ -475,21 +502,21 @@ export class Vector3 {
+      * @param {Vector3} v - The vector to compute the squared distance to.
+      * @return {number} The squared distance.
+      */
+-    distanceToSquared(v: Vector3): number;
++    distanceToSquared(v: Vector3Like): number;
+     /**
+      * Computes the Manhattan distance from the given vector to this instance.
+      *
+      * @param {Vector3} v - The vector to compute the Manhattan distance to.
+      * @return {number} The Manhattan distance.
+      */
+-    manhattanDistanceTo(v: Vector3): number;
++    manhattanDistanceTo(v: Vector3Like): number;
+     /**
+      * Sets the vector components from the given spherical coordinates.
+      *
+      * @param {Spherical} s - The spherical coordinates.
+      * @return {Vector3} A reference to this vector.
+      */
+-    setFromSpherical(s: Spherical): Vector3;
++    setFromSpherical(s: Spherical): this;
+     /**
+      * Sets the vector components from the given spherical coordinates.
+      *
+@@ -498,14 +525,14 @@ export class Vector3 {
+      * @param {number} theta - The theta angle in radians.
+      * @return {Vector3} A reference to this vector.
+      */
+-    setFromSphericalCoords(radius: number, phi: number, theta: number): Vector3;
++    setFromSphericalCoords(radius: number, phi: number, theta: number): this;
+     /**
+      * Sets the vector components from the given cylindrical coordinates.
+      *
+      * @param {Cylindrical} c - The cylindrical coordinates.
+      * @return {Vector3} A reference to this vector.
+      */
+-    setFromCylindrical(c: Cylindrical): Vector3;
++    setFromCylindrical(c: Cylindrical): this;
+     /**
+      * Sets the vector components from the given cylindrical coordinates.
+      *
+@@ -514,7 +541,7 @@ export class Vector3 {
+      * @param {number} y - The y value.
+      * @return {Vector3} A reference to this vector.
+      */
+-    setFromCylindricalCoords(radius: number, theta: number, y: number): Vector3;
++    setFromCylindricalCoords(radius: number, theta: number, y: number): this;
+     /**
+      * Sets the vector components to the position elements of the
+      * given transformation matrix.
+@@ -522,7 +549,7 @@ export class Vector3 {
+      * @param {Matrix4} m - The 4x4 matrix.
+      * @return {Vector3} A reference to this vector.
+      */
+-    setFromMatrixPosition(m: Matrix4): Vector3;
++    setFromMatrixPosition(m: Matrix4): this;
+     /**
+      * Sets the vector components to the scale elements of the
+      * given transformation matrix.
+@@ -530,7 +557,7 @@ export class Vector3 {
+      * @param {Matrix4} m - The 4x4 matrix.
+      * @return {Vector3} A reference to this vector.
+      */
+-    setFromMatrixScale(m: Matrix4): Vector3;
++    setFromMatrixScale(m: Matrix4): this;
+     /**
+      * Sets the vector components from the specified matrix column.
+      *
+@@ -538,7 +565,7 @@ export class Vector3 {
+      * @param {number} index - The column index.
+      * @return {Vector3} A reference to this vector.
+      */
+-    setFromMatrixColumn(m: Matrix4, index: number): Vector3;
++    setFromMatrixColumn(m: Matrix4, index: number): this;
+     /**
+      * Sets the vector components from the specified matrix column.
+      *
+@@ -546,14 +573,14 @@ export class Vector3 {
+      * @param {number} index - The column index.
+      * @return {Vector3} A reference to this vector.
+      */
+-    setFromMatrix3Column(m: Matrix3, index: number): Vector3;
++    setFromMatrix3Column(m: Matrix3, index: number): this;
+     /**
+      * Sets the vector components from the given Euler angles.
+      *
+      * @param {Euler} e - The Euler angles to set.
+      * @return {Vector3} A reference to this vector.
+      */
+-    setFromEuler(e: Euler): Vector3;
++    setFromEuler(e: Euler): this;
+     /**
+      * Sets the vector components from the RGB components of the
+      * given color.
+@@ -561,14 +588,14 @@ export class Vector3 {
+      * @param {Color} c - The color to set.
+      * @return {Vector3} A reference to this vector.
+      */
+-    setFromColor(c: Color): Vector3;
++    setFromColor(c: RGB): this;
+     /**
+      * Returns `true` if this vector is equal with the given one.
+      *
+      * @param {Vector3} v - The vector to test for equality.
+      * @return {boolean} Whether this vector is equal with the given one.
+      */
+-    equals(v: Vector3): boolean;
++    equals(v: Vector3Like): boolean;
+     /**
+      * Sets this vector's x value to be `array[ offset ]`, y value to be `array[ offset + 1 ]`
+      * and z value to be `array[ offset + 2 ]`.
+@@ -577,7 +604,25 @@ export class Vector3 {
+      * @param {number} [offset=0] - The offset into the array.
+      * @return {Vector3} A reference to this vector.
+      */
+-    fromArray(array: Array<number>, offset?: number): Vector3;
++    fromArray(array: number[] | ArrayLike<number>, offset?: number): this;
++    /**
++     * Writes the components of this vector to the given array. If no array is provided,
++     * the method returns a new instance.
++     *
++     * @param {Array<number>} [array=[]] - The target array holding the vector components.
++     * @param {number} [offset=0] - Index of the first element in the array.
++     * @return {Array<number>} The vector components.
++     */
++    toArray(array?: number[], offset?: number): number[];
++    /**
++     * Writes the components of this vector to the given array. If no array is provided,
++     * the method returns a new instance.
++     *
++     * @param {Array<number>} [array=[]] - The target array holding the vector components.
++     * @param {number} [offset=0] - Index of the first element in the array.
++     * @return {Array<number>} The vector components.
++     */
++    toArray(array?: Vector3Tuple, offset?: 0): Vector3Tuple;
+     /**
+      * Writes the components of this vector to the given array. If no array is provided,
+      * the method returns a new instance.
+@@ -586,7 +631,7 @@ export class Vector3 {
+      * @param {number} [offset=0] - Index of the first element in the array.
+      * @return {Array<number>} The vector components.
+      */
+-    toArray(array?: Array<number>, offset?: number): Array<number>;
++    toArray(array: ArrayLike<number>, offset?: number): ArrayLike<number>;
+     /**
+      * Sets the components of this vector from the given buffer attribute.
+      *
+@@ -594,20 +639,19 @@ export class Vector3 {
+      * @param {number} index - The index into the attribute.
+      * @return {Vector3} A reference to this vector.
+      */
+-    fromBufferAttribute(attribute: BufferAttribute, index: number): Vector3;
++    fromBufferAttribute(attribute: BufferAttribute | InterleavedBufferAttribute, index: number): this;
+     /**
+      * Sets each component of this vector to a pseudo-random value between `0` and
+      * `1`, excluding `1`.
+      *
+      * @return {Vector3} A reference to this vector.
+      */
+-    random(): Vector3;
++    random(): this;
+     /**
+      * Sets this vector to a uniformly random point on a unit sphere.
+      *
+      * @return {Vector3} A reference to this vector.
+      */
+-    randomDirection(): Vector3;
++    randomDirection(): this;
+     [Symbol.iterator](): Generator<number, void, unknown>;
+ }
+-import { Quaternion } from './Quaternion.js';
+diff --git a/jsdoc-testing/jsdoc/src/math/Vector4.d.ts b/jsdoc-testing/jsdoc/src/math/Vector4.d.ts
+index 2360be77d..27aedaaea 100644
+--- a/jsdoc-testing/jsdoc/src/math/Vector4.d.ts
++++ b/jsdoc-testing/jsdoc/src/math/Vector4.d.ts
+@@ -1,3 +1,17 @@
++import { BufferAttribute } from "../core/BufferAttribute.js";
++import { Matrix4 } from "./Matrix4.js";
++import { QuaternionLike } from "./Quaternion.js";
++import { Vector3Like } from "./Vector3.js";
++
++export type Vector4Tuple = [number, number, number, number];
++
++export interface Vector4Like {
++    readonly x: number;
++    readonly y: number;
++    readonly z: number;
++    readonly w: number;
++}
++
+ /**
+  * Class representing a 4D vector. A 4D vector is an ordered quadruplet of numbers
+  * (labeled x, y, z and w), which can be used to represent a number of things, such as:
+@@ -23,6 +37,14 @@
+  * ```
+  */
+ export class Vector4 {
++    /**
++     * This flag can be used for type testing.
++     *
++     * @type {boolean}
++     * @readonly
++     * @default true
++     */
++    readonly isVector4: true;
+     /**
+      * Constructs a new 4D vector.
+      *
+@@ -79,42 +101,42 @@ export class Vector4 {
+      * @param {number} w - The value of the w component.
+      * @return {Vector4} A reference to this vector.
+      */
+-    set(x: number, y: number, z: number, w: number): Vector4;
++    set(x: number, y: number, z: number, w: number): this;
+     /**
+      * Sets the vector components to the same value.
+      *
+      * @param {number} scalar - The value to set for all vector components.
+      * @return {Vector4} A reference to this vector.
+      */
+-    setScalar(scalar: number): Vector4;
++    setScalar(scalar: number): this;
+     /**
+      * Sets the vector's x component to the given value
+      *
+      * @param {number} x - The value to set.
+      * @return {Vector4} A reference to this vector.
+      */
+-    setX(x: number): Vector4;
++    setX(x: number): this;
+     /**
+      * Sets the vector's y component to the given value
+      *
+      * @param {number} y - The value to set.
+      * @return {Vector4} A reference to this vector.
+      */
+-    setY(y: number): Vector4;
++    setY(y: number): this;
+     /**
+      * Sets the vector's z component to the given value
+      *
+      * @param {number} z - The value to set.
+      * @return {Vector4} A reference to this vector.
+      */
+-    setZ(z: number): Vector4;
++    setZ(z: number): this;
+     /**
+      * Sets the vector's w component to the given value
+      *
+      * @param {number} w - The value to set.
+      * @return {Vector4} A reference to this vector.
+      */
+-    setW(w: number): Vector4;
++    setW(w: number): this;
+     /**
+      * Allows to set a vector component with an index.
+      *
+@@ -123,7 +145,7 @@ export class Vector4 {
+      * @param {number} value - The value to set.
+      * @return {Vector4} A reference to this vector.
+      */
+-    setComponent(index: number, value: number): Vector4;
++    setComponent(index: number, value: number): this;
+     /**
+      * Returns the value of the vector component which matches the given index.
+      *
+@@ -137,28 +159,28 @@ export class Vector4 {
+      *
+      * @return {Vector4} A clone of this instance.
+      */
+-    clone(): Vector4;
++    clone(): this;
+     /**
+      * Copies the values of the given vector to this instance.
+      *
+      * @param {Vector3|Vector4} v - The vector to copy.
+      * @return {Vector4} A reference to this vector.
+      */
+-    copy(v: Vector3 | Vector4): Vector4;
++    copy(v: Vector3Like | Vector4Like): this;
+     /**
+      * Adds the given vector to this instance.
+      *
+      * @param {Vector4} v - The vector to add.
+      * @return {Vector4} A reference to this vector.
+      */
+-    add(v: Vector4): Vector4;
++    add(v: Vector4Like): this;
+     /**
+      * Adds the given scalar value to all components of this instance.
+      *
+      * @param {number} s - The scalar to add.
+      * @return {Vector4} A reference to this vector.
+      */
+-    addScalar(s: number): Vector4;
++    addScalar(s: number): this;
+     /**
+      * Adds the given vectors and stores the result in this instance.
+      *
+@@ -166,7 +188,7 @@ export class Vector4 {
+      * @param {Vector4} b - The second vector.
+      * @return {Vector4} A reference to this vector.
+      */
+-    addVectors(a: Vector4, b: Vector4): Vector4;
++    addVectors(a: Vector4Like, b: Vector4Like): this;
+     /**
+      * Adds the given vector scaled by the given factor to this instance.
+      *
+@@ -174,21 +196,21 @@ export class Vector4 {
+      * @param {number} s - The factor that scales `v`.
+      * @return {Vector4} A reference to this vector.
+      */
+-    addScaledVector(v: Vector4, s: number): Vector4;
++    addScaledVector(v: Vector4Like, s: number): this;
+     /**
+      * Subtracts the given vector from this instance.
+      *
+      * @param {Vector4} v - The vector to subtract.
+      * @return {Vector4} A reference to this vector.
+      */
+-    sub(v: Vector4): Vector4;
++    sub(v: Vector4Like): this;
+     /**
+      * Subtracts the given scalar value from all components of this instance.
+      *
+      * @param {number} s - The scalar to subtract.
+      * @return {Vector4} A reference to this vector.
+      */
+-    subScalar(s: number): Vector4;
++    subScalar(s: number): this;
+     /**
+      * Subtracts the given vectors and stores the result in this instance.
+      *
+@@ -196,42 +218,42 @@ export class Vector4 {
+      * @param {Vector4} b - The second vector.
+      * @return {Vector4} A reference to this vector.
+      */
+-    subVectors(a: Vector4, b: Vector4): Vector4;
++    subVectors(a: Vector4Like, b: Vector4Like): this;
+     /**
+      * Multiplies the given vector with this instance.
+      *
+      * @param {Vector4} v - The vector to multiply.
+      * @return {Vector4} A reference to this vector.
+      */
+-    multiply(v: Vector4): Vector4;
++    multiply(v: Vector4Like): this;
+     /**
+      * Multiplies the given scalar value with all components of this instance.
+      *
+      * @param {number} scalar - The scalar to multiply.
+      * @return {Vector4} A reference to this vector.
+      */
+-    multiplyScalar(scalar: number): Vector4;
++    multiplyScalar(scalar: number): this;
+     /**
+      * Multiplies this vector with the given 4x4 matrix.
+      *
+      * @param {Matrix4} m - The 4x4 matrix.
+      * @return {Vector4} A reference to this vector.
+      */
+-    applyMatrix4(m: Matrix4): Vector4;
++    applyMatrix4(m: Matrix4): this;
+     /**
+      * Divides this instance by the given vector.
+      *
+      * @param {Vector4} v - The vector to divide.
+      * @return {Vector4} A reference to this vector.
+      */
+-    divide(v: Vector4): Vector4;
++    divide(v: Vector4Like): this;
+     /**
+      * Divides this vector by the given scalar.
+      *
+      * @param {number} scalar - The scalar to divide.
+      * @return {Vector4} A reference to this vector.
+      */
+-    divideScalar(scalar: number): Vector4;
++    divideScalar(scalar: number): this;
+     /**
+      * Sets the x, y and z components of this
+      * vector to the quaternion's axis and w to the angle.
+@@ -239,7 +261,7 @@ export class Vector4 {
+      * @param {Quaternion} q - The Quaternion to set.
+      * @return {Vector4} A reference to this vector.
+      */
+-    setAxisAngleFromQuaternion(q: Quaternion): Vector4;
++    setAxisAngleFromQuaternion(q: QuaternionLike): this;
+     /**
+      * Sets the x, y and z components of this
+      * vector to the axis of rotation and w to the angle.
+@@ -247,7 +269,7 @@ export class Vector4 {
+      * @param {Matrix4} m - A 4x4 matrix of which the upper left 3x3 matrix is a pure rotation matrix.
+      * @return {Vector4} A reference to this vector.
+      */
+-    setAxisAngleFromRotationMatrix(m: Matrix4): Vector4;
++    setAxisAngleFromRotationMatrix(m: Matrix4): this;
+     /**
+      * Sets the vector components to the position elements of the
+      * given transformation matrix.
+@@ -255,7 +277,7 @@ export class Vector4 {
+      * @param {Matrix4} m - The 4x4 matrix.
+      * @return {Vector4} A reference to this vector.
+      */
+-    setFromMatrixPosition(m: Matrix4): Vector4;
++    setFromMatrixPosition(m: Matrix4): this;
+     /**
+      * If this vector's x, y, z or w value is greater than the given vector's x, y, z or w
+      * value, replace that value with the corresponding min value.
+@@ -263,7 +285,7 @@ export class Vector4 {
+      * @param {Vector4} v - The vector.
+      * @return {Vector4} A reference to this vector.
+      */
+-    min(v: Vector4): Vector4;
++    min(v: Vector4Like): this;
+     /**
+      * If this vector's x, y, z or w value is less than the given vector's x, y, z or w
+      * value, replace that value with the corresponding max value.
+@@ -271,7 +293,7 @@ export class Vector4 {
+      * @param {Vector4} v - The vector.
+      * @return {Vector4} A reference to this vector.
+      */
+-    max(v: Vector4): Vector4;
++    max(v: Vector4Like): this;
+     /**
+      * If this vector's x, y, z or w value is greater than the max vector's x, y, z or w
+      * value, it is replaced by the corresponding value.
+@@ -282,7 +304,7 @@ export class Vector4 {
+      * @param {Vector4} max - The maximum x, y and z values in the desired range.
+      * @return {Vector4} A reference to this vector.
+      */
+-    clamp(min: Vector4, max: Vector4): Vector4;
++    clamp(min: Vector4Like, max: Vector4Like): this;
+     /**
+      * If this vector's x, y, z or w values are greater than the max value, they are
+      * replaced by the max value.
+@@ -293,7 +315,7 @@ export class Vector4 {
+      * @param {number} maxVal - The maximum value the components will be clamped to.
+      * @return {Vector4} A reference to this vector.
+      */
+-    clampScalar(minVal: number, maxVal: number): Vector4;
++    clampScalar(minVal: number, maxVal: number): this;
+     /**
+      * If this vector's length is greater than the max value, it is replaced by
+      * the max value.
+@@ -310,39 +332,39 @@ export class Vector4 {
+      *
+      * @return {Vector4} A reference to this vector.
+      */
+-    floor(): Vector4;
++    floor(): this;
+     /**
+      * The components of this vector are rounded up to the nearest integer value.
+      *
+      * @return {Vector4} A reference to this vector.
+      */
+-    ceil(): Vector4;
++    ceil(): this;
+     /**
+      * The components of this vector are rounded to the nearest integer value
+      *
+      * @return {Vector4} A reference to this vector.
+      */
+-    round(): Vector4;
++    round(): this;
+     /**
+      * The components of this vector are rounded towards zero (up if negative,
+      * down if positive) to an integer value.
+      *
+      * @return {Vector4} A reference to this vector.
+      */
+-    roundToZero(): Vector4;
++    roundToZero(): this;
+     /**
+      * Inverts this vector - i.e. sets x = -x, y = -y, z = -z, w = -w.
+      *
+      * @return {Vector4} A reference to this vector.
+      */
+-    negate(): Vector4;
++    negate(): this;
+     /**
+      * Calculates the dot product of the given vector with this instance.
+      *
+      * @param {Vector4} v - The vector to compute the dot product with.
+      * @return {number} The result of the dot product.
+      */
+-    dot(v: Vector4): number;
++    dot(v: Vector4Like): number;
+     /**
+      * Computes the square of the Euclidean length (straight-line length) from
+      * (0, 0, 0, 0) to (x, y, z, w). If you are comparing the lengths of vectors, you should
+@@ -369,7 +391,7 @@ export class Vector4 {
+      *
+      * @return {Vector4} A reference to this vector.
+      */
+-    normalize(): Vector4;
++    normalize(): this;
+     /**
+      * Sets this vector to a vector with the same direction as this one, but
+      * with the specified length.
+@@ -377,7 +399,7 @@ export class Vector4 {
+      * @param {number} length - The new length of this vector.
+      * @return {Vector4} A reference to this vector.
+      */
+-    setLength(length: number): Vector4;
++    setLength(length: number): this;
+     /**
+      * Linearly interpolates between the given vector and this instance, where
+      * alpha is the percent distance along the line - alpha = 0 will be this
+@@ -387,7 +409,7 @@ export class Vector4 {
+      * @param {number} alpha - The interpolation factor, typically in the closed interval `[0, 1]`.
+      * @return {Vector4} A reference to this vector.
+      */
+-    lerp(v: Vector4, alpha: number): Vector4;
++    lerp(v: Vector4Like, alpha: number): this;
+     /**
+      * Linearly interpolates between the given vectors, where alpha is the percent
+      * distance along the line - alpha = 0 will be first vector, and alpha = 1 will
+@@ -398,14 +420,14 @@ export class Vector4 {
+      * @param {number} alpha - The interpolation factor, typically in the closed interval `[0, 1]`.
+      * @return {Vector4} A reference to this vector.
+      */
+-    lerpVectors(v1: Vector4, v2: Vector4, alpha: number): Vector4;
++    lerpVectors(v1: Vector4Like, v2: Vector4Like, alpha: number): this;
+     /**
+      * Returns `true` if this vector is equal with the given one.
+      *
+      * @param {Vector4} v - The vector to test for equality.
+      * @return {boolean} Whether this vector is equal with the given one.
+      */
+-    equals(v: Vector4): boolean;
++    equals(v: Vector4Like): boolean;
+     /**
+      * Sets this vector's x value to be `array[ offset ]`, y value to be `array[ offset + 1 ]`,
+      * z value to be `array[ offset + 2 ]`, w value to be `array[ offset + 3 ]`.
+@@ -414,7 +436,25 @@ export class Vector4 {
+      * @param {number} [offset=0] - The offset into the array.
+      * @return {Vector4} A reference to this vector.
+      */
+-    fromArray(array: Array<number>, offset?: number): Vector4;
++    fromArray(array: number[] | ArrayLike<number>, offset?: number): this;
++    /**
++     * Writes the components of this vector to the given array. If no array is provided,
++     * the method returns a new instance.
++     *
++     * @param {Array<number>} [array=[]] - The target array holding the vector components.
++     * @param {number} [offset=0] - Index of the first element in the array.
++     * @return {Array<number>} The vector components.
++     */
++    toArray(array?: number[], offset?: number): number[];
++    /**
++     * Writes the components of this vector to the given array. If no array is provided,
++     * the method returns a new instance.
++     *
++     * @param {Array<number>} [array=[]] - The target array holding the vector components.
++     * @param {number} [offset=0] - Index of the first element in the array.
++     * @return {Array<number>} The vector components.
++     */
++    toArray(array?: Vector4Tuple, offset?: 0): Vector4Tuple;
+     /**
+      * Writes the components of this vector to the given array. If no array is provided,
+      * the method returns a new instance.
+@@ -423,7 +463,7 @@ export class Vector4 {
+      * @param {number} [offset=0] - Index of the first element in the array.
+      * @return {Array<number>} The vector components.
+      */
+-    toArray(array?: Array<number>, offset?: number): Array<number>;
++    toArray(array: ArrayLike<number>, offset?: number): ArrayLike<number>;
+     /**
+      * Sets the components of this vector from the given buffer attribute.
+      *
+@@ -431,13 +471,13 @@ export class Vector4 {
+      * @param {number} index - The index into the attribute.
+      * @return {Vector4} A reference to this vector.
+      */
+-    fromBufferAttribute(attribute: BufferAttribute, index: number): Vector4;
++    fromBufferAttribute(attribute: BufferAttribute, index: number): this;
+     /**
+      * Sets each component of this vector to a pseudo-random value between `0` and
+      * `1`, excluding `1`.
+      *
+      * @return {Vector4} A reference to this vector.
+      */
+-    random(): Vector4;
++    random(): this;
+     [Symbol.iterator](): Generator<number, void, unknown>;
+ }
 diff --git a/jsdoc-testing/jsdoc/src/math/interpolants/BezierInterpolant.d.ts b/jsdoc-testing/jsdoc/src/math/interpolants/BezierInterpolant.d.ts
 index a3d1715dc..e7de49dad 100644
 --- a/jsdoc-testing/jsdoc/src/math/interpolants/BezierInterpolant.d.ts
