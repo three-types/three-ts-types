@@ -12440,7 +12440,7 @@ index fb50e77df..f08de1905 100644
       * Constructs a new icosahedron geometry.
       *
 diff --git a/jsdoc-testing/jsdoc/src/geometries/LatheGeometry.d.ts b/jsdoc-testing/jsdoc/src/geometries/LatheGeometry.d.ts
-index cce939fca..5cce56089 100644
+index cce939fca..e6674d79c 100644
 --- a/jsdoc-testing/jsdoc/src/geometries/LatheGeometry.d.ts
 +++ b/jsdoc-testing/jsdoc/src/geometries/LatheGeometry.d.ts
 @@ -23,7 +23,7 @@ export class LatheGeometry extends BufferGeometry {
@@ -12452,14 +12452,23 @@ index cce939fca..5cce56089 100644
      /**
       * Constructs a new lathe geometry.
       *
-@@ -42,8 +42,13 @@ export class LatheGeometry extends BufferGeometry {
+@@ -34,7 +34,7 @@ export class LatheGeometry extends BufferGeometry {
+      * @param {number} [phiLength=Math.PI*2] - The radian (0 to 2PI) range of the lathed section 2PI is a
+      * closed lathe, less than 2PI is a portion.
+      */
+-    constructor(points?: Array<Vector2 | Vector3>, segments?: number, phiStart?: number, phiLength?: number);
++    constructor(points?: Vector2[], segments?: number, phiStart?: number, phiLength?: number);
+     /**
+      * Holds the constructor parameters that have been
+      * used to generate the geometry. Any modification
+@@ -42,9 +42,13 @@ export class LatheGeometry extends BufferGeometry {
       *
       * @type {Object}
       */
 -    parameters: Object;
 -    copy(source: any): this;
 +    readonly parameters: {
-+        readonly points: Array<Vector2 | Vector3>;
++        readonly points: Vector2[];
 +        readonly segments: number;
 +        readonly phiStart: number;
 +        readonly phiLength: number;
@@ -12468,6 +12477,7 @@ index cce939fca..5cce56089 100644
  }
  import { BufferGeometry } from '../core/BufferGeometry.js';
  import { Vector2 } from '../math/Vector2.js';
+-import { Vector3 } from '../math/Vector3.js';
 diff --git a/jsdoc-testing/jsdoc/src/geometries/OctahedronGeometry.d.ts b/jsdoc-testing/jsdoc/src/geometries/OctahedronGeometry.d.ts
 index d61fe28a2..ea6881985 100644
 --- a/jsdoc-testing/jsdoc/src/geometries/OctahedronGeometry.d.ts
