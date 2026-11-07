@@ -1,161 +1,7 @@
-import { Matrix3 } from "./Matrix3.js";
-import { Vector3 } from "./Vector3.js";
-
 import { BufferAttribute } from "../core/BufferAttribute.js";
 import { InterleavedBufferAttribute } from "../core/InterleavedBufferAttribute.js";
-
-export { SRGBToLinear } from "./ColorManagement.js";
-
-declare const _colorKeywords: {
-    aliceblue: 0xf0f8ff;
-    antiquewhite: 0xfaebd7;
-    aqua: 0x00ffff;
-    aquamarine: 0x7fffd4;
-    azure: 0xf0ffff;
-    beige: 0xf5f5dc;
-    bisque: 0xffe4c4;
-    black: 0x000000;
-    blanchedalmond: 0xffebcd;
-    blue: 0x0000ff;
-    blueviolet: 0x8a2be2;
-    brown: 0xa52a2a;
-    burlywood: 0xdeb887;
-    cadetblue: 0x5f9ea0;
-    chartreuse: 0x7fff00;
-    chocolate: 0xd2691e;
-    coral: 0xff7f50;
-    cornflowerblue: 0x6495ed;
-    cornsilk: 0xfff8dc;
-    crimson: 0xdc143c;
-    cyan: 0x00ffff;
-    darkblue: 0x00008b;
-    darkcyan: 0x008b8b;
-    darkgoldenrod: 0xb8860b;
-    darkgray: 0xa9a9a9;
-    darkgreen: 0x006400;
-    darkgrey: 0xa9a9a9;
-    darkkhaki: 0xbdb76b;
-    darkmagenta: 0x8b008b;
-    darkolivegreen: 0x556b2f;
-    darkorange: 0xff8c00;
-    darkorchid: 0x9932cc;
-    darkred: 0x8b0000;
-    darksalmon: 0xe9967a;
-    darkseagreen: 0x8fbc8f;
-    darkslateblue: 0x483d8b;
-    darkslategray: 0x2f4f4f;
-    darkslategrey: 0x2f4f4f;
-    darkturquoise: 0x00ced1;
-    darkviolet: 0x9400d3;
-    deeppink: 0xff1493;
-    deepskyblue: 0x00bfff;
-    dimgray: 0x696969;
-    dimgrey: 0x696969;
-    dodgerblue: 0x1e90ff;
-    firebrick: 0xb22222;
-    floralwhite: 0xfffaf0;
-    forestgreen: 0x228b22;
-    fuchsia: 0xff00ff;
-    gainsboro: 0xdcdcdc;
-    ghostwhite: 0xf8f8ff;
-    gold: 0xffd700;
-    goldenrod: 0xdaa520;
-    gray: 0x808080;
-    green: 0x008000;
-    greenyellow: 0xadff2f;
-    grey: 0x808080;
-    honeydew: 0xf0fff0;
-    hotpink: 0xff69b4;
-    indianred: 0xcd5c5c;
-    indigo: 0x4b0082;
-    ivory: 0xfffff0;
-    khaki: 0xf0e68c;
-    lavender: 0xe6e6fa;
-    lavenderblush: 0xfff0f5;
-    lawngreen: 0x7cfc00;
-    lemonchiffon: 0xfffacd;
-    lightblue: 0xadd8e6;
-    lightcoral: 0xf08080;
-    lightcyan: 0xe0ffff;
-    lightgoldenrodyellow: 0xfafad2;
-    lightgray: 0xd3d3d3;
-    lightgreen: 0x90ee90;
-    lightgrey: 0xd3d3d3;
-    lightpink: 0xffb6c1;
-    lightsalmon: 0xffa07a;
-    lightseagreen: 0x20b2aa;
-    lightskyblue: 0x87cefa;
-    lightslategray: 0x778899;
-    lightslategrey: 0x778899;
-    lightsteelblue: 0xb0c4de;
-    lightyellow: 0xffffe0;
-    lime: 0x00ff00;
-    limegreen: 0x32cd32;
-    linen: 0xfaf0e6;
-    magenta: 0xff00ff;
-    maroon: 0x800000;
-    mediumaquamarine: 0x66cdaa;
-    mediumblue: 0x0000cd;
-    mediumorchid: 0xba55d3;
-    mediumpurple: 0x9370db;
-    mediumseagreen: 0x3cb371;
-    mediumslateblue: 0x7b68ee;
-    mediumspringgreen: 0x00fa9a;
-    mediumturquoise: 0x48d1cc;
-    mediumvioletred: 0xc71585;
-    midnightblue: 0x191970;
-    mintcream: 0xf5fffa;
-    mistyrose: 0xffe4e1;
-    moccasin: 0xffe4b5;
-    navajowhite: 0xffdead;
-    navy: 0x000080;
-    oldlace: 0xfdf5e6;
-    olive: 0x808000;
-    olivedrab: 0x6b8e23;
-    orange: 0xffa500;
-    orangered: 0xff4500;
-    orchid: 0xda70d6;
-    palegoldenrod: 0xeee8aa;
-    palegreen: 0x98fb98;
-    paleturquoise: 0xafeeee;
-    palevioletred: 0xdb7093;
-    papayawhip: 0xffefd5;
-    peachpuff: 0xffdab9;
-    peru: 0xcd853f;
-    pink: 0xffc0cb;
-    plum: 0xdda0dd;
-    powderblue: 0xb0e0e6;
-    purple: 0x800080;
-    rebeccapurple: 0x663399;
-    red: 0xff0000;
-    rosybrown: 0xbc8f8f;
-    royalblue: 0x4169e1;
-    saddlebrown: 0x8b4513;
-    salmon: 0xfa8072;
-    sandybrown: 0xf4a460;
-    seagreen: 0x2e8b57;
-    seashell: 0xfff5ee;
-    sienna: 0xa0522d;
-    silver: 0xc0c0c0;
-    skyblue: 0x87ceeb;
-    slateblue: 0x6a5acd;
-    slategray: 0x708090;
-    slategrey: 0x708090;
-    snow: 0xfffafa;
-    springgreen: 0x00ff7f;
-    steelblue: 0x4682b4;
-    tan: 0xd2b48c;
-    teal: 0x008080;
-    thistle: 0xd8bfd8;
-    tomato: 0xff6347;
-    turquoise: 0x40e0d0;
-    violet: 0xee82ee;
-    wheat: 0xf5deb3;
-    white: 0xffffff;
-    whitesmoke: 0xf5f5f5;
-    yellow: 0xffff00;
-    yellowgreen: 0x9acd32;
-};
+import { Matrix3 } from "./Matrix3.js";
+import { Vector3 } from "./Vector3.js";
 
 export type ColorRepresentation = Color | string | number;
 
@@ -172,205 +18,559 @@ export interface RGB {
 }
 
 /**
- * Class representing a color.
+ * A Color instance is represented by RGB components in the linear <i>working
+ * color space</i>, which defaults to `LinearSRGBColorSpace`. Inputs
+ * conventionally using `SRGBColorSpace` (such as hexadecimals and CSS
+ * strings) are converted to the working color space automatically.
  *
- * A Color instance is represented by RGB components in the linear <i>working color space</i>, which defaults to
- * `LinearSRGBColorSpace`. Inputs conventionally using `SRGBColorSpace` (such as hexadecimals and CSS strings) are
- * converted to the working color space automatically.
- *
- * ```
+ * ```js
  * // converted automatically from SRGBColorSpace to LinearSRGBColorSpace
  * const color = new THREE.Color().setHex( 0x112233 );
  * ```
- *
  * Source color spaces may be specified explicitly, to ensure correct conversions.
- *
- * ```
+ * ```js
  * // assumed already LinearSRGBColorSpace; no conversion
  * const color = new THREE.Color().setRGB( 0.5, 0.5, 0.5 );
  *
  * // converted explicitly from SRGBColorSpace to LinearSRGBColorSpace
  * const color = new THREE.Color().setRGB( 0.5, 0.5, 0.5, SRGBColorSpace );
  * ```
+ * If THREE.ColorManagement is disabled, no conversions occur. For details,
+ * see <i>Color management</i>. Iterating through a Color instance will yield
+ * its components (r, g, b) in the corresponding order. A Color can be initialised
+ * in any of the following ways:
+ * ```js
+ * //empty constructor - will default white
+ * const color1 = new THREE.Color();
  *
- * If THREE.ColorManagement is disabled, no conversions occur. For details, see <i>Color management</i>.
+ * //Hexadecimal color (recommended)
+ * const color2 = new THREE.Color( 0xff0000 );
  *
- * Iterating through a Color instance will yield its components (r, g, b) in the corresponding order.
+ * //RGB string
+ * const color3 = new THREE.Color("rgb(255, 0, 0)");
+ * const color4 = new THREE.Color("rgb(100%, 0%, 0%)");
+ *
+ * //X11 color name - all 140 color names are supported.
+ * //Note the lack of CamelCase in the name
+ * const color5 = new THREE.Color( 'skyblue' );
+ * //HSL string
+ * const color6 = new THREE.Color("hsl(0, 100%, 50%)");
+ *
+ * //Separate RGB values between 0 and 1
+ * const color7 = new THREE.Color( 1, 0, 0 );
+ * ```
  */
 export class Color {
-    constructor(color?: ColorRepresentation);
-    constructor(r: number, g: number, b: number);
-
-    readonly isColor: true;
-
     /**
-     * Red channel value between `0.0` and `1.0`. Default is `1`.
+     * Constructs a new color.
+     *
+     * Note that standard method of specifying color in three.js is with a hexadecimal triplet,
+     * and that method is used throughout the rest of the documentation.
+     *
+     * @param {(number|string|Color)} [r] - The red component of the color. If `g` and `b` are
+     * not provided, it can be hexadecimal triplet, a CSS-style string or another `Color` instance.
+     * @param {number} [g] - The green component.
+     * @param {number} [b] - The blue component.
+     */
+    constructor(color?: ColorRepresentation);
+    /**
+     * Constructs a new color.
+     *
+     * Note that standard method of specifying color in three.js is with a hexadecimal triplet,
+     * and that method is used throughout the rest of the documentation.
+     *
+     * @param {(number|string|Color)} [r] - The red component of the color. If `g` and `b` are
+     * not provided, it can be hexadecimal triplet, a CSS-style string or another `Color` instance.
+     * @param {number} [g] - The green component.
+     * @param {number} [b] - The blue component.
+     */
+    constructor(r: number, g: number, b: number);
+    /**
+     * This flag can be used for type testing.
+     *
+     * @type {boolean}
+     * @readonly
+     * @default true
+     */
+    readonly isColor: true;
+    /**
+     * The red component.
+     *
+     * @type {number}
      * @default 1
      */
     r: number;
-
     /**
-     * Green channel value between `0.0` and `1.0`. Default is `1`.
+     * The green component.
+     *
+     * @type {number}
      * @default 1
      */
     g: number;
-
     /**
-     * Blue channel value between `0.0` and `1.0`. Default is `1`.
+     * The blue component.
+     *
+     * @type {number}
      * @default 1
      */
     b: number;
-
-    // eslint-disable-next-line @definitelytyped/no-single-element-tuple-type
-    set(...args: [color: ColorRepresentation] | [r: number, g: number, b: number]): this;
-
     /**
-     * Sets this color's {@link r}, {@link g} and {@link b} components from the x, y, and z components of the specified
-     * {@link Vector3 | vector}.
+     * Sets the colors's components from the given values.
+     *
+     * @param {(number|string|Color)} [r] - The red component of the color. If `g` and `b` are
+     * not provided, it can be hexadecimal triplet, a CSS-style string or another `Color` instance.
+     * @param {number} [g] - The green component.
+     * @param {number} [b] - The blue component.
+     * @return {Color} A reference to this color.
      */
-    setFromVector3(vector: Vector3): this;
-
+    set(...args: [color: ColorRepresentation] | [r: number, g: number, b: number]): this;
+    /**
+     * Sets the colors's components to the given scalar value.
+     *
+     * @param {number} scalar - The scalar value.
+     * @return {Color} A reference to this color.
+     */
     setScalar(scalar: number): this;
+    /**
+     * Sets this color from a hexadecimal value.
+     *
+     * @param {number} hex - The hexadecimal value.
+     * @param {string} [colorSpace=SRGBColorSpace] - The color space.
+     * @return {Color} A reference to this color.
+     */
     setHex(hex: number, colorSpace?: string): this;
-
     /**
      * Sets this color from RGB values.
-     * @param r Red channel value between 0 and 1.
-     * @param g Green channel value between 0 and 1.
-     * @param b Blue channel value between 0 and 1.
+     *
+     * @param {number} r - Red channel value between `0.0` and `1.0`.
+     * @param {number} g - Green channel value between `0.0` and `1.0`.
+     * @param {number} b - Blue channel value between `0.0` and `1.0`.
+     * @param {string} [colorSpace=ColorManagement.workingColorSpace] - The color space.
+     * @return {Color} A reference to this color.
      */
     setRGB(r: number, g: number, b: number, colorSpace?: string): this;
-
     /**
-     * Sets this color from HSL values.
-     * Based on MochiKit implementation by Bob Ippolito.
+     * Sets this color from RGB values.
      *
-     * @param h Hue channel value between 0 and 1.
-     * @param s Saturation value channel between 0 and 1.
-     * @param l Value channel value between 0 and 1.
+     * @param {number} h - Hue value between `0.0` and `1.0`.
+     * @param {number} s - Saturation value between `0.0` and `1.0`.
+     * @param {number} l - Lightness value between `0.0` and `1.0`.
+     * @param {string} [colorSpace=ColorManagement.workingColorSpace] - The color space.
+     * @return {Color} A reference to this color.
      */
     setHSL(h: number, s: number, l: number, colorSpace?: string): this;
-
     /**
-     * Sets this color from a CSS context style string.
-     * @param contextStyle Color in CSS context style format.
+     * Sets this color from a CSS-style string. For example, `rgb(250, 0,0)`,
+     * `rgb(100%, 0%, 0%)`, `hsl(0, 100%, 50%)`, `#ff0000`, `#f00`, or `red` ( or
+     * any [X11 color name](https://en.wikipedia.org/wiki/X11_color_names#Color_name_chart) -
+     * all 140 color names are supported).
+     *
+     * @param {string} style - Color as a CSS-style string.
+     * @param {string} [colorSpace=SRGBColorSpace] - The color space.
+     * @return {Color} A reference to this color.
      */
     setStyle(style: string, colorSpace?: string): this;
-
     /**
-     * Sets this color from a color name.
-     * Faster than {@link Color#setStyle .setStyle()} method if you don't need the other CSS-style formats.
-     * @param style Color name in X11 format.
+     * Sets this color from a color name. Faster than {@link Color#setStyle} if
+     * you don't need the other CSS-style formats.
+     *
+     * For convenience, the list of names is exposed in `Color.NAMES` as a hash.
+     * ```js
+     * Color.NAMES.aliceblue // returns 0xF0F8FF
+     * ```
+     *
+     * @param {string} style - The color name.
+     * @param {string} [colorSpace=SRGBColorSpace] - The color space.
+     * @return {Color} A reference to this color.
      */
     setColorName(style: string, colorSpace?: string): this;
-
     /**
-     * Clones this color.
+     * Returns a new color with copied values from this instance.
+     *
+     * @return {Color} A clone of this instance.
      */
     clone(): this;
-
     /**
-     * Copies given color.
-     * @param color Color to copy.
+     * Copies the values of the given color to this instance.
+     *
+     * @param {Color} color - The color to copy.
+     * @return {Color} A reference to this color.
      */
     copy(color: Color): this;
-
     /**
-     * Copies given color making conversion from `SRGBColorSpace` to `LinearSRGBColorSpace`.
-     * @param color Color to copy.
+     * Copies the given color into this color, and then converts this color from
+     * `SRGBColorSpace` to `LinearSRGBColorSpace`.
+     *
+     * @param {Color} color - The color to copy/convert.
+     * @return {Color} A reference to this color.
      */
     copySRGBToLinear(color: Color): this;
-
     /**
-     * Copies given color making conversion from `LinearSRGBColorSpace` to `SRGBColorSpace`.
-     * @param color Color to copy.
+     * Copies the given color into this color, and then converts this color from
+     * `LinearSRGBColorSpace` to `SRGBColorSpace`.
+     *
+     * @param {Color} color - The color to copy/convert.
+     * @return {Color} A reference to this color.
      */
     copyLinearToSRGB(color: Color): this;
-
     /**
      * Converts this color from `SRGBColorSpace` to `LinearSRGBColorSpace`.
+     *
+     * @return {Color} A reference to this color.
      */
     convertSRGBToLinear(): this;
-
     /**
      * Converts this color from `LinearSRGBColorSpace` to `SRGBColorSpace`.
+     *
+     * @return {Color} A reference to this color.
      */
     convertLinearToSRGB(): this;
-
     /**
      * Returns the hexadecimal value of this color.
+     *
+     * @param {string} [colorSpace=SRGBColorSpace] - The color space.
+     * @return {number} The hexadecimal value.
      */
     getHex(colorSpace?: string): number;
-
     /**
-     * Returns the string formatted hexadecimal value of this color.
+     * Returns the hexadecimal value of this color as a string (for example, 'FFFFFF').
+     *
+     * @param {string} [colorSpace=SRGBColorSpace] - The color space.
+     * @return {string} The hexadecimal value as a string.
      */
     getHexString(colorSpace?: string): string;
-
-    getHSL(target: HSL, colorSpace?: string): HSL;
-
-    getRGB(target: RGB, colorSpace?: string): RGB;
-
     /**
-     * Returns the value of this color in CSS context style.
-     * Example: rgb(r, g, b)
+     * Converts the colors RGB values into the HSL format and stores them into the
+     * given target object.
+     *
+     * @param {{h:number,s:number,l:number}} target - The target object that is used to store the method's result.
+     * @param {string} [colorSpace=ColorManagement.workingColorSpace] - The color space.
+     * @return {{h:number,s:number,l:number}} The HSL representation of this color.
+     */
+    getHSL(target: HSL, colorSpace?: string): HSL;
+    /**
+     * Returns the RGB values of this color and stores them into the given target object.
+     *
+     * @param {Color} target - The target color that is used to store the method's result.
+     * @param {string} [colorSpace=ColorManagement.workingColorSpace] - The color space.
+     * @return {Color} The RGB representation of this color.
+     */
+    getRGB(target: RGB, colorSpace?: string): RGB;
+    /**
+     * Returns the value of this color as a CSS style string. Example: `rgb(255,0,0)`.
+     *
+     * @param {string} [colorSpace=SRGBColorSpace] - The color space.
+     * @return {string} The CSS representation of this color.
      */
     getStyle(colorSpace?: string): string;
-
-    offsetHSL(h: number, s: number, l: number): this;
-
-    add(color: Color): this;
-    addColors(color1: Color, color2: Color): this;
-    addScalar(s: number): this;
-
     /**
-     * Applies the transform {@link Matrix3 | m} to this color's RGB components.
+     * Adds the given HSL values to this color's values.
+     * Internally, this converts the color's RGB values to HSL, adds HSL
+     * and then converts the color back to RGB.
+     *
+     * @param {number} h - Hue value between `0.0` and `1.0`.
+     * @param {number} s - Saturation value between `0.0` and `1.0`.
+     * @param {number} l - Lightness value between `0.0` and `1.0`.
+     * @return {Color} A reference to this color.
+     */
+    offsetHSL(h: number, s: number, l: number): this;
+    /**
+     * Adds the RGB values of the given color to the RGB values of this color.
+     *
+     * @param {Color} color - The color to add.
+     * @return {Color} A reference to this color.
+     */
+    add(color: Color): this;
+    /**
+     * Adds the RGB values of the given colors and stores the result in this instance.
+     *
+     * @param {Color} color1 - The first color.
+     * @param {Color} color2 - The second color.
+     * @return {Color} A reference to this color.
+     */
+    addColors(color1: Color, color2: Color): this;
+    /**
+     * Adds the given scalar value to the RGB values of this color.
+     *
+     * @param {number} s - The scalar to add.
+     * @return {Color} A reference to this color.
+     */
+    addScalar(s: number): this;
+    /**
+     * Subtracts the RGB values of the given color from the RGB values of this color.
+     *
+     * @param {Color} color - The color to subtract.
+     * @return {Color} A reference to this color.
+     */
+    sub(color: Color): this;
+    /**
+     * Multiplies the RGB values of the given color with the RGB values of this color.
+     *
+     * @param {Color} color - The color to multiply.
+     * @return {Color} A reference to this color.
+     */
+    multiply(color: Color): this;
+    /**
+     * Multiplies the given scalar value with the RGB values of this color.
+     *
+     * @param {number} s - The scalar to multiply.
+     * @return {Color} A reference to this color.
+     */
+    multiplyScalar(s: number): this;
+    /**
+     * Linearly interpolates this color's RGB values toward the RGB values of the
+     * given color. The alpha argument can be thought of as the ratio between
+     * the two colors, where `0.0` is this color and `1.0` is the first argument.
+     *
+     * @param {Color} color - The color to converge on.
+     * @param {number} alpha - The interpolation factor in the closed interval `[0,1]`.
+     * @return {Color} A reference to this color.
+     */
+    lerp(color: Color, alpha: number): this;
+    /**
+     * Linearly interpolates between the given colors and stores the result in this instance.
+     * The alpha argument can be thought of as the ratio between the two colors, where `0.0`
+     * is the first and `1.0` is the second color.
+     *
+     * @param {Color} color1 - The first color.
+     * @param {Color} color2 - The second color.
+     * @param {number} alpha - The interpolation factor in the closed interval `[0,1]`.
+     * @return {Color} A reference to this color.
+     */
+    lerpColors(color1: Color, color2: Color, alpha: number): this;
+    /**
+     * Linearly interpolates this color's HSL values toward the HSL values of the
+     * given color. It differs from {@link Color#lerp} by not interpolating straight
+     * from one color to the other, but instead going through all the hues in between
+     * those two colors. The alpha argument can be thought of as the ratio between
+     * the two colors, where 0.0 is this color and 1.0 is the first argument.
+     *
+     * @param {Color} color - The color to converge on.
+     * @param {number} alpha - The interpolation factor in the closed interval `[0,1]`.
+     * @return {Color} A reference to this color.
+     */
+    lerpHSL(color: Color, alpha: number): this;
+    /**
+     * Sets the color's RGB components from the given 3D vector.
+     *
+     * @param {Vector3} v - The vector to set.
+     * @return {Color} A reference to this color.
+     */
+    setFromVector3(v: Vector3): this;
+    /**
+     * Transforms this color with the given 3x3 matrix.
+     *
+     * @param {Matrix3} m - The matrix.
+     * @return {Color} A reference to this color.
      */
     applyMatrix3(m: Matrix3): this;
-
-    sub(color: Color): this;
-    multiply(color: Color): this;
-    multiplyScalar(s: number): this;
-    lerp(color: Color, alpha: number): this;
-    lerpColors(color1: Color, color2: Color, alpha: number): this;
-    lerpHSL(color: Color, alpha: number): this;
-    equals(color: Color): boolean;
-
     /**
-     * Sets this color's red, green and blue value from the provided array or array-like.
-     * @param array the source array or array-like.
-     * @param offset (optional) offset into the array-like. Default is 0.
+     * Returns `true` if this color is equal with the given one.
+     *
+     * @param {Color} c - The color to test for equality.
+     * @return {boolean} Whether this bounding color is equal with the given one.
+     */
+    equals(c: Color): boolean;
+    /**
+     * Sets this color's RGB components from the given array.
+     *
+     * @param {Array<number>} array - An array holding the RGB values.
+     * @param {number} [offset=0] - The offset into the array.
+     * @return {Color} A reference to this color.
      */
     fromArray(array: number[] | ArrayLike<number>, offset?: number): this;
-
     /**
-     * Returns an array [red, green, blue], or copies red, green and blue into the provided array.
-     * @param array (optional) array to store the color to. If this is not provided, a new array will be created.
-     * @param offset (optional) optional offset into the array.
-     * @return The created or provided array.
+     * Writes the RGB components of this color to the given array. If no array is provided,
+     * the method returns a new instance.
+     *
+     * @param {Array<number>} [array=[]] - The target array holding the color components.
+     * @param {number} [offset=0] - Index of the first element in the array.
+     * @return {Array<number>} The color components.
      */
     toArray(array?: number[], offset?: number): number[];
-
     /**
-     * Copies red, green and blue into the provided array-like.
-     * @param array array-like to store the color to.
-     * @param offset (optional) optional offset into the array-like.
-     * @return The provided array-like.
+     * Writes the RGB components of this color to the given array. If no array is provided,
+     * the method returns a new instance.
+     *
+     * @param {Array<number>} [array=[]] - The target array holding the color components.
+     * @param {number} [offset=0] - Index of the first element in the array.
+     * @return {Array<number>} The color components.
      */
     toArray(xyz: ArrayLike<number>, offset?: number): ArrayLike<number>;
-
     /**
-     * This method defines the serialization result of Color.
-     * @return The color as a hexadecimal value.
+     * Sets the components of this color from the given buffer attribute.
+     *
+     * @param {BufferAttribute} attribute - The buffer attribute holding color data.
+     * @param {number} index - The index into the attribute.
+     * @return {Color} A reference to this color.
+     */
+    fromBufferAttribute(attribute: BufferAttribute | InterleavedBufferAttribute, index: number): this;
+    /**
+     * This methods defines the serialization result of this class. Returns the color
+     * as a hexadecimal value.
+     *
+     * @return {number} The hexadecimal value.
      */
     toJSON(): number;
-
-    fromBufferAttribute(attribute: BufferAttribute | InterleavedBufferAttribute, index: number): this;
-
-    [Symbol.iterator](): Generator<number, void>;
-
+    [Symbol.iterator](): Generator<number, void, unknown>;
     /**
-     * List of X11 color names.
+     * A dictionary with X11 color names.
+     *
+     * Note that multiple words such as Dark Orange become the string 'darkorange'.
+     *
+     * @static
+     * @type {Object}
      */
     static NAMES: typeof _colorKeywords;
 }
+declare const _colorKeywords: {
+    aliceblue: number;
+    antiquewhite: number;
+    aqua: number;
+    aquamarine: number;
+    azure: number;
+    beige: number;
+    bisque: number;
+    black: number;
+    blanchedalmond: number;
+    blue: number;
+    blueviolet: number;
+    brown: number;
+    burlywood: number;
+    cadetblue: number;
+    chartreuse: number;
+    chocolate: number;
+    coral: number;
+    cornflowerblue: number;
+    cornsilk: number;
+    crimson: number;
+    cyan: number;
+    darkblue: number;
+    darkcyan: number;
+    darkgoldenrod: number;
+    darkgray: number;
+    darkgreen: number;
+    darkgrey: number;
+    darkkhaki: number;
+    darkmagenta: number;
+    darkolivegreen: number;
+    darkorange: number;
+    darkorchid: number;
+    darkred: number;
+    darksalmon: number;
+    darkseagreen: number;
+    darkslateblue: number;
+    darkslategray: number;
+    darkslategrey: number;
+    darkturquoise: number;
+    darkviolet: number;
+    deeppink: number;
+    deepskyblue: number;
+    dimgray: number;
+    dimgrey: number;
+    dodgerblue: number;
+    firebrick: number;
+    floralwhite: number;
+    forestgreen: number;
+    fuchsia: number;
+    gainsboro: number;
+    ghostwhite: number;
+    gold: number;
+    goldenrod: number;
+    gray: number;
+    green: number;
+    greenyellow: number;
+    grey: number;
+    honeydew: number;
+    hotpink: number;
+    indianred: number;
+    indigo: number;
+    ivory: number;
+    khaki: number;
+    lavender: number;
+    lavenderblush: number;
+    lawngreen: number;
+    lemonchiffon: number;
+    lightblue: number;
+    lightcoral: number;
+    lightcyan: number;
+    lightgoldenrodyellow: number;
+    lightgray: number;
+    lightgreen: number;
+    lightgrey: number;
+    lightpink: number;
+    lightsalmon: number;
+    lightseagreen: number;
+    lightskyblue: number;
+    lightslategray: number;
+    lightslategrey: number;
+    lightsteelblue: number;
+    lightyellow: number;
+    lime: number;
+    limegreen: number;
+    linen: number;
+    magenta: number;
+    maroon: number;
+    mediumaquamarine: number;
+    mediumblue: number;
+    mediumorchid: number;
+    mediumpurple: number;
+    mediumseagreen: number;
+    mediumslateblue: number;
+    mediumspringgreen: number;
+    mediumturquoise: number;
+    mediumvioletred: number;
+    midnightblue: number;
+    mintcream: number;
+    mistyrose: number;
+    moccasin: number;
+    navajowhite: number;
+    navy: number;
+    oldlace: number;
+    olive: number;
+    olivedrab: number;
+    orange: number;
+    orangered: number;
+    orchid: number;
+    palegoldenrod: number;
+    palegreen: number;
+    paleturquoise: number;
+    palevioletred: number;
+    papayawhip: number;
+    peachpuff: number;
+    peru: number;
+    pink: number;
+    plum: number;
+    powderblue: number;
+    purple: number;
+    rebeccapurple: number;
+    red: number;
+    rosybrown: number;
+    royalblue: number;
+    saddlebrown: number;
+    salmon: number;
+    sandybrown: number;
+    seagreen: number;
+    seashell: number;
+    sienna: number;
+    silver: number;
+    skyblue: number;
+    slateblue: number;
+    slategray: number;
+    slategrey: number;
+    snow: number;
+    springgreen: number;
+    steelblue: number;
+    tan: number;
+    teal: number;
+    thistle: number;
+    tomato: number;
+    turquoise: number;
+    violet: number;
+    wheat: number;
+    white: number;
+    whitesmoke: number;
+    yellow: number;
+    yellowgreen: number;
+};
+export {};

@@ -6,48 +6,84 @@ export type Matrix2Tuple = [
 ];
 
 /**
- * A class representing a 2x2 {@link https://en.wikipedia.org/wiki/Matrix_(mathematics) matrix}.
+ * Represents a 2x2 matrix.
  *
- * @example
- * const m = new Matrix2();
+ * A Note on Row-Major and Column-Major Ordering:
+ *
+ * The constructor and {@link Matrix2#set} method take arguments in
+ * [row-major](https://en.wikipedia.org/wiki/Row-_and_column-major_order#Column-major_order)
+ * order, while internally they are stored in the {@link Matrix2#elements} array in column-major order.
+ * This means that calling:
+ * ```js
+ * const m = new THREE.Matrix2();
+ * m.set( 11, 12,
+ *        21, 22 );
+ * ```
+ * will result in the elements array containing:
+ * ```js
+ * m.elements = [ 11, 21,
+ *                12, 22 ];
+ * ```
+ * and internally all calculations are performed using column-major ordering.
+ * However, as the actual ordering makes no difference mathematically and
+ * most people are used to thinking about matrices in row-major order, the
+ * three.js documentation shows matrices in row-major order. Just bear in
+ * mind that if you are reading the source code, you'll have to take the
+ * transpose of any matrices outlined here to make sense of the calculations.
  */
 export class Matrix2 {
-    readonly isMatrix2: true;
-
     /**
-     * A {@link https://en.wikipedia.org/wiki/Row-_and_column-major_order column-major} list of matrix values.
+     * This flag can be used for type testing.
+     *
+     * @type {boolean}
+     * @readonly
+     * @default true
      */
-    elements: Matrix2Tuple;
-
+    readonly isMatrix2: true;
     /**
-     * Creates a 2x2 {@link https://en.wikipedia.org/wiki/Identity_matrix identity matrix}.
+     * Constructs a new 2x2 matrix. This constructor
+     * initializes the matrix as an identity matrix.
      */
     constructor();
-
     /**
-     * Creates a 2x2 matrix with the given arguments in row-major order.
+     * Constructs a new 2x2 matrix. The arguments are supposed to be
+     * in row-major order.
+     *
+     * @param {number} [n11] - 1-1 matrix element.
+     * @param {number} [n12] - 1-2 matrix element.
+     * @param {number} [n21] - 2-1 matrix element.
+     * @param {number} [n22] - 2-2 matrix element.
      */
     constructor(n11: number, n12: number, n21: number, n22: number);
-
     /**
-     * Resets this matrix to the 2x2 identity matrix:
+     * A column-major list of matrix values.
+     *
+     * @type {Array<number>}
+     */
+    elements: Matrix2Tuple;
+    /**
+     * Sets this matrix to the 2x2 identity matrix.
+     *
+     * @return {Matrix2} A reference to this matrix.
      */
     identity(): this;
-
     /**
-     * Sets the elements of this matrix based on an array in
-     * {@link https://en.wikipedia.org/wiki/Row-_and_column-major_order#Column-major_order column-major} format.
+     * Sets the elements of the matrix from the given array.
      *
-     * @param array the array to read the elements from
-     * @param offset (optional) index of first element in the array. Default is `0`.
+     * @param {Array<number>} array - The matrix elements in column-major order.
+     * @param {number} [offset=0] - Index of the first element in the array.
+     * @return {Matrix2} A reference to this matrix.
      */
     fromArray(array: ArrayLike<number>, offset?: number): this;
-
     /**
-     * Sets the 2x2 matrix values to the given
-     * {@link https://en.wikipedia.org/wiki/Row-_and_column-major_order row-major} sequence of values:
-     * [n11, n12,
-     *  n21, n22]
+     * Sets the elements of the matrix.The arguments are supposed to be
+     * in row-major order.
+     *
+     * @param {number} n11 - 1-1 matrix element.
+     * @param {number} n12 - 1-2 matrix element.
+     * @param {number} n21 - 2-1 matrix element.
+     * @param {number} n22 - 2-2 matrix element.
+     * @return {Matrix2} A reference to this matrix.
      */
     set(n11: number, n12: number, n21: number, n22: number): this;
 }
