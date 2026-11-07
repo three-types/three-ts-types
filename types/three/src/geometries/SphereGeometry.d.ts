@@ -1,35 +1,35 @@
-import { BufferGeometry } from "../core/BufferGeometry.js";
-
 /**
- * A class for generating sphere geometries.
- * @example
- * ```typescript
- * const geometry = new THREE.SphereGeometry(15, 32, 16);
- * const material = new THREE.MeshBasicMaterial({
- *     color: 0xffff00
- * });
- * const sphere = new THREE.Mesh(geometry, material);
- * scene.add(sphere);
+ * A class for generating a sphere geometry.
+ *
+ * ```js
+ * const geometry = new THREE.SphereGeometry( 15, 32, 16 );
+ * const material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
+ * const sphere = new THREE.Mesh( geometry, material );
+ * scene.add( sphere );
  * ```
- * @see {@link https://threejs.org/docs/index.html#api/en/geometries/SphereGeometry | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/geometries/SphereGeometry.js | Source}
+ *
+ * @augments BufferGeometry
+ * @demo scenes/geometry-browser.html#SphereGeometry
  */
 export class SphereGeometry extends BufferGeometry {
     /**
-     * Create a new instance of {@link SphereGeometry}
-     * @remarks
-     * The geometry is created by sweeping and calculating vertexes
-     * around the **Y** axis (horizontal sweep) and the **Z** axis (vertical sweep)
-     * Thus, incomplete spheres (akin to `'sphere slices'`) can be created
-     * through the use of different values of {@link phiStart}, {@link phiLength}, {@link thetaStart} and {@link thetaLength},
-     * in order to define the points in which we start (or end) calculating those vertices.
-     * @param radius Sphere radius. Expects a `Float`. Default `1`
-     * @param widthSegments Number of horizontal segments. Minimum value is 3, and the Expects a `Integer`. Default `32`
-     * @param heightSegments Number of vertical segments. Minimum value is 2, and the Expects a `Integer`. Default `16`
-     * @param phiStart Specify horizontal starting angle. Expects a `Float`. Default `0`
-     * @param phiLength Specify horizontal sweep angle size. Expects a `Float`. Default `Math.PI * 2`
-     * @param thetaStart Specify vertical starting angle. Expects a `Float`. Default `0`
-     * @param thetaLength Specify vertical sweep angle size. Expects a `Float`. Default `Math.PI`
+     * Factory method for creating an instance of this class from the given
+     * JSON object.
+     *
+     * @param {Object} data - A JSON object representing the serialized geometry.
+     * @return {SphereGeometry} A new instance.
+     */
+    static fromJSON(data: {}): SphereGeometry;
+    /**
+     * Constructs a new sphere geometry.
+     *
+     * @param {number} [radius=1] - The sphere radius.
+     * @param {number} [widthSegments=32] - The number of horizontal segments. Minimum value is `3`.
+     * @param {number} [heightSegments=16] - The number of vertical segments. Minimum value is `2`.
+     * @param {number} [phiStart=0] - The horizontal starting angle in radians.
+     * @param {number} [phiLength=Math.PI*2] - The horizontal sweep angle size.
+     * @param {number} [thetaStart=0] - The vertical starting angle in radians.
+     * @param {number} [thetaLength=Math.PI] - The vertical sweep angle size.
      */
     constructor(
         radius?: number,
@@ -40,17 +40,12 @@ export class SphereGeometry extends BufferGeometry {
         thetaStart?: number,
         thetaLength?: number,
     );
-
     /**
-     * A Read-only _string_ to check if `this` object type.
-     * @remarks Sub-classes will update this value.
-     * @defaultValue `SphereGeometry`
-     */
-    override readonly type: string | "SphereGeometry";
-
-    /**
-     * An object with a property for each of the constructor parameters.
-     * @remarks Any modification after instantiation does not change the geometry.
+     * Holds the constructor parameters that have been
+     * used to generate the geometry. Any modification
+     * after instantiation does not change the geometry.
+     *
+     * @type {Object}
      */
     readonly parameters: {
         readonly radius: number;
@@ -61,7 +56,6 @@ export class SphereGeometry extends BufferGeometry {
         readonly thetaStart: number;
         readonly thetaLength: number;
     };
-
-    /** @internal */
-    static fromJSON(data: {}): SphereGeometry;
+    copy(source: SphereGeometry): this;
 }
+import { BufferGeometry } from "../core/BufferGeometry.js";

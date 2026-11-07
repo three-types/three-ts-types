@@ -1,30 +1,37 @@
-import { BufferGeometry } from "../core/BufferGeometry.js";
-
 /**
- * A class for generating cylinder geometries.
- * @example
- * ```typescript
- * const geometry = new THREE.CylinderGeometry(5, 5, 20, 32);
- * const material = new THREE.MeshBasicMaterial({
- *     color: 0xffff00
- * });
- * const cylinder = new THREE.Mesh(geometry, material);
- * scene.add(cylinder);
+ * A geometry class for representing a cylinder.
+ *
+ * ```js
+ * const geometry = new THREE.CylinderGeometry( 5, 5, 20, 32 );
+ * const material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
+ * const cylinder = new THREE.Mesh( geometry, material );
+ * scene.add( cylinder );
  * ```
- * @see {@link https://threejs.org/docs/index.html#api/en/geometries/CylinderGeometry | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/geometries/CylinderGeometry.js | Source}
+ *
+ * @augments BufferGeometry
+ * @demo scenes/geometry-browser.html#CylinderGeometry
  */
 export class CylinderGeometry extends BufferGeometry {
     /**
-     * Create a new instance of {@link CylinderGeometry}
-     * @param radiusTop Radius of the cylinder at the top. Default `1`
-     * @param radiusBottom Radius of the cylinder at the bottom. Default `1`
-     * @param height Height of the cylinder. Default `1`
-     * @param radialSegments Number of segmented faces around the circumference of the cylinder. Default `32`
-     * @param heightSegments Number of rows of faces along the height of the cylinder. Expects a `Integer`. Default `1`
-     * @param openEnded A Boolean indicating whether the ends of the cylinder are open or capped. Default `false`, _meaning capped_.
-     * @param thetaStart Start angle for first segment. Default `0`, _(three o'clock position)_.
-     * @param thetaLength The central angle, often called theta, of the circular sector. Default `Math.PI * 2`, _which makes for a complete cylinder.
+     * Factory method for creating an instance of this class from the given
+     * JSON object.
+     *
+     * @param {Object} data - A JSON object representing the serialized geometry.
+     * @return {CylinderGeometry} A new instance.
+     */
+    static fromJSON(data: {}): CylinderGeometry;
+    /**
+     * Constructs a new cylinder geometry.
+     *
+     * @param {number} [radiusTop=1] - Radius of the cylinder at the top.
+     * @param {number} [radiusBottom=1] - Radius of the cylinder at the bottom.
+     * @param {number} [height=1] - Height of the cylinder.
+     * @param {number} [radialSegments=32] - Number of segmented faces around the circumference of the cylinder.
+     * @param {number} [heightSegments=1] - Number of rows of faces along the height of the cylinder.
+     * @param {boolean} [openEnded=false] - Whether the base of the cylinder is open or capped.
+     * @param {number} [thetaStart=0] - Start angle for first segment, in radians.
+     * @param {number} [thetaLength=Math.PI*2] - The central angle, often called theta, of the circular sector, in radians.
+     * The default value results in a complete cylinder.
      */
     constructor(
         radiusTop?: number,
@@ -36,17 +43,12 @@ export class CylinderGeometry extends BufferGeometry {
         thetaStart?: number,
         thetaLength?: number,
     );
-
     /**
-     * A Read-only _string_ to check if `this` object type.
-     * @remarks Sub-classes will update this value.
-     * @defaultValue `CylinderGeometry`
-     */
-    override readonly type: string | "CylinderGeometry";
-
-    /**
-     * An object with a property for each of the constructor parameters.
-     * @remarks Any modification after instantiation does not change the geometry.
+     * Holds the constructor parameters that have been
+     * used to generate the geometry. Any modification
+     * after instantiation does not change the geometry.
+     *
+     * @type {Object}
      */
     readonly parameters: {
         readonly radiusTop: number;
@@ -58,7 +60,6 @@ export class CylinderGeometry extends BufferGeometry {
         readonly thetaStart: number;
         readonly thetaLength: number;
     };
-
-    /** @internal */
-    static fromJSON(data: any): CylinderGeometry;
+    copy(source: CylinderGeometry): this;
 }
+import { BufferGeometry } from "../core/BufferGeometry.js";

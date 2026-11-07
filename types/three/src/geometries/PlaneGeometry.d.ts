@@ -1,40 +1,40 @@
-import { BufferGeometry } from "../core/BufferGeometry.js";
-
 /**
- * A class for generating plane geometries.
- * @example
- * ```typescript
- * const geometry = new THREE.PlaneGeometry(1, 1);
- * const material = new THREE.MeshBasicMaterial({
- *     color: 0xffff00,
- *     side: THREE.DoubleSide
- * });
- * const plane = new THREE.Mesh(geometry, material);
- * scene.add(plane);
+ * A geometry class for representing a plane.
+ *
+ * ```js
+ * const geometry = new THREE.PlaneGeometry( 1, 1 );
+ * const material = new THREE.MeshBasicMaterial( { color: 0xffff00, side: THREE.DoubleSide } );
+ * const plane = new THREE.Mesh( geometry, material );
+ * scene.add( plane );
  * ```
- * @see {@link https://threejs.org/docs/index.html#api/en/geometries/PlaneGeometry | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/geometries/PlaneGeometry.js | Source}
+ *
+ * @augments BufferGeometry
+ * @demo scenes/geometry-browser.html#PlaneGeometry
  */
 export class PlaneGeometry extends BufferGeometry {
     /**
-     * Create a new instance of {@link PlaneGeometry}
-     * @param width Width along the X axis. Expects a `Float`. Default `1`
-     * @param height Height along the Y axis. Expects a `Float`. Default `1`
-     * @param widthSegments Number of segmented faces along the width of the sides. Expects a `Integer`. Default `1`
-     * @param heightSegments Number of segmented faces along the height of the sides. Expects a `Integer`. Default `1`
+     * Factory method for creating an instance of this class from the given
+     * JSON object.
+     *
+     * @param {Object} data - A JSON object representing the serialized geometry.
+     * @return {PlaneGeometry} A new instance.
+     */
+    static fromJSON(data: {}): PlaneGeometry;
+    /**
+     * Constructs a new plane geometry.
+     *
+     * @param {number} [width=1] - The width along the X axis.
+     * @param {number} [height=1] - The height along the Y axis
+     * @param {number} [widthSegments=1] - The number of segments along the X axis.
+     * @param {number} [heightSegments=1] - The number of segments along the Y axis.
      */
     constructor(width?: number, height?: number, widthSegments?: number, heightSegments?: number);
-
     /**
-     * A Read-only _string_ to check if `this` object type.
-     * @remarks Sub-classes will update this value.
-     * @defaultValue `PlaneGeometry`
-     */
-    override readonly type: string | "PlaneGeometry";
-
-    /**
-     * An object with a property for each of the constructor parameters.
-     * @remarks Any modification after instantiation does not change the geometry.
+     * Holds the constructor parameters that have been
+     * used to generate the geometry. Any modification
+     * after instantiation does not change the geometry.
+     *
+     * @type {Object}
      */
     readonly parameters: {
         readonly width: number;
@@ -42,7 +42,6 @@ export class PlaneGeometry extends BufferGeometry {
         readonly widthSegments: number;
         readonly heightSegments: number;
     };
-
-    /** @internal */
-    static fromJSON(data: {}): PlaneGeometry;
+    copy(source: PlaneGeometry): this;
 }
+import { BufferGeometry } from "../core/BufferGeometry.js";

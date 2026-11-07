@@ -1,41 +1,37 @@
-import { BufferGeometry } from "../core/BufferGeometry.js";
-
 /**
- * This can be used as a helper object to view the edges of a {@link THREE.BufferGeometry | geometry}.
- * @example
- * ```typescript
- * const geometry = new THREE.BoxGeometry(100, 100, 100);
- * const edges = new THREE.EdgesGeometry(geometry);
- * const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({
- *     color: 0xffffff
- * }));
- * scene.add(line);
+ * Can be used as a helper object to view the edges of a geometry.
+ *
+ * ```js
+ * const geometry = new THREE.BoxGeometry();
+ * const edges = new THREE.EdgesGeometry( geometry );
+ * const line = new THREE.LineSegments( edges );
+ * scene.add( line );
  * ```
- * @see Example: {@link https://threejs.org/examples/#webgl_helpers | helpers}
- * @see {@link https://threejs.org/docs/index.html#api/en/geometries/EdgesGeometry | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/geometries/EdgesGeometry.js | Source}
+ *
+ * Note: It is not yet possible to serialize/deserialize instances of this class.
+ *
+ * @augments BufferGeometry
  */
 export class EdgesGeometry<TBufferGeometry extends BufferGeometry = BufferGeometry> extends BufferGeometry {
     /**
-     * Create a new instance of {@link EdgesGeometry}
-     * @param geometry Any geometry object. Default `null`.
-     * @param thresholdAngle An edge is only rendered if the angle (in degrees) between the face normals of the adjoining faces exceeds this value. Expects a `Integer`. Default `1` _degree_.
+     * Constructs a new edges geometry.
+     *
+     * @param {?BufferGeometry} [geometry=null] - The geometry.
+     * @param {number} [thresholdAngle=1] - An edge is only rendered if the angle (in degrees)
+     * between the face normals of the adjoining faces exceeds this value.
      */
     constructor(geometry?: TBufferGeometry | null, thresholdAngle?: number);
-
     /**
-     * A Read-only _string_ to check if `this` object type.
-     * @remarks Sub-classes will update this value.
-     * @defaultValue `EdgesGeometry`
-     */
-    override readonly type: string | "EdgesGeometry";
-
-    /**
-     * An object with a property for each of the constructor parameters.
-     * @remarks Any modification after instantiation does not change the geometry.
+     * Holds the constructor parameters that have been
+     * used to generate the geometry. Any modification
+     * after instantiation does not change the geometry.
+     *
+     * @type {Object}
      */
     readonly parameters: {
         readonly geometry: TBufferGeometry | null;
         readonly thresholdAngle: number;
     };
+    copy(source: EdgesGeometry<TBufferGeometry>): this;
 }
+import { BufferGeometry } from "../core/BufferGeometry.js";

@@ -12121,6 +12121,699 @@ index 10e62e17d..24a16521c 100644
  }
 -import { Curve } from '../core/Curve.js';
 -import { Vector2 } from '../../math/Vector2.js';
+diff --git a/jsdoc-testing/jsdoc/src/geometries/BoxGeometry.d.ts b/jsdoc-testing/jsdoc/src/geometries/BoxGeometry.d.ts
+index 36fb50dad..bc750b63e 100644
+--- a/jsdoc-testing/jsdoc/src/geometries/BoxGeometry.d.ts
++++ b/jsdoc-testing/jsdoc/src/geometries/BoxGeometry.d.ts
+@@ -21,7 +21,7 @@ export class BoxGeometry extends BufferGeometry {
+      * @param {Object} data - A JSON object representing the serialized geometry.
+      * @return {BoxGeometry} A new instance.
+      */
+-    static fromJSON(data: Object): BoxGeometry;
++    static fromJSON(data: {}): BoxGeometry;
+     /**
+      * Constructs a new box geometry.
+      *
+@@ -40,7 +40,14 @@ export class BoxGeometry extends BufferGeometry {
+      *
+      * @type {Object}
+      */
+-    parameters: Object;
+-    copy(source: any): this;
++    readonly parameters: {
++        readonly width: number;
++        readonly height: number;
++        readonly depth: number;
++        readonly widthSegments: number;
++        readonly heightSegments: number;
++        readonly depthSegments: number;
++    };
++    copy(source: BoxGeometry): this;
+ }
+ import { BufferGeometry } from '../core/BufferGeometry.js';
+diff --git a/jsdoc-testing/jsdoc/src/geometries/CapsuleGeometry.d.ts b/jsdoc-testing/jsdoc/src/geometries/CapsuleGeometry.d.ts
+index 207ba310c..db46227e7 100644
+--- a/jsdoc-testing/jsdoc/src/geometries/CapsuleGeometry.d.ts
++++ b/jsdoc-testing/jsdoc/src/geometries/CapsuleGeometry.d.ts
+@@ -19,7 +19,7 @@ export class CapsuleGeometry extends BufferGeometry {
+      * @param {Object} data - A JSON object representing the serialized geometry.
+      * @return {CapsuleGeometry} A new instance.
+      */
+-    static fromJSON(data: Object): CapsuleGeometry;
++    static fromJSON(data: {}): CapsuleGeometry;
+     /**
+      * Constructs a new capsule geometry.
+      *
+@@ -37,7 +37,13 @@ export class CapsuleGeometry extends BufferGeometry {
+      *
+      * @type {Object}
+      */
+-    parameters: Object;
+-    copy(source: any): this;
++    readonly parameters: {
++        readonly radius: number;
++        readonly height: number;
++        readonly capSegments: number;
++        readonly radialSegments: number;
++        readonly heightSegments: number;
++    };
++    copy(source: CapsuleGeometry): this;
+ }
+ import { BufferGeometry } from '../core/BufferGeometry.js';
+diff --git a/jsdoc-testing/jsdoc/src/geometries/CircleGeometry.d.ts b/jsdoc-testing/jsdoc/src/geometries/CircleGeometry.d.ts
+index 964d89897..8b64473ca 100644
+--- a/jsdoc-testing/jsdoc/src/geometries/CircleGeometry.d.ts
++++ b/jsdoc-testing/jsdoc/src/geometries/CircleGeometry.d.ts
+@@ -24,7 +24,7 @@ export class CircleGeometry extends BufferGeometry {
+      * @param {Object} data - A JSON object representing the serialized geometry.
+      * @return {CircleGeometry} A new instance.
+      */
+-    static fromJSON(data: Object): CircleGeometry;
++    static fromJSON(data: {}): CircleGeometry;
+     /**
+      * Constructs a new circle geometry.
+      *
+@@ -42,7 +42,12 @@ export class CircleGeometry extends BufferGeometry {
+      *
+      * @type {Object}
+      */
+-    parameters: Object;
+-    copy(source: any): this;
++    readonly parameters: {
++        readonly radius: number;
++        readonly segments: number;
++        readonly thetaStart: number;
++        readonly thetaLength: number;
++    };
++    copy(source: CircleGeometry): this;
+ }
+ import { BufferGeometry } from '../core/BufferGeometry.js';
+diff --git a/jsdoc-testing/jsdoc/src/geometries/ConeGeometry.d.ts b/jsdoc-testing/jsdoc/src/geometries/ConeGeometry.d.ts
+index 0df48d532..4a7697a64 100644
+--- a/jsdoc-testing/jsdoc/src/geometries/ConeGeometry.d.ts
++++ b/jsdoc-testing/jsdoc/src/geometries/ConeGeometry.d.ts
+@@ -12,6 +12,14 @@
+  * @demo scenes/geometry-browser.html#ConeGeometry
+  */
+ export class ConeGeometry extends CylinderGeometry {
++    /**
++     * Factory method for creating an instance of this class from the given
++     * JSON object.
++     *
++     * @param {Object} data - A JSON object representing the serialized geometry.
++     * @return {ConeGeometry} A new instance.
++     */
++    static fromJSON(data: {}): ConeGeometry;
+     /**
+      * Constructs a new cone geometry.
+      *
+@@ -25,5 +33,23 @@ export class ConeGeometry extends CylinderGeometry {
+      * The default value results in a complete cone.
+      */
+     constructor(radius?: number, height?: number, radialSegments?: number, heightSegments?: number, openEnded?: boolean, thetaStart?: number, thetaLength?: number);
++    /**
++     * Holds the constructor parameters that have been
++     * used to generate the geometry. Any modification
++     * after instantiation does not change the geometry.
++     *
++     * @type {Object}
++     */
++    override readonly parameters: {
++        readonly radius: number;
++        readonly radiusTop: number;
++        readonly radiusBottom: number;
++        readonly height: number;
++        readonly radialSegments: number;
++        readonly heightSegments: number;
++        readonly openEnded: boolean;
++        readonly thetaStart: number;
++        readonly thetaLength: number;
++    };
+ }
+ import { CylinderGeometry } from './CylinderGeometry.js';
+diff --git a/jsdoc-testing/jsdoc/src/geometries/CylinderGeometry.d.ts b/jsdoc-testing/jsdoc/src/geometries/CylinderGeometry.d.ts
+index 6b28774bd..ae9f32657 100644
+--- a/jsdoc-testing/jsdoc/src/geometries/CylinderGeometry.d.ts
++++ b/jsdoc-testing/jsdoc/src/geometries/CylinderGeometry.d.ts
+@@ -19,7 +19,7 @@ export class CylinderGeometry extends BufferGeometry {
+      * @param {Object} data - A JSON object representing the serialized geometry.
+      * @return {CylinderGeometry} A new instance.
+      */
+-    static fromJSON(data: Object): CylinderGeometry;
++    static fromJSON(data: {}): CylinderGeometry;
+     /**
+      * Constructs a new cylinder geometry.
+      *
+@@ -41,7 +41,16 @@ export class CylinderGeometry extends BufferGeometry {
+      *
+      * @type {Object}
+      */
+-    parameters: Object;
+-    copy(source: any): this;
++    readonly parameters: {
++        readonly radiusTop: number;
++        readonly radiusBottom: number;
++        readonly height: number;
++        readonly radialSegments: number;
++        readonly heightSegments: number;
++        readonly openEnded: boolean;
++        readonly thetaStart: number;
++        readonly thetaLength: number;
++    };
++    copy(source: CylinderGeometry): this;
+ }
+ import { BufferGeometry } from '../core/BufferGeometry.js';
+diff --git a/jsdoc-testing/jsdoc/src/geometries/DodecahedronGeometry.d.ts b/jsdoc-testing/jsdoc/src/geometries/DodecahedronGeometry.d.ts
+index dd5a084d9..e8b7216d7 100644
+--- a/jsdoc-testing/jsdoc/src/geometries/DodecahedronGeometry.d.ts
++++ b/jsdoc-testing/jsdoc/src/geometries/DodecahedronGeometry.d.ts
+@@ -12,6 +12,14 @@
+  * @demo scenes/geometry-browser.html#DodecahedronGeometry
+  */
+ export class DodecahedronGeometry extends PolyhedronGeometry {
++    /**
++     * Factory method for creating an instance of this class from the given
++     * JSON object.
++     *
++     * @param {Object} data - A JSON object representing the serialized geometry.
++     * @return {DodecahedronGeometry} A new instance.
++     */
++    static fromJSON(data: {}): DodecahedronGeometry;
+     /**
+      * Constructs a new dodecahedron geometry.
+      *
+diff --git a/jsdoc-testing/jsdoc/src/geometries/EdgesGeometry.d.ts b/jsdoc-testing/jsdoc/src/geometries/EdgesGeometry.d.ts
+index e8a57e60b..eeb458e9c 100644
+--- a/jsdoc-testing/jsdoc/src/geometries/EdgesGeometry.d.ts
++++ b/jsdoc-testing/jsdoc/src/geometries/EdgesGeometry.d.ts
+@@ -12,7 +12,7 @@
+  *
+  * @augments BufferGeometry
+  */
+-export class EdgesGeometry extends BufferGeometry {
++export class EdgesGeometry<TBufferGeometry extends BufferGeometry = BufferGeometry> extends BufferGeometry {
+     /**
+      * Constructs a new edges geometry.
+      *
+@@ -20,7 +20,7 @@ export class EdgesGeometry extends BufferGeometry {
+      * @param {number} [thresholdAngle=1] - An edge is only rendered if the angle (in degrees)
+      * between the face normals of the adjoining faces exceeds this value.
+      */
+-    constructor(geometry?: BufferGeometry | null, thresholdAngle?: number);
++    constructor(geometry?: TBufferGeometry | null, thresholdAngle?: number);
+     /**
+      * Holds the constructor parameters that have been
+      * used to generate the geometry. Any modification
+@@ -28,7 +28,10 @@ export class EdgesGeometry extends BufferGeometry {
+      *
+      * @type {Object}
+      */
+-    parameters: Object;
+-    copy(source: any): this;
++    readonly parameters: {
++        readonly geometry: TBufferGeometry | null;
++        readonly thresholdAngle: number;
++    };
++    copy(source: EdgesGeometry<TBufferGeometry>): this;
+ }
+ import { BufferGeometry } from '../core/BufferGeometry.js';
+diff --git a/jsdoc-testing/jsdoc/src/geometries/ExtrudeGeometry.d.ts b/jsdoc-testing/jsdoc/src/geometries/ExtrudeGeometry.d.ts
+index 92ba6a8a5..ec30cb5c0 100644
+--- a/jsdoc-testing/jsdoc/src/geometries/ExtrudeGeometry.d.ts
++++ b/jsdoc-testing/jsdoc/src/geometries/ExtrudeGeometry.d.ts
+@@ -1,7 +1,4 @@
+-/**
+- * ~Options
+- */
+-export type ExtrudeGeometry = {
++export interface ExtrudeGeometryOptions {
+     /**
+      * - Number of points on the curves.
+      */
+@@ -37,12 +34,31 @@ export type ExtrudeGeometry = {
+     /**
+      * - A 3D spline path along which the shape should be extruded. Bevels not supported for path extrusion.
+      */
+-    extrudePath?: Curve | null;
++    extrudePath?: Curve<Vector3> | undefined;
+     /**
+      * - An object that provides UV generator functions for custom UV generation.
+      */
+-    UVGenerator?: Object | undefined;
+-};
++    UVGenerator?: UVGenerator | undefined;
++}
++
++export interface UVGenerator {
++    generateTopUV(
++        geometry: ExtrudeGeometry,
++        vertices: number[],
++        indexA: number,
++        indexB: number,
++        indexC: number,
++    ): Vector2[];
++    generateSideWallUV(
++        geometry: ExtrudeGeometry,
++        vertices: number[],
++        indexA: number,
++        indexB: number,
++        indexC: number,
++        indexD: number,
++    ): Vector2[];
++}
++
+ /**
+  * Creates extruded geometry from a path shape.
+  *
+@@ -74,14 +90,14 @@ export class ExtrudeGeometry extends BufferGeometry {
+      * @param {Array<Shape>} shapes - An array of shapes.
+      * @return {ExtrudeGeometry} A new instance.
+      */
+-    static fromJSON(data: Object, shapes: Array<Shape>): ExtrudeGeometry;
++    static fromJSON(data: {}, shapes: Array<Shape>): ExtrudeGeometry;
+     /**
+      * Constructs a new extrude geometry.
+      *
+      * @param {Shape|Array<Shape>} [shapes] - A shape or an array of shapes.
+      * @param {ExtrudeGeometry~Options} [options] - The extrude settings.
+      */
+-    constructor(shapes?: Shape | Array<Shape>, options?: {});
++    constructor(shapes?: Shape | Array<Shape>, options?: ExtrudeGeometryOptions);
+     /**
+      * Holds the constructor parameters that have been
+      * used to generate the geometry. Any modification
+@@ -89,9 +105,14 @@ export class ExtrudeGeometry extends BufferGeometry {
+      *
+      * @type {Object}
+      */
+-    parameters: Object;
+-    copy(source: any): this;
+-    toJSON(): any;
++    readonly parameters: {
++        readonly shapes: Shape | Shape[];
++        readonly options: ExtrudeGeometryOptions;
++    };
++    copy(source: ExtrudeGeometry): this;
+ }
+ import { BufferGeometry } from '../core/BufferGeometry.js';
++import { Curve } from '../extras/core/Curve.js';
+ import { Shape } from '../extras/core/Shape.js';
++import { Vector2 } from '../math/Vector2.js';
++import { Vector3 } from '../math/Vector3.js';
+diff --git a/jsdoc-testing/jsdoc/src/geometries/IcosahedronGeometry.d.ts b/jsdoc-testing/jsdoc/src/geometries/IcosahedronGeometry.d.ts
+index fb50e77df..f08de1905 100644
+--- a/jsdoc-testing/jsdoc/src/geometries/IcosahedronGeometry.d.ts
++++ b/jsdoc-testing/jsdoc/src/geometries/IcosahedronGeometry.d.ts
+@@ -12,6 +12,14 @@
+  * @demo scenes/geometry-browser.html#IcosahedronGeometry
+  */
+ export class IcosahedronGeometry extends PolyhedronGeometry {
++    /**
++     * Factory method for creating an instance of this class from the given
++     * JSON object.
++     *
++     * @param {Object} data - A JSON object representing the serialized geometry.
++     * @return {IcosahedronGeometry} A new instance.
++     */
++    static fromJSON(data: {}): IcosahedronGeometry;
+     /**
+      * Constructs a new icosahedron geometry.
+      *
+diff --git a/jsdoc-testing/jsdoc/src/geometries/LatheGeometry.d.ts b/jsdoc-testing/jsdoc/src/geometries/LatheGeometry.d.ts
+index cce939fca..e6674d79c 100644
+--- a/jsdoc-testing/jsdoc/src/geometries/LatheGeometry.d.ts
++++ b/jsdoc-testing/jsdoc/src/geometries/LatheGeometry.d.ts
+@@ -23,7 +23,7 @@ export class LatheGeometry extends BufferGeometry {
+      * @param {Object} data - A JSON object representing the serialized geometry.
+      * @return {LatheGeometry} A new instance.
+      */
+-    static fromJSON(data: Object): LatheGeometry;
++    static fromJSON(data: {}): LatheGeometry;
+     /**
+      * Constructs a new lathe geometry.
+      *
+@@ -34,7 +34,7 @@ export class LatheGeometry extends BufferGeometry {
+      * @param {number} [phiLength=Math.PI*2] - The radian (0 to 2PI) range of the lathed section 2PI is a
+      * closed lathe, less than 2PI is a portion.
+      */
+-    constructor(points?: Array<Vector2 | Vector3>, segments?: number, phiStart?: number, phiLength?: number);
++    constructor(points?: Vector2[], segments?: number, phiStart?: number, phiLength?: number);
+     /**
+      * Holds the constructor parameters that have been
+      * used to generate the geometry. Any modification
+@@ -42,9 +42,13 @@ export class LatheGeometry extends BufferGeometry {
+      *
+      * @type {Object}
+      */
+-    parameters: Object;
+-    copy(source: any): this;
++    readonly parameters: {
++        readonly points: Vector2[];
++        readonly segments: number;
++        readonly phiStart: number;
++        readonly phiLength: number;
++    };
++    copy(source: LatheGeometry): this;
+ }
+ import { BufferGeometry } from '../core/BufferGeometry.js';
+ import { Vector2 } from '../math/Vector2.js';
+-import { Vector3 } from '../math/Vector3.js';
+diff --git a/jsdoc-testing/jsdoc/src/geometries/OctahedronGeometry.d.ts b/jsdoc-testing/jsdoc/src/geometries/OctahedronGeometry.d.ts
+index d61fe28a2..ea6881985 100644
+--- a/jsdoc-testing/jsdoc/src/geometries/OctahedronGeometry.d.ts
++++ b/jsdoc-testing/jsdoc/src/geometries/OctahedronGeometry.d.ts
+@@ -12,6 +12,14 @@
+  * @demo scenes/geometry-browser.html#OctahedronGeometry
+  */
+ export class OctahedronGeometry extends PolyhedronGeometry {
++    /**
++     * Factory method for creating an instance of this class from the given
++     * JSON object.
++     *
++     * @param {Object} data - A JSON object representing the serialized geometry.
++     * @return {OctahedronGeometry} A new instance.
++     */
++    static fromJSON(data: {}): OctahedronGeometry;
+     /**
+      * Constructs a new octahedron geometry.
+      *
+diff --git a/jsdoc-testing/jsdoc/src/geometries/PlaneGeometry.d.ts b/jsdoc-testing/jsdoc/src/geometries/PlaneGeometry.d.ts
+index d75a367ea..cb37b5dcb 100644
+--- a/jsdoc-testing/jsdoc/src/geometries/PlaneGeometry.d.ts
++++ b/jsdoc-testing/jsdoc/src/geometries/PlaneGeometry.d.ts
+@@ -19,7 +19,7 @@ export class PlaneGeometry extends BufferGeometry {
+      * @param {Object} data - A JSON object representing the serialized geometry.
+      * @return {PlaneGeometry} A new instance.
+      */
+-    static fromJSON(data: Object): PlaneGeometry;
++    static fromJSON(data: {}): PlaneGeometry;
+     /**
+      * Constructs a new plane geometry.
+      *
+@@ -36,7 +36,12 @@ export class PlaneGeometry extends BufferGeometry {
+      *
+      * @type {Object}
+      */
+-    parameters: Object;
+-    copy(source: any): this;
++    readonly parameters: {
++        readonly width: number;
++        readonly height: number;
++        readonly widthSegments: number;
++        readonly heightSegments: number;
++    };
++    copy(source: PlaneGeometry): this;
+ }
+ import { BufferGeometry } from '../core/BufferGeometry.js';
+diff --git a/jsdoc-testing/jsdoc/src/geometries/PolyhedronGeometry.d.ts b/jsdoc-testing/jsdoc/src/geometries/PolyhedronGeometry.d.ts
+index c0ef0437c..3a1bf3eb5 100644
+--- a/jsdoc-testing/jsdoc/src/geometries/PolyhedronGeometry.d.ts
++++ b/jsdoc-testing/jsdoc/src/geometries/PolyhedronGeometry.d.ts
+@@ -13,7 +13,7 @@ export class PolyhedronGeometry extends BufferGeometry {
+      * @param {Object} data - A JSON object representing the serialized geometry.
+      * @return {PolyhedronGeometry} A new instance.
+      */
+-    static fromJSON(data: Object): PolyhedronGeometry;
++    static fromJSON(data: {}): PolyhedronGeometry;
+     /**
+      * Constructs a new polyhedron geometry.
+      *
+@@ -30,7 +30,12 @@ export class PolyhedronGeometry extends BufferGeometry {
+      *
+      * @type {Object}
+      */
+-    parameters: Object;
+-    copy(source: any): this;
++    readonly parameters: {
++        readonly vertices: number[];
++        readonly indices: number[];
++        readonly radius: number;
++        readonly detail: number;
++    };
++    copy(source: PolyhedronGeometry): this;
+ }
+ import { BufferGeometry } from '../core/BufferGeometry.js';
+diff --git a/jsdoc-testing/jsdoc/src/geometries/RingGeometry.d.ts b/jsdoc-testing/jsdoc/src/geometries/RingGeometry.d.ts
+index 3d54a0d1a..31a57b5bd 100644
+--- a/jsdoc-testing/jsdoc/src/geometries/RingGeometry.d.ts
++++ b/jsdoc-testing/jsdoc/src/geometries/RingGeometry.d.ts
+@@ -19,7 +19,7 @@ export class RingGeometry extends BufferGeometry {
+      * @param {Object} data - A JSON object representing the serialized geometry.
+      * @return {RingGeometry} A new instance.
+      */
+-    static fromJSON(data: Object): RingGeometry;
++    static fromJSON(data: {}): RingGeometry;
+     /**
+      * Constructs a new ring geometry.
+      *
+@@ -38,7 +38,14 @@ export class RingGeometry extends BufferGeometry {
+      *
+      * @type {Object}
+      */
+-    parameters: Object;
+-    copy(source: any): this;
++    readonly parameters: {
++        readonly innerRadius: number;
++        readonly outerRadius: number;
++        readonly thetaSegments: number;
++        readonly phiSegments: number;
++        readonly thetaStart: number;
++        readonly thetaLength: number;
++    };
++    copy(source: RingGeometry): this;
+ }
+ import { BufferGeometry } from '../core/BufferGeometry.js';
+diff --git a/jsdoc-testing/jsdoc/src/geometries/ShapeGeometry.d.ts b/jsdoc-testing/jsdoc/src/geometries/ShapeGeometry.d.ts
+index 335290e14..fc6afb1a7 100644
+--- a/jsdoc-testing/jsdoc/src/geometries/ShapeGeometry.d.ts
++++ b/jsdoc-testing/jsdoc/src/geometries/ShapeGeometry.d.ts
+@@ -24,7 +24,7 @@ export class ShapeGeometry extends BufferGeometry {
+      * @param {Array<Shape>} shapes - An array of shapes.
+      * @return {ShapeGeometry} A new instance.
+      */
+-    static fromJSON(data: Object, shapes: Array<Shape>): ShapeGeometry;
++    static fromJSON(data: {}, shapes: Array<Shape>): ShapeGeometry;
+     /**
+      * Constructs a new shape geometry.
+      *
+@@ -39,9 +39,11 @@ export class ShapeGeometry extends BufferGeometry {
+      *
+      * @type {Object}
+      */
+-    parameters: Object;
+-    copy(source: any): this;
+-    toJSON(): any;
++    readonly parameters: {
++        readonly shapes: Shape | Shape[];
++        readonly curveSegments: number;
++    };
++    copy(source: ShapeGeometry): this;
+ }
+ import { BufferGeometry } from '../core/BufferGeometry.js';
+ import { Shape } from '../extras/core/Shape.js';
+diff --git a/jsdoc-testing/jsdoc/src/geometries/SphereGeometry.d.ts b/jsdoc-testing/jsdoc/src/geometries/SphereGeometry.d.ts
+index b150fa7df..2120e85fd 100644
+--- a/jsdoc-testing/jsdoc/src/geometries/SphereGeometry.d.ts
++++ b/jsdoc-testing/jsdoc/src/geometries/SphereGeometry.d.ts
+@@ -19,7 +19,7 @@ export class SphereGeometry extends BufferGeometry {
+      * @param {Object} data - A JSON object representing the serialized geometry.
+      * @return {SphereGeometry} A new instance.
+      */
+-    static fromJSON(data: Object): SphereGeometry;
++    static fromJSON(data: {}): SphereGeometry;
+     /**
+      * Constructs a new sphere geometry.
+      *
+@@ -39,7 +39,15 @@ export class SphereGeometry extends BufferGeometry {
+      *
+      * @type {Object}
+      */
+-    parameters: Object;
+-    copy(source: any): this;
++    readonly parameters: {
++        readonly radius: number;
++        readonly widthSegments: number;
++        readonly heightSegments: number;
++        readonly phiStart: number;
++        readonly phiLength: number;
++        readonly thetaStart: number;
++        readonly thetaLength: number;
++    };
++    copy(source: SphereGeometry): this;
+ }
+ import { BufferGeometry } from '../core/BufferGeometry.js';
+diff --git a/jsdoc-testing/jsdoc/src/geometries/TetrahedronGeometry.d.ts b/jsdoc-testing/jsdoc/src/geometries/TetrahedronGeometry.d.ts
+index 20b8cc1f3..cc9a8bbe7 100644
+--- a/jsdoc-testing/jsdoc/src/geometries/TetrahedronGeometry.d.ts
++++ b/jsdoc-testing/jsdoc/src/geometries/TetrahedronGeometry.d.ts
+@@ -12,6 +12,14 @@
+  * @demo scenes/geometry-browser.html#TetrahedronGeometry
+  */
+ export class TetrahedronGeometry extends PolyhedronGeometry {
++    /**
++     * Factory method for creating an instance of this class from the given
++     * JSON object.
++     *
++     * @param {Object} data - A JSON object representing the serialized geometry.
++     * @return {TetrahedronGeometry} A new instance.
++     */
++    static fromJSON(data: {}): TetrahedronGeometry;
+     /**
+      * Constructs a new tetrahedron geometry.
+      *
+diff --git a/jsdoc-testing/jsdoc/src/geometries/TorusGeometry.d.ts b/jsdoc-testing/jsdoc/src/geometries/TorusGeometry.d.ts
+index cb545919c..305fe1264 100644
+--- a/jsdoc-testing/jsdoc/src/geometries/TorusGeometry.d.ts
++++ b/jsdoc-testing/jsdoc/src/geometries/TorusGeometry.d.ts
+@@ -1,3 +1,13 @@
++export interface TorusGeometryJSON {
++    radius: number;
++    tube: number;
++    radialSegments: number;
++    tubularSegments: number;
++    arc: number;
++    thetaStart: number;
++    thetaLength: number;
++}
++
+ /**
+  * A geometry class for representing an torus.
+  *
+@@ -19,7 +29,7 @@ export class TorusGeometry extends BufferGeometry {
+      * @param {Object} data - A JSON object representing the serialized geometry.
+      * @return {TorusGeometry} A new instance.
+      */
+-    static fromJSON(data: Object): TorusGeometry;
++    static fromJSON(data: TorusGeometryJSON): TorusGeometry;
+     /**
+      * Constructs a new torus geometry.
+      *
+@@ -39,7 +49,15 @@ export class TorusGeometry extends BufferGeometry {
+      *
+      * @type {Object}
+      */
+-    parameters: Object;
+-    copy(source: any): this;
++    readonly parameters: {
++        readonly radius: number;
++        readonly tube: number;
++        readonly radialSegments: number;
++        readonly tubularSegments: number;
++        readonly arc: number;
++        readonly thetaStart: number;
++        readonly thetaLength: number;
++    };
++    copy(source: TorusGeometry): this;
+ }
+ import { BufferGeometry } from '../core/BufferGeometry.js';
+diff --git a/jsdoc-testing/jsdoc/src/geometries/TorusKnotGeometry.d.ts b/jsdoc-testing/jsdoc/src/geometries/TorusKnotGeometry.d.ts
+index 5f7272dfe..d8a2ddd17 100644
+--- a/jsdoc-testing/jsdoc/src/geometries/TorusKnotGeometry.d.ts
++++ b/jsdoc-testing/jsdoc/src/geometries/TorusKnotGeometry.d.ts
+@@ -21,7 +21,7 @@ export class TorusKnotGeometry extends BufferGeometry {
+      * @param {Object} data - A JSON object representing the serialized geometry.
+      * @return {TorusKnotGeometry} A new instance.
+      */
+-    static fromJSON(data: Object): TorusKnotGeometry;
++    static fromJSON(data: {}): TorusKnotGeometry;
+     /**
+      * Constructs a new torus knot geometry.
+      *
+@@ -40,7 +40,14 @@ export class TorusKnotGeometry extends BufferGeometry {
+      *
+      * @type {Object}
+      */
+-    parameters: Object;
+-    copy(source: any): this;
++    readonly parameters: {
++        readonly radius: number;
++        readonly tube: number;
++        readonly tubularSegments: number;
++        readonly radialSegments: number;
++        readonly p: number;
++        readonly q: number;
++    };
++    copy(source: TorusKnotGeometry): this;
+ }
+ import { BufferGeometry } from '../core/BufferGeometry.js';
+diff --git a/jsdoc-testing/jsdoc/src/geometries/TubeGeometry.d.ts b/jsdoc-testing/jsdoc/src/geometries/TubeGeometry.d.ts
+index f34277010..2db48ab46 100644
+--- a/jsdoc-testing/jsdoc/src/geometries/TubeGeometry.d.ts
++++ b/jsdoc-testing/jsdoc/src/geometries/TubeGeometry.d.ts
+@@ -33,7 +33,7 @@ export class TubeGeometry extends BufferGeometry {
+      * @param {Object} data - A JSON object representing the serialized geometry.
+      * @return {TubeGeometry} A new instance.
+      */
+-    static fromJSON(data: Object): TubeGeometry;
++    static fromJSON(data: {}): TubeGeometry;
+     /**
+      * Constructs a new tube geometry.
+      *
+@@ -43,7 +43,7 @@ export class TubeGeometry extends BufferGeometry {
+      * @param {number} [radialSegments=8] - The number of segments that make up the cross-section.
+      * @param {boolean} [closed=false] - Whether the tube is closed or not.
+      */
+-    constructor(path?: Curve, tubularSegments?: number, radius?: number, radialSegments?: number, closed?: boolean);
++    constructor(path?: Curve<Vector3>, tubularSegments?: number, radius?: number, radialSegments?: number, closed?: boolean);
+     /**
+      * Holds the constructor parameters that have been
+      * used to generate the geometry. Any modification
+@@ -51,10 +51,18 @@ export class TubeGeometry extends BufferGeometry {
+      *
+      * @type {Object}
+      */
+-    parameters: Object;
+-    tangents: any;
+-    normals: any;
+-    binormals: any;
+-    copy(source: any): this;
++    readonly parameters: {
++        readonly path: Curve<Vector3>;
++        readonly tubularSegments: number;
++        readonly radius: number;
++        readonly radialSegments: number;
++        readonly closed: boolean;
++    };
++    tangents: Vector3[];
++    normals: Vector3[];
++    binormals: Vector3[];
++    copy(source: TubeGeometry): this;
+ }
+ import { BufferGeometry } from '../core/BufferGeometry.js';
++import { Curve } from '../extras/core/Curve.js';
++import { Vector3 } from '../math/Vector3.js';
+diff --git a/jsdoc-testing/jsdoc/src/geometries/WireframeGeometry.d.ts b/jsdoc-testing/jsdoc/src/geometries/WireframeGeometry.d.ts
+index 39f9908ab..ec30d87be 100644
+--- a/jsdoc-testing/jsdoc/src/geometries/WireframeGeometry.d.ts
++++ b/jsdoc-testing/jsdoc/src/geometries/WireframeGeometry.d.ts
+@@ -18,13 +18,13 @@
+  *
+  * @augments BufferGeometry
+  */
+-export class WireframeGeometry extends BufferGeometry {
++export class WireframeGeometry<TBufferGeometry extends BufferGeometry = BufferGeometry> extends BufferGeometry {
+     /**
+      * Constructs a new wireframe geometry.
+      *
+      * @param {?BufferGeometry} [geometry=null] - The geometry.
+      */
+-    constructor(geometry?: BufferGeometry | null);
++    constructor(geometry?: TBufferGeometry | null);
+     /**
+      * Holds the constructor parameters that have been
+      * used to generate the geometry. Any modification
+@@ -32,7 +32,9 @@ export class WireframeGeometry extends BufferGeometry {
+      *
+      * @type {Object}
+      */
+-    parameters: Object;
+-    copy(source: any): this;
++    readonly parameters: {
++        readonly geometry: TBufferGeometry | null;
++    };
++    copy(source: WireframeGeometry<TBufferGeometry>): this;
+ }
+ import { BufferGeometry } from '../core/BufferGeometry.js';
 diff --git a/jsdoc-testing/jsdoc/src/helpers/ArrowHelper.d.ts b/jsdoc-testing/jsdoc/src/helpers/ArrowHelper.d.ts
 index c4ee0cb4f..d14d62040 100644
 --- a/jsdoc-testing/jsdoc/src/helpers/ArrowHelper.d.ts

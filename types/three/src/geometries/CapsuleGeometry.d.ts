@@ -1,28 +1,33 @@
-import { BufferGeometry } from "../core/BufferGeometry.js";
-
 /**
- * {@link CapsuleGeometry} is a geometry class for a capsule with given radii and height
- * @remarks It is constructed using a lathe.
- * @example
- * ```typescript
- * const geometry = new THREE.CapsuleGeometry(1, 1, 4, 8);
- * const material = new THREE.MeshBasicMaterial({
- *     color: 0x00ff00
- * });
- * const capsule = new THREE.Mesh(geometry, material);
- * scene.add(capsule);
+ * A geometry class for representing a capsule.
+ *
+ * ```js
+ * const geometry = new THREE.CapsuleGeometry( 1, 1, 4, 8, 1 );
+ * const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+ * const capsule = new THREE.Mesh( geometry, material );
+ * scene.add( capsule );
  * ```
- * @see {@link https://threejs.org/docs/index.html#api/en/geometries/CapsuleGeometry | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/geometries/CapsuleGeometry.js | Source}
+ *
+ * @augments BufferGeometry
+ * @demo scenes/geometry-browser.html#CapsuleGeometry
  */
 export class CapsuleGeometry extends BufferGeometry {
     /**
-     * Create a new instance of {@link CapsuleGeometry}
-     * @param radius Radius of the capsule. Expects a `Float`. Default `1`
-     * @param height Height of the middle section. Expects a `Float`. Default `1`
-     * @param capSegments Number of curve segments used to build the caps. Expects a `Integer`. Default `4`
-     * @param radialSegments Number of segmented faces around the circumference of the capsule. Expects a `Integer`. Default `8`
-     * @param heightSegments Number of rows of faces along the height of the capsule. Optional; defaults to `1`.
+     * Factory method for creating an instance of this class from the given
+     * JSON object.
+     *
+     * @param {Object} data - A JSON object representing the serialized geometry.
+     * @return {CapsuleGeometry} A new instance.
+     */
+    static fromJSON(data: {}): CapsuleGeometry;
+    /**
+     * Constructs a new capsule geometry.
+     *
+     * @param {number} [radius=1] - Radius of the capsule.
+     * @param {number} [height=1] - Height of the middle section.
+     * @param {number} [capSegments=4] - Number of curve segments used to build each cap.
+     * @param {number} [radialSegments=8] - Number of segmented faces around the circumference of the capsule. Must be an integer >= 3.
+     * @param {number} [heightSegments=1] - Number of rows of faces along the height of the middle section. Must be an integer >= 1.
      */
     constructor(
         radius?: number,
@@ -31,17 +36,12 @@ export class CapsuleGeometry extends BufferGeometry {
         radialSegments?: number,
         heightSegments?: number,
     );
-
     /**
-     * A Read-only _string_ to check if `this` object type.
-     * @remarks Sub-classes will update this value.
-     * @defaultValue `CapsuleGeometry`
-     */
-    override readonly type: string | "CapsuleGeometry";
-
-    /**
-     * An object with a property for each of the constructor parameters.
-     * @remarks Any modification after instantiation does not change the geometry.
+     * Holds the constructor parameters that have been
+     * used to generate the geometry. Any modification
+     * after instantiation does not change the geometry.
+     *
+     * @type {Object}
      */
     readonly parameters: {
         readonly radius: number;
@@ -50,7 +50,6 @@ export class CapsuleGeometry extends BufferGeometry {
         readonly radialSegments: number;
         readonly heightSegments: number;
     };
-
-    /** @internal */
-    static fromJSON(data: {}): CapsuleGeometry;
+    copy(source: CapsuleGeometry): this;
 }
+import { BufferGeometry } from "../core/BufferGeometry.js";
