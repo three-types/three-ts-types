@@ -1,6 +1,7 @@
 import { BindMode } from "../constants.js";
 import { BufferGeometry } from "../core/BufferGeometry.js";
 import { JSONMeta, Object3DEventMap } from "../core/Object3D.js";
+import { Intersection, Raycaster } from "../core/Raycaster.js";
 import { Material } from "../materials/Material.js";
 import { Box3 } from "../math/Box3.js";
 import { Matrix4, Matrix4Tuple } from "../math/Matrix4.js";
@@ -21,41 +22,18 @@ export interface SkinnedMeshJSON extends MeshJSON {
 }
 
 /**
- * A mesh that has a {@link THREE.Skeleton | Skeleton} with {@link Bone | bones} that can then be used to animate the vertices of the geometry.
- * @example
- * ```typescript
- * const geometry = new THREE.CylinderGeometry(5, 5, 5, 5, 15, 5, 30);
- * // create the skin indices and skin weights manually
- * // (typically a loader would read this data from a 3D model for you)
- * const position = geometry.attributes.position;
- * const vertex = new THREE.Vector3();
- * const skinIndices = [];
- * const skinWeights = [];
- * for (let i = 0; i & lt; position.count; i++) {
- *     vertex.fromBufferAttribute(position, i);
- *     // compute skinIndex and skinWeight based on some configuration data
- *     const y = (vertex.y + sizing.halfHeight);
- *     const skinIndex = Math.floor(y / sizing.segmentHeight);
- *     const skinWeight = (y % sizing.segmentHeight) / sizing.segmentHeight;
- *     skinIndices.push(skinIndex, skinIndex + 1, 0, 0);
- *     skinWeights.push(1 - skinWeight, skinWeight, 0, 0);
- * }
- * geometry.setAttribute('skinIndex', new THREE.Uint16BufferAttribute(skinIndices, 4));
- * geometry.setAttribute('skinWeight', new THREE.Float32BufferAttribute(skinWeights, 4));
- * // create skinned mesh and skeleton
- * const mesh = new THREE.SkinnedMesh(geometry, material);
- * const skeleton = new THREE.Skeleton(bones);
- * // see example from THREE.Skeleton
- * const rootBone = skeleton.bones[0];
- * mesh.add(rootBone);
- * // bind the skeleton to the mesh
- * mesh.bind(skeleton);
- * // move the bones and manipulate the model
- * skeleton.bones[0].rotation.x = -0.1;
- * skeleton.bones[1].rotation.x = 0.2;
- * ```
- * @see {@link https://threejs.org/docs/index.html#api/en/objects/SkinnedMesh | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/objects/SkinnedMesh.js | Source}
+ * A mesh that has a {@link Skeleton} that can then be used to animate the
+ * vertices of the geometry with skinning/skeleton animation.
+ *
+ * Next to a valid skeleton, the skinned mesh requires skin indices and weights
+ * as buffer attributes in its geometry. These attribute define which bones affect a single
+ * vertex to a certain extend.
+ *
+ * Typically skinned meshes are not created manually but loaders like {@link GLTFLoader}
+ * or {@link FBXLoader } import respective models.
+ *
+ * @augments Mesh
+ * @demo scenes/bones-browser.html
  */
 export class SkinnedMesh<
     TGeometry extends BufferGeometry = BufferGeometry,
@@ -63,101 +41,102 @@ export class SkinnedMesh<
     TEventMap extends Object3DEventMap = Object3DEventMap,
 > extends Mesh<TGeometry, TMaterial, TEventMap> {
     /**
-     * Create a new instance of {@link SkinnedMesh}
-     * @param geometry An instance of {@link THREE.BufferGeometry | BufferGeometry}. Default {@link THREE.BufferGeometry | `new THREE.BufferGeometry()`}.
-     * @param material A single or an array of {@link THREE.Material | Material}. Default {@link THREE.MeshBasicMaterial | `new THREE.MeshBasicMaterial()`}.
+     * Constructs a new skinned mesh.
+     *
+     * @param {BufferGeometry} [geometry] - The mesh geometry.
+     * @param {Material|Array<Material>} [material] - The mesh material.
      */
-    constructor(geometry?: TGeometry, material?: TMaterial, useVertexTexture?: boolean);
-
+    constructor(geometry?: TGeometry, material?: TMaterial);
     /**
-     * Read-only flag to check if a given object is of type {@link SkinnedMesh}.
-     * @remarks This is a _constant_ value
-     * @defaultValue `true`
+     * This flag can be used for type testing.
+     *
+     * @type {boolean}
+     * @readonly
+     * @default true
      */
     readonly isSkinnedMesh: true;
-
     /**
-     * @override
-     * @defaultValue `SkinnedMesh`
-     */
-    override readonly type: string | "SkinnedMesh";
-
-    /**
-     * Either {@link AttachedBindMode} or {@link DetachedBindMode}. {@link AttachedBindMode} means the skinned mesh
-     * shares the same world space as the skeleton. This is not true when using {@link DetachedBindMode} which is useful
-     * when sharing a skeleton across multiple skinned meshes.
-     * @defaultValue `AttachedBindMode`
+     * `AttachedBindMode` means the skinned mesh shares the same world space as the skeleton.
+     * This is not true when using `DetachedBindMode` which is useful when sharing a skeleton
+     * across multiple skinned meshes.
+     *
+     * @type {(AttachedBindMode|DetachedBindMode)}
+     * @default AttachedBindMode
      */
     bindMode: BindMode;
-
     /**
      * The base matrix that is used for the bound bone transforms.
+     *
+     * @type {Matrix4}
      */
     bindMatrix: Matrix4;
     /**
      * The base matrix that is used for resetting the bound bone transforms.
+     *
+     * @type {Matrix4}
      */
     bindMatrixInverse: Matrix4;
-
     /**
-     * The bounding box of the SkinnedMesh. Can be calculated with {@link computeBoundingBox | .computeBoundingBox()}.
-     * @default `null`
+     * The bounding box of the skinned mesh. Can be computed via {@link SkinnedMesh#computeBoundingBox}.
+     *
+     * @type {?Box3}
+     * @default null
      */
-    boundingBox: Box3;
-
+    boundingBox: Box3 | null;
     /**
-     * The bounding box of the SkinnedMesh. Can be calculated with {@link computeBoundingSphere | .computeBoundingSphere()}.
-     * @default `null`
+     * The bounding sphere of the skinned mesh. Can be computed via {@link SkinnedMesh#computeBoundingSphere}.
+     *
+     * @type {?Sphere}
+     * @default null
      */
-    boundingSphere: Sphere;
-
+    boundingSphere: Sphere | null;
     /**
-     * {@link THREE.Skeleton | Skeleton} representing the bone hierarchy of the skinned mesh.
-     */
-    skeleton: Skeleton;
-
-    /**
-     * Bind a skeleton to the skinned mesh
-     * @remarks
-     * The bindMatrix gets saved to .bindMatrix property and the .bindMatrixInverse gets calculated.
-     * @param skeleton {@link THREE.Skeleton | Skeleton} created from a {@link Bone | Bones} tree.
-     * @param bindMatrix {@link THREE.Matrix4 | Matrix4} that represents the base transform of the skeleton.
-     */
-    bind(skeleton: Skeleton, bindMatrix?: Matrix4): void;
-
-    /**
-     * Computes the bounding box of the skinned mesh, and updates the {@link .boundingBox} attribute. The bounding box
-     * is not computed by the engine; it must be computed by your app. If the skinned mesh is animated, the bounding box
-     * should be recomputed per frame.
+     * Computes the bounding box of the skinned mesh, and updates {@link SkinnedMesh#boundingBox}.
+     * The bounding box is not automatically computed by the engine; this method must be called by your app.
+     * If the skinned mesh is animated, the bounding box should be recomputed per frame in order to reflect
+     * the current animation state.
      */
     computeBoundingBox(): void;
-
     /**
-     * Computes the bounding sphere of the skinned mesh, and updates the {@link .boundingSphere} attribute. The bounding
-     * sphere is automatically computed by the engine when it is needed, e.g., for ray casting and view frustum culling.
-     * If the skinned mesh is animated, the bounding sphere should be recomputed per frame.
+     * Computes the bounding sphere of the skinned mesh, and updates {@link SkinnedMesh#boundingSphere}.
+     * The bounding sphere is automatically computed by the engine once when it is needed, e.g., for ray casting
+     * and view frustum culling. If the skinned mesh is animated, the bounding sphere should be recomputed
+     * per frame in order to reflect the current animation state.
      */
     computeBoundingSphere(): void;
-
+    copy(source: SkinnedMesh, recursive?: boolean): this;
+    skeleton: Skeleton;
+    raycast(raycaster: Raycaster, intersects: Intersection[]): void;
+    getVertexPosition(index: number, target: Vector3): Vector3;
     /**
-     * This method sets the skinned mesh in the rest pose (resets the pose).
+     * Binds the given skeleton to the skinned mesh.
+     *
+     * @param {Skeleton} skeleton - The skeleton to bind.
+     * @param {Matrix4} [bindMatrix] - The bind matrix. If no bind matrix is provided,
+     * the skinned mesh's world matrix will be used instead.
+     */
+    bind(skeleton: Skeleton, bindMatrix?: Matrix4): void;
+    /**
+     * This method sets the skinned mesh in the rest pose).
      */
     pose(): void;
-
     /**
-     * Normalizes the skin weights.
+     * Normalizes the skin weights which are defined as a buffer attribute
+     * in the skinned mesh's geometry.
      */
     normalizeSkinWeights(): void;
-
+    updateMatrixWorld(force?: boolean): void;
     /**
-     * Applies the bone transform associated with the given index to the given position vector
-     * @remarks Returns the updated vector.
-     * @param index Expects a `Integer`
-     * @param vector
+     * Applies the bone transform associated with the given index to the given
+     * vector. Can be used to transform positions or direction vectors by providing
+     * a Vector4 with 1 or 0 in the w component respectively. Returns the updated vector.
+     *
+     * @param {number} index - The vertex index.
+     * @param {Vector3|Vector4} target - The target object that is used to store the method's result.
+     * @return {Vector3|Vector4} The updated vertex attribute data.
      */
-    applyBoneTransform(index: number, vector: Vector3): Vector3;
-    applyBoneTransform(index: number, vector: Vector4): Vector4;
-    applyBoneTransform(index: number, vector: Vector3 | Vector4): Vector3 | Vector4;
-
+    applyBoneTransform(index: number, target: Vector3): Vector3;
+    applyBoneTransform(index: number, target: Vector4): Vector4;
+    applyBoneTransform(index: number, target: Vector3 | Vector4): Vector3 | Vector4;
     toJSON(meta?: JSONMeta): SkinnedMeshJSON;
 }

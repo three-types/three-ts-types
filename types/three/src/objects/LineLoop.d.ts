@@ -4,14 +4,11 @@ import { Material } from "../materials/Material.js";
 import { Line } from "./Line.js";
 
 /**
- * A continuous line that connects back to the start.
- * @remarks
- * This is nearly the same as {@link THREE.Line | Line},
- * the only difference is that it is rendered using {@link https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/drawElements | gl.LINE_LOOP}
- * instead of {@link https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/drawElements | gl.LINE_STRIP},
- * which draws a straight line to the next vertex, and connects the last vertex back to the first.
- * @see {@link https://threejs.org/docs/index.html#api/en/objects/LineLoop | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/objects/LineLoop.js | Source}
+ * A continuous line. This is nearly the same as {@link Line} the only difference
+ * is that the last vertex is connected with the first vertex in order to close
+ * the line to form a loop.
+ *
+ * @augments Line
  */
 export class LineLoop<
     TGeometry extends BufferGeometry = BufferGeometry,
@@ -19,22 +16,18 @@ export class LineLoop<
     TEventMap extends Object3DEventMap = Object3DEventMap,
 > extends Line<TGeometry, TMaterial, TEventMap> {
     /**
-     * Create a new instance of {@link LineLoop}
-     * @param geometry  List of vertices representing points on the line loop. Default {@link THREE.BufferGeometry | `new THREE.BufferGeometry()`}.
-     * @param material Material for the line. Default {@link THREE.LineBasicMaterial | `new THREE.LineBasicMaterial()`}.
+     * Constructs a new line loop.
+     *
+     * @param {BufferGeometry} [geometry] - The line geometry.
+     * @param {Material|Array<Material>} [material] - The line material.
      */
     constructor(geometry?: TGeometry, material?: TMaterial);
-
     /**
-     * Read-only flag to check if a given object is of type {@link LineLoop}.
-     * @remarks This is a _constant_ value
-     * @defaultValue `true`
+     * This flag can be used for type testing.
+     *
+     * @type {boolean}
+     * @readonly
+     * @default true
      */
     readonly isLineLoop: true;
-
-    /**
-     * @override
-     * @defaultValue `LineLoop`
-     */
-    override readonly type: string | "LineLoop";
 }
