@@ -11572,14 +11572,14 @@ index 3ae4feae2..ebc48e66c 100644
  }
 -import { EllipseCurve } from './EllipseCurve.js';
 diff --git a/jsdoc-testing/jsdoc/src/extras/curves/CatmullRomCurve3.d.ts b/jsdoc-testing/jsdoc/src/extras/curves/CatmullRomCurve3.d.ts
-index 8798e6d39..c243822a3 100644
+index 8798e6d39..10089c1b9 100644
 --- a/jsdoc-testing/jsdoc/src/extras/curves/CatmullRomCurve3.d.ts
 +++ b/jsdoc-testing/jsdoc/src/extras/curves/CatmullRomCurve3.d.ts
 @@ -1,3 +1,8 @@
 +import { Curve } from '../core/Curve.js';
 +import { Vector3 } from '../../math/Vector3.js';
 +
-+export type CurveType = "centripetal" | "chordal" | "catmullrom";
++export type CatmullRomCurve3CurveType = "centripetal" | "chordal" | "catmullrom";
 +
  /**
   * A curve representing a Catmull-Rom spline.
@@ -11598,7 +11598,7 @@ index 8798e6d39..c243822a3 100644
       * @param {number} [tension=0.5] - Tension of the curve.
       */
 -    constructor(points?: Array<Vector3>, closed?: boolean, curveType?: ("centripetal" | "chordal" | "catmullrom"), tension?: number);
-+    constructor(points?: Array<Vector3>, closed?: boolean, curveType?: CurveType, tension?: number);
++    constructor(points?: Array<Vector3>, closed?: boolean, curveType?: CatmullRomCurve3CurveType, tension?: number);
      /**
       * This flag can be used for type testing.
       *
@@ -11629,7 +11629,7 @@ index 8798e6d39..c243822a3 100644
       * @default 'centripetal'
       */
 -    curveType: ("centripetal" | "chordal" | "catmullrom");
-+    curveType: CurveType;
++    curveType: CatmullRomCurve3CurveType;
      /**
       * Tension of the curve.
       *
@@ -11778,13 +11778,13 @@ index ccc99379e..291df37b2 100644
 -import { Curve } from '../core/Curve.js';
 -import { Vector3 } from '../../math/Vector3.js';
 diff --git a/jsdoc-testing/jsdoc/src/extras/curves/Curves.d.ts b/jsdoc-testing/jsdoc/src/extras/curves/Curves.d.ts
-index ce726ca5a..e69264d92 100644
+index ce726ca5a..6834b773d 100644
 --- a/jsdoc-testing/jsdoc/src/extras/curves/Curves.d.ts
 +++ b/jsdoc-testing/jsdoc/src/extras/curves/Curves.d.ts
 @@ -1,5 +1,5 @@
  export { ArcCurve } from "./ArcCurve.js";
 -export { CatmullRomCurve3 } from "./CatmullRomCurve3.js";
-+export { CatmullRomCurve3, CurveType } from "./CatmullRomCurve3.js";
++export { CatmullRomCurve3, CatmullRomCurve3CurveType } from "./CatmullRomCurve3.js";
  export { CubicBezierCurve } from "./CubicBezierCurve.js";
  export { CubicBezierCurve3 } from "./CubicBezierCurve3.js";
  export { EllipseCurve } from "./EllipseCurve.js";
