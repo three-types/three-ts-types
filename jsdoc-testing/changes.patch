@@ -10269,6 +10269,1211 @@ index fd08bb44b..1f64f2959 100644
      clone(): UniformsGroup;
  }
 -import { EventDispatcher } from './EventDispatcher.js';
+diff --git a/jsdoc-testing/jsdoc/src/extras/Controls.d.ts b/jsdoc-testing/jsdoc/src/extras/Controls.d.ts
+index f9b5a381f..3138e96f9 100644
+--- a/jsdoc-testing/jsdoc/src/extras/Controls.d.ts
++++ b/jsdoc-testing/jsdoc/src/extras/Controls.d.ts
+@@ -1,70 +1,68 @@
++import { MOUSE, TOUCH } from '../constants.js';
++import { EventDispatcher } from '../core/EventDispatcher.js';
++import { Object3D } from '../core/Object3D.js';
++
++export interface ControlsEventMap {}
++
+ /**
+  * Abstract base class for controls.
+  *
+  * @abstract
+  * @augments EventDispatcher
+  */
+-export class Controls extends EventDispatcher {
++export abstract class Controls<
++    TEventMap extends ControlsEventMap = ControlsEventMap,
++    TObject extends Object3D = Object3D,
++> extends EventDispatcher<TEventMap> {
+     /**
+      * Constructs a new controls instance.
+      *
+      * @param {Object3D} object - The object that is managed by the controls.
+      * @param {?HTMLElement} domElement - The HTML element used for event listeners.
+      */
+-    constructor(object: Object3D, domElement?: HTMLElement | null);
++    constructor(object: TObject, domElement?: HTMLElement | SVGElement | null);
+     /**
+      * The object that is managed by the controls.
+-     *
+-     * @type {Object3D}
+      */
+-    object: Object3D;
++    object: TObject;
+     /**
+      * The HTML element used for event listeners.
+      *
+-     * @type {?HTMLElement}
+      * @default null
+      */
+-    domElement: HTMLElement | null;
++    domElement: HTMLElement | SVGElement | null;
+     /**
+      * Whether the controls responds to user input or not.
+      *
+-     * @type {boolean}
+      * @default true
+      */
+     enabled: boolean;
+     /**
+      * The internal state of the controls.
+      *
+-     * @type {number}
+      * @default -1
+      */
+     state: number;
+     /**
+      * This object defines the keyboard input of the controls.
+-     *
+-     * @type {Object}
+      */
+-    keys: Object;
++    keys: object;
+     /**
+      * This object defines what type of actions are assigned to the available mouse buttons.
+      * It depends on the control implementation what kind of mouse buttons and actions are supported.
+-     *
+-     * @type {{LEFT: ?number, MIDDLE: ?number, RIGHT: ?number}}
+      */
+     mouseButtons: {
+-        LEFT: number | null;
+-        MIDDLE: number | null;
+-        RIGHT: number | null;
++        LEFT?: MOUSE | null | undefined;
++        MIDDLE?: MOUSE | null | undefined;
++        RIGHT?: MOUSE | null | undefined;
+     };
+     /**
+      * This object defines what type of actions are assigned to what kind of touch interaction.
+      * It depends on the control implementation what kind of touch interaction and actions are supported.
+-     *
+-     * @type {{ONE: ?number, TWO: ?number}}
+      */
+     touches: {
+-        ONE: number | null;
+-        TWO: number | null;
++        ONE?: TOUCH | null | undefined;
++        TWO?: TOUCH | null | undefined;
+     };
+     /**
+      * Connects the controls to the DOM. This method has so called "side effects" since
+@@ -72,7 +70,7 @@ export class Controls extends EventDispatcher {
+      *
+      * @param {HTMLElement} element - The DOM element to connect to.
+      */
+-    connect(element: HTMLElement): void;
++    connect(element: HTMLElement | SVGElement): void;
+     /**
+      * Disconnects the controls from the DOM.
+      */
+@@ -88,6 +86,5 @@ export class Controls extends EventDispatcher {
+      *
+      * @param {number} [delta] - The time delta in seconds.
+      */
+-    update(): void;
++    update(delta?: number): void;
+ }
+-import { EventDispatcher } from '../core/EventDispatcher.js';
+diff --git a/jsdoc-testing/jsdoc/src/extras/Earcut.d.ts b/jsdoc-testing/jsdoc/src/extras/Earcut.d.ts
+index 77d051e6a..869fa935a 100644
+--- a/jsdoc-testing/jsdoc/src/extras/Earcut.d.ts
++++ b/jsdoc-testing/jsdoc/src/extras/Earcut.d.ts
+@@ -14,5 +14,5 @@ export class Earcut {
+      * @return {Array<number>} An array representing the triangulated faces. Each face is defined by three consecutive numbers
+      * representing vertex indices.
+      */
+-    static triangulate(data: Array<number>, holeIndices: Array<number>, dim?: number): Array<number>;
++    static triangulate(data: Array<number>, holeIndices?: Array<number>, dim?: number): Array<number>;
+ }
+diff --git a/jsdoc-testing/jsdoc/src/extras/ImageUtils.d.ts b/jsdoc-testing/jsdoc/src/extras/ImageUtils.d.ts
+index 26077e10c..8f98328eb 100644
+--- a/jsdoc-testing/jsdoc/src/extras/ImageUtils.d.ts
++++ b/jsdoc-testing/jsdoc/src/extras/ImageUtils.d.ts
+@@ -11,12 +11,26 @@ export class ImageUtils {
+      * @param {string} [type='image/png'] - Indicates the image format.
+      * @return {string} The data URI.
+      */
+-    static getDataURL(image: (HTMLImageElement | HTMLCanvasElement), type?: string): string;
++    static getDataURL(
++        image: HTMLImageElement | HTMLCanvasElement | CanvasImageSource | ImageBitmap | ImageData,
++        type?: string,
++    ): string;
+     /**
+      * Converts the given sRGB image data to linear color space.
+      *
+      * @param {(HTMLImageElement|HTMLCanvasElement|ImageBitmap|Object)} image - The image object.
+      * @return {HTMLCanvasElement|Object} The converted image.
+      */
+-    static sRGBToLinear(image: (HTMLImageElement | HTMLCanvasElement | ImageBitmap | Object)): HTMLCanvasElement | Object;
++    static sRGBToLinear(image: HTMLImageElement | HTMLCanvasElement | ImageBitmap): HTMLCanvasElement;
++    /**
++     * Converts the given sRGB image data to linear color space.
++     *
++     * @param {(HTMLImageElement|HTMLCanvasElement|ImageBitmap|Object)} image - The image object.
++     * @return {HTMLCanvasElement|Object} The converted image.
++     */
++    static sRGBToLinear(image: ImageData): {
++        data: ImageData["data"];
++        width: ImageData["width"];
++        height: ImageData["height"];
++    };
+ }
+diff --git a/jsdoc-testing/jsdoc/src/extras/PMREMGenerator.d.ts b/jsdoc-testing/jsdoc/src/extras/PMREMGenerator.d.ts
+index 6d1182c75..29b9f49cb 100644
+--- a/jsdoc-testing/jsdoc/src/extras/PMREMGenerator.d.ts
++++ b/jsdoc-testing/jsdoc/src/extras/PMREMGenerator.d.ts
+@@ -1,3 +1,15 @@
++import { Vector3 } from '../math/Vector3.js';
++import { WebGLCubeRenderTarget } from '../renderers/WebGLCubeRenderTarget.js';
++import { WebGLRenderer } from '../renderers/WebGLRenderer.js';
++import { Scene } from '../scenes/Scene.js';
++import { CubeTexture } from '../textures/CubeTexture.js';
++import { Texture } from '../textures/Texture.js';
++
++export interface PMREMGeneratorOptions {
++    size?: number | undefined;
++    position?: Vector3 | undefined;
++}
++
+ /**
+  * Generates a Prefiltered, Mipmapped Radiance Environment Map (PMREM) for
+  * image-based lighting. The result is a cube render target whose mip levels
+@@ -26,501 +38,6 @@ export class PMREMGenerator {
+      * @param {WebGLRenderer} renderer - The renderer.
+      */
+     constructor(renderer: WebGLRenderer);
+-    _renderer: WebGLRenderer;
+-    _cubeSize: number;
+-    _sourceTarget: any;
+-    _cubeCamera: CubeCamera;
+-    _boxMesh: Mesh;
+-    _cubemapMaterial: {
+-        readonly isShaderMaterial: boolean;
+-        type: string;
+-        defines: Object;
+-        uniforms: Object;
+-        uniformsGroups: Array<UniformsGroup>;
+-        vertexShader: string;
+-        fragmentShader: string;
+-        linewidth: number;
+-        wireframe: boolean;
+-        wireframeLinewidth: number;
+-        fog: boolean;
+-        lights: boolean;
+-        clipping: boolean;
+-        forceSinglePass: boolean;
+-        extensions: {
+-            clipCullDistance: false;
+-            multiDraw: false;
+-        };
+-        defaultAttributeValues: Object;
+-        index0AttributeName: string | undefined;
+-        uniformsNeedUpdate: boolean;
+-        glslVersion: (GLSL1 | GLSL3) | null;
+-        copy(source: any): /*elided*/ any;
+-        toJSON(meta: any): Object;
+-        fromJSON(json: Object, textures: {
+-            [x: string]: Texture;
+-        }): /*elided*/ any;
+-        readonly isMaterial: boolean;
+-        readonly uuid: string;
+-        name: string;
+-        blending: (NoBlending | number | AdditiveBlending | SubtractiveBlending | MultiplyBlending | CustomBlending);
+-        side: (number | BackSide | DoubleSide);
+-        vertexColors: boolean;
+-        opacity: number;
+-        transparent: boolean;
+-        alphaHash: boolean;
+-        blendSrc: (ZeroFactor | OneFactor | SrcColorFactor | OneMinusSrcColorFactor | number | number | DstAlphaFactor | OneMinusDstAlphaFactor | DstColorFactor | OneMinusDstColorFactor | SrcAlphaSaturateFactor | ConstantColorFactor | OneMinusConstantColorFactor | ConstantAlphaFactor | OneMinusConstantAlphaFactor);
+-        blendDst: (ZeroFactor | OneFactor | SrcColorFactor | OneMinusSrcColorFactor | number | number | DstAlphaFactor | OneMinusDstAlphaFactor | DstColorFactor | OneMinusDstColorFactor | SrcAlphaSaturateFactor | ConstantColorFactor | OneMinusConstantColorFactor | ConstantAlphaFactor | OneMinusConstantAlphaFactor);
+-        blendEquation: (number | SubtractEquation | ReverseSubtractEquation | MinEquation | MaxEquation);
+-        blendSrcAlpha: (ZeroFactor | OneFactor | SrcColorFactor | OneMinusSrcColorFactor | number | number | DstAlphaFactor | OneMinusDstAlphaFactor | DstColorFactor | OneMinusDstColorFactor | SrcAlphaSaturateFactor | ConstantColorFactor | OneMinusConstantColorFactor | ConstantAlphaFactor | OneMinusConstantAlphaFactor) | null;
+-        blendDstAlpha: (
+-        /**
+-         * Generates a PMREM from an LDR or HDR cubemap. The cube face size matches
+-         * the input, rounded down to a power of two and at least 256.
+-         *
+-         * @param {Texture} cubemap - The cubemap texture to be converted.
+-         * @param {?WebGLCubeRenderTarget} [renderTarget=null] - The render target to use.
+-         * @return {WebGLCubeRenderTarget} The resulting PMREM.
+-         */
+-        ZeroFactor | OneFactor | SrcColorFactor | OneMinusSrcColorFactor | number | number | DstAlphaFactor | OneMinusDstAlphaFactor | DstColorFactor | OneMinusDstColorFactor | SrcAlphaSaturateFactor | ConstantColorFactor | OneMinusConstantColorFactor | ConstantAlphaFactor | OneMinusConstantAlphaFactor) | null;
+-        blendEquationAlpha: (number | SubtractEquation | ReverseSubtractEquation | MinEquation | MaxEquation) | null;
+-        blendColor: Color;
+-        blendAlpha: number;
+-        depthFunc: (NeverDepth | AlwaysDepth | LessDepth | number | EqualDepth | GreaterEqualDepth | GreaterDepth | NotEqualDepth);
+-        depthTest: boolean;
+-        depthWrite: boolean;
+-        stencilWriteMask: number;
+-        stencilFunc: NeverStencilFunc | LessStencilFunc | EqualStencilFunc | LessEqualStencilFunc | GreaterStencilFunc | NotEqualStencilFunc | GreaterEqualStencilFunc | number;
+-        stencilRef: number;
+-        stencilFuncMask: number;
+-        stencilFail: ZeroStencilOp | number | ReplaceStencilOp | IncrementStencilOp | DecrementStencilOp | IncrementWrapStencilOp | DecrementWrapStencilOp | InvertStencilOp;
+-        stencilZFail: ZeroStencilOp | number | ReplaceStencilOp | IncrementStencilOp | DecrementStencilOp | IncrementWrapStencilOp | DecrementWrapStencilOp | InvertStencilOp;
+-        stencilZPass: ZeroStencilOp | number | ReplaceStencilOp | IncrementStencilOp | DecrementStencilOp | IncrementWrapStencilOp | DecrementWrapStencilOp | InvertStencilOp;
+-        stencilWrite: boolean;
+-        clippingPlanes: Array<import("../Three.Core.js").Plane> | null;
+-        clipIntersection: boolean;
+-        clipShadows: boolean;
+-        shadowSide: (number | BackSide | DoubleSide) | null;
+-        colorWrite: boolean;
+-        precision: ("highp" | "mediump" | "lowp") | null;
+-        polygonOffset: boolean;
+-        polygonOffsetFactor: number;
+-        polygonOffsetUnits: number;
+-        dithering: boolean;
+-        alphaToCoverage: boolean;
+-        premultipliedAlpha: boolean;
+-        allowOverride: boolean;
+-        visible: boolean;
+-        toneMapped: boolean;
+-        userData: Object;
+-        readonly version: number;
+-        _alphaTest: number;
+-        get alphaTest(): number;
+-        set alphaTest(value: number);
+-        onBeforeRender(): void;
+-        onBeforeCompile(): void;
+-        customProgramCacheKey(): string;
+-        setValues(values?: Object): void;
+-        clone(): Material;
+-        dispose(): void;
+-        set needsUpdate(value: boolean);
+-        addEventListener(type: string, listener: Function): void;
+-        _listeners: {} | undefined;
+-        hasEventListener(type: string, listener: Function): boolean;
+-        removeEventListener(type: string, listener: Function): void;
+-        dispatchEvent(event: Object): void;
+-    } | null;
+-    _equirectMaterial: {
+-        readonly isShaderMaterial: boolean;
+-        type: string;
+-        defines: Object;
+-        uniforms: Object;
+-        uniformsGroups: Array<UniformsGroup>;
+-        vertexShader: string;
+-        fragmentShader: string;
+-        linewidth: number;
+-        wireframe: boolean;
+-        wireframeLinewidth: number;
+-        fog: boolean;
+-        lights: boolean;
+-        clipping: boolean;
+-        forceSinglePass: boolean;
+-        extensions: {
+-            clipCullDistance: false;
+-            multiDraw: false;
+-        };
+-        defaultAttributeValues: Object;
+-        index0AttributeName: string | undefined;
+-        uniformsNeedUpdate: boolean;
+-        glslVersion: (GLSL1 | GLSL3) | null;
+-        copy(source: any): /*elided*/ any;
+-        toJSON(meta: any): Object;
+-        fromJSON(json: Object, textures: {
+-            [x: string]: Texture;
+-        }): /*elided*/ any;
+-        readonly isMaterial: boolean;
+-        readonly uuid: string;
+-        name: string;
+-        blending: (NoBlending | number | AdditiveBlending | SubtractiveBlending | MultiplyBlending | CustomBlending);
+-        side: (number | BackSide | DoubleSide);
+-        vertexColors: boolean;
+-        opacity: number;
+-        transparent: boolean;
+-        alphaHash: boolean;
+-        blendSrc: (ZeroFactor | OneFactor | SrcColorFactor | OneMinusSrcColorFactor | number | number | DstAlphaFactor | OneMinusDstAlphaFactor | DstColorFactor | OneMinusDstColorFactor | SrcAlphaSaturateFactor | ConstantColorFactor | OneMinusConstantColorFactor | ConstantAlphaFactor | OneMinusConstantAlphaFactor);
+-        blendDst: (ZeroFactor | OneFactor | SrcColorFactor | OneMinusSrcColorFactor | number | number | DstAlphaFactor | OneMinusDstAlphaFactor | DstColorFactor | OneMinusDstColorFactor | SrcAlphaSaturateFactor | ConstantColorFactor | OneMinusConstantColorFactor | ConstantAlphaFactor | OneMinusConstantAlphaFactor);
+-        blendEquation: (number | SubtractEquation | ReverseSubtractEquation | MinEquation | MaxEquation);
+-        blendSrcAlpha: (ZeroFactor | OneFactor | SrcColorFactor | OneMinusSrcColorFactor | number | number | DstAlphaFactor | OneMinusDstAlphaFactor | DstColorFactor | OneMinusDstColorFactor | SrcAlphaSaturateFactor | ConstantColorFactor | OneMinusConstantColorFactor | ConstantAlphaFactor | OneMinusConstantAlphaFactor) | null;
+-        blendDstAlpha: (
+-        /**
+-         * Generates a PMREM from an LDR or HDR cubemap. The cube face size matches
+-         * the input, rounded down to a power of two and at least 256.
+-         *
+-         * @param {Texture} cubemap - The cubemap texture to be converted.
+-         * @param {?WebGLCubeRenderTarget} [renderTarget=null] - The render target to use.
+-         * @return {WebGLCubeRenderTarget} The resulting PMREM.
+-         */
+-        ZeroFactor | OneFactor | SrcColorFactor | OneMinusSrcColorFactor | number | number | DstAlphaFactor | OneMinusDstAlphaFactor | DstColorFactor | OneMinusDstColorFactor | SrcAlphaSaturateFactor | ConstantColorFactor | OneMinusConstantColorFactor | ConstantAlphaFactor | OneMinusConstantAlphaFactor) | null;
+-        blendEquationAlpha: (number | SubtractEquation | ReverseSubtractEquation | MinEquation | MaxEquation) | null;
+-        blendColor: Color;
+-        blendAlpha: number;
+-        depthFunc: (NeverDepth | AlwaysDepth | LessDepth | number | EqualDepth | GreaterEqualDepth | GreaterDepth | NotEqualDepth);
+-        depthTest: boolean;
+-        depthWrite: boolean;
+-        stencilWriteMask: number;
+-        stencilFunc: NeverStencilFunc | LessStencilFunc | EqualStencilFunc | LessEqualStencilFunc | GreaterStencilFunc | NotEqualStencilFunc | GreaterEqualStencilFunc | number;
+-        stencilRef: number;
+-        stencilFuncMask: number;
+-        stencilFail: ZeroStencilOp | number | ReplaceStencilOp | IncrementStencilOp | DecrementStencilOp | IncrementWrapStencilOp | DecrementWrapStencilOp | InvertStencilOp;
+-        stencilZFail: ZeroStencilOp | number | ReplaceStencilOp | IncrementStencilOp | DecrementStencilOp | IncrementWrapStencilOp | DecrementWrapStencilOp | InvertStencilOp;
+-        stencilZPass: ZeroStencilOp | number | ReplaceStencilOp | IncrementStencilOp | DecrementStencilOp | IncrementWrapStencilOp | DecrementWrapStencilOp | InvertStencilOp;
+-        stencilWrite: boolean;
+-        clippingPlanes: Array<import("../Three.Core.js").Plane> | null;
+-        clipIntersection: boolean;
+-        clipShadows: boolean;
+-        shadowSide: (number | BackSide | DoubleSide) | null;
+-        colorWrite: boolean;
+-        precision: ("highp" | "mediump" | "lowp") | null;
+-        polygonOffset: boolean;
+-        polygonOffsetFactor: number;
+-        polygonOffsetUnits: number;
+-        dithering: boolean;
+-        alphaToCoverage: boolean;
+-        premultipliedAlpha: boolean;
+-        allowOverride: boolean;
+-        visible: boolean;
+-        toneMapped: boolean;
+-        userData: Object;
+-        readonly version: number;
+-        _alphaTest: number;
+-        get alphaTest(): number;
+-        set alphaTest(value: number);
+-        onBeforeRender(): void;
+-        onBeforeCompile(): void;
+-        customProgramCacheKey(): string;
+-        setValues(values?: Object): void;
+-        clone(): Material;
+-        dispose(): void;
+-        set needsUpdate(value: boolean);
+-        addEventListener(type: string, listener: Function): void;
+-        _listeners: {} | undefined;
+-        hasEventListener(type: string, listener: Function): boolean;
+-        removeEventListener(type: string, listener: Function): void;
+-        dispatchEvent(event: Object): void;
+-    } | null;
+-    _blurMaterial: {
+-        readonly isShaderMaterial: boolean;
+-        type: string;
+-        defines: Object;
+-        uniforms: Object;
+-        uniformsGroups: Array<UniformsGroup>;
+-        vertexShader: string;
+-        fragmentShader: string;
+-        linewidth: number;
+-        wireframe: boolean;
+-        wireframeLinewidth: number;
+-        fog: boolean;
+-        lights: boolean;
+-        clipping: boolean;
+-        forceSinglePass: boolean;
+-        extensions: {
+-            clipCullDistance: false;
+-            multiDraw: false;
+-        };
+-        defaultAttributeValues: Object;
+-        index0AttributeName: string | undefined;
+-        uniformsNeedUpdate: boolean;
+-        glslVersion: (GLSL1 | GLSL3) | null;
+-        copy(source: any): /*elided*/ any;
+-        toJSON(meta: any): Object;
+-        fromJSON(json: Object, textures: {
+-            [x: string]: Texture;
+-        }): /*elided*/ any;
+-        readonly isMaterial: boolean;
+-        readonly uuid: string;
+-        name: string;
+-        blending: (NoBlending | number | AdditiveBlending | SubtractiveBlending | MultiplyBlending | CustomBlending);
+-        side: (number | BackSide | DoubleSide);
+-        vertexColors: boolean;
+-        opacity: number;
+-        transparent: boolean;
+-        alphaHash: boolean;
+-        blendSrc: (ZeroFactor | OneFactor | SrcColorFactor | OneMinusSrcColorFactor | number | number | DstAlphaFactor | OneMinusDstAlphaFactor | DstColorFactor | OneMinusDstColorFactor | SrcAlphaSaturateFactor | ConstantColorFactor | OneMinusConstantColorFactor | ConstantAlphaFactor | OneMinusConstantAlphaFactor);
+-        blendDst: (ZeroFactor | OneFactor | SrcColorFactor | OneMinusSrcColorFactor | number | number | DstAlphaFactor | OneMinusDstAlphaFactor | DstColorFactor | OneMinusDstColorFactor | SrcAlphaSaturateFactor | ConstantColorFactor | OneMinusConstantColorFactor | ConstantAlphaFactor | OneMinusConstantAlphaFactor);
+-        blendEquation: (number | SubtractEquation | ReverseSubtractEquation | MinEquation | MaxEquation);
+-        blendSrcAlpha: (ZeroFactor | OneFactor | SrcColorFactor | OneMinusSrcColorFactor | number | number | DstAlphaFactor | OneMinusDstAlphaFactor | DstColorFactor | OneMinusDstColorFactor | SrcAlphaSaturateFactor | ConstantColorFactor | OneMinusConstantColorFactor | ConstantAlphaFactor | OneMinusConstantAlphaFactor) | null;
+-        blendDstAlpha: (
+-        /**
+-         * Generates a PMREM from an LDR or HDR cubemap. The cube face size matches
+-         * the input, rounded down to a power of two and at least 256.
+-         *
+-         * @param {Texture} cubemap - The cubemap texture to be converted.
+-         * @param {?WebGLCubeRenderTarget} [renderTarget=null] - The render target to use.
+-         * @return {WebGLCubeRenderTarget} The resulting PMREM.
+-         */
+-        ZeroFactor | OneFactor | SrcColorFactor | OneMinusSrcColorFactor | number | number | DstAlphaFactor | OneMinusDstAlphaFactor | DstColorFactor | OneMinusDstColorFactor | SrcAlphaSaturateFactor | ConstantColorFactor | OneMinusConstantColorFactor | ConstantAlphaFactor | OneMinusConstantAlphaFactor) | null;
+-        blendEquationAlpha: (number | SubtractEquation | ReverseSubtractEquation | MinEquation | MaxEquation) | null;
+-        blendColor: Color;
+-        blendAlpha: number;
+-        depthFunc: (NeverDepth | AlwaysDepth | LessDepth | number | EqualDepth | GreaterEqualDepth | GreaterDepth | NotEqualDepth);
+-        depthTest: boolean;
+-        depthWrite: boolean;
+-        stencilWriteMask: number;
+-        stencilFunc: NeverStencilFunc | LessStencilFunc | EqualStencilFunc | LessEqualStencilFunc | GreaterStencilFunc | NotEqualStencilFunc | GreaterEqualStencilFunc | number;
+-        stencilRef: number;
+-        stencilFuncMask: number;
+-        stencilFail: ZeroStencilOp | number | ReplaceStencilOp | IncrementStencilOp | DecrementStencilOp | IncrementWrapStencilOp | DecrementWrapStencilOp | InvertStencilOp;
+-        stencilZFail: ZeroStencilOp | number | ReplaceStencilOp | IncrementStencilOp | DecrementStencilOp | IncrementWrapStencilOp | DecrementWrapStencilOp | InvertStencilOp;
+-        stencilZPass: ZeroStencilOp | number | ReplaceStencilOp | IncrementStencilOp | DecrementStencilOp | IncrementWrapStencilOp | DecrementWrapStencilOp | InvertStencilOp;
+-        stencilWrite: boolean;
+-        clippingPlanes: Array<import("../Three.Core.js").Plane> | null;
+-        clipIntersection: boolean;
+-        clipShadows: boolean;
+-        shadowSide: (number | BackSide | DoubleSide) | null;
+-        colorWrite: boolean;
+-        precision: ("highp" | "mediump" | "lowp") | null;
+-        polygonOffset: boolean;
+-        polygonOffsetFactor: number;
+-        polygonOffsetUnits: number;
+-        dithering: boolean;
+-        alphaToCoverage: boolean;
+-        premultipliedAlpha: boolean;
+-        allowOverride: boolean;
+-        visible: boolean;
+-        toneMapped: boolean;
+-        userData: Object;
+-        readonly version: number;
+-        _alphaTest: number;
+-        get alphaTest(): number;
+-        set alphaTest(value: number);
+-        onBeforeRender(): void;
+-        onBeforeCompile(): void;
+-        customProgramCacheKey(): string;
+-        setValues(values?: Object): void;
+-        clone(): Material;
+-        dispose(): void;
+-        set needsUpdate(value: boolean);
+-        addEventListener(type: string, listener: Function): void;
+-        _listeners: {} | undefined;
+-        hasEventListener(type: string, listener: Function): boolean;
+-        removeEventListener(type: string, listener: Function): void;
+-        dispatchEvent(event: Object): void;
+-    } | null;
+-    _ggxMaterial: {
+-        readonly isShaderMaterial: boolean;
+-        type: string;
+-        defines: Object;
+-        uniforms: Object;
+-        uniformsGroups: Array<UniformsGroup>;
+-        vertexShader: string;
+-        fragmentShader: string;
+-        linewidth: number;
+-        wireframe: boolean;
+-        wireframeLinewidth: number;
+-        fog: boolean;
+-        lights: boolean;
+-        clipping: boolean;
+-        forceSinglePass: boolean;
+-        extensions: {
+-            clipCullDistance: false;
+-            multiDraw: false;
+-        };
+-        defaultAttributeValues: Object;
+-        index0AttributeName: string | undefined;
+-        uniformsNeedUpdate: boolean;
+-        glslVersion: (GLSL1 | GLSL3) | null;
+-        copy(source: any): /*elided*/ any;
+-        toJSON(meta: any): Object;
+-        fromJSON(json: Object, textures: {
+-            [x: string]: Texture;
+-        }): /*elided*/ any;
+-        readonly isMaterial: boolean;
+-        readonly uuid: string;
+-        name: string;
+-        blending: (NoBlending | number | AdditiveBlending | SubtractiveBlending | MultiplyBlending | CustomBlending);
+-        side: (number | BackSide | DoubleSide);
+-        vertexColors: boolean;
+-        opacity: number;
+-        transparent: boolean;
+-        alphaHash: boolean;
+-        blendSrc: (ZeroFactor | OneFactor | SrcColorFactor | OneMinusSrcColorFactor | number | number | DstAlphaFactor | OneMinusDstAlphaFactor | DstColorFactor | OneMinusDstColorFactor | SrcAlphaSaturateFactor | ConstantColorFactor | OneMinusConstantColorFactor | ConstantAlphaFactor | OneMinusConstantAlphaFactor);
+-        blendDst: (ZeroFactor | OneFactor | SrcColorFactor | OneMinusSrcColorFactor | number | number | DstAlphaFactor | OneMinusDstAlphaFactor | DstColorFactor | OneMinusDstColorFactor | SrcAlphaSaturateFactor | ConstantColorFactor | OneMinusConstantColorFactor | ConstantAlphaFactor | OneMinusConstantAlphaFactor);
+-        blendEquation: (number | SubtractEquation | ReverseSubtractEquation | MinEquation | MaxEquation);
+-        blendSrcAlpha: (ZeroFactor | OneFactor | SrcColorFactor | OneMinusSrcColorFactor | number | number | DstAlphaFactor | OneMinusDstAlphaFactor | DstColorFactor | OneMinusDstColorFactor | SrcAlphaSaturateFactor | ConstantColorFactor | OneMinusConstantColorFactor | ConstantAlphaFactor | OneMinusConstantAlphaFactor) | null;
+-        blendDstAlpha: (
+-        /**
+-         * Generates a PMREM from an LDR or HDR cubemap. The cube face size matches
+-         * the input, rounded down to a power of two and at least 256.
+-         *
+-         * @param {Texture} cubemap - The cubemap texture to be converted.
+-         * @param {?WebGLCubeRenderTarget} [renderTarget=null] - The render target to use.
+-         * @return {WebGLCubeRenderTarget} The resulting PMREM.
+-         */
+-        ZeroFactor | OneFactor | SrcColorFactor | OneMinusSrcColorFactor | number | number | DstAlphaFactor | OneMinusDstAlphaFactor | DstColorFactor | OneMinusDstColorFactor | SrcAlphaSaturateFactor | ConstantColorFactor | OneMinusConstantColorFactor | ConstantAlphaFactor | OneMinusConstantAlphaFactor) | null;
+-        blendEquationAlpha: (number | SubtractEquation | ReverseSubtractEquation | MinEquation | MaxEquation) | null;
+-        blendColor: Color;
+-        blendAlpha: number;
+-        depthFunc: (NeverDepth | AlwaysDepth | LessDepth | number | EqualDepth | GreaterEqualDepth | GreaterDepth | NotEqualDepth);
+-        depthTest: boolean;
+-        depthWrite: boolean;
+-        stencilWriteMask: number;
+-        stencilFunc: NeverStencilFunc | LessStencilFunc | EqualStencilFunc | LessEqualStencilFunc | GreaterStencilFunc | NotEqualStencilFunc | GreaterEqualStencilFunc | number;
+-        stencilRef: number;
+-        stencilFuncMask: number;
+-        stencilFail: ZeroStencilOp | number | ReplaceStencilOp | IncrementStencilOp | DecrementStencilOp | IncrementWrapStencilOp | DecrementWrapStencilOp | InvertStencilOp;
+-        stencilZFail: ZeroStencilOp | number | ReplaceStencilOp | IncrementStencilOp | DecrementStencilOp | IncrementWrapStencilOp | DecrementWrapStencilOp | InvertStencilOp;
+-        stencilZPass: ZeroStencilOp | number | ReplaceStencilOp | IncrementStencilOp | DecrementStencilOp | IncrementWrapStencilOp | DecrementWrapStencilOp | InvertStencilOp;
+-        stencilWrite: boolean;
+-        clippingPlanes: Array<import("../Three.Core.js").Plane> | null;
+-        clipIntersection: boolean;
+-        clipShadows: boolean;
+-        shadowSide: (number | BackSide | DoubleSide) | null;
+-        colorWrite: boolean;
+-        precision: ("highp" | "mediump" | "lowp") | null;
+-        polygonOffset: boolean;
+-        polygonOffsetFactor: number;
+-        polygonOffsetUnits: number;
+-        dithering: boolean;
+-        alphaToCoverage: boolean;
+-        premultipliedAlpha: boolean;
+-        allowOverride: boolean;
+-        visible: boolean;
+-        toneMapped: boolean;
+-        userData: Object;
+-        readonly version: number;
+-        _alphaTest: number;
+-        get alphaTest(): number;
+-        set alphaTest(value: number);
+-        onBeforeRender(): void;
+-        onBeforeCompile(): void;
+-        customProgramCacheKey(): string;
+-        setValues(values?: Object): void;
+-        clone(): Material;
+-        dispose(): void;
+-        set needsUpdate(value: boolean);
+-        addEventListener(type: string, listener: Function): void;
+-        _listeners: {} | undefined;
+-        hasEventListener(type: string, listener: Function): boolean;
+-        removeEventListener(type: string, listener: Function): void;
+-        dispatchEvent(event: Object): void;
+-    } | null;
+-    _integrationMaterial: {
+-        readonly isShaderMaterial: boolean;
+-        type: string;
+-        defines: Object;
+-        uniforms: Object;
+-        uniformsGroups: Array<UniformsGroup>;
+-        vertexShader: string;
+-        fragmentShader: string;
+-        linewidth: number;
+-        wireframe: boolean;
+-        wireframeLinewidth: number;
+-        fog: boolean;
+-        lights: boolean;
+-        clipping: boolean;
+-        forceSinglePass: boolean;
+-        extensions: {
+-            clipCullDistance: false;
+-            multiDraw: false;
+-        };
+-        defaultAttributeValues: Object;
+-        index0AttributeName: string | undefined;
+-        uniformsNeedUpdate: boolean;
+-        glslVersion: (GLSL1 | GLSL3) | null;
+-        copy(source: any): /*elided*/ any;
+-        toJSON(meta: any): Object;
+-        fromJSON(json: Object, textures: {
+-            [x: string]: Texture;
+-        }): /*elided*/ any;
+-        readonly isMaterial: boolean;
+-        readonly uuid: string;
+-        name: string;
+-        blending: (NoBlending | number | AdditiveBlending | SubtractiveBlending | MultiplyBlending | CustomBlending);
+-        side: (number | BackSide | DoubleSide);
+-        vertexColors: boolean;
+-        opacity: number;
+-        transparent: boolean;
+-        alphaHash: boolean;
+-        blendSrc: (ZeroFactor | OneFactor | SrcColorFactor | OneMinusSrcColorFactor | number | number | DstAlphaFactor | OneMinusDstAlphaFactor | DstColorFactor | OneMinusDstColorFactor | SrcAlphaSaturateFactor | ConstantColorFactor | OneMinusConstantColorFactor | ConstantAlphaFactor | OneMinusConstantAlphaFactor);
+-        blendDst: (ZeroFactor | OneFactor | SrcColorFactor | OneMinusSrcColorFactor | number | number | DstAlphaFactor | OneMinusDstAlphaFactor | DstColorFactor | OneMinusDstColorFactor | SrcAlphaSaturateFactor | ConstantColorFactor | OneMinusConstantColorFactor | ConstantAlphaFactor | OneMinusConstantAlphaFactor);
+-        blendEquation: (number | SubtractEquation | ReverseSubtractEquation | MinEquation | MaxEquation);
+-        blendSrcAlpha: (ZeroFactor | OneFactor | SrcColorFactor | OneMinusSrcColorFactor | number | number | DstAlphaFactor | OneMinusDstAlphaFactor | DstColorFactor | OneMinusDstColorFactor | SrcAlphaSaturateFactor | ConstantColorFactor | OneMinusConstantColorFactor | ConstantAlphaFactor | OneMinusConstantAlphaFactor) | null;
+-        blendDstAlpha: (
+-        /**
+-         * Generates a PMREM from an LDR or HDR cubemap. The cube face size matches
+-         * the input, rounded down to a power of two and at least 256.
+-         *
+-         * @param {Texture} cubemap - The cubemap texture to be converted.
+-         * @param {?WebGLCubeRenderTarget} [renderTarget=null] - The render target to use.
+-         * @return {WebGLCubeRenderTarget} The resulting PMREM.
+-         */
+-        ZeroFactor | OneFactor | SrcColorFactor | OneMinusSrcColorFactor | number | number | DstAlphaFactor | OneMinusDstAlphaFactor | DstColorFactor | OneMinusDstColorFactor | SrcAlphaSaturateFactor | ConstantColorFactor | OneMinusConstantColorFactor | ConstantAlphaFactor | OneMinusConstantAlphaFactor) | null;
+-        blendEquationAlpha: (number | SubtractEquation | ReverseSubtractEquation | MinEquation | MaxEquation) | null;
+-        blendColor: Color;
+-        blendAlpha: number;
+-        depthFunc: (NeverDepth | AlwaysDepth | LessDepth | number | EqualDepth | GreaterEqualDepth | GreaterDepth | NotEqualDepth);
+-        depthTest: boolean;
+-        depthWrite: boolean;
+-        stencilWriteMask: number;
+-        stencilFunc: NeverStencilFunc | LessStencilFunc | EqualStencilFunc | LessEqualStencilFunc | GreaterStencilFunc | NotEqualStencilFunc | GreaterEqualStencilFunc | number;
+-        stencilRef: number;
+-        stencilFuncMask: number;
+-        stencilFail: ZeroStencilOp | number | ReplaceStencilOp | IncrementStencilOp | DecrementStencilOp | IncrementWrapStencilOp | DecrementWrapStencilOp | InvertStencilOp;
+-        stencilZFail: ZeroStencilOp | number | ReplaceStencilOp | IncrementStencilOp | DecrementStencilOp | IncrementWrapStencilOp | DecrementWrapStencilOp | InvertStencilOp;
+-        stencilZPass: ZeroStencilOp | number | ReplaceStencilOp | IncrementStencilOp | DecrementStencilOp | IncrementWrapStencilOp | DecrementWrapStencilOp | InvertStencilOp;
+-        stencilWrite: boolean;
+-        clippingPlanes: Array<import("../Three.Core.js").Plane> | null;
+-        clipIntersection: boolean;
+-        clipShadows: boolean;
+-        shadowSide: (number | BackSide | DoubleSide) | null;
+-        colorWrite: boolean;
+-        precision: ("highp" | "mediump" | "lowp") | null;
+-        polygonOffset: boolean;
+-        polygonOffsetFactor: number;
+-        polygonOffsetUnits: number;
+-        dithering: boolean;
+-        alphaToCoverage: boolean;
+-        premultipliedAlpha: boolean;
+-        allowOverride: boolean;
+-        visible: boolean;
+-        toneMapped: boolean;
+-        userData: Object;
+-        readonly version: number;
+-        _alphaTest: number;
+-        get alphaTest(): number;
+-        set alphaTest(value: number);
+-        onBeforeRender(): void;
+-        onBeforeCompile(): void;
+-        customProgramCacheKey(): string;
+-        setValues(values?: Object): void;
+-        clone(): Material;
+-        dispose(): void;
+-        set needsUpdate(value: boolean);
+-        addEventListener(type: string, listener: Function): void;
+-        _listeners: {} | undefined;
+-        hasEventListener(type: string, listener: Function): boolean;
+-        removeEventListener(type: string, listener: Function): void;
+-        dispatchEvent(event: Object): void;
+-    } | null;
+     /**
+      * Generates a PMREM from a scene, optionally applying a Gaussian blur before
+      * GGX filtering.
+@@ -534,10 +51,7 @@ export class PMREMGenerator {
+      * @param {Vector3} [options.position=origin] - The position of the internal cube camera that renders the scene.
+      * @return {WebGLCubeRenderTarget} The resulting PMREM.
+      */
+-    fromScene(scene: Scene, sigma?: number, near?: number, far?: number, options?: {
+-        size?: number | undefined;
+-        position?: Vector3 | undefined;
+-    }): WebGLCubeRenderTarget;
++    fromScene(scene: Scene, sigma?: number, near?: number, far?: number, options?: PMREMGeneratorOptions): WebGLCubeRenderTarget;
+     /**
+      * Generates a PMREM from an LDR or HDR equirectangular texture. The cube face
+      * size is one quarter of the image width, rounded down to a power of two and
+@@ -556,7 +70,7 @@ export class PMREMGenerator {
+      * @param {?WebGLCubeRenderTarget} [renderTarget=null] - The render target to use.
+      * @return {WebGLCubeRenderTarget} The resulting PMREM.
+      */
+-    fromCubemap(cubemap: Texture, renderTarget?: WebGLCubeRenderTarget | null): WebGLCubeRenderTarget;
++    fromCubemap(cubemap: CubeTexture, renderTarget?: WebGLCubeRenderTarget | null): WebGLCubeRenderTarget;
+     /**
+      * Pre-compiles the cubemap shader. You can get faster start-up by invoking this method during
+      * your texture's network fetch for increased concurrency.
+@@ -572,43 +86,4 @@ export class PMREMGenerator {
+      * belong to the caller and are not disposed.
+      */
+     dispose(): void;
+-    _setSize(cubeSize: any): void;
+-    _fromTexture(texture: any, renderTarget: any): any;
+-    _allocateTarget(): WebGLCubeRenderTarget;
+-    _getSourceTarget(depthBuffer?: boolean): WebGLCubeRenderTarget | null;
+-    _compileMaterial(material: any): void;
+-    /**
+-     * Renders the box mesh with the given material into all six faces of a cube render target.
+-     *
+-     * @private
+-     * @param {WebGLCubeRenderTarget} target - The render target.
+-     * @param {number} lod - The mip level to render into.
+-     * @param {ShaderMaterial} material - The material.
+-     */
+-    private _renderCube;
+-    _textureToCubemap(texture: any): void;
+-    /**
+-     * Prefilters the source cubemap into the mip levels of the PMREM. The sharp levels
+-     * integrate the GGX lobe of their roughness with VNDF importance sampling, reading the
+-     * mip level of the source that matches the solid angle of each sample. The rough
+-     * levels weight every texel of a small source mip with the GGX lobe instead.
+-     *
+-     * @private
+-     * @param {WebGLCubeRenderTarget} pmremTarget - The PMREM.
+-     */
+-    private _applyPMREM;
+-    /**
+-     * Applies the initial fromScene() blur in two passes using a golden-angle
+-     * spiral kernel. Level 0 of the PMREM serves as the intermediate target.
+-     *
+-     * @private
+-     * @param {WebGLCubeRenderTarget} pmremTarget - The PMREM.
+-     * @param {number} sigma - The blur radius in radians.
+-     */
+-    private _blur;
+ }
+-import { CubeCamera } from '../cameras/CubeCamera.js';
+-import { Mesh } from '../objects/Mesh.js';
+-import { Color } from '../math/Color.js';
+-import { Vector3 } from '../math/Vector3.js';
+-import { WebGLCubeRenderTarget } from '../renderers/WebGLCubeRenderTarget.js';
+diff --git a/jsdoc-testing/jsdoc/src/extras/ShapeUtils.d.ts b/jsdoc-testing/jsdoc/src/extras/ShapeUtils.d.ts
+index 333966c85..ac4bb7c35 100644
+--- a/jsdoc-testing/jsdoc/src/extras/ShapeUtils.d.ts
++++ b/jsdoc-testing/jsdoc/src/extras/ShapeUtils.d.ts
+@@ -1,3 +1,5 @@
++import { Vector2Like } from '../math/Vector2.js';
++
+ /**
+  * A class containing utility functions for shapes.
+  *
+@@ -10,14 +12,14 @@ export class ShapeUtils {
+      * @param {Array<Vector2>} contour - An array of 2D points.
+      * @return {number} The area.
+      */
+-    static area(contour: Array<Vector2>): number;
++    static area(contour: readonly Vector2Like[]): number;
+     /**
+      * Returns `true` if the given contour uses a clockwise winding order.
+      *
+      * @param {Array<Vector2>} pts - An array of 2D points defining a polygon.
+      * @return {boolean} Whether the given contour uses a clockwise winding order or not.
+      */
+-    static isClockWise(pts: Array<Vector2>): boolean;
++    static isClockWise(pts: readonly Vector2Like[]): boolean;
+     /**
+      * Triangulates the given shape definition.
+      *
+@@ -25,5 +27,5 @@ export class ShapeUtils {
+      * @param {Array<Array<Vector2>>} holes - An array that holds arrays of 2D points defining the holes.
+      * @return {Array<Array<number>>} An array that holds for each face definition an array with three indices.
+      */
+-    static triangulateShape(contour: Array<Vector2>, holes: Array<Array<Vector2>>): Array<Array<number>>;
++    static triangulateShape(contour: Vector2Like[], holes: Vector2Like[][]): Array<Array<number>>;
+ }
+diff --git a/jsdoc-testing/jsdoc/src/extras/TextureUtils.d.ts b/jsdoc-testing/jsdoc/src/extras/TextureUtils.d.ts
+index 5de7a1677..8ba891a8a 100644
+--- a/jsdoc-testing/jsdoc/src/extras/TextureUtils.d.ts
++++ b/jsdoc-testing/jsdoc/src/extras/TextureUtils.d.ts
+@@ -1,3 +1,6 @@
++import { CompressedPixelFormat, PixelFormat, TextureDataType } from '../constants.js';
++import { Texture } from '../textures/Texture.js';
++
+ /**
+  * Scales the texture as large as possible within its surface without cropping
+  * or stretching the texture. The method preserves the original aspect ratio of
+@@ -34,7 +37,7 @@ export function fill(texture: Texture): Texture;
+  * @param {number} type - The texture's type.
+  * @return {number} The byte length.
+  */
+-export function getByteLength(width: number, height: number, format: number, type: number): number;
++export function getByteLength(width: number, height: number, format: PixelFormat | CompressedPixelFormat, type: TextureDataType): number;
+ /**
+  * A class containing utility functions for textures.
+  *
+@@ -77,5 +80,5 @@ export class TextureUtils {
+      * @param {number} type - The texture's type.
+      * @return {number} The byte length.
+      */
+-    static getByteLength(width: number, height: number, format: number, type: number): number;
++    static getByteLength(width: number, height: number, format: PixelFormat | CompressedPixelFormat, type: TextureDataType): number;
+ }
+diff --git a/jsdoc-testing/jsdoc/src/extras/core/Curve.d.ts b/jsdoc-testing/jsdoc/src/extras/core/Curve.d.ts
+index ff7e9b470..72913cdb4 100644
+--- a/jsdoc-testing/jsdoc/src/extras/core/Curve.d.ts
++++ b/jsdoc-testing/jsdoc/src/extras/core/Curve.d.ts
+@@ -1,16 +1,22 @@
++import { Vector2 } from '../../math/Vector2.js';
++import { Vector3 } from '../../math/Vector3.js';
++
++export interface CurveJSON {
++    metadata: { version: number; type: string; generator: string };
++    arcLengthDivisions: number;
++    type: string;
++}
++
+ /**
+  * An abstract base class for creating an analytic curve object that contains methods
+  * for interpolation.
+  *
+  * @abstract
+  */
+-export class Curve {
++export abstract class Curve<TVector extends Vector2 | Vector3> {
+     /**
+      * The type property is used for detecting the object type
+      * in context of serialization/deserialization.
+-     *
+-     * @type {string}
+-     * @readonly
+      */
+     readonly type: string;
+     /**
+@@ -19,25 +25,15 @@ export class Curve {
+      * precision when using methods like {@link Curve#getSpacedPoints}, it is
+      * recommended to increase the value of this property if the curve is very large.
+      *
+-     * @type {number}
+      * @default 200
+      */
+     arcLengthDivisions: number;
+     /**
+      * Must be set to `true` if the curve parameters have changed.
+      *
+-     * @type {boolean}
+      * @default false
+      */
+     needsUpdate: boolean;
+-    /**
+-     * An internal cache that holds precomputed curve length values.
+-     *
+-     * @private
+-     * @type {?Array<number>}
+-     * @default null
+-     */
+-    private cacheArcLengths;
+     /**
+      * This method returns a vector in 2D or 3D space (depending on the curve definition)
+      * for the given interpolation factor.
+@@ -47,7 +43,7 @@ export class Curve {
+      * @param {(Vector2|Vector3)} [optionalTarget] - The optional target vector the result is written to.
+      * @return {(Vector2|Vector3)} The position on the curve. It can be a 2D or 3D vector depending on the curve definition.
+      */
+-    getPoint(): (Vector2 | Vector3);
++    getPoint(t: number, optionalTarget?: TVector): TVector;
+     /**
+      * This method returns a vector in 2D or 3D space (depending on the curve definition)
+      * for the given interpolation factor. Unlike {@link Curve#getPoint}, this method honors the length
+@@ -57,7 +53,7 @@ export class Curve {
+      * @param {(Vector2|Vector3)} [optionalTarget] - The optional target vector the result is written to.
+      * @return {(Vector2|Vector3)} The position on the curve. It can be a 2D or 3D vector depending on the curve definition.
+      */
+-    getPointAt(u: number, optionalTarget?: (Vector2 | Vector3)): (Vector2 | Vector3);
++    getPointAt(u: number, optionalTarget?: TVector): TVector;
+     /**
+      * This method samples the curve via {@link Curve#getPoint} and returns an array of points representing
+      * the curve shape.
+@@ -65,7 +61,7 @@ export class Curve {
+      * @param {number} [divisions=5] - The number of divisions.
+      * @return {Array<(Vector2|Vector3)>} An array holding the sampled curve values. The number of points is `divisions + 1`.
+      */
+-    getPoints(divisions?: number): Array<(Vector2 | Vector3)>;
++    getPoints(divisions?: number): Array<TVector>;
+     /**
+      * This method samples the curve via {@link Curve#getPointAt} and returns an array of points representing
+      * the curve shape. Unlike {@link Curve#getPoints}, this method returns equi-spaced points across the entire
+@@ -74,7 +70,7 @@ export class Curve {
+      * @param {number} [divisions=5] - The number of divisions.
+      * @return {Array<(Vector2|Vector3)>} An array holding the sampled curve values. The number of points is `divisions + 1`.
+      */
+-    getSpacedPoints(divisions?: number): Array<(Vector2 | Vector3)>;
++    getSpacedPoints(divisions?: number): Array<TVector>;
+     /**
+      * Returns the total arc length of the curve.
+      *
+@@ -115,7 +111,7 @@ export class Curve {
+      * @param {(Vector2|Vector3)} [optionalTarget] - The optional target vector the result is written to.
+      * @return {(Vector2|Vector3)} The tangent vector.
+      */
+-    getTangent(t: number, optionalTarget?: (Vector2 | Vector3)): (Vector2 | Vector3);
++    getTangent(t: number, optionalTarget?: TVector): TVector;
+     /**
+      * Same as {@link Curve#getTangent} but with equidistant samples.
+      *
+@@ -124,7 +120,7 @@ export class Curve {
+      * @return {(Vector2|Vector3)} The tangent vector.
+      * @see {@link Curve#getPointAt}
+      */
+-    getTangentAt(u: number, optionalTarget?: (Vector2 | Vector3)): (Vector2 | Vector3);
++    getTangentAt(u: number, optionalTarget?: TVector): TVector;
+     /**
+      * Generates the Frenet Frames. Requires a curve definition in 3D space. Used
+      * in geometries like {@link TubeGeometry} or {@link ExtrudeGeometry}.
+@@ -143,28 +139,26 @@ export class Curve {
+      *
+      * @return {Curve} A clone of this instance.
+      */
+-    clone(): Curve;
++    clone(): this;
+     /**
+      * Copies the values of the given curve to this instance.
+      *
+      * @param {Curve} source - The curve to copy.
+      * @return {Curve} A reference to this curve.
+      */
+-    copy(source: Curve): Curve;
++    copy(source: Curve<TVector>): this;
+     /**
+      * Serializes the curve into JSON.
+      *
+      * @return {Object} A JSON object representing the serialized curve.
+      * @see {@link ObjectLoader#parse}
+      */
+-    toJSON(): Object;
++    toJSON(): CurveJSON;
+     /**
+      * Deserializes the curve from the given JSON.
+      *
+      * @param {Object} json - The JSON holding the serialized curve.
+      * @return {Curve} A reference to this curve.
+      */
+-    fromJSON(json: Object): Curve;
++    fromJSON(json: CurveJSON): this;
+ }
+-import { Vector2 } from '../../math/Vector2.js';
+-import { Vector3 } from '../../math/Vector3.js';
+diff --git a/jsdoc-testing/jsdoc/src/extras/core/CurvePath.d.ts b/jsdoc-testing/jsdoc/src/extras/core/CurvePath.d.ts
+index c733bfc68..4f6e6ced8 100644
+--- a/jsdoc-testing/jsdoc/src/extras/core/CurvePath.d.ts
++++ b/jsdoc-testing/jsdoc/src/extras/core/CurvePath.d.ts
+@@ -1,46 +1,43 @@
++import { Vector2 } from '../../math/Vector2.js';
++import { Vector3 } from '../../math/Vector3.js';
++import { Curve, CurveJSON } from './Curve.js';
++
++export interface CurvePathJSON extends CurveJSON {
++    autoClose: boolean;
++    curves: CurveJSON[];
++}
++
+ /**
+  * A base class extending {@link Curve}. `CurvePath` is simply an
+  * array of connected curves, but retains the API of a curve.
+  *
+  * @augments Curve
+  */
+-export class CurvePath extends Curve {
+-    type: string;
++export class CurvePath<TVector extends Vector2 | Vector3> extends Curve<TVector> {
+     /**
+      * An array of curves defining the
+      * path.
+-     *
+-     * @type {Array<Curve>}
+      */
+-    curves: Array<Curve>;
++    curves: Array<Curve<TVector>>;
+     /**
+      * Whether the path should automatically be closed
+      * by a line curve.
+      *
+-     * @type {boolean}
+      * @default false
+      */
+     autoClose: boolean;
+-    /**
+-     * An internal cache that holds precomputed curve length values.
+-     *
+-     * @private
+-     * @type {?Array<number>}
+-     * @default null
+-     */
+-    private cacheLengths;
+     /**
+      * Adds a curve to this curve path.
+      *
+      * @param {Curve} curve - The curve to add.
+      */
+-    add(curve: Curve): void;
++    add(curve: Curve<TVector>): void;
+     /**
+      * Adds a line curve to close the path.
+      *
+      * @return {CurvePath} A reference to this curve path.
+      */
+-    closePath(): CurvePath;
++    closePath(): this;
+     /**
+      * This method returns a vector in 2D or 3D space (depending on the curve definitions)
+      * for the given interpolation factor.
+@@ -49,15 +46,15 @@ export class CurvePath extends Curve {
+      * @param {(Vector2|Vector3)} [optionalTarget] - The optional target vector the result is written to.
+      * @return {?(Vector2|Vector3)} The position on the curve. It can be a 2D or 3D vector depending on the curve definition.
+      */
+-    getPoint(t: number, optionalTarget?: (Vector2 | Vector3)): (Vector2 | Vector3) | null;
++    getPoint(t: number, optionalTarget?: TVector): TVector;
+     /**
+      * Returns list of cumulative curve lengths of the defined curves.
+      *
+      * @return {Array<number>} The curve lengths.
+      */
+     getCurveLengths(): Array<number>;
+-    getSpacedPoints(divisions?: number): any[];
+-    copy(source: any): this;
+-    fromJSON(json: any): this;
++    getSpacedPoints(divisions?: number): TVector[];
++    copy(source: CurvePath<TVector>): this;
++    toJSON(): CurvePathJSON;
++    fromJSON(json: CurvePathJSON): this;
+ }
+-import { Curve } from './Curve.js';
+diff --git a/jsdoc-testing/jsdoc/src/extras/core/Path.d.ts b/jsdoc-testing/jsdoc/src/extras/core/Path.d.ts
+index 521287532..fa7d45734 100644
+--- a/jsdoc-testing/jsdoc/src/extras/core/Path.d.ts
++++ b/jsdoc-testing/jsdoc/src/extras/core/Path.d.ts
+@@ -1,3 +1,10 @@
++import { Vector2, Vector2Tuple } from '../../math/Vector2.js';
++import { CurvePath, CurvePathJSON } from './CurvePath.js';
++
++export interface PathJSON extends CurvePathJSON {
++    currentPoint: Vector2Tuple;
++}
++
+ /**
+  * A 2D path representation. The class provides methods for creating paths
+  * and contours of 2D shapes similar to the 2D Canvas API.
+@@ -20,7 +27,7 @@
+  *
+  * @augments CurvePath
+  */
+-export class Path extends CurvePath {
++export class Path extends CurvePath<Vector2> {
+     /**
+      * Constructs a new path.
+      *
+@@ -29,8 +36,6 @@ export class Path extends CurvePath {
+     constructor(points?: Array<Vector2>);
+     /**
+      * The current offset of the path. Any new curve added will start here.
+-     *
+-     * @type {Vector2}
+      */
+     currentPoint: Vector2;
+     /**
+@@ -40,7 +45,7 @@ export class Path extends CurvePath {
+      * @param {Array<Vector2>} points - An array of 2D points.
+      * @return {Path} A reference to this path.
+      */
+-    setFromPoints(points: Array<Vector2>): Path;
++    setFromPoints(points: Array<Vector2>): this;
+     /**
+      * Moves {@link Path#currentPoint} to the given point.
+      *
+@@ -48,7 +53,7 @@ export class Path extends CurvePath {
+      * @param {number} y - The y coordinate.
+      * @return {Path} A reference to this path.
+      */
+-    moveTo(x: number, y: number): Path;
++    moveTo(x: number, y: number): this;
+     /**
+      * Adds an instance of {@link LineCurve} to the path by connecting
+      * the current point with the given one.
+@@ -57,7 +62,7 @@ export class Path extends CurvePath {
+      * @param {number} y - The y coordinate of the end point.
+      * @return {Path} A reference to this path.
+      */
+-    lineTo(x: number, y: number): Path;
++    lineTo(x: number, y: number): this;
+     /**
+      * Adds an instance of {@link QuadraticBezierCurve} to the path by connecting
+      * the current point with the given one.
+@@ -68,7 +73,7 @@ export class Path extends CurvePath {
+      * @param {number} aY - The y coordinate of the end point.
+      * @return {Path} A reference to this path.
+      */
+-    quadraticCurveTo(aCPx: number, aCPy: number, aX: number, aY: number): Path;
++    quadraticCurveTo(aCPx: number, aCPy: number, aX: number, aY: number): this;
+     /**
+      * Adds an instance of {@link CubicBezierCurve} to the path by connecting
+      * the current point with the given one.
+@@ -81,7 +86,7 @@ export class Path extends CurvePath {
+      * @param {number} aY - The y coordinate of the end point.
+      * @return {Path} A reference to this path.
+      */
+-    bezierCurveTo(aCP1x: number, aCP1y: number, aCP2x: number, aCP2y: number, aX: number, aY: number): Path;
++    bezierCurveTo(aCP1x: number, aCP1y: number, aCP2x: number, aCP2y: number, aX: number, aY: number): this;
+     /**
+      * Adds an instance of {@link SplineCurve} to the path by connecting
+      * the current point with the given list of points.
+@@ -89,7 +94,7 @@ export class Path extends CurvePath {
+      * @param {Array<Vector2>} pts - An array of points in 2D space.
+      * @return {Path} A reference to this path.
+      */
+-    splineThru(pts: Array<Vector2>): Path;
++    splineThru(pts: Array<Vector2>): this;
+     /**
+      * Adds an arc as an instance of {@link EllipseCurve} to the path, positioned relative
+      * to the current point.
+@@ -102,7 +107,7 @@ export class Path extends CurvePath {
+      * @param {boolean} [aClockwise=false] - Whether to sweep the arc clockwise or not.
+      * @return {Path} A reference to this path.
+      */
+-    arc(aX?: number, aY?: number, aRadius?: number, aStartAngle?: number, aEndAngle?: number, aClockwise?: boolean): Path;
++    arc(aX?: number, aY?: number, aRadius?: number, aStartAngle?: number, aEndAngle?: number, aClockwise?: boolean): this;
+     /**
+      * Adds an absolutely positioned arc as an instance of {@link EllipseCurve} to the path.
+      *
+@@ -114,7 +119,7 @@ export class Path extends CurvePath {
+      * @param {boolean} [aClockwise=false] - Whether to sweep the arc clockwise or not.
+      * @return {Path} A reference to this path.
+      */
+-    absarc(aX?: number, aY?: number, aRadius?: number, aStartAngle?: number, aEndAngle?: number, aClockwise?: boolean): Path;
++    absarc(aX?: number, aY?: number, aRadius?: number, aStartAngle?: number, aEndAngle?: number, aClockwise?: boolean): this;
+     /**
+      * Adds an ellipse as an instance of {@link EllipseCurve} to the path, positioned relative
+      * to the current point
+@@ -129,7 +134,7 @@ export class Path extends CurvePath {
+      * @param {number} [aRotation=0] - The rotation angle of the ellipse in radians, counterclockwise from the positive X axis.
+      * @return {Path} A reference to this path.
+      */
+-    ellipse(aX?: number, aY?: number, xRadius?: number, yRadius?: number, aStartAngle?: number, aEndAngle?: number, aClockwise?: boolean, aRotation?: number): Path;
++    ellipse(aX?: number, aY?: number, xRadius?: number, yRadius?: number, aStartAngle?: number, aEndAngle?: number, aClockwise?: boolean, aRotation?: number): this;
+     /**
+      * Adds an absolutely positioned ellipse as an instance of {@link EllipseCurve} to the path.
+      *
+@@ -143,9 +148,8 @@ export class Path extends CurvePath {
+      * @param {number} [aRotation=0] - The rotation angle of the ellipse in radians, counterclockwise from the positive X axis.
+      * @return {Path} A reference to this path.
+      */
+-    absellipse(aX?: number, aY?: number, xRadius?: number, yRadius?: number, aStartAngle?: number, aEndAngle?: number, aClockwise?: boolean, aRotation?: number): Path;
+-    copy(source: any): this;
+-    fromJSON(json: any): this;
++    absellipse(aX?: number, aY?: number, xRadius?: number, yRadius?: number, aStartAngle?: number, aEndAngle?: number, aClockwise?: boolean, aRotation?: number): this;
++    copy(source: Path): this;
++    toJSON(): PathJSON;
++    fromJSON(json: PathJSON): this;
+ }
+-import { CurvePath } from './CurvePath.js';
+-import { Vector2 } from '../../math/Vector2.js';
+diff --git a/jsdoc-testing/jsdoc/src/extras/core/Shape.d.ts b/jsdoc-testing/jsdoc/src/extras/core/Shape.d.ts
+index 056fdb610..ee0ed6e02 100644
+--- a/jsdoc-testing/jsdoc/src/extras/core/Shape.d.ts
++++ b/jsdoc-testing/jsdoc/src/extras/core/Shape.d.ts
+@@ -1,3 +1,11 @@
++import { Vector2 } from '../../math/Vector2.js';
++import { Path, PathJSON } from './Path.js';
++
++export interface ShapeJSON extends PathJSON {
++    uuid: string;
++    holes: PathJSON[];
++}
++
+ /**
+  * Defines an arbitrary 2d shape plane using paths with optional holes. It
+  * can be used with {@link ExtrudeGeometry}, {@link ShapeGeometry}, to get
+@@ -38,17 +46,11 @@ export class Shape extends Path {
+     constructor(points?: Array<Vector2>);
+     /**
+      * The UUID of the shape.
+-     *
+-     * @type {string}
+-     * @readonly
+      */
+     readonly uuid: string;
+     /**
+      * Defines the holes in the shape. Hole definitions must use the
+      * opposite winding order (CW/CCW) than the outer shape.
+-     *
+-     * @type {Array<Path>}
+-     * @readonly
+      */
+     readonly holes: Array<Path>;
+     /**
+@@ -70,7 +72,7 @@ export class Shape extends Path {
+         shape: Array<Vector2>;
+         holes: Array<Array<Vector2>>;
+     };
+-    copy(source: any): this;
+-    fromJSON(json: any): this;
++    copy(source: Shape): this;
++    toJSON(): ShapeJSON;
++    fromJSON(json: ShapeJSON): this;
+ }
+-import { Path } from './Path.js';
 diff --git a/jsdoc-testing/jsdoc/src/extras/core/ShapePath.d.ts b/jsdoc-testing/jsdoc/src/extras/core/ShapePath.d.ts
 index fef0c558e..8f48716ce 100644
 --- a/jsdoc-testing/jsdoc/src/extras/core/ShapePath.d.ts
@@ -10344,6 +11549,623 @@ index fef0c558e..8f48716ce 100644
 -import { Path } from './Path.js';
 -import { Vector2 } from '../../math/Vector2.js';
 -import { Shape } from './Shape.js';
+diff --git a/jsdoc-testing/jsdoc/src/extras/curves/ArcCurve.d.ts b/jsdoc-testing/jsdoc/src/extras/curves/ArcCurve.d.ts
+index 3ae4feae2..ebc48e66c 100644
+--- a/jsdoc-testing/jsdoc/src/extras/curves/ArcCurve.d.ts
++++ b/jsdoc-testing/jsdoc/src/extras/curves/ArcCurve.d.ts
+@@ -1,3 +1,5 @@
++import { EllipseCurve } from './EllipseCurve.js';
++
+ /**
+  * A curve representing an arc.
+  *
+@@ -18,10 +20,7 @@ export class ArcCurve extends EllipseCurve {
+     /**
+      * This flag can be used for type testing.
+      *
+-     * @type {boolean}
+-     * @readonly
+      * @default true
+      */
+-    readonly isArcCurve: boolean;
++    readonly isArcCurve: true;
+ }
+-import { EllipseCurve } from './EllipseCurve.js';
+diff --git a/jsdoc-testing/jsdoc/src/extras/curves/CatmullRomCurve3.d.ts b/jsdoc-testing/jsdoc/src/extras/curves/CatmullRomCurve3.d.ts
+index 8798e6d39..c243822a3 100644
+--- a/jsdoc-testing/jsdoc/src/extras/curves/CatmullRomCurve3.d.ts
++++ b/jsdoc-testing/jsdoc/src/extras/curves/CatmullRomCurve3.d.ts
+@@ -1,3 +1,8 @@
++import { Curve } from '../core/Curve.js';
++import { Vector3 } from '../../math/Vector3.js';
++
++export type CurveType = "centripetal" | "chordal" | "catmullrom";
++
+ /**
+  * A curve representing a Catmull-Rom spline.
+  *
+@@ -22,7 +27,7 @@
+  *
+  * @augments Curve
+  */
+-export class CatmullRomCurve3 extends Curve {
++export class CatmullRomCurve3 extends Curve<Vector3> {
+     /**
+      * Constructs a new Catmull-Rom curve.
+      *
+@@ -31,40 +36,32 @@ export class CatmullRomCurve3 extends Curve {
+      * @param {('centripetal'|'chordal'|'catmullrom')} [curveType='centripetal'] - The curve type.
+      * @param {number} [tension=0.5] - Tension of the curve.
+      */
+-    constructor(points?: Array<Vector3>, closed?: boolean, curveType?: ("centripetal" | "chordal" | "catmullrom"), tension?: number);
++    constructor(points?: Array<Vector3>, closed?: boolean, curveType?: CurveType, tension?: number);
+     /**
+      * This flag can be used for type testing.
+      *
+-     * @type {boolean}
+-     * @readonly
+      * @default true
+      */
+-    readonly isCatmullRomCurve3: boolean;
+-    type: string;
++    readonly isCatmullRomCurve3: true;
+     /**
+      * An array of 3D points defining the curve.
+-     *
+-     * @type {Array<Vector3>}
+      */
+     points: Array<Vector3>;
+     /**
+      * Whether the curve is closed or not.
+      *
+-     * @type {boolean}
+      * @default false
+      */
+     closed: boolean;
+     /**
+      * The curve type.
+      *
+-     * @type {('centripetal'|'chordal'|'catmullrom')}
+      * @default 'centripetal'
+      */
+-    curveType: ("centripetal" | "chordal" | "catmullrom");
++    curveType: CurveType;
+     /**
+      * Tension of the curve.
+      *
+-     * @type {number}
+      * @default 0.5
+      */
+     tension: number;
+@@ -76,8 +73,5 @@ export class CatmullRomCurve3 extends Curve {
+      * @return {Vector3} The position on the curve.
+      */
+     getPoint(t: number, optionalTarget?: Vector3): Vector3;
+-    copy(source: any): this;
+-    fromJSON(json: any): this;
++    copy(source: CatmullRomCurve3): this;
+ }
+-import { Curve } from '../core/Curve.js';
+-import { Vector3 } from '../../math/Vector3.js';
+diff --git a/jsdoc-testing/jsdoc/src/extras/curves/CubicBezierCurve.d.ts b/jsdoc-testing/jsdoc/src/extras/curves/CubicBezierCurve.d.ts
+index 434713a9f..ca53adf6e 100644
+--- a/jsdoc-testing/jsdoc/src/extras/curves/CubicBezierCurve.d.ts
++++ b/jsdoc-testing/jsdoc/src/extras/curves/CubicBezierCurve.d.ts
+@@ -1,3 +1,6 @@
++import { Curve } from '../core/Curve.js';
++import { Vector2 } from '../../math/Vector2.js';
++
+ /**
+  * A curve representing a 2D Cubic Bezier curve.
+  *
+@@ -20,7 +23,7 @@
+  *
+  * @augments Curve
+  */
+-export class CubicBezierCurve extends Curve {
++export class CubicBezierCurve extends Curve<Vector2> {
+     /**
+      * Constructs a new Cubic Bezier curve.
+      *
+@@ -33,34 +36,23 @@ export class CubicBezierCurve extends Curve {
+     /**
+      * This flag can be used for type testing.
+      *
+-     * @type {boolean}
+-     * @readonly
+      * @default true
+      */
+-    readonly isCubicBezierCurve: boolean;
+-    type: string;
++    readonly isCubicBezierCurve: true;
+     /**
+      * The start point.
+-     *
+-     * @type {Vector2}
+      */
+     v0: Vector2;
+     /**
+      * The first control point.
+-     *
+-     * @type {Vector2}
+      */
+     v1: Vector2;
+     /**
+      * The second control point.
+-     *
+-     * @type {Vector2}
+      */
+     v2: Vector2;
+     /**
+      * The end point.
+-     *
+-     * @type {Vector2}
+      */
+     v3: Vector2;
+     /**
+@@ -71,8 +63,5 @@ export class CubicBezierCurve extends Curve {
+      * @return {Vector2} The position on the curve.
+      */
+     getPoint(t: number, optionalTarget?: Vector2): Vector2;
+-    copy(source: any): this;
+-    fromJSON(json: any): this;
++    copy(source: CubicBezierCurve): this;
+ }
+-import { Curve } from '../core/Curve.js';
+-import { Vector2 } from '../../math/Vector2.js';
+diff --git a/jsdoc-testing/jsdoc/src/extras/curves/CubicBezierCurve3.d.ts b/jsdoc-testing/jsdoc/src/extras/curves/CubicBezierCurve3.d.ts
+index ccc99379e..291df37b2 100644
+--- a/jsdoc-testing/jsdoc/src/extras/curves/CubicBezierCurve3.d.ts
++++ b/jsdoc-testing/jsdoc/src/extras/curves/CubicBezierCurve3.d.ts
+@@ -1,9 +1,12 @@
++import { Curve } from '../core/Curve.js';
++import { Vector3 } from '../../math/Vector3.js';
++
+ /**
+  * A curve representing a 3D Cubic Bezier curve.
+  *
+  * @augments Curve
+  */
+-export class CubicBezierCurve3 extends Curve {
++export class CubicBezierCurve3 extends Curve<Vector3> {
+     /**
+      * Constructs a new Cubic Bezier curve.
+      *
+@@ -16,34 +19,23 @@ export class CubicBezierCurve3 extends Curve {
+     /**
+      * This flag can be used for type testing.
+      *
+-     * @type {boolean}
+-     * @readonly
+      * @default true
+      */
+-    readonly isCubicBezierCurve3: boolean;
+-    type: string;
++    readonly isCubicBezierCurve3: true;
+     /**
+      * The start point.
+-     *
+-     * @type {Vector3}
+      */
+     v0: Vector3;
+     /**
+      * The first control point.
+-     *
+-     * @type {Vector3}
+      */
+     v1: Vector3;
+     /**
+      * The second control point.
+-     *
+-     * @type {Vector3}
+      */
+     v2: Vector3;
+     /**
+      * The end point.
+-     *
+-     * @type {Vector3}
+      */
+     v3: Vector3;
+     /**
+@@ -54,8 +46,5 @@ export class CubicBezierCurve3 extends Curve {
+      * @return {Vector3} The position on the curve.
+      */
+     getPoint(t: number, optionalTarget?: Vector3): Vector3;
+-    copy(source: any): this;
+-    fromJSON(json: any): this;
++    copy(source: CubicBezierCurve3): this;
+ }
+-import { Curve } from '../core/Curve.js';
+-import { Vector3 } from '../../math/Vector3.js';
+diff --git a/jsdoc-testing/jsdoc/src/extras/curves/Curves.d.ts b/jsdoc-testing/jsdoc/src/extras/curves/Curves.d.ts
+index ce726ca5a..e69264d92 100644
+--- a/jsdoc-testing/jsdoc/src/extras/curves/Curves.d.ts
++++ b/jsdoc-testing/jsdoc/src/extras/curves/Curves.d.ts
+@@ -1,5 +1,5 @@
+ export { ArcCurve } from "./ArcCurve.js";
+-export { CatmullRomCurve3 } from "./CatmullRomCurve3.js";
++export { CatmullRomCurve3, CurveType } from "./CatmullRomCurve3.js";
+ export { CubicBezierCurve } from "./CubicBezierCurve.js";
+ export { CubicBezierCurve3 } from "./CubicBezierCurve3.js";
+ export { EllipseCurve } from "./EllipseCurve.js";
+diff --git a/jsdoc-testing/jsdoc/src/extras/curves/EllipseCurve.d.ts b/jsdoc-testing/jsdoc/src/extras/curves/EllipseCurve.d.ts
+index 4080dab88..a2b2b2ef4 100644
+--- a/jsdoc-testing/jsdoc/src/extras/curves/EllipseCurve.d.ts
++++ b/jsdoc-testing/jsdoc/src/extras/curves/EllipseCurve.d.ts
+@@ -1,3 +1,6 @@
++import { Curve } from '../core/Curve.js';
++import { Vector2 } from '../../math/Vector2.js';
++
+ /**
+  * A curve representing an ellipse.
+  *
+@@ -21,7 +24,7 @@
+  *
+  * @augments Curve
+  */
+-export class EllipseCurve extends Curve {
++export class EllipseCurve extends Curve<Vector2> {
+     /**
+      * Constructs a new ellipse curve.
+      *
+@@ -38,23 +41,18 @@ export class EllipseCurve extends Curve {
+     /**
+      * This flag can be used for type testing.
+      *
+-     * @type {boolean}
+-     * @readonly
+      * @default true
+      */
+-    readonly isEllipseCurve: boolean;
+-    type: string;
++    readonly isEllipseCurve: true;
+     /**
+      * The X center of the ellipse.
+      *
+-     * @type {number}
+      * @default 0
+      */
+     aX: number;
+     /**
+      * The Y center of the ellipse.
+      *
+-     * @type {number}
+      * @default 0
+      */
+     aY: number;
+@@ -62,7 +60,6 @@ export class EllipseCurve extends Curve {
+      * The radius of the ellipse in the x direction.
+      * Setting the this value equal to the {@link EllipseCurve#yRadius} will result in a circle.
+      *
+-     * @type {number}
+      * @default 1
+      */
+     xRadius: number;
+@@ -70,35 +67,30 @@ export class EllipseCurve extends Curve {
+      * The radius of the ellipse in the y direction.
+      * Setting the this value equal to the {@link EllipseCurve#xRadius} will result in a circle.
+      *
+-     * @type {number}
+      * @default 1
+      */
+     yRadius: number;
+     /**
+      * The start angle of the curve in radians starting from the positive X axis.
+      *
+-     * @type {number}
+      * @default 0
+      */
+     aStartAngle: number;
+     /**
+      * The end angle of the curve in radians starting from the positive X axis.
+      *
+-     * @type {number}
+      * @default Math.PI*2
+      */
+     aEndAngle: number;
+     /**
+      * Whether the ellipse is drawn clockwise or not.
+      *
+-     * @type {boolean}
+      * @default false
+      */
+     aClockwise: boolean;
+     /**
+      * The rotation angle of the ellipse in radians, counterclockwise from the positive X axis.
+      *
+-     * @type {number}
+      * @default 0
+      */
+     aRotation: number;
+@@ -110,8 +102,5 @@ export class EllipseCurve extends Curve {
+      * @return {Vector2} The position on the curve.
+      */
+     getPoint(t: number, optionalTarget?: Vector2): Vector2;
+-    copy(source: any): this;
+-    fromJSON(json: any): this;
++    copy(source: EllipseCurve): this;
+ }
+-import { Curve } from '../core/Curve.js';
+-import { Vector2 } from '../../math/Vector2.js';
+diff --git a/jsdoc-testing/jsdoc/src/extras/curves/LineCurve.d.ts b/jsdoc-testing/jsdoc/src/extras/curves/LineCurve.d.ts
+index 3a0f08206..78bbc1331 100644
+--- a/jsdoc-testing/jsdoc/src/extras/curves/LineCurve.d.ts
++++ b/jsdoc-testing/jsdoc/src/extras/curves/LineCurve.d.ts
+@@ -1,9 +1,12 @@
++import { Curve } from '../core/Curve.js';
++import { Vector2 } from '../../math/Vector2.js';
++
+ /**
+  * A curve representing a 2D line segment.
+  *
+  * @augments Curve
+  */
+-export class LineCurve extends Curve {
++export class LineCurve extends Curve<Vector2> {
+     /**
+      * Constructs a new line curve.
+      *
+@@ -14,22 +17,15 @@ export class LineCurve extends Curve {
+     /**
+      * This flag can be used for type testing.
+      *
+-     * @type {boolean}
+-     * @readonly
+      * @default true
+      */
+-    readonly isLineCurve: boolean;
+-    type: string;
++    readonly isLineCurve: true;
+     /**
+      * The start point.
+-     *
+-     * @type {Vector2}
+      */
+     v1: Vector2;
+     /**
+      * The end point.
+-     *
+-     * @type {Vector2}
+      */
+     v2: Vector2;
+     /**
+@@ -40,11 +36,5 @@ export class LineCurve extends Curve {
+      * @return {Vector2} The position on the line.
+      */
+     getPoint(t: number, optionalTarget?: Vector2): Vector2;
+-    getPointAt(u: any, optionalTarget: any): Vector2;
+-    getTangent(t: any, optionalTarget?: Vector2): Vector2;
+-    getTangentAt(u: any, optionalTarget: any): Vector2;
+-    copy(source: any): this;
+-    fromJSON(json: any): this;
++    copy(source: LineCurve): this;
+ }
+-import { Curve } from '../core/Curve.js';
+-import { Vector2 } from '../../math/Vector2.js';
+diff --git a/jsdoc-testing/jsdoc/src/extras/curves/LineCurve3.d.ts b/jsdoc-testing/jsdoc/src/extras/curves/LineCurve3.d.ts
+index 5f03eb30d..4c9868534 100644
+--- a/jsdoc-testing/jsdoc/src/extras/curves/LineCurve3.d.ts
++++ b/jsdoc-testing/jsdoc/src/extras/curves/LineCurve3.d.ts
+@@ -1,9 +1,12 @@
++import { Curve } from '../core/Curve.js';
++import { Vector3 } from '../../math/Vector3.js';
++
+ /**
+  * A curve representing a 3D line segment.
+  *
+  * @augments Curve
+  */
+-export class LineCurve3 extends Curve {
++export class LineCurve3 extends Curve<Vector3> {
+     /**
+      * Constructs a new line curve.
+      *
+@@ -14,24 +17,17 @@ export class LineCurve3 extends Curve {
+     /**
+      * This flag can be used for type testing.
+      *
+-     * @type {boolean}
+-     * @readonly
+      * @default true
+      */
+-    readonly isLineCurve3: boolean;
+-    type: string;
++    readonly isLineCurve3: true;
+     /**
+      * The start point.
+-     *
+-     * @type {Vector3}
+      */
+     v1: Vector3;
+     /**
+      * The end point.
+-     *
+-     * @type {Vector2}
+      */
+-    v2: Vector2;
++    v2: Vector3;
+     /**
+      * Returns a point on the line.
+      *
+@@ -40,11 +36,5 @@ export class LineCurve3 extends Curve {
+      * @return {Vector3} The position on the line.
+      */
+     getPoint(t: number, optionalTarget?: Vector3): Vector3;
+-    getPointAt(u: any, optionalTarget: any): Vector3;
+-    getTangent(t: any, optionalTarget?: Vector3): Vector3;
+-    getTangentAt(u: any, optionalTarget: any): Vector3;
+-    copy(source: any): this;
+-    fromJSON(json: any): this;
++    copy(source: LineCurve3): this;
+ }
+-import { Curve } from '../core/Curve.js';
+-import { Vector3 } from '../../math/Vector3.js';
+diff --git a/jsdoc-testing/jsdoc/src/extras/curves/QuadraticBezierCurve.d.ts b/jsdoc-testing/jsdoc/src/extras/curves/QuadraticBezierCurve.d.ts
+index d123a23b5..69f8bfdfd 100644
+--- a/jsdoc-testing/jsdoc/src/extras/curves/QuadraticBezierCurve.d.ts
++++ b/jsdoc-testing/jsdoc/src/extras/curves/QuadraticBezierCurve.d.ts
+@@ -1,3 +1,6 @@
++import { Curve } from '../core/Curve.js';
++import { Vector2 } from '../../math/Vector2.js';
++
+ /**
+  * A curve representing a 2D Quadratic Bezier curve.
+  *
+@@ -19,7 +22,7 @@
+  *
+  * @augments Curve
+  */
+-export class QuadraticBezierCurve extends Curve {
++export class QuadraticBezierCurve extends Curve<Vector2> {
+     /**
+      * Constructs a new Quadratic Bezier curve.
+      *
+@@ -31,28 +34,19 @@ export class QuadraticBezierCurve extends Curve {
+     /**
+      * This flag can be used for type testing.
+      *
+-     * @type {boolean}
+-     * @readonly
+      * @default true
+      */
+-    readonly isQuadraticBezierCurve: boolean;
+-    type: string;
++    readonly isQuadraticBezierCurve: true;
+     /**
+      * The start point.
+-     *
+-     * @type {Vector2}
+      */
+     v0: Vector2;
+     /**
+      * The control point.
+-     *
+-     * @type {Vector2}
+      */
+     v1: Vector2;
+     /**
+      * The end point.
+-     *
+-     * @type {Vector2}
+      */
+     v2: Vector2;
+     /**
+@@ -63,8 +57,5 @@ export class QuadraticBezierCurve extends Curve {
+      * @return {Vector2} The position on the curve.
+      */
+     getPoint(t: number, optionalTarget?: Vector2): Vector2;
+-    copy(source: any): this;
+-    fromJSON(json: any): this;
++    copy(source: QuadraticBezierCurve): this;
+ }
+-import { Curve } from '../core/Curve.js';
+-import { Vector2 } from '../../math/Vector2.js';
+diff --git a/jsdoc-testing/jsdoc/src/extras/curves/QuadraticBezierCurve3.d.ts b/jsdoc-testing/jsdoc/src/extras/curves/QuadraticBezierCurve3.d.ts
+index 5166fe270..16373fc02 100644
+--- a/jsdoc-testing/jsdoc/src/extras/curves/QuadraticBezierCurve3.d.ts
++++ b/jsdoc-testing/jsdoc/src/extras/curves/QuadraticBezierCurve3.d.ts
+@@ -1,9 +1,12 @@
++import { Curve } from '../core/Curve.js';
++import { Vector3 } from '../../math/Vector3.js';
++
+ /**
+  * A curve representing a 3D Quadratic Bezier curve.
+  *
+  * @augments Curve
+  */
+-export class QuadraticBezierCurve3 extends Curve {
++export class QuadraticBezierCurve3 extends Curve<Vector3> {
+     /**
+      * Constructs a new Quadratic Bezier curve.
+      *
+@@ -15,28 +18,19 @@ export class QuadraticBezierCurve3 extends Curve {
+     /**
+      * This flag can be used for type testing.
+      *
+-     * @type {boolean}
+-     * @readonly
+      * @default true
+      */
+-    readonly isQuadraticBezierCurve3: boolean;
+-    type: string;
++    readonly isQuadraticBezierCurve3: true;
+     /**
+      * The start point.
+-     *
+-     * @type {Vector3}
+      */
+     v0: Vector3;
+     /**
+      * The control point.
+-     *
+-     * @type {Vector3}
+      */
+     v1: Vector3;
+     /**
+      * The end point.
+-     *
+-     * @type {Vector3}
+      */
+     v2: Vector3;
+     /**
+@@ -47,8 +41,5 @@ export class QuadraticBezierCurve3 extends Curve {
+      * @return {Vector3} The position on the curve.
+      */
+     getPoint(t: number, optionalTarget?: Vector3): Vector3;
+-    copy(source: any): this;
+-    fromJSON(json: any): this;
++    copy(source: QuadraticBezierCurve3): this;
+ }
+-import { Curve } from '../core/Curve.js';
+-import { Vector3 } from '../../math/Vector3.js';
+diff --git a/jsdoc-testing/jsdoc/src/extras/curves/SplineCurve.d.ts b/jsdoc-testing/jsdoc/src/extras/curves/SplineCurve.d.ts
+index 10e62e17d..24a16521c 100644
+--- a/jsdoc-testing/jsdoc/src/extras/curves/SplineCurve.d.ts
++++ b/jsdoc-testing/jsdoc/src/extras/curves/SplineCurve.d.ts
+@@ -1,3 +1,6 @@
++import { Curve } from '../core/Curve.js';
++import { Vector2 } from '../../math/Vector2.js';
++
+ /**
+  * A curve representing a 2D spline curve.
+  *
+@@ -22,7 +25,7 @@
+  *
+  * @augments Curve
+  */
+-export class SplineCurve extends Curve {
++export class SplineCurve extends Curve<Vector2> {
+     /**
+      * Constructs a new 2D spline curve.
+      *
+@@ -32,16 +35,11 @@ export class SplineCurve extends Curve {
+     /**
+      * This flag can be used for type testing.
+      *
+-     * @type {boolean}
+-     * @readonly
+      * @default true
+      */
+-    readonly isSplineCurve: boolean;
+-    type: string;
++    readonly isSplineCurve: true;
+     /**
+      * An array of 2D points defining the curve.
+-     *
+-     * @type {Array<Vector2>}
+      */
+     points: Array<Vector2>;
+     /**
+@@ -52,8 +50,5 @@ export class SplineCurve extends Curve {
+      * @return {Vector2} The position on the curve.
+      */
+     getPoint(t: number, optionalTarget?: Vector2): Vector2;
+-    copy(source: any): this;
+-    fromJSON(json: any): this;
++    copy(source: SplineCurve): this;
+ }
+-import { Curve } from '../core/Curve.js';
+-import { Vector2 } from '../../math/Vector2.js';
 diff --git a/jsdoc-testing/jsdoc/src/helpers/ArrowHelper.d.ts b/jsdoc-testing/jsdoc/src/helpers/ArrowHelper.d.ts
 index c4ee0cb4f..d14d62040 100644
 --- a/jsdoc-testing/jsdoc/src/helpers/ArrowHelper.d.ts
