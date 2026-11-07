@@ -29,13 +29,6 @@ export class FileLoader<TData = string | ArrayBuffer> extends Loader<TData> {
      */
     responseType: string;
     /**
-     * Used for aborting requests.
-     *
-     * @private
-     * @type {AbortController}
-     */
-    private _abortController;
-    /**
      * Starts loading from the given URL and pass the loaded response to the `onLoad()` callback.
      *
      * @param {string} url - The path/URL of the file to be loaded. This can also be a data URI.

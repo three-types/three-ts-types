@@ -103,14 +103,6 @@ export abstract class DataTextureLoader extends Loader<DataTexture> {
      * @return {DataTexture} The data texture.
      */
     createDataTexture(buffer: ArrayBuffer): DataTexture;
-    /**
-     * Applies the given parsed texture data to the given data texture.
-     *
-     * @private
-     * @param {DataTexture} texture - The data texture.
-     * @param {DataTextureLoader~TexData} texData - The parsed texture data.
-     */
-    private _applyTexData;
 }
 import {
     ColorSpace,

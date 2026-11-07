@@ -66,13 +66,6 @@ export class LoadingManager {
      */
     onError: ((url: string) => void) | undefined;
     /**
-     * Used for aborting ongoing requests in loaders using this manager.
-     *
-     * @private
-     * @type {AbortController | null}
-     */
-    private _abortController;
-    /**
      * This should be called by any loader using the manager when the loader
      * starts loading an item.
      *

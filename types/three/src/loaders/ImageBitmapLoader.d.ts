@@ -43,13 +43,6 @@ export class ImageBitmapLoader extends Loader<ImageBitmap> {
      */
     options: ImageBitmapOptions;
     /**
-     * Used for aborting requests.
-     *
-     * @private
-     * @type {AbortController}
-     */
-    private _abortController;
-    /**
      * Sets the given loader options. The structure of the object must match the `options` parameter of
      * [createImageBitmap](https://developer.mozilla.org/en-US/docs/Web/API/Window/createImageBitmap).
      *

@@ -29,13 +29,6 @@ declare class NodeObjectLoader extends ObjectLoader {
         [x: string]: new() => NodeMaterial;
     };
     /**
-     * A reference to hold the `nodes` JSON property.
-     *
-     * @private
-     * @type {?Object[]}
-     */
-    private _nodesJSON;
-    /**
      * Defines the dictionary of node types.
      *
      * @param {Object<string,Node.constructor>} value - The node library defined as `<classname,class>`.
