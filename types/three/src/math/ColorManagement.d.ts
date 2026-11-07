@@ -28,8 +28,5 @@ export interface ColorManagement {
     getToneMappingMode: (colorSpace: string) => "extended" | "standard";
     getLuminanceCoefficients: (target: Vector3, colorSpace?: string) => Vector3;
     define: (colorSpaces: Record<string, ColorSpaceDefinition>) => void;
-    _getMatrix: (targetMatrix: Matrix3, sourceColorSpace: string, targetColorSpace: string) => Matrix3;
-    _getDrawingBufferColorSpace: (colorSpace: string) => string;
-    _getUnpackColorSpace: (colorSpace?: string) => string;
 }
 export const ColorManagement: ColorManagement;

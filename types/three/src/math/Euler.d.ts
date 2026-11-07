@@ -40,10 +40,6 @@ export class Euler {
      * @default true
      */
     readonly isEuler: true;
-    _x: number;
-    _y: number;
-    _z: number;
-    _order: EulerOrder;
     set x(value: number);
     /**
      * The angle of the x axis in radians.
@@ -161,10 +157,13 @@ export class Euler {
      * @return {Array<number,number,number,string>} The Euler components.
      */
     toArray(array?: Partial<EulerTuple>, offset?: number): EulerTuple;
-    _onChange(callback: () => void): this;
-    _onChangeCallback: () => void;
     [Symbol.iterator](): Generator<string | number, void, unknown>;
-}
-export namespace Euler {
-    let DEFAULT_ORDER: EulerOrder;
+    /**
+     * The default Euler angle order.
+     *
+     * @static
+     * @type {string}
+     * @default 'XYZ'
+     */
+    static DEFAULT_ORDER: EulerOrder;
 }

@@ -235,29 +235,29 @@ export function denormalize(
  * @return {number|undefined} The normalization factor.
  */
 export function getNormalizationScale(array: TypedArray): number | undefined;
-export namespace MathUtils {
-    export { DEG2RAD };
-    export { RAD2DEG };
-    export { generateUUID };
-    export { clamp };
-    export { euclideanModulo };
-    export { mapLinear };
-    export { inverseLerp };
-    export { lerp };
-    export { damp };
-    export { pingpong };
-    export { smoothstep };
-    export { smootherstep };
-    export { randInt };
-    export { randFloat };
-    export { randFloatSpread };
-    export { seededRandom };
-    export { degToRad };
-    export { radToDeg };
-    export { isPowerOfTwo };
-    export { ceilPowerOfTwo };
-    export { floorPowerOfTwo };
-    export { setQuaternionFromProperEuler };
-    export { normalize };
-    export { denormalize };
-}
+export const MathUtils: {
+    DEG2RAD: typeof DEG2RAD;
+    RAD2DEG: typeof RAD2DEG;
+    generateUUID: typeof generateUUID;
+    clamp: typeof clamp;
+    euclideanModulo: typeof euclideanModulo;
+    mapLinear: typeof mapLinear;
+    inverseLerp: typeof inverseLerp;
+    lerp: typeof lerp;
+    damp: typeof damp;
+    pingpong: typeof pingpong;
+    smoothstep: typeof smoothstep;
+    smootherstep: typeof smootherstep;
+    randInt: typeof randInt;
+    randFloat: typeof randFloat;
+    randFloatSpread: typeof randFloatSpread;
+    seededRandom: typeof seededRandom;
+    degToRad: typeof degToRad;
+    radToDeg: typeof radToDeg;
+    isPowerOfTwo: typeof isPowerOfTwo;
+    ceilPowerOfTwo: typeof ceilPowerOfTwo;
+    floorPowerOfTwo: typeof floorPowerOfTwo;
+    setQuaternionFromProperEuler: typeof setQuaternionFromProperEuler;
+    normalize: typeof normalize;
+    denormalize: typeof denormalize;
+};

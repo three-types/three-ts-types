@@ -89,10 +89,6 @@ export class Quaternion {
      * @default true
      */
     readonly isQuaternion: true;
-    _x: number;
-    _y: number;
-    _z: number;
-    _w: number;
     set x(value: number);
     /**
      * The x value of this quaternion.
@@ -352,7 +348,5 @@ export class Quaternion {
      * @return {Array<number>} The serialized quaternion.
      */
     toJSON(): [number, number, number, number];
-    _onChange(callback: () => void): this;
-    _onChangeCallback: () => void;
     [Symbol.iterator](): Generator<number, void, unknown>;
 }
