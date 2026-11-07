@@ -14355,6 +14355,1091 @@ index f561855ff..0d5ada0ac 100644
 -import { SpotLight } from '../SpotLight.js';
 +
 +export default ProjectorLight;
+diff --git a/jsdoc-testing/jsdoc/src/loaders/AnimationLoader.d.ts b/jsdoc-testing/jsdoc/src/loaders/AnimationLoader.d.ts
+index 4bed37855..1ce6c9887 100644
+--- a/jsdoc-testing/jsdoc/src/loaders/AnimationLoader.d.ts
++++ b/jsdoc-testing/jsdoc/src/loaders/AnimationLoader.d.ts
+@@ -9,7 +9,7 @@
+  *
+  * @augments Loader
+  */
+-export class AnimationLoader extends Loader {
++export class AnimationLoader extends Loader<AnimationClip[]> {
+     /**
+      * Starts loading from the given URL and pass the loaded animations as an array
+      * holding instances of {@link AnimationClip} to the `onLoad()` callback.
+@@ -19,14 +19,14 @@ export class AnimationLoader extends Loader {
+      * @param {onProgressCallback} onProgress - Executed while the loading is in progress.
+      * @param {onErrorCallback} onError - Executed when errors occur.
+      */
+-    load(url: string, onLoad: (arg0: Array<AnimationClip>) => any, onProgress: onProgressCallback, onError: onErrorCallback): void;
++    load(url: string, onLoad: (data: Array<AnimationClip>) => void, onProgress?: onProgressCallback, onError?: onErrorCallback): void;
+     /**
+      * Parses the given JSON object and returns an array of animation clips.
+      *
+      * @param {Object} json - The serialized animation clips.
+      * @return {Array<AnimationClip>} The parsed animation clips.
+      */
+-    parse(json: Object): Array<AnimationClip>;
++    parse(json: readonly unknown[]): Array<AnimationClip>;
+ }
+-import { Loader } from './Loader.js';
++import { Loader, onErrorCallback, onProgressCallback } from './Loader.js';
+ import { AnimationClip } from '../animation/AnimationClip.js';
+diff --git a/jsdoc-testing/jsdoc/src/loaders/AudioLoader.d.ts b/jsdoc-testing/jsdoc/src/loaders/AudioLoader.d.ts
+index c9c2c4c2c..1f8a8144d 100644
+--- a/jsdoc-testing/jsdoc/src/loaders/AudioLoader.d.ts
++++ b/jsdoc-testing/jsdoc/src/loaders/AudioLoader.d.ts
+@@ -15,7 +15,7 @@
+  *
+  * @augments Loader
+  */
+-export class AudioLoader extends Loader {
++export class AudioLoader extends Loader<AudioBuffer> {
+     /**
+      * Starts loading from the given URL and passes the loaded audio buffer
+      * to the `onLoad()` callback.
+@@ -25,6 +25,6 @@ export class AudioLoader extends Loader {
+      * @param {onProgressCallback} onProgress - Executed while the loading is in progress.
+      * @param {onErrorCallback} onError - Executed when errors occur.
+      */
+-    load(url: string, onLoad: (arg0: AudioBuffer) => any, onProgress: onProgressCallback, onError: onErrorCallback): void;
++    load(url: string, onLoad: (data: AudioBuffer) => void, onProgress?: onProgressCallback, onError?: onErrorCallback): void;
+ }
+-import { Loader } from './Loader.js';
++import { Loader, onErrorCallback, onProgressCallback } from './Loader.js';
+diff --git a/jsdoc-testing/jsdoc/src/loaders/BufferGeometryLoader.d.ts b/jsdoc-testing/jsdoc/src/loaders/BufferGeometryLoader.d.ts
+index b85f471e0..85c9bc502 100644
+--- a/jsdoc-testing/jsdoc/src/loaders/BufferGeometryLoader.d.ts
++++ b/jsdoc-testing/jsdoc/src/loaders/BufferGeometryLoader.d.ts
+@@ -13,7 +13,7 @@
+  *
+  * @augments Loader
+  */
+-export class BufferGeometryLoader extends Loader {
++export class BufferGeometryLoader extends Loader<InstancedBufferGeometry | BufferGeometry> {
+     /**
+      * Starts loading from the given URL and pass the loaded geometry to the `onLoad()` callback.
+      *
+@@ -22,14 +22,15 @@ export class BufferGeometryLoader extends Loader {
+      * @param {onProgressCallback} onProgress - Executed while the loading is in progress.
+      * @param {onErrorCallback} onError - Executed when errors occur.
+      */
+-    load(url: string, onLoad: (arg0: BufferGeometry) => any, onProgress: onProgressCallback, onError: onErrorCallback): void;
++    load(url: string, onLoad: (data: InstancedBufferGeometry | BufferGeometry) => void, onProgress?: onProgressCallback, onError?: onErrorCallback): void;
+     /**
+      * Parses the given JSON object and returns a geometry.
+      *
+      * @param {Object} json - The serialized geometry.
+      * @return {BufferGeometry} The parsed geometry.
+      */
+-    parse(json: Object): BufferGeometry;
++    parse(json: unknown): InstancedBufferGeometry | BufferGeometry;
+ }
+-import { Loader } from './Loader.js';
++import { Loader, onErrorCallback, onProgressCallback } from './Loader.js';
+ import { BufferGeometry } from '../core/BufferGeometry.js';
++import { InstancedBufferGeometry } from '../core/InstancedBufferGeometry.js';
+diff --git a/jsdoc-testing/jsdoc/src/loaders/Cache.d.ts b/jsdoc-testing/jsdoc/src/loaders/Cache.d.ts
+index 6be70c33d..e96f44911 100644
+--- a/jsdoc-testing/jsdoc/src/loaders/Cache.d.ts
++++ b/jsdoc-testing/jsdoc/src/loaders/Cache.d.ts
+@@ -1,10 +1,10 @@
+ export namespace Cache {
+     let enabled: boolean;
+     let files: {
+-        [x: string]: Object;
++        [x: string]: any;
+     };
+-    function add(key: string, file: Object): void;
+-    function get(key: string): Object | undefined;
++    function add(key: string, file: any): void;
++    function get(key: string): any;
+     function remove(key: string): void;
+     function clear(): void;
+ }
+diff --git a/jsdoc-testing/jsdoc/src/loaders/CompressedTextureLoader.d.ts b/jsdoc-testing/jsdoc/src/loaders/CompressedTextureLoader.d.ts
+index 652d27243..62a6d440b 100644
+--- a/jsdoc-testing/jsdoc/src/loaders/CompressedTextureLoader.d.ts
++++ b/jsdoc-testing/jsdoc/src/loaders/CompressedTextureLoader.d.ts
+@@ -1,7 +1,7 @@
+ /**
+  * ~TexData
+  */
+-export type CompressedTextureLoader = {
++export interface CompressedTextureLoaderTexData {
+     /**
+      * - The width of the base mip.
+      */
+@@ -22,16 +22,12 @@ export type CompressedTextureLoader = {
+      * - An array holding the mipmaps.
+      * Each entry holds the data and the dimensions for each level.
+      */
+-    mipmaps: Array<{
+-        data: TypedArray;
+-        width: number;
+-        height: number;
+-    }>;
++    mipmaps: Array<CompressedTextureMipmap>;
+     /**
+      * - The texture format.
+      */
+-    format: number;
+-};
++    format: PixelFormat | CompressedPixelFormat;
++}
+ /**
+  * Abstract base class for loading compressed texture formats S3TC, ASTC or ETC.
+  * Textures are internally loaded via {@link FileLoader}.
+@@ -42,7 +38,7 @@ export type CompressedTextureLoader = {
+  * @abstract
+  * @augments Loader
+  */
+-export class CompressedTextureLoader extends Loader {
++export class CompressedTextureLoader extends Loader<CompressedTexture> {
+     /**
+      * Starts loading from the given URL and passes the loaded compressed texture
+      * to the `onLoad()` callback. The method also returns a new texture object which can
+@@ -55,7 +51,8 @@ export class CompressedTextureLoader extends Loader {
+      * @param {onErrorCallback} onError - Executed when errors occur.
+      * @return {CompressedTexture} The compressed texture.
+      */
+-    load(url: string, onLoad: (arg0: CompressedTexture) => any, onProgress: onProgressCallback, onError: onErrorCallback): CompressedTexture;
++    load(url: string, onLoad?: (data: CompressedTexture) => void, onProgress?: onProgressCallback, onError?: onErrorCallback): CompressedTexture;
+ }
+-import { Loader } from './Loader.js';
+-import { CompressedTexture } from '../textures/CompressedTexture.js';
++import { Loader, onErrorCallback, onProgressCallback } from './Loader.js';
++import { CompressedTexture, CompressedTextureMipmap } from '../textures/CompressedTexture.js';
++import { CompressedPixelFormat, PixelFormat } from '../constants.js';
+diff --git a/jsdoc-testing/jsdoc/src/loaders/CubeTextureLoader.d.ts b/jsdoc-testing/jsdoc/src/loaders/CubeTextureLoader.d.ts
+index 8ac41df2c..776e49790 100644
+--- a/jsdoc-testing/jsdoc/src/loaders/CubeTextureLoader.d.ts
++++ b/jsdoc-testing/jsdoc/src/loaders/CubeTextureLoader.d.ts
+@@ -24,7 +24,7 @@
+  *
+  * @augments Loader
+  */
+-export class CubeTextureLoader extends Loader {
++export class CubeTextureLoader extends Loader<CubeTexture, readonly string[]> {
+     /**
+      * Starts loading from the given URL and pass the fully loaded cube texture
+      * to the `onLoad()` callback. The method also returns a new cube texture object which can
+@@ -39,7 +39,7 @@ export class CubeTextureLoader extends Loader {
+      * @param {onErrorCallback} onError - Executed when errors occur.
+      * @return {CubeTexture} The cube texture.
+      */
+-    load(urls: Array<string>, onLoad: (arg0: CubeTexture) => any, onProgress: onProgressCallback, onError: onErrorCallback): CubeTexture;
++    load(urls: readonly string[], onLoad?: (data: CubeTexture) => void, onProgress?: onProgressCallback, onError?: onErrorCallback): CubeTexture;
+ }
+-import { Loader } from './Loader.js';
++import { Loader, onErrorCallback, onProgressCallback } from './Loader.js';
+ import { CubeTexture } from '../textures/CubeTexture.js';
+diff --git a/jsdoc-testing/jsdoc/src/loaders/DataTextureLoader.d.ts b/jsdoc-testing/jsdoc/src/loaders/DataTextureLoader.d.ts
+index 62f05e621..2f3f3f2ff 100644
+--- a/jsdoc-testing/jsdoc/src/loaders/DataTextureLoader.d.ts
++++ b/jsdoc-testing/jsdoc/src/loaders/DataTextureLoader.d.ts
+@@ -1,11 +1,11 @@
+ /**
+  * ~TexData
+  */
+-export type DataTextureLoader = {
++export interface DataTextureLoaderTexData {
+     /**
+      * - An object holding width, height and the texture data.
+      */
+-    image?: Object | undefined;
++    image?: DataTextureImageData | undefined;
+     /**
+      * - The width of the base mip.
+      */
+@@ -17,15 +17,15 @@ export type DataTextureLoader = {
+     /**
+      * - The texture data.
+      */
+-    data?: TypedArray;
++    data?: TypedArray | undefined;
+     /**
+      * - The texture format.
+      */
+-    format?: number | undefined;
++    format?: PixelFormat | undefined;
+     /**
+      * - The texture type.
+      */
+-    type?: number | undefined;
++    type?: TextureDataType | undefined;
+     /**
+      * - If set to `true`, the texture is flipped along the vertical axis when uploaded to the GPU.
+      */
+@@ -33,11 +33,11 @@ export type DataTextureLoader = {
+     /**
+      * - The wrapS value.
+      */
+-    wrapS?: number | undefined;
++    wrapS?: Wrapping | undefined;
+     /**
+      * - The wrapT value.
+      */
+-    wrapT?: number | undefined;
++    wrapT?: Wrapping | undefined;
+     /**
+      * - The anisotropy value.
+      */
+@@ -49,20 +49,21 @@ export type DataTextureLoader = {
+     /**
+      * - The color space.
+      */
+-    colorSpace?: string | undefined;
++    colorSpace?: ColorSpace | undefined;
+     /**
+      * - The mag filter.
+      */
+-    magFilter?: number | undefined;
++    magFilter?: MagnificationTextureFilter | undefined;
+     /**
+      * - The min filter.
+      */
+-    minFilter?: number | undefined;
++    minFilter?: MinificationTextureFilter | undefined;
+     /**
+      * - The mipmaps.
+      */
+-    mipmaps?: Object[] | undefined;
+-};
++    mipmaps?: CompressedTextureMipmap[] | CubeTexture[] | HTMLCanvasElement[] | undefined;
++    mipmapCount?: number | undefined;
++}
+ /**
+  * Abstract base class for loading binary texture formats RGBE, EXR or TGA.
+  * Textures are internally loaded via {@link FileLoader}.
+@@ -73,7 +74,7 @@ export type DataTextureLoader = {
+  * @abstract
+  * @augments Loader
+  */
+-export class DataTextureLoader extends Loader {
++export abstract class DataTextureLoader extends Loader<DataTexture> {
+     /**
+      * Starts loading from the given URL and passes the loaded data texture
+      * to the `onLoad()` callback. The method also returns a new texture object which can
+@@ -86,7 +87,8 @@ export class DataTextureLoader extends Loader {
+      * @param {onErrorCallback} onError - Executed when errors occur.
+      * @return {DataTexture} The data texture.
+      */
+-    load(url: string, onLoad: (arg0: DataTexture) => any, onProgress: onProgressCallback, onError: onErrorCallback): DataTexture;
++    load(url: string, onLoad?: (data: DataTexture, texData: DataTextureLoaderTexData) => void, onProgress?: onProgressCallback, onError?: onErrorCallback): DataTexture;
++    abstract parse(buffer: ArrayBuffer): DataTextureLoaderTexData;
+     /**
+      * Parses the given buffer and returns a configured data texture. Use this method
+      * for parsing texture data that is already in memory (e.g. drag and drop or data
+@@ -105,5 +107,9 @@ export class DataTextureLoader extends Loader {
+      */
+     private _applyTexData;
+ }
+-import { Loader } from './Loader.js';
+-import { DataTexture } from '../textures/DataTexture.js';
++import { Loader, onErrorCallback, onProgressCallback } from './Loader.js';
++import { DataTexture, DataTextureImageData } from '../textures/DataTexture.js';
++import { ColorSpace, MagnificationTextureFilter, MinificationTextureFilter, PixelFormat, TextureDataType, Wrapping } from '../constants.js';
++import { TypedArray } from '../core/BufferAttribute.js';
++import { CompressedTextureMipmap } from '../textures/CompressedTexture.js';
++import { CubeTexture } from '../textures/CubeTexture.js';
+diff --git a/jsdoc-testing/jsdoc/src/loaders/FileLoader.d.ts b/jsdoc-testing/jsdoc/src/loaders/FileLoader.d.ts
+index bdad7b69a..35c6d5e24 100644
+--- a/jsdoc-testing/jsdoc/src/loaders/FileLoader.d.ts
++++ b/jsdoc-testing/jsdoc/src/loaders/FileLoader.d.ts
+@@ -13,7 +13,7 @@
+  *
+  * @augments Loader
+  */
+-export class FileLoader extends Loader {
++export class FileLoader<TData = string | ArrayBuffer> extends Loader<TData> {
+     /**
+      * The expected mime type. Valid values can be found
+      * [here](https://developer.mozilla.org/en-US/docs/Web/API/DOMParser/parseFromString#mimetype)
+@@ -27,7 +27,7 @@ export class FileLoader extends Loader {
+      * @type {('arraybuffer'|'blob'|'document'|'json'|'')}
+      * @default ''
+      */
+-    responseType: ("arraybuffer" | "blob" | "document" | "json" | "");
++    responseType: string;
+     /**
+      * Used for aborting requests.
+      *
+@@ -43,26 +43,26 @@ export class FileLoader extends Loader {
+      * @param {onProgressCallback} [onProgress] - Executed while the loading is in progress.
+      * @param {onErrorCallback} [onError] - Executed when errors occur.
+      */
+-    load(url: string, onLoad: (arg0: any) => any, onProgress?: onProgressCallback, onError?: onErrorCallback): void;
++    load(url: string, onLoad?: (data: TData) => void, onProgress?: onProgressCallback, onError?: onErrorCallback): void;
+     /**
+      * Sets the expected response type.
+      *
+      * @param {('arraybuffer'|'blob'|'document'|'json'|'')} value - The response type.
+      * @return {FileLoader} A reference to this file loader.
+      */
+-    setResponseType(value: ("arraybuffer" | "blob" | "document" | "json" | "")): FileLoader;
++    setResponseType(value: string): this;
+     /**
+      * Sets the expected mime type of the loaded file.
+      *
+      * @param {string} value - The mime type.
+      * @return {FileLoader} A reference to this file loader.
+      */
+-    setMimeType(value: string): FileLoader;
++    setMimeType(value: string): this;
+     /**
+      * Aborts ongoing fetch requests.
+      *
+      * @return {FileLoader} A reference to this instance.
+      */
+-    abort(): FileLoader;
++    abort(): this;
+ }
+-import { Loader } from './Loader.js';
++import { Loader, onErrorCallback, onProgressCallback } from './Loader.js';
+diff --git a/jsdoc-testing/jsdoc/src/loaders/ImageBitmapLoader.d.ts b/jsdoc-testing/jsdoc/src/loaders/ImageBitmapLoader.d.ts
+index c060ff5b6..1d57a4fbc 100644
+--- a/jsdoc-testing/jsdoc/src/loaders/ImageBitmapLoader.d.ts
++++ b/jsdoc-testing/jsdoc/src/loaders/ImageBitmapLoader.d.ts
+@@ -26,7 +26,7 @@
+  *
+  * @augments Loader
+  */
+-export class ImageBitmapLoader extends Loader {
++export class ImageBitmapLoader extends Loader<ImageBitmap> {
+     /**
+      * This flag can be used for type testing.
+      *
+@@ -34,14 +34,14 @@ export class ImageBitmapLoader extends Loader {
+      * @readonly
+      * @default true
+      */
+-    readonly isImageBitmapLoader: boolean;
++    readonly isImageBitmapLoader: true;
+     /**
+      * Represents the loader options.
+      *
+      * @type {Object}
+      * @default {premultiplyAlpha:'none'}
+      */
+-    options: Object;
++    options: ImageBitmapOptions;
+     /**
+      * Used for aborting requests.
+      *
+@@ -59,7 +59,7 @@ export class ImageBitmapLoader extends Loader {
+      * @param {Object} options - The loader options to set.
+      * @return {ImageBitmapLoader} A reference to this image bitmap loader.
+      */
+-    setOptions(options: Object): ImageBitmapLoader;
++    setOptions(options: ImageBitmapOptions): this;
+     /**
+      * Starts loading from the given URL and pass the loaded image bitmap to the `onLoad()` callback.
+      *
+@@ -68,12 +68,12 @@ export class ImageBitmapLoader extends Loader {
+      * @param {onProgressCallback} onProgress - Unsupported in this loader.
+      * @param {onErrorCallback} onError - Executed when errors occur.
+      */
+-    load(url: string, onLoad: (arg0: ImageBitmap) => any, onProgress: onProgressCallback, onError: onErrorCallback): void;
++    load(url: string, onLoad?: (data: ImageBitmap) => void, onProgress?: onProgressCallback, onError?: onErrorCallback): void;
+     /**
+      * Aborts ongoing fetch requests.
+      *
+      * @return {ImageBitmapLoader} A reference to this instance.
+      */
+-    abort(): ImageBitmapLoader;
++    abort(): this;
+ }
+-import { Loader } from './Loader.js';
++import { Loader, onErrorCallback, onProgressCallback } from './Loader.js';
+diff --git a/jsdoc-testing/jsdoc/src/loaders/ImageLoader.d.ts b/jsdoc-testing/jsdoc/src/loaders/ImageLoader.d.ts
+index 0b4296abc..d41276f37 100644
+--- a/jsdoc-testing/jsdoc/src/loaders/ImageLoader.d.ts
++++ b/jsdoc-testing/jsdoc/src/loaders/ImageLoader.d.ts
+@@ -11,7 +11,7 @@
+  *
+  * @augments Loader
+  */
+-export class ImageLoader extends Loader {
++export class ImageLoader extends Loader<HTMLImageElement> {
+     /**
+      * Starts loading from the given URL and passes the loaded image
+      * to the `onLoad()` callback. The method also returns a new `Image` object which can
+@@ -24,6 +24,6 @@ export class ImageLoader extends Loader {
+      * @param {onErrorCallback} onError - Executed when errors occur.
+      * @return {Image} The image.
+      */
+-    load(url: string, onLoad: (arg0: new (width?: number, height?: number) => HTMLImageElement) => any, onProgress: onProgressCallback, onError: onErrorCallback): new (width?: number, height?: number) => HTMLImageElement;
++    load(url: string, onLoad?: (data: HTMLImageElement) => void, onProgress?: onProgressCallback, onError?: onErrorCallback): HTMLImageElement;
+ }
+-import { Loader } from './Loader.js';
++import { Loader, onErrorCallback, onProgressCallback } from './Loader.js';
+diff --git a/jsdoc-testing/jsdoc/src/loaders/Loader.d.ts b/jsdoc-testing/jsdoc/src/loaders/Loader.d.ts
+index bd9dd20b9..0233debcd 100644
+--- a/jsdoc-testing/jsdoc/src/loaders/Loader.d.ts
++++ b/jsdoc-testing/jsdoc/src/loaders/Loader.d.ts
+@@ -1,17 +1,19 @@
++import { LoadingManager } from './LoadingManager.js';
++
+ /**
+  * Callback for onProgress in loaders.
+  */
+-export type onProgressCallback = (event: ProgressEvent) => any;
++export type onProgressCallback = (event: ProgressEvent) => void;
+ /**
+  * Callback for onError in loaders.
+  */
+-export type onErrorCallback = (error: Error) => any;
++export type onErrorCallback = (error: unknown) => void;
+ /**
+  * Abstract base class for loaders.
+  *
+  * @abstract
+  */
+-export class Loader {
++export class Loader<TData = unknown, TUrl = string> {
+     /**
+      * Constructs a new loader.
+      *
+@@ -59,7 +61,7 @@ export class Loader {
+      * @type {Object<string, any>}
+      */
+     requestHeader: {
+-        [x: string]: any;
++        [header: string]: string;
+     };
+     /**
+      * The request priority hint. Image loaders use `HTMLImageElement.fetchPriority`.
+@@ -86,7 +88,7 @@ export class Loader {
+      * @param {onProgressCallback} [onProgress] - Executed while the loading is in progress.
+      * @param {onErrorCallback} [onError] - Executed when errors occur.
+      */
+-    load(): void;
++    load(url: TUrl, onLoad: (data: TData) => void, onProgress?: onProgressCallback, onError?: onErrorCallback): void;
+     /**
+      * A async version of {@link Loader#load}.
+      *
+@@ -94,7 +96,7 @@ export class Loader {
+      * @param {onProgressCallback} [onProgress] - Executed while the loading is in progress.
+      * @return {Promise} A Promise that resolves when the asset has been loaded.
+      */
+-    loadAsync(url: string, onProgress?: onProgressCallback): Promise<any>;
++    loadAsync(url: TUrl, onProgress?: onProgressCallback): Promise<TData>;
+     /**
+      * This method needs to be implemented by all concrete loaders. It holds the
+      * logic for parsing the asset into three.js entities.
+@@ -102,7 +104,7 @@ export class Loader {
+      * @abstract
+      * @param {any} data - The data to parse.
+      */
+-    parse(): void;
++    parse(data: unknown, ...args: any[]): unknown;
+     /**
+      * Sets the `crossOrigin` String to implement CORS for loading the URL
+      * from a different domain that allows CORS.
+@@ -110,7 +112,7 @@ export class Loader {
+      * @param {string} crossOrigin - The `crossOrigin` value.
+      * @return {Loader} A reference to this instance.
+      */
+-    setCrossOrigin(crossOrigin: string): Loader;
++    setCrossOrigin(crossOrigin: string): this;
+     /**
+      * Whether the XMLHttpRequest uses credentials such as cookies, authorization
+      * headers or TLS client certificates, see [XMLHttpRequest.withCredentials](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/withCredentials).
+@@ -120,21 +122,21 @@ export class Loader {
+      * @param {boolean} value - The `withCredentials` value.
+      * @return {Loader} A reference to this instance.
+      */
+-    setWithCredentials(value: boolean): Loader;
++    setWithCredentials(value: boolean): this;
+     /**
+      * Sets the base path for the asset.
+      *
+      * @param {string} path - The base path.
+      * @return {Loader} A reference to this instance.
+      */
+-    setPath(path: string): Loader;
++    setPath(path: string): this;
+     /**
+      * Sets the base path for dependent resources like textures.
+      *
+      * @param {string} resourcePath - The resource path.
+      * @return {Loader} A reference to this instance.
+      */
+-    setResourcePath(resourcePath: string): Loader;
++    setResourcePath(resourcePath: string): this;
+     /**
+      * Sets the given request header.
+      *
+@@ -142,7 +144,9 @@ export class Loader {
+      * for configuring the HTTP request.
+      * @return {Loader} A reference to this instance.
+      */
+-    setRequestHeader(requestHeader: Object): Loader;
++    setRequestHeader(requestHeader: {
++        [header: string]: string;
++    }): this;
+     /**
+      * Sets a browser scheduling hint. Browsers may ignore this hint.
+      * Internally created loaders inherit it. Loaders supplied by the application
+@@ -151,7 +155,7 @@ export class Loader {
+      * @param {('high'|'low'|'auto')} value - The request priority hint.
+      * @return {Loader} A reference to this instance.
+      */
+-    setPriority(value: ("high" | "low" | "auto")): Loader;
++    setPriority(value: ("high" | "low" | "auto")): this;
+     /**
+      * Sets the HTTP cache mode for fetch requests. `no-cache` revalidates cached
+      * responses; `no-store` bypasses the HTTP cache. This does not affect
+@@ -160,15 +164,13 @@ export class Loader {
+      * @param {('default'|'no-store'|'reload'|'no-cache'|'force-cache')} value - The HTTP cache mode.
+      * @return {Loader} A reference to this instance.
+      */
+-    setCache(value: ("default" | "no-store" | "reload" | "no-cache" | "force-cache")): Loader;
++    setCache(value: ("default" | "no-store" | "reload" | "no-cache" | "force-cache")): this;
+     /**
+      * This method can be implemented in loaders for aborting ongoing requests.
+      *
+      * @abstract
+      * @return {Loader} A reference to this instance.
+      */
+-    abort(): Loader;
+-}
+-export namespace Loader {
+-    let DEFAULT_MATERIAL_NAME: string;
++    abort(): this;
++    static DEFAULT_MATERIAL_NAME: string;
+ }
+diff --git a/jsdoc-testing/jsdoc/src/loaders/LoadingManager.d.ts b/jsdoc-testing/jsdoc/src/loaders/LoadingManager.d.ts
+index dc1f5c00d..97dcd605a 100644
+--- a/jsdoc-testing/jsdoc/src/loaders/LoadingManager.d.ts
++++ b/jsdoc-testing/jsdoc/src/loaders/LoadingManager.d.ts
+@@ -1,3 +1,5 @@
++import { Loader } from './Loader.js';
++
+ /**
+  * The global default loading manager.
+  *
+@@ -30,35 +32,35 @@ export class LoadingManager {
+      * @param {Function} [onProgress] - Executes when single items have been loaded.
+      * @param {Function} [onError] - Executes when an error occurs.
+      */
+-    constructor(onLoad?: Function, onProgress?: Function, onError?: Function);
++    constructor(onLoad?: () => void, onProgress?: (url: string, loaded: number, total: number) => void, onError?: (url: string) => void);
+     /**
+      * Executes when an item starts loading.
+      *
+      * @type {Function|undefined}
+      * @default undefined
+      */
+-    onStart: Function | undefined;
++    onStart: ((url: string, loaded: number, total: number) => void) | undefined;
+     /**
+      * Executes when all items have been loaded.
+      *
+      * @type {Function|undefined}
+      * @default undefined
+      */
+-    onLoad: Function | undefined;
++    onLoad: (() => void) | undefined;
+     /**
+      * Executes when single items have been loaded.
+      *
+      * @type {Function|undefined}
+      * @default undefined
+      */
+-    onProgress: Function | undefined;
++    onProgress: ((url: string, loaded: number, total: number) => void) | undefined;
+     /**
+      * Executes when an error occurs.
+      *
+      * @type {Function|undefined}
+      * @default undefined
+      */
+-    onError: Function | undefined;
++    onError: ((url: string) => void) | undefined;
+     /**
+      * Used for aborting ongoing requests in loaders using this manager.
+      *
+@@ -129,7 +131,7 @@ export class LoadingManager {
+      * @param {function(string):string} transform - URL modifier callback. Called with an URL and must return a resolved URL.
+      * @return {LoadingManager} A reference to this loading manager.
+      */
+-    setURLModifier: (transform: (arg0: string) => string) => LoadingManager;
++    setURLModifier: (transform?: (url: string) => string) => this;
+     /**
+      * Registers a loader with the given regular expression. Can be used to
+      * define what loader should be used in order to load specific files. A
+@@ -144,14 +146,14 @@ export class LoadingManager {
+      * @param {Loader} loader - A loader that should handle matched cases.
+      * @return {LoadingManager} A reference to this loading manager.
+      */
+-    addHandler: (regex: string, loader: Loader) => LoadingManager;
++    addHandler: (regex: RegExp, loader: Loader) => this;
+     /**
+      * Removes the loader for the given regular expression.
+      *
+      * @param {string} regex - A regular expression.
+      * @return {LoadingManager} A reference to this loading manager.
+      */
+-    removeHandler: (regex: string) => LoadingManager;
++    removeHandler: (regex: RegExp) => this;
+     /**
+      * Can be used to retrieve the registered loader for the given file path.
+      *
+@@ -166,7 +168,7 @@ export class LoadingManager {
+      *
+      * @return {LoadingManager} A reference to this loading manager.
+      */
+-    abort: () => LoadingManager;
++    abort: () => this;
+     /**
+      * Used for aborting ongoing requests in loaders using this manager.
+      *
+diff --git a/jsdoc-testing/jsdoc/src/loaders/MaterialLoader.d.ts b/jsdoc-testing/jsdoc/src/loaders/MaterialLoader.d.ts
+index 9dda62756..4721d6314 100644
+--- a/jsdoc-testing/jsdoc/src/loaders/MaterialLoader.d.ts
++++ b/jsdoc-testing/jsdoc/src/loaders/MaterialLoader.d.ts
+@@ -10,7 +10,7 @@
+  *
+  * @augments Loader
+  */
+-export class MaterialLoader extends Loader {
++export class MaterialLoader extends Loader<Material> {
+     /**
+      * Creates a material for the given type.
+      *
+@@ -27,7 +27,7 @@ export class MaterialLoader extends Loader {
+      * @param {string} type - The material type.
+      * @param {Material.constructor} materialClass - The material class.
+      */
+-    static registerMaterial(type: string, materialClass: Material.constructor): void;
++    static registerMaterial(type: string, materialClass: new() => Material): void;
+     /**
+      * A dictionary holding textures used by the material.
+      *
+@@ -44,14 +44,14 @@ export class MaterialLoader extends Loader {
+      * @param {onProgressCallback} onProgress - Executed while the loading is in progress.
+      * @param {onErrorCallback} onError - Executed when errors occur.
+      */
+-    load(url: string, onLoad: (arg0: Material) => any, onProgress: onProgressCallback, onError: onErrorCallback): void;
++    load(url: string, onLoad: (data: Material) => void, onProgress?: onProgressCallback, onError?: onErrorCallback): void;
+     /**
+      * Parses the given JSON object and returns a material.
+      *
+      * @param {Object} json - The serialized material.
+      * @return {Material} The parsed material.
+      */
+-    parse(json: Object): Material;
++    parse(json: unknown): Material;
+     /**
+      * Textures are not embedded in the material JSON so they have
+      * to be injected before the loading process starts.
+@@ -59,7 +59,9 @@ export class MaterialLoader extends Loader {
+      * @param {Object} value - A dictionary holding textures for material properties.
+      * @return {MaterialLoader} A reference to this material loader.
+      */
+-    setTextures(value: Object): MaterialLoader;
++    setTextures(value: {
++        [x: string]: Texture;
++    }): this;
+     /**
+      * Creates a material for the given type.
+      *
+@@ -68,5 +70,6 @@ export class MaterialLoader extends Loader {
+      */
+     createMaterialFromType(type: string): Material;
+ }
+-import { Loader } from './Loader.js';
++import { Loader, onErrorCallback, onProgressCallback } from './Loader.js';
+ import { Material } from '../materials/Materials.js';
++import { Texture } from '../textures/Texture.js';
+diff --git a/jsdoc-testing/jsdoc/src/loaders/ObjectLoader.d.ts b/jsdoc-testing/jsdoc/src/loaders/ObjectLoader.d.ts
+index def8eb4b2..5e0f3a91b 100644
+--- a/jsdoc-testing/jsdoc/src/loaders/ObjectLoader.d.ts
++++ b/jsdoc-testing/jsdoc/src/loaders/ObjectLoader.d.ts
+@@ -14,7 +14,7 @@
+  *
+  * @augments Loader
+  */
+-export class ObjectLoader extends Loader {
++export class ObjectLoader extends Loader<Object3D> {
+     /**
+      * Registers the given geometry at the internal
+      * geometry library.
+@@ -23,7 +23,11 @@ export class ObjectLoader extends Loader {
+      * @param {string} type - The geometry type.
+      * @param {BufferGeometry.constructor} geometryClass - The geometry class.
+      */
+-    static registerGeometry(type: string, geometryClass: BufferGeometry.constructor): void;
++    static registerGeometry(type: string, geometryClass: {
++        fromJSON(data: unknown, shapes: {
++            [x: string]: Shape;
++        }): BufferGeometry;
++    }): void;
+     /**
+      * Constructs a new object loader.
+      *
+@@ -38,7 +42,7 @@ export class ObjectLoader extends Loader {
+      * @param {onProgressCallback} onProgress - Executed while the loading is in progress.
+      * @param {onErrorCallback} onError - Executed when errors occur.
+      */
+-    load(url: string, onLoad: (arg0: Object3D) => any, onProgress: onProgressCallback, onError: onErrorCallback): void;
++    load(url: string, onLoad?: (data: Object3D) => void, onProgress?: onProgressCallback, onError?: onErrorCallback): void;
+     /**
+      * Async version of {@link ObjectLoader#load}.
+      *
+@@ -47,7 +51,7 @@ export class ObjectLoader extends Loader {
+      * @param {onProgressCallback} onProgress - Executed while the loading is in progress.
+      * @return {Promise<Object3D>} A Promise that resolves with the loaded 3D object.
+      */
+-    loadAsync(url: string, onProgress: onProgressCallback): Promise<Object3D>;
++    loadAsync(url: string, onProgress?: onProgressCallback): Promise<Object3D>;
+     /**
+      * Parses the given JSON. This is used internally by {@link ObjectLoader#load}
+      * but can also be used directly to parse a previously loaded JSON structure.
+@@ -56,36 +60,66 @@ export class ObjectLoader extends Loader {
+      * @param {onLoad} onLoad - Executed when all resources (e.g. textures) have been fully loaded.
+      * @return {Object3D} The parsed 3D object.
+      */
+-    parse(json: Object, onLoad: any): Object3D;
++    parse(json: unknown, onLoad?: (object: Object3D) => void): Object3D;
+     /**
+      * Async version of {@link ObjectLoader#parse}.
+      *
+      * @param {Object} json - The serialized 3D object.
+      * @return {Promise<Object3D>} A Promise that resolves with the parsed 3D object.
+      */
+-    parseAsync(json: Object): Promise<Object3D>;
+-    parseShapes(json: any): {};
+-    parseSkeletons(json: any, object: any): {};
+-    parseGeometries(json: any, shapes: any): {};
+-    parseMaterials(json: any, textures: any): {};
+-    parseAnimations(json: any): {};
+-    parseImages(json: any, onLoad: any): {};
+-    parseImagesAsync(json: any): Promise<{}>;
+-    parseTextures(json: any, images: any): {};
+-    parseObject(data: any, geometries: any, materials: any, textures: any, animations: any): Object3D | Sprite | LOD | Mesh | SkinnedMesh | InstancedMesh | BatchedMesh | Line | Points | PerspectiveCamera | OrthographicCamera;
+-    bindSkeletons(object: any, skeletons: any): void;
+-    bindLightTargets(object: any): void;
++    parseAsync(json: unknown): Promise<Object3D>;
++    parseShapes(json: unknown): {
++        [key: string]: Shape;
++    };
++    parseSkeletons(json: unknown, object: Object3D): {
++        [key: string]: Skeleton;
++    };
++    parseGeometries(json: unknown, shapes: {
++        [key: string]: Shape;
++    }): {
++        [key: string]: InstancedBufferGeometry | BufferGeometry;
++    };
++    parseMaterials(json: unknown, textures: {
++        [key: string]: Texture;
++    }): {
++        [key: string]: Material;
++    };
++    parseAnimations(json: unknown): {
++        [key: string]: AnimationClip;
++    };
++    parseImages(json: unknown, onLoad?: () => void): {
++        [key: string]: TextureSource<unknown>;
++    };
++    parseImagesAsync(json: unknown): Promise<{
++        [key: string]: TextureSource<unknown>;
++    }>;
++    parseTextures(json: unknown, images: {
++        [key: string]: TextureSource<unknown>;
++    }): {
++        [key: string]: Texture;
++    };
++    parseObject(data: unknown, geometries: {
++        [key: string]: InstancedBufferGeometry | BufferGeometry;
++    }, materials: {
++        [key: string]: Material;
++    }, textures: {
++        [key: string]: Texture;
++    }, animations: {
++        [key: string]: AnimationClip;
++    }): Object3D;
++    bindSkeletons(object: Object3D, skeletons: {
++        [key: string]: Skeleton;
++    }): void;
++    bindLightTargets(object: Object3D): void;
+ }
+-import { Loader } from './Loader.js';
++import { Loader, onErrorCallback, onProgressCallback } from './Loader.js';
+ import { Object3D } from '../core/Object3D.js';
+-import { Sprite } from '../objects/Sprite.js';
+-import { LOD } from '../objects/LOD.js';
+-import { Mesh } from '../objects/Mesh.js';
+-import { SkinnedMesh } from '../objects/SkinnedMesh.js';
+-import { InstancedMesh } from '../objects/InstancedMesh.js';
+-import { BatchedMesh } from '../objects/BatchedMesh.js';
+-import { Line } from '../objects/Line.js';
+-import { Points } from '../objects/Points.js';
+-import { PerspectiveCamera } from '../cameras/PerspectiveCamera.js';
+-import { OrthographicCamera } from '../cameras/OrthographicCamera.js';
++import { AnimationClip } from '../animation/AnimationClip.js';
++import { BufferGeometry } from '../core/BufferGeometry.js';
++import { InstancedBufferGeometry } from '../core/InstancedBufferGeometry.js';
++import { Shape } from '../extras/core/Shape.js';
++import { Material } from '../materials/Material.js';
++import { Skeleton } from '../objects/Skeleton.js';
++import { Texture } from '../textures/Texture.js';
++import { TextureSource } from '../textures/TextureSource.js';
+ import { LoadingManager } from './LoadingManager.js';
+diff --git a/jsdoc-testing/jsdoc/src/loaders/TextureLoader.d.ts b/jsdoc-testing/jsdoc/src/loaders/TextureLoader.d.ts
+index 6425c24d8..19d064f50 100644
+--- a/jsdoc-testing/jsdoc/src/loaders/TextureLoader.d.ts
++++ b/jsdoc-testing/jsdoc/src/loaders/TextureLoader.d.ts
+@@ -14,7 +14,7 @@
+  *
+  * @augments Loader
+  */
+-export class TextureLoader extends Loader {
++export class TextureLoader extends Loader<Texture<HTMLImageElement>> {
+     /**
+      * Starts loading from the given URL and pass the fully loaded texture
+      * to the `onLoad()` callback. The method also returns a new texture object which can
+@@ -27,7 +27,7 @@ export class TextureLoader extends Loader {
+      * @param {onErrorCallback} [onError] - Executed when errors occur.
+      * @return {Texture} The texture.
+      */
+-    load(url: string, onLoad?: (arg0: Texture) => any, onProgress?: onProgressCallback, onError?: onErrorCallback): Texture;
++    load(url: string, onLoad?: (data: Texture<HTMLImageElement>) => void, onProgress?: onProgressCallback, onError?: onErrorCallback): Texture<HTMLImageElement>;
+ }
+-import { Loader } from './Loader.js';
++import { Loader, onErrorCallback, onProgressCallback } from './Loader.js';
+ import { Texture } from '../textures/Texture.js';
+diff --git a/jsdoc-testing/jsdoc/src/loaders/nodes/NodeLoader.d.ts b/jsdoc-testing/jsdoc/src/loaders/nodes/NodeLoader.d.ts
+index 58b362d35..41fe6d2ae 100644
+--- a/jsdoc-testing/jsdoc/src/loaders/nodes/NodeLoader.d.ts
++++ b/jsdoc-testing/jsdoc/src/loaders/nodes/NodeLoader.d.ts
+@@ -1,10 +1,13 @@
+ export default NodeLoader;
++export interface NodeLoaderResult {
++    [hash: string]: Node;
++}
+ /**
+  * A loader for loading node objects in the three.js JSON Object/Scene format.
+  *
+  * @augments Loader
+  */
+-declare class NodeLoader extends Loader {
++declare class NodeLoader extends Loader<Node> {
+     /**
+      * Represents a dictionary of textures.
+      *
+@@ -19,7 +22,7 @@ declare class NodeLoader extends Loader {
+      * @type {Object<string,Node.constructor>}
+      */
+     nodes: {
+-        [x: string]: Node.constructor;
++        [x: string]: new(...args: any[]) => Node;
+     };
+     /**
+      * Loads the node definitions from the given URL.
+@@ -29,16 +32,14 @@ declare class NodeLoader extends Loader {
+      * @param {Function} onProgress - Will be called while load progresses.
+      * @param {Function} onError - Will be called when errors are thrown during the loading process.
+      */
+-    load(url: string, onLoad: Function, onProgress: Function, onError: Function): void;
++    load(url: string, onLoad: (data: Node) => void, onProgress?: onProgressCallback, onError?: onErrorCallback): void;
+     /**
+      * Parse the node dependencies for the loaded node.
+      *
+      * @param {Array<Object>} [json] - The JSON definition
+      * @return {Object<string,Node>} A dictionary with node dependencies.
+      */
+-    parseNodes(json?: Array<Object>): {
+-        [x: string]: Node;
+-    };
++    parseNodes(json?: Array<Object>): NodeLoaderResult;
+     /**
+      * Parses the node from the given JSON.
+      *
+@@ -63,7 +64,7 @@ declare class NodeLoader extends Loader {
+      */
+     setTextures(value: {
+         [x: string]: Texture;
+-    }): NodeLoader;
++    }): this;
+     /**
+      * Defines the dictionary of node types.
+      *
+@@ -71,8 +72,8 @@ declare class NodeLoader extends Loader {
+      * @return {NodeLoader} A reference to this loader.
+      */
+     setNodes(value: {
+-        [x: string]: Node.constructor;
+-    }): NodeLoader;
++        [x: string]: new(...args: any[]) => Node;
++    }): this;
+     /**
+      * Creates a node object from the given type.
+      *
+@@ -81,4 +82,6 @@ declare class NodeLoader extends Loader {
+      */
+     createNodeFromType(type: string): Node;
+ }
+-import { Loader } from '../Loader.js';
++import { Loader, onErrorCallback, onProgressCallback } from '../Loader.js';
++import { Node } from '../../nodes/Nodes.js';
++import { Texture } from '../../textures/Texture.js';
+diff --git a/jsdoc-testing/jsdoc/src/loaders/nodes/NodeMaterialLoader.d.ts b/jsdoc-testing/jsdoc/src/loaders/nodes/NodeMaterialLoader.d.ts
+index cf350a240..9f564f2f4 100644
+--- a/jsdoc-testing/jsdoc/src/loaders/nodes/NodeMaterialLoader.d.ts
++++ b/jsdoc-testing/jsdoc/src/loaders/nodes/NodeMaterialLoader.d.ts
+@@ -11,7 +11,7 @@ declare class NodeMaterialLoader extends MaterialLoader {
+      * @type {Object<string,Node.constructor>}
+      */
+     nodes: {
+-        [x: string]: Node.constructor;
++        [x: string]: new(...args: any[]) => Node;
+     };
+     /**
+      * Represents a dictionary of node material types.
+@@ -19,7 +19,7 @@ declare class NodeMaterialLoader extends MaterialLoader {
+      * @type {Object<string,NodeMaterial.constructor>}
+      */
+     nodeMaterials: {
+-        [x: string]: NodeMaterial.constructor;
++        [x: string]: new() => NodeMaterial;
+     };
+     /**
+      * Parses the node material from the given JSON.
+@@ -27,7 +27,7 @@ declare class NodeMaterialLoader extends MaterialLoader {
+      * @param {Object} json - The JSON definition
+      * @return {NodeMaterial}. The parsed material.
+      */
+-    parse(json: Object): NodeMaterial;
++    parse(json: unknown): NodeMaterial;
+     /**
+      * Defines the dictionary of node types.
+      *
+@@ -35,8 +35,8 @@ declare class NodeMaterialLoader extends MaterialLoader {
+      * @return {NodeLoader} A reference to this loader.
+      */
+     setNodes(value: {
+-        [x: string]: Node.constructor;
+-    }): NodeLoader;
++        [x: string]: new(...args: any[]) => Node;
++    }): this;
+     /**
+      * Defines the dictionary of node material types.
+      *
+@@ -44,14 +44,16 @@ declare class NodeMaterialLoader extends MaterialLoader {
+      * @return {NodeLoader} A reference to this loader.
+      */
+     setNodeMaterials(value: {
+-        [x: string]: NodeMaterial.constructor;
+-    }): NodeLoader;
++        [x: string]: new() => NodeMaterial;
++    }): this;
+     /**
+      * Creates a node material from the given type.
+      *
+      * @param {string} type - The node material type.
+      * @return {Node} The created node material instance.
+      */
+-    createMaterialFromType(type: string): Node;
++    createMaterialFromType(type: string): NodeMaterial;
+ }
+ import { MaterialLoader } from '../../loaders/MaterialLoader.js';
++import NodeMaterial from '../../materials/nodes/NodeMaterial.js';
++import { Node } from '../../nodes/Nodes.js';
+diff --git a/jsdoc-testing/jsdoc/src/loaders/nodes/NodeObjectLoader.d.ts b/jsdoc-testing/jsdoc/src/loaders/nodes/NodeObjectLoader.d.ts
+index b5954eab2..b99ee4e47 100644
+--- a/jsdoc-testing/jsdoc/src/loaders/nodes/NodeObjectLoader.d.ts
++++ b/jsdoc-testing/jsdoc/src/loaders/nodes/NodeObjectLoader.d.ts
+@@ -18,7 +18,7 @@ declare class NodeObjectLoader extends ObjectLoader {
+      * @type {Object<string,Node.constructor>}
+      */
+     nodes: {
+-        [x: string]: Node.constructor;
++        [x: string]: new(...args: any[]) => Node;
+     };
+     /**
+      * Represents a dictionary of node material types.
+@@ -26,7 +26,7 @@ declare class NodeObjectLoader extends ObjectLoader {
+      * @type {Object<string,NodeMaterial.constructor>}
+      */
+     nodeMaterials: {
+-        [x: string]: NodeMaterial.constructor;
++        [x: string]: new() => NodeMaterial;
+     };
+     /**
+      * A reference to hold the `nodes` JSON property.
+@@ -42,8 +42,8 @@ declare class NodeObjectLoader extends ObjectLoader {
+      * @return {NodeObjectLoader} A reference to this loader.
+      */
+     setNodes(value: {
+-        [x: string]: Node.constructor;
+-    }): NodeObjectLoader;
++        [x: string]: new(...args: any[]) => Node;
++    }): this;
+     /**
+      * Defines the dictionary of node material types.
+      *
+@@ -51,8 +51,8 @@ declare class NodeObjectLoader extends ObjectLoader {
+      * @return {NodeObjectLoader} A reference to this loader.
+      */
+     setNodeMaterials(value: {
+-        [x: string]: NodeMaterial.constructor;
+-    }): NodeObjectLoader;
++        [x: string]: new() => NodeMaterial;
++    }): this;
+     /**
+      * Parses the node objects from the given JSON.
+      *
+@@ -60,14 +60,14 @@ declare class NodeObjectLoader extends ObjectLoader {
+      * @param {Function} onLoad - The onLoad callback function.
+      * @return {Object3D}. The parsed 3D object.
+      */
+-    parse(json: Object, onLoad: Function): Object3D;
++    parse(json: unknown, onLoad?: (object: Object3D) => void): Object3D;
+     /**
+      * Async version of {@link NodeObjectLoader#parse}.
+      *
+      * @param {Object} json - The JSON definition
+      * @return {Promise<Object3D>} A Promise that resolves with the parsed 3D object.
+      */
+-    parseAsync(json: Object): Promise<Object3D>;
++    parseAsync(json: unknown): Promise<Object3D>;
+     /**
+      * Parses the node objects from the given JSON and textures.
+      *
+@@ -77,9 +77,7 @@ declare class NodeObjectLoader extends ObjectLoader {
+      */
+     parseNodes(json: Object[], textures: {
+         [x: string]: Texture;
+-    }): {
+-        [x: string]: Node;
+-    };
++    }): NodeLoaderResult;
+     /**
+      * Parses the node objects from the given JSON and textures.
+      *
+@@ -87,10 +85,16 @@ declare class NodeObjectLoader extends ObjectLoader {
+      * @param {Object<string,Texture>} textures - The texture library.
+      * @return {Object<string,NodeMaterial>}. The parsed materials.
+      */
+-    parseMaterials(json: Object, textures: {
++    parseMaterials(json: unknown, textures: {
+         [x: string]: Texture;
+     }): {
+         [x: string]: NodeMaterial;
+     };
+ }
+ import { ObjectLoader } from '../../loaders/ObjectLoader.js';
++import { Object3D } from '../../core/Object3D.js';
++import NodeMaterial from '../../materials/nodes/NodeMaterial.js';
++import { Node } from '../../nodes/Nodes.js';
++import { Texture } from '../../textures/Texture.js';
++import { LoadingManager } from '../LoadingManager.js';
++import { NodeLoaderResult } from './NodeLoader.js';
 diff --git a/jsdoc-testing/jsdoc/src/materials/LineBasicMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/LineBasicMaterial.d.ts
 index b7fb9b69a..04111f284 100644
 --- a/jsdoc-testing/jsdoc/src/materials/LineBasicMaterial.d.ts
