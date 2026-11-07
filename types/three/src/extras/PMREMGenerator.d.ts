@@ -1,6 +1,6 @@
 import { Vector3 } from "../math/Vector3.js";
+import { WebGLCubeRenderTarget } from "../renderers/WebGLCubeRenderTarget.js";
 import { WebGLRenderer } from "../renderers/WebGLRenderer.js";
-import { WebGLRenderTarget } from "../renderers/WebGLRenderTarget.js";
 import { Scene } from "../scenes/Scene.js";
 import { CubeTexture } from "../textures/CubeTexture.js";
 import { Texture } from "../textures/Texture.js";
@@ -11,45 +11,45 @@ export interface PMREMGeneratorOptions {
 }
 
 /**
- * This class generates a Prefiltered, Mipmapped Radiance Environment Map (PMREM) from a cubeMap environment texture.
- * @remarks
- * This allows different levels of blur to be quickly accessed based on material roughness
- * Unlike a traditional mipmap chain, it only goes down to the LOD_MIN level (above), and then creates extra even more filtered 'mips' at the same LOD_MIN resolution,
- * associated with higher roughness levels
- * In this way we maintain resolution to smoothly interpolate diffuse lighting while limiting sampling computation.
- * @remarks
- * Note: The minimum {@link THREE.MeshStandardMaterial | MeshStandardMaterial}'s roughness depends on the size of the provided texture
- * If your render has small dimensions or the shiny parts have a lot of curvature, you may still be able to get away with a smaller texture size.
+ * Generates a Prefiltered, Mipmapped Radiance Environment Map (PMREM) for
+ * image-based lighting. The result is a cube render target whose mip levels
+ * store GGX-filtered radiance at increasing roughness, from a mirror at level 0
+ * to roughness 1. See {@link PMREMGenerator.lodToRoughness} for the mapping.
  *
- * | texture size | minimum roughness  |
- * |--------------|--------------------|
- * | 16           | 0.21               |
- * | 32           | 0.15               |
- * | 64           | 0.11               |
- * | 128          | 0.076              |
- * | 256          | 0.054              |
- * | 512          | 0.038              |
- * | 1024         | 0.027              |
+ * Filtering assumes the view direction equals the surface normal. Sharp levels
+ * use GGX visible normal sampling (Heitz, 2018), while rough levels integrate a
+ * lower-resolution source cubemap.
  *
- * @see {@link https://threejs.org/docs/index.html#api/en/extras/PMREMGenerator | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/extras/PMREMGenerator.js | Source}
+ * @see {@link https://jcgt.org/published/0007/04/01/ | Sampling the GGX Distribution of Visible Normals}
  */
 export class PMREMGenerator {
     /**
-     * This constructor creates a new PMREMGenerator.
-     * @param renderer
+     * Returns the roughness a mip level of a PMREM has been prefiltered for.
+     * The inverse mapping is used by the renderers when sampling a PMREM.
+     *
+     * @param {number} lod - The mip level.
+     * @param {number} maxLod - The last mip level of the PMREM.
+     * @return {number} The roughness.
+     */
+    static lodToRoughness(lod: number, maxLod: number): number;
+    /**
+     * Constructs a new PMREM generator.
+     *
+     * @param {WebGLRenderer} renderer - The renderer.
      */
     constructor(renderer: WebGLRenderer);
-
     /**
-     * Generates a PMREM from a supplied Scene, which can be faster than using an image if networking bandwidth is low
-     * @remarks
-     * Optional near and far planes ensure the scene is rendered in its entirety.
-     * @param scene The given scene.
-     * @param sigma Specifies a blur radius in radians to be applied to the scene before PMREM generation. Default `0`.
-     * @param near The near plane value. Default `0.1`.
-     * @param far The far plane value. Default `100`.
-     * @param {?Object} [options={}]
+     * Generates a PMREM from a scene, optionally applying a Gaussian blur before
+     * GGX filtering.
+     *
+     * @param {Scene} scene - The scene to be captured.
+     * @param {number} [sigma=0] - The blur radius in radians.
+     * @param {number} [near=0.1] - The near plane distance.
+     * @param {number} [far=100] - The far plane distance.
+     * @param {Object} [options={}] - The configuration options.
+     * @param {number} [options.size=256] - The texture size of the PMREM, rounded down to a power of two and at least 256.
+     * @param {Vector3} [options.position=origin] - The position of the internal cube camera that renders the scene.
+     * @return {WebGLCubeRenderTarget} The resulting PMREM.
      */
     fromScene(
         scene: Scene,
@@ -57,39 +57,39 @@ export class PMREMGenerator {
         near?: number,
         far?: number,
         options?: PMREMGeneratorOptions,
-    ): WebGLRenderTarget;
-
+    ): WebGLCubeRenderTarget;
     /**
-     * Generates a PMREM from an equirectangular texture, which can be either LDR or HDR. The ideal input image size is
-     * 1k (1024 x 512), as this matches best with the 256 x 256 cubemap output. The smallest supported equirectangular
-     * image size is 64 x 32.
+     * Generates a PMREM from an LDR or HDR equirectangular texture. The cube face
+     * size is one quarter of the image width, rounded down to a power of two and
+     * at least 256.
+     *
+     * @param {Texture} equirectangular - The equirectangular texture to be converted.
+     * @param {?WebGLCubeRenderTarget} [renderTarget=null] - The render target to use.
+     * @return {WebGLCubeRenderTarget} The resulting PMREM.
      */
-    fromEquirectangular(equirectangular: Texture, renderTarget?: WebGLRenderTarget | null): WebGLRenderTarget;
-
+    fromEquirectangular(equirectangular: Texture, renderTarget?: WebGLCubeRenderTarget | null): WebGLCubeRenderTarget;
     /**
-     * Generates a PMREM from an cubemap texture, which can be either LDR or HDR. The ideal input cube size is
-     * 256 x 256, as this matches best with the 256 x 256 cubemap output. The smallest supported cube size is 16 x 16.
+     * Generates a PMREM from an LDR or HDR cubemap. The cube face size matches
+     * the input, rounded down to a power of two and at least 256.
+     *
+     * @param {Texture} cubemap - The cubemap texture to be converted.
+     * @param {?WebGLCubeRenderTarget} [renderTarget=null] - The render target to use.
+     * @return {WebGLCubeRenderTarget} The resulting PMREM.
      */
-    fromCubemap(cubemap: CubeTexture, renderTarget?: WebGLRenderTarget | null): WebGLRenderTarget;
-
+    fromCubemap(cubemap: CubeTexture, renderTarget?: WebGLCubeRenderTarget | null): WebGLCubeRenderTarget;
     /**
-     * Pre-compiles the cubemap shader
-     * @remarks
-     * You can get faster start-up by invoking this method during your texture's network fetch for increased concurrency.
+     * Pre-compiles the cubemap shader. You can get faster start-up by invoking this method during
+     * your texture's network fetch for increased concurrency.
      */
     compileCubemapShader(): void;
-
     /**
-     * Pre-compiles the equirectangular shader
-     * @remarks
-     * You can get faster start-up by invoking this method during your texture's network fetch for increased concurrency.
+     * Pre-compiles the equirectangular shader. You can get faster start-up by invoking this method during
+     * your texture's network fetch for increased concurrency.
      */
     compileEquirectangularShader(): void;
-
     /**
-     * Frees the GPU-related resources allocated by this instance
-     * @remarks
-     * Call this method whenever this instance is no longer used in your app.
+     * Disposes of the PMREMGenerator's internal memory. The PMREMs it returned
+     * belong to the caller and are not disposed.
      */
     dispose(): void;
 }

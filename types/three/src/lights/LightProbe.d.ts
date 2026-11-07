@@ -41,6 +41,6 @@ export class LightProbe extends Light {
      * A light probe uses spherical harmonics to encode lighting information.
      */
     sh: SphericalHarmonics3;
-    copy(source: LightProbe): this;
+    copy(source: LightProbe, recursive?: boolean): this;
     toJSON(meta?: JSONMeta): LightProbeJSON;
 }

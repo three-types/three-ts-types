@@ -15,31 +15,38 @@ export interface CompressedTextureMipmap {
     height: number;
 }
 
+export interface CompressedTextureImageData {
+    width: number;
+    height: number;
+}
+
 /**
- * Creates a texture based on data in compressed form, for example from a {@link https://en.wikipedia.org/wiki/DirectDraw_Surface | DDS} file.
- * @remarks For use with the {@link THREE.CompressedTextureLoader | CompressedTextureLoader}.
- * @see {@link https://threejs.org/docs/index.html#api/en/textures/CompressedTexture | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/textures/CompressedTexture.js | Source}
+ * Creates a texture based on data in compressed form.
+ *
+ * These texture are usually loaded with {@link CompressedTextureLoader}.
+ *
+ * @augments Texture
  */
 export class CompressedTexture<TImageData = CompressedTextureImageData> extends Texture<TImageData> {
     /**
-     * This creates a new {@link THREE.CompressedTexture | CompressedTexture} object.
-     * @param mipmaps The mipmaps array should contain objects with data, width and height. The mipmaps should be of the
-     * correct format and type.
-     * @param width The width of the biggest mipmap.
-     * @param height The height of the biggest mipmap.
-     * @param format The format used in the mipmaps. See {@link THREE.CompressedPixelFormat}.
-     * @param type See {@link Texture.type | .type}. Default {@link THREE.UnsignedByteType}
-     * @param mapping See {@link Texture.mapping | .mapping}. Default {@link THREE.Texture.DEFAULT_MAPPING}
-     * @param wrapS See {@link Texture.wrapS | .wrapS}. Default {@link THREE.ClampToEdgeWrapping}
-     * @param wrapT See {@link Texture.wrapT | .wrapT}. Default {@link THREE.ClampToEdgeWrapping}
-     * @param magFilter See {@link Texture.magFilter | .magFilter}. Default {@link THREE.LinearFilter}
-     * @param minFilter  See {@link Texture.minFilter | .minFilter}. Default {@link THREE.LinearMipmapLinearFilter}
-     * @param anisotropy See {@link Texture.anisotropy | .anisotropy}. Default {@link THREE.Texture.DEFAULT_ANISOTROPY}
-     * @param colorSpace See {@link Texture.colorSpace .colorSpace}. Default {@link NoColorSpace}
+     * Constructs a new compressed texture.
+     *
+     * @param {Array<Object>} [mipmaps=[]] - This array holds for all mipmaps (including the bases mip)
+     * the data and dimensions.
+     * @param {number} width - The width of the texture.
+     * @param {number} height - The height of the texture.
+     * @param {number} [format=RGBAFormat] - The texture format.
+     * @param {number} [type=UnsignedByteType] - The texture type.
+     * @param {number} [mapping=Texture.DEFAULT_MAPPING] - The texture mapping.
+     * @param {number} [wrapS=ClampToEdgeWrapping] - The wrapS value.
+     * @param {number} [wrapT=ClampToEdgeWrapping] - The wrapT value.
+     * @param {number} [magFilter=LinearFilter] - The mag filter value.
+     * @param {number} [minFilter=LinearMipmapLinearFilter] - The min filter value.
+     * @param {number} [anisotropy=Texture.DEFAULT_ANISOTROPY] - The anisotropy value.
+     * @param {string} [colorSpace=NoColorSpace] - The color space.
      */
     constructor(
-        mipmaps: CompressedTextureMipmap[],
+        mipmaps: CompressedTextureMipmap[] | undefined,
         width: number,
         height: number,
         format?: CompressedPixelFormat,
@@ -52,41 +59,19 @@ export class CompressedTexture<TImageData = CompressedTextureImageData> extends 
         anisotropy?: number,
         colorSpace?: string,
     );
-
     /**
-     * Read-only flag to check if a given object is of type {@link CompressedTexture}.
-     * @remarks This is a _constant_ value
-     * @defaultValue `true`
+     * This flag can be used for type testing.
+     *
+     * @type {boolean}
+     * @readonly
+     * @default true
      */
     readonly isCompressedTexture: true;
-
     /**
-     *  The mipmaps array should contain objects with data, width and height. The mipmaps should be of the correct
-     *  format and type.
+     * This array holds for all mipmaps (including the bases mip) the data and dimensions.
+     *
+     * @type {Array<Object>}
      */
     mipmaps: CompressedTextureMipmap[];
-
-    /**
-     * @override
-     * @see {@link https://threejs.org/docs/index.html#api/en/constants/Textures | Texture Constants}
-     * @see {@link THREE.CompressedPixelFormat}
-     */
     format: CompressedPixelFormat;
-
-    /**
-     * @override No flipping for cube textures. (also flipping doesn't work for compressed textures)
-     * @defaultValue `false`
-     */
-    flipY: boolean;
-
-    /**
-     * @override Can't generate mipmaps for compressed textures. mips must be embedded in DDS files
-     * @defaultValue `false`
-     */
-    generateMipmaps: boolean;
-}
-
-export interface CompressedTextureImageData {
-    width: number;
-    height: number;
 }

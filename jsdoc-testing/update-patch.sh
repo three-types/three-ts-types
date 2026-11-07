@@ -1,4 +1,4 @@
-git diff > ../changes.patch
+git diff --abbrev=9 HEAD > ../changes.patch
 mv ../changes.patch .
 rm -rf jsdoc
 git add -A

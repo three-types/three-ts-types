@@ -1,40 +1,40 @@
-import { BufferGeometry } from "../core/BufferGeometry.js";
-
 /**
- * This can be used as a helper object to view a {@link BufferGeometry | geometry} as a wireframe.
- * @example
- * ```typescript
- * const geometry = new THREE.SphereGeometry(100, 100, 100);
- * const wireframe = new THREE.WireframeGeometry(geometry);
- * const line = new THREE.LineSegments(wireframe);
- * line.material.depthTest = false;
+ * Can be used as a helper object to visualize a geometry as a wireframe.
+ *
+ * ```js
+ * const geometry = new THREE.SphereGeometry();
+ *
+ * const wireframe = new THREE.WireframeGeometry( geometry );
+ *
+ * const line = new THREE.LineSegments( wireframe );
+ * line.material.depthWrite = false;
  * line.material.opacity = 0.25;
  * line.material.transparent = true;
- * scene.add(line);
+ *
+ * scene.add( line );
  * ```
- * @see Example: {@link https://threejs.org/examples/#webgl_helpers | helpers}
- * @see {@link https://threejs.org/docs/index.html#api/en/geometries/WireframeGeometry | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/geometries/WireframeGeometry.js | Source}
+ *
+ * Note: It is not yet possible to serialize/deserialize instances of this class.
+ *
+ * @augments BufferGeometry
  */
 export class WireframeGeometry<TBufferGeometry extends BufferGeometry = BufferGeometry> extends BufferGeometry {
     /**
-     * Create a new instance of {@link WireframeGeometry}
-     * @param geometry Any geometry object. Default `null`.
+     * Constructs a new wireframe geometry.
+     *
+     * @param {?BufferGeometry} [geometry=null] - The geometry.
      */
-    constructor(geometry?: TBufferGeometry);
-
+    constructor(geometry?: TBufferGeometry | null);
     /**
-     * A Read-only _string_ to check if `this` object type.
-     * @remarks Sub-classes will update this value.
-     * @defaultValue `WireframeGeometry`
-     */
-    override readonly type: string | "WireframeGeometry";
-
-    /**
-     * An object with a property for each of the constructor parameters.
-     * @remarks Any modification after instantiation does not change the geometry.
+     * Holds the constructor parameters that have been
+     * used to generate the geometry. Any modification
+     * after instantiation does not change the geometry.
+     *
+     * @type {Object}
      */
     readonly parameters: {
-        readonly geometry: TBufferGeometry;
+        readonly geometry: TBufferGeometry | null;
     };
+    copy(source: WireframeGeometry<TBufferGeometry>): this;
 }
+import { BufferGeometry } from "../core/BufferGeometry.js";

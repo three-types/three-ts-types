@@ -2,63 +2,60 @@ import { Vector2 } from "../../math/Vector2.js";
 import { Curve } from "../core/Curve.js";
 
 /**
- * Create a smooth **2D** {@link http://en.wikipedia.org/wiki/B%C3%A9zier_curve#mediaviewer/File:B%C3%A9zier_2_big.gif | quadratic bezier curve},
- * defined by a start point, end point and a single control point.
- * @example
- * ```typescript
+ * A curve representing a 2D Quadratic Bezier curve.
+ *
+ * ```js
  * const curve = new THREE.QuadraticBezierCurve(
- * new THREE.Vector2(-10, 0),
- * new THREE.Vector2(20, 15),
- * new THREE.Vector2(10, 0));
- * const points = curve.getPoints(50);
- * const geometry = new THREE.BufferGeometry().setFromPoints(points);
- * const material = new THREE.LineBasicMaterial({
- *     color: 0xff0000
- * });
+ * 	new THREE.Vector2( - 10, 0 ),
+ * 	new THREE.Vector2( 20, 15 ),
+ * 	new THREE.Vector2( 10, 0 )
+ * )
+ *
+ * const points = curve.getPoints( 50 );
+ * const geometry = new THREE.BufferGeometry().setFromPoints( points );
+ *
+ * const material = new THREE.LineBasicMaterial( { color: 0xff0000 } );
+ *
  * // Create the final object to add to the scene
- * const curveObject = new THREE.Line(geometry, material);
+ * const curveObject = new THREE.Line( geometry, material );
  * ```
- * @see {@link https://threejs.org/docs/index.html#api/en/extras/curves/QuadraticBezierCurve | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/extras/curves/QuadraticBezierCurve.js | Source}
+ *
+ * @augments Curve
  */
 export class QuadraticBezierCurve extends Curve<Vector2> {
     /**
-     * This constructor creates a new {@link QuadraticBezierCurve}.
-     * @param v0 The start point. Default is `new THREE.Vector2()`.
-     * @param v1 The control point. Default is `new THREE.Vector2()`.
-     * @param v2 The end point. Default is `new THREE.Vector2()`.
+     * Constructs a new Quadratic Bezier curve.
+     *
+     * @param {Vector2} [v0] - The start point.
+     * @param {Vector2} [v1] - The control point.
+     * @param {Vector2} [v2] - The end point.
      */
     constructor(v0?: Vector2, v1?: Vector2, v2?: Vector2);
-
     /**
-     * Read-only flag to check if a given object is of type {@link LineCurve3}.
-     * @remarks This is a _constant_ value
-     * @defaultValue `true`
+     * This flag can be used for type testing.
+     *
+     * @default true
      */
-    readonly isQuadraticBezierCurve = true;
-
-    /**
-     * A Read-only _string_ to check if `this` object type.
-     * @remarks Sub-classes will update this value.
-     * @defaultValue `QuadraticBezierCurve`
-     */
-    override readonly type: string | "QuadraticBezierCurve";
-
+    readonly isQuadraticBezierCurve: true;
     /**
      * The start point.
-     * @defaultValue `new THREE.Vector2()`
      */
     v0: Vector2;
-
     /**
      * The control point.
-     * @defaultValue `new THREE.Vector2()`
      */
     v1: Vector2;
-
     /**
      * The end point.
-     * @defaultValue `new THREE.Vector2()`
      */
     v2: Vector2;
+    /**
+     * Returns a point on the curve.
+     *
+     * @param {number} t - A interpolation factor representing a position on the curve. Must be in the range `[0,1]`.
+     * @param {Vector2} [optionalTarget] - The optional target vector the result is written to.
+     * @return {Vector2} The position on the curve.
+     */
+    getPoint(t: number, optionalTarget?: Vector2): Vector2;
+    copy(source: QuadraticBezierCurve): this;
 }

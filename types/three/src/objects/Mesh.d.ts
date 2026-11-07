@@ -1,5 +1,6 @@
 import { BufferGeometry } from "../core/BufferGeometry.js";
 import { JSONMeta, Object3D, Object3DEventMap, Object3DJSON, Object3DJSONObject } from "../core/Object3D.js";
+import { Intersection, Raycaster } from "../core/Raycaster.js";
 import { Material } from "../materials/Material.js";
 import { Frustum } from "../math/Frustum.js";
 import { FrustumArray } from "../math/FrustumArray.js";
@@ -14,20 +15,16 @@ export interface MeshJSON extends Object3DJSON {
 }
 
 /**
- * Class representing triangular {@link https://en.wikipedia.org/wiki/Polygon_mesh | polygon mesh} based objects.
- * @remarks
- * Also serves as a base for other classes such as {@link THREE.SkinnedMesh | SkinnedMesh},  {@link THREE.InstancedMesh | InstancedMesh}.
- * @example
- * ```typescript
- * const geometry = new THREE.BoxGeometry(1, 1, 1);
- * const material = new THREE.MeshBasicMaterial({
- *     color: 0xffff00
- * });
- * const {@link Mesh} = new THREE.Mesh(geometry, material);
- * scene.add(mesh);
+ * Class representing triangular polygon mesh based objects.
+ *
+ * ```js
+ * const geometry = new THREE.BoxGeometry( 1, 1, 1 );
+ * const material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
+ * const mesh = new THREE.Mesh( geometry, material );
+ * scene.add( mesh );
  * ```
- * @see {@link https://threejs.org/docs/index.html#api/en/objects/Mesh | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/objects/Mesh.js | Source}
+ *
+ * @augments Object3D
  */
 export class Mesh<
     TGeometry extends BufferGeometry = BufferGeometry,
@@ -35,77 +32,89 @@ export class Mesh<
     TEventMap extends Object3DEventMap = Object3DEventMap,
 > extends Object3D<TEventMap> {
     /**
-     * Create a new instance of {@link Mesh}
-     * @param geometry An instance of {@link THREE.BufferGeometry | BufferGeometry}. Default {@link THREE.BufferGeometry | `new THREE.BufferGeometry()`}.
-     * @param material A single or an array of {@link THREE.Material | Material}. Default {@link THREE.MeshBasicMaterial | `new THREE.MeshBasicMaterial()`}.
+     * Constructs a new mesh.
+     *
+     * @param {BufferGeometry} [geometry] - The mesh geometry.
+     * @param {Material|Array<Material>} [material] - The mesh material.
      */
     constructor(geometry?: TGeometry, material?: TMaterial);
-
     /**
-     * Read-only flag to check if a given object is of type {@link Mesh}.
-     * @remarks This is a _constant_ value
-     * @defaultValue `true`
+     * This flag can be used for type testing.
+     *
+     * @type {boolean}
+     * @readonly
+     * @default true
      */
     readonly isMesh: true;
-
     /**
-     * @override
-     * @defaultValue `Mesh`
-     */
-    override readonly type: string | "Mesh";
-
-    /**
-     * An instance of {@link THREE.BufferGeometry | BufferGeometry} (or derived classes), defining the object's structure.
-     * @defaultValue {@link THREE.BufferGeometry | `new THREE.BufferGeometry()`}.
+     * The mesh geometry.
+     *
+     * @type {BufferGeometry}
      */
     geometry: TGeometry;
-
     /**
-     * An instance of material derived from the {@link THREE.Material | Material} base class or an array of materials, defining the object's appearance.
-     * @defaultValue {@link THREE.MeshBasicMaterial | `new THREE.MeshBasicMaterial()`}.
+     * The mesh material.
+     *
+     * @type {Material|Array<Material>}
+     * @default MeshBasicMaterial
      */
     material: TMaterial;
-
     /**
-     * An array of weights typically from `0-1` that specify how much of the morph is applied.
-     * @defaultValue `undefined`, _but reset to a blank array by {@link updateMorphTargets | .updateMorphTargets()}._
+     * A dictionary representing the morph targets in the geometry. The key is the
+     * morph targets name, the value its attribute index. This member is `undefined`
+     * by default and only set when morph targets are detected in the geometry.
+     *
+     * @type {Object<string,number>|undefined}
+     * @default undefined
      */
-    morphTargetInfluences?: number[] | undefined;
-
+    morphTargetDictionary: {
+        [x: string]: number;
+    } | undefined;
     /**
-     * A dictionary of morphTargets based on the `morphTarget.name` property.
-     * @defaultValue `undefined`, _but rebuilt by {@link updateMorphTargets | .updateMorphTargets()}._
+     * An array of weights typically in the range `[0,1]` that specify how much of the morph
+     * is applied. This member is `undefined` by default and only set when morph targets are
+     * detected in the geometry.
+     *
+     * @type {Array<number>|undefined}
+     * @default undefined
      */
-    morphTargetDictionary?: { [key: string]: number } | undefined;
-
+    morphTargetInfluences: Array<number> | undefined;
     /**
      * The number of instances of this mesh.
      * Can only be used with {@link WebGPURenderer}.
      *
+     * @type {number}
      * @default 1
      */
     count: number;
-
+    copy(source: Mesh, recursive?: boolean): this;
     /**
-     * Updates the morphTargets to have no influence on the object
-     * @remarks Resets the {@link morphTargetInfluences} and {@link morphTargetDictionary} properties.
+     * Sets the values of {@link Mesh#morphTargetDictionary} and {@link Mesh#morphTargetInfluences}
+     * to make sure existing morph targets can influence this 3D object.
      */
     updateMorphTargets(): void;
-
     /**
-     * Get the local-space position of the vertex at the given index,
-     * taking into account the current animation state of both morph targets and skinning.
-     * @param index Expects a `Integer`
-     * @param target
+     * Returns the local-space position of the vertex at the given index, taking into
+     * account the current animation state of both morph targets and skinning.
+     *
+     * @param {number} index - The vertex index.
+     * @param {Vector3} target - The target object that is used to store the method's result.
+     * @return {Vector3} The vertex position in local space.
      */
     getVertexPosition(index: number, target: Vector3): Vector3;
-
     /**
      * Returns `true` if this mesh intersects the given frustum.
-     * @param frustum The frustum to test.
-     * @returns Whether this mesh intersects the given frustum or not.
+     *
+     * @param {Frustum|FrustumArray} frustum - The frustum to test.
+     * @return {boolean} Whether this mesh intersects the given frustum or not.
      */
     intersectsFrustum(frustum: Frustum | FrustumArray): boolean;
-
+    /**
+     * Computes intersection points between a casted ray and this line.
+     *
+     * @param {Raycaster} raycaster - The raycaster.
+     * @param {Array<Object>} intersects - The target array that holds the intersection points.
+     */
+    raycast(raycaster: Raycaster, intersects: Intersection[]): void;
     toJSON(meta?: JSONMeta): MeshJSON;
 }

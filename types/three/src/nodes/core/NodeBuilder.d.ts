@@ -11,8 +11,12 @@ export default abstract class NodeBuilder {
     object: Object3D;
     material: Material | null;
     geometry: BufferGeometry | null;
-    camera: Camera | null;
     scene: Scene | null;
+
+    /**
+     * The camera the 3D object is rendered with.
+     */
+    camera: Camera | null;
 
     /**
      * The compute node, if building for compute.

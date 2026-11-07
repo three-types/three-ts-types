@@ -1,66 +1,42 @@
-import { BufferGeometry } from "../core/BufferGeometry.js";
-import { Curve } from "../extras/core/Curve.js";
-import { Shape } from "../extras/core/Shape.js";
-import { Vector2 } from "../math/Vector2.js";
-import { Vector3 } from "../math/Vector3.js";
-
 export interface ExtrudeGeometryOptions {
     /**
-     * Number of points on the curves.
-     * @default 12
+     * - Number of points on the curves.
      */
     curveSegments?: number | undefined;
-
     /**
-     * Number of points used for subdividing segments along the depth of the extruded spline.
-     * @default 1
+     * - Number of points used for subdividing segments along the depth of the extruded spline.
      */
     steps?: number | undefined;
-
     /**
-     * Depth to extrude the shape.
-     * @default 1
+     * - Depth to extrude the shape.
      */
     depth?: number | undefined;
-
     /**
-     * Whether to beveling to the shape or not.
-     * @default true
+     * - Whether to beveling to the shape or not.
      */
     bevelEnabled?: boolean | undefined;
-
     /**
-     * How deep into the original shape the bevel goes.
-     * @default 0.2
+     * - How deep into the original shape the bevel goes.
      */
     bevelThickness?: number | undefined;
-
     /**
-     * Distance from the shape outline that the bevel extends.
-     * @default bevelThickness-0.1
+     * - Distance from the shape outline that the bevel extends.
      */
     bevelSize?: number | undefined;
-
     /**
-     * Distance from the shape outline that the bevel starts.
-     * @default 0
+     * - Distance from the shape outline that the bevel starts.
      */
     bevelOffset?: number | undefined;
-
     /**
-     * Number of bevel layers.
-     * @default 3
+     * - Number of bevel layers.
      */
     bevelSegments?: number | undefined;
-
     /**
-     * A 3D spline path along which the shape should be extruded. Bevels not supported for path extrusion.
-     * @default undefined
+     * - A 3D spline path along which the shape should be extruded. Bevels not supported for path extrusion.
      */
     extrudePath?: Curve<Vector3> | undefined;
-
     /**
-     * An object that provides UV generator functions for custom UV generation.
+     * - An object that provides UV generator functions for custom UV generation.
      */
     UVGenerator?: UVGenerator | undefined;
 }
@@ -105,21 +81,23 @@ export interface UVGenerator {
  * @augments BufferGeometry
  * @demo scenes/geometry-browser.html#ExtrudeGeometry
  */
-declare class ExtrudeGeometry extends BufferGeometry {
+export class ExtrudeGeometry extends BufferGeometry {
     /**
-     * Create a new instance of {@link ExtrudeGeometry}
-     * @param shapes Shape or an array of shapes. Default `new Shape([new Vector2(0.5, 0.5), new Vector2(-0.5, 0.5), new Vector2(-0.5, -0.5), new Vector2(0.5, -0.5)])`.
-     * @param options Object that can contain the following parameters. @see {@link ExtrudeGeometryOptions} for defaults.
+     * Factory method for creating an instance of this class from the given
+     * JSON object.
+     *
+     * @param {Object} data - A JSON object representing the serialized geometry.
+     * @param {Array<Shape>} shapes - An array of shapes.
+     * @return {ExtrudeGeometry} A new instance.
      */
-    constructor(shapes?: Shape | Shape[], options?: ExtrudeGeometryOptions);
-
+    static fromJSON(data: {}, shapes: Array<Shape>): ExtrudeGeometry;
     /**
-     * A Read-only _string_ to check if `this` object type.
-     * @remarks Sub-classes will update this value.
-     * @defaultValue `ExtrudeGeometry`
+     * Constructs a new extrude geometry.
+     *
+     * @param {Shape|Array<Shape>} [shapes] - A shape or an array of shapes.
+     * @param {ExtrudeGeometry~Options} [options] - The extrude settings.
      */
-    override readonly type: string | "ExtrudeGeometry";
-
+    constructor(shapes?: Shape | Array<Shape>, options?: ExtrudeGeometryOptions);
     /**
      * Holds the constructor parameters that have been
      * used to generate the geometry. Any modification
@@ -131,8 +109,10 @@ declare class ExtrudeGeometry extends BufferGeometry {
         readonly shapes: Shape | Shape[];
         readonly options: ExtrudeGeometryOptions;
     };
-
     copy(source: ExtrudeGeometry): this;
 }
-
-export { ExtrudeGeometry };
+import { BufferGeometry } from "../core/BufferGeometry.js";
+import { Curve } from "../extras/core/Curve.js";
+import { Shape } from "../extras/core/Shape.js";
+import { Vector2 } from "../math/Vector2.js";
+import { Vector3 } from "../math/Vector3.js";

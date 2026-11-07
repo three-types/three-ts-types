@@ -58,5 +58,5 @@ export class RectAreaLight extends Light {
      * Changing the power will also change the light's intensity.
      */
     get power(): number;
-    copy(source: RectAreaLight): this;
+    copy(source: RectAreaLight, recursive?: boolean): this;
 }

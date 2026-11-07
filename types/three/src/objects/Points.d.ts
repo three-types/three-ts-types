@@ -1,15 +1,14 @@
 import { BufferGeometry, NormalOrGLBufferAttributes } from "../core/BufferGeometry.js";
 import { Object3D, Object3DEventMap } from "../core/Object3D.js";
+import { Intersection, Raycaster } from "../core/Raycaster.js";
 import { Material } from "../materials/Material.js";
 import { Frustum } from "../math/Frustum.js";
 import { FrustumArray } from "../math/FrustumArray.js";
 
 /**
- * A class for displaying {@link Points}
- * @remarks
- * The {@link Points} are rendered by the {@link THREE.WebGLRenderer | WebGLRenderer} using {@link https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/drawElements | gl.POINTS}.
- * @see {@link https://threejs.org/docs/index.html#api/en/objects/Points | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/objects/Points.js | Source}
+ * A class for displaying points or point clouds.
+ *
+ * @augments Object3D
  */
 export class Points<
     TGeometry extends BufferGeometry<NormalOrGLBufferAttributes> = BufferGeometry,
@@ -17,59 +16,71 @@ export class Points<
     TEventMap extends Object3DEventMap = Object3DEventMap,
 > extends Object3D<TEventMap> {
     /**
-     * Create a new instance of {@link Points}
-     * @param geometry An instance of {@link THREE.BufferGeometry | BufferGeometry}. Default {@link THREE.BufferGeometry | `new THREE.BufferGeometry()`}.
-     * @param material A single or an array of {@link THREE.Material | Material}. Default {@link THREE.PointsMaterial | `new THREE.PointsMaterial()`}.
+     * Constructs a new point cloud.
+     *
+     * @param {BufferGeometry} [geometry] - The points geometry.
+     * @param {Material|Array<Material>} [material] - The points material.
      */
     constructor(geometry?: TGeometry, material?: TMaterial);
-
     /**
-     * Read-only flag to check if a given object is of type {@link Points}.
-     * @remarks This is a _constant_ value
-     * @defaultValue `true`
+     * This flag can be used for type testing.
+     *
+     * @type {boolean}
+     * @readonly
+     * @default true
      */
     readonly isPoints: true;
-
     /**
-     * @override
-     * @defaultValue `Points`
-     */
-    override readonly type: string | "Points";
-
-    /**
-     * An array of weights typically from `0-1` that specify how much of the morph is applied.
-     * @defaultValue `undefined`, _but reset to a blank array by {@link updateMorphTargets | .updateMorphTargets()}._
-     */
-    morphTargetInfluences?: number[] | undefined;
-
-    /**
-     * A dictionary of morphTargets based on the `morphTarget.name` property.
-     * @defaultValue `undefined`, _but rebuilt by {@link updateMorphTargets | .updateMorphTargets()}._
-     */
-    morphTargetDictionary?: { [key: string]: number } | undefined;
-
-    /**
-     * An instance of {@link THREE.BufferGeometry | BufferGeometry} (or derived classes), defining the object's structure.
-     * @remarks each vertex designates the position of a particle in the system.
+     * The points geometry.
+     *
+     * @type {BufferGeometry}
      */
     geometry: TGeometry;
-
     /**
-     * An instance of {@link THREE.Material | Material}, defining the object's appearance.
-     * @defaultValue {@link THREE.PointsMaterial | `new THREE.PointsMaterial()`}, _with randomised colour_.
+     * The line material.
+     *
+     * @type {Material|Array<Material>}
+     * @default PointsMaterial
      */
     material: TMaterial;
-
     /**
-     * Updates the morphTargets to have no influence on the object
-     * @remarks Resets the {@link morphTargetInfluences} and {@link morphTargetDictionary} properties.
+     * A dictionary representing the morph targets in the geometry. The key is the
+     * morph targets name, the value its attribute index. This member is `undefined`
+     * by default and only set when morph targets are detected in the geometry.
+     *
+     * @type {Object<string,number>|undefined}
+     * @default undefined
      */
-    updateMorphTargets(): void;
-
+    morphTargetDictionary: {
+        [x: string]: number;
+    } | undefined;
+    /**
+     * An array of weights typically in the range `[0,1]` that specify how much of the morph
+     * is applied. This member is `undefined` by default and only set when morph targets are
+     * detected in the geometry.
+     *
+     * @type {Array<number>|undefined}
+     * @default undefined
+     */
+    morphTargetInfluences: Array<number> | undefined;
+    copy(source: Points, recursive?: boolean): this;
     /**
      * Returns `true` if this point cloud intersects the given frustum.
-     * @param frustum The frustum to test.
-     * @returns Whether this point cloud intersects the given frustum or not.
+     *
+     * @param {Frustum|FrustumArray} frustum - The frustum to test.
+     * @return {boolean} Whether this point cloud intersects the given frustum or not.
      */
     intersectsFrustum(frustum: Frustum | FrustumArray): boolean;
+    /**
+     * Computes intersection points between a casted ray and this point cloud.
+     *
+     * @param {Raycaster} raycaster - The raycaster.
+     * @param {Array<Object>} intersects - The target array that holds the intersection points.
+     */
+    raycast(raycaster: Raycaster, intersects: Intersection[]): void;
+    /**
+     * Sets the values of {@link Points#morphTargetDictionary} and {@link Points#morphTargetInfluences}
+     * to make sure existing morph targets can influence this 3D object.
+     */
+    updateMorphTargets(): void;
 }

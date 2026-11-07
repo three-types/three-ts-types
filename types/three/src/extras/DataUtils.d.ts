@@ -1,22 +1,39 @@
 /**
- * Returns a half precision floating point value from the given single precision floating point value.
- * @param val A single precision floating point value.
- * @see {@link https://threejs.org/docs/index.html#api/en/extras/DataUtils | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/extras/DataUtils.js | Source}
+ * Returns a half precision floating point value (FP16) from the given single
+ * precision floating point value (FP32).
+ *
+ * @param {number} val - A single precision floating point value.
+ * @return {number} The FP16 value.
  */
-declare function toHalfFloat(val: number): number;
-
+export function toHalfFloat(val: number): number;
 /**
- * Returns a single precision floating point value from the given half precision floating point value.
- * @param val A half precision floating point value.
- * @see {@link https://threejs.org/docs/index.html#api/en/extras/DataUtils | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/extras/DataUtils.js | Source}
+ * Returns a single precision floating point value (FP32) from the given half
+ * precision floating point value (FP16).
+ *
+ * @param {number} val - A half precision floating point value.
+ * @return {number} The FP32 value.
  */
-declare function fromHalfFloat(val: number): number;
-
-declare class DataUtils {
+export function fromHalfFloat(val: number): number;
+/**
+ * A class containing utility functions for data.
+ *
+ * @hideconstructor
+ */
+export class DataUtils {
+    /**
+     * Returns a half precision floating point value (FP16) from the given single
+     * precision floating point value (FP32).
+     *
+     * @param {number} val - A single precision floating point value.
+     * @return {number} The FP16 value.
+     */
     static toHalfFloat(val: number): number;
+    /**
+     * Returns a single precision floating point value (FP32) from the given half
+     * precision floating point value (FP16).
+     *
+     * @param {number} val - A half precision floating point value.
+     * @return {number} The FP32 value.
+     */
     static fromHalfFloat(val: number): number;
 }
-
-export { DataUtils, fromHalfFloat, toHalfFloat };

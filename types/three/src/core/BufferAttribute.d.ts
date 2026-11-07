@@ -40,611 +40,484 @@ export interface BufferAttributeEventMap {
 }
 
 /**
- * This class stores data for an attribute (such as vertex positions, face indices, normals, colors, UVs, and any custom attributes )
- * associated with a {@link THREE.BufferGeometry | BufferGeometry}, which allows for more efficient passing of data to the GPU
- * @remarks
- * When working with _vector-like_ data, the _`.fromBufferAttribute( attribute, index )`_ helper methods on
- * {@link THREE.Vector2.fromBufferAttribute | Vector2},
- * {@link THREE.Vector3.fromBufferAttribute | Vector3},
- * {@link THREE.Vector4.fromBufferAttribute | Vector4}, and
- * {@link THREE.Color.fromBufferAttribute | Color} classes may be helpful.
- * @see {@link THREE.BufferGeometry | BufferGeometry} for details and a usage examples.
- * @see Example: {@link https://threejs.org/examples/#webgl_buffergeometry | WebGL / BufferGeometry - Clean up Memory}
- * @see {@link https://threejs.org/docs/index.html#api/en/core/BufferAttribute | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/core/BufferAttribute.js | Source}
+ * Convenient class that can be used when creating a `Float32` buffer attribute with
+ * a plain `Array` instance.
+ */
+export class Float32BufferAttribute extends BufferAttribute {
+    /**
+     * Constructs a new buffer attribute.
+     *
+     * @param {(Array<number>|Float32Array)} array - The array holding the attribute data.
+     * @param {number} itemSize - The item size.
+     * @param {boolean} [normalized=false] - Whether the data are normalized or not.
+     */
+    constructor(
+        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
+        itemSize: number,
+        normalized?: boolean,
+    );
+}
+/**
+ * Convenient class that can be used when creating a `Float16` buffer attribute with
+ * a plain `Array` instance.
+ *
+ * This class automatically converts to and from FP16 via `Uint16Array` since `Float16Array`
+ * browser support is still problematic.
+ */
+export class Float16BufferAttribute extends BufferAttribute {
+    /**
+     * Constructs a new buffer attribute.
+     *
+     * @param {(Array<number>|Uint16Array)} array - The array holding the attribute data.
+     * @param {number} itemSize - The item size.
+     * @param {boolean} [normalized=false] - Whether the data are normalized or not.
+     */
+    constructor(
+        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
+        itemSize: number,
+        normalized?: boolean,
+    );
+    readonly isFloat16BufferAttribute: true;
+}
+/**
+ * Convenient class that can be used when creating a `UInt32` buffer attribute with
+ * a plain `Array` instance.
+ */
+export class Uint32BufferAttribute extends BufferAttribute {
+    /**
+     * Constructs a new buffer attribute.
+     *
+     * @param {(Array<number>|Uint32Array)} array - The array holding the attribute data.
+     * @param {number} itemSize - The item size.
+     * @param {boolean} [normalized=false] - Whether the data are normalized or not.
+     */
+    constructor(
+        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
+        itemSize: number,
+        normalized?: boolean,
+    );
+}
+/**
+ * Convenient class that can be used when creating a `Int32` buffer attribute with
+ * a plain `Array` instance.
+ */
+export class Int32BufferAttribute extends BufferAttribute {
+    /**
+     * Constructs a new buffer attribute.
+     *
+     * @param {(Array<number>|Int32Array)} array - The array holding the attribute data.
+     * @param {number} itemSize - The item size.
+     * @param {boolean} [normalized=false] - Whether the data are normalized or not.
+     */
+    constructor(
+        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
+        itemSize: number,
+        normalized?: boolean,
+    );
+}
+/**
+ * Convenient class that can be used when creating a `UInt16` buffer attribute with
+ * a plain `Array` instance.
+ */
+export class Uint16BufferAttribute extends BufferAttribute {
+    /**
+     * Constructs a new buffer attribute.
+     *
+     * @param {(Array<number>|Uint16Array)} array - The array holding the attribute data.
+     * @param {number} itemSize - The item size.
+     * @param {boolean} [normalized=false] - Whether the data are normalized or not.
+     */
+    constructor(
+        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
+        itemSize: number,
+        normalized?: boolean,
+    );
+}
+/**
+ * Convenient class that can be used when creating a `Int16` buffer attribute with
+ * a plain `Array` instance.
+ */
+export class Int16BufferAttribute extends BufferAttribute {
+    /**
+     * Constructs a new buffer attribute.
+     *
+     * @param {(Array<number>|Int16Array)} array - The array holding the attribute data.
+     * @param {number} itemSize - The item size.
+     * @param {boolean} [normalized=false] - Whether the data are normalized or not.
+     */
+    constructor(
+        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
+        itemSize: number,
+        normalized?: boolean,
+    );
+}
+/**
+ * Convenient class that can be used when creating a `UInt8Clamped` buffer attribute with
+ * a plain `Array` instance.
+ */
+export class Uint8ClampedBufferAttribute extends BufferAttribute {
+    /**
+     * Constructs a new buffer attribute.
+     *
+     * @param {(Array<number>|Uint8ClampedArray)} array - The array holding the attribute data.
+     * @param {number} itemSize - The item size.
+     * @param {boolean} [normalized=false] - Whether the data are normalized or not.
+     */
+    constructor(
+        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
+        itemSize: number,
+        normalized?: boolean,
+    );
+}
+/**
+ * Convenient class that can be used when creating a `UInt8` buffer attribute with
+ * a plain `Array` instance.
+ */
+export class Uint8BufferAttribute extends BufferAttribute {
+    /**
+     * Constructs a new buffer attribute.
+     *
+     * @param {(Array<number>|Uint8Array)} array - The array holding the attribute data.
+     * @param {number} itemSize - The item size.
+     * @param {boolean} [normalized=false] - Whether the data are normalized or not.
+     */
+    constructor(
+        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
+        itemSize: number,
+        normalized?: boolean,
+    );
+}
+/**
+ * Convenient class that can be used when creating a `Int8` buffer attribute with
+ * a plain `Array` instance.
+ */
+export class Int8BufferAttribute extends BufferAttribute {
+    /**
+     * Constructs a new buffer attribute.
+     *
+     * @param {(Array<number>|Int8Array)} array - The array holding the attribute data.
+     * @param {number} itemSize - The item size.
+     * @param {boolean} [normalized=false] - Whether the data are normalized or not.
+     */
+    constructor(
+        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
+        itemSize: number,
+        normalized?: boolean,
+    );
+}
+/**
+ * This class stores data for an attribute (such as vertex positions, face
+ * indices, normals, colors, UVs, and any custom attributes ) associated with
+ * a geometry, which allows for more efficient passing of data to the GPU.
+ *
+ * When working with vector-like data, the `fromBufferAttribute( attribute, index )`
+ * helper methods on vector and color class might be helpful. E.g. {@link Vector3#fromBufferAttribute}.
  */
 export class BufferAttribute<TEventMap extends BufferAttributeEventMap = BufferAttributeEventMap>
     extends EventDispatcher<TEventMap>
 {
     /**
-     * This creates a new {@link THREE.GLBufferAttribute | GLBufferAttribute} object.
-     * @param array Must be a `TypedArray`. Used to instantiate the buffer.
-     * This array should have `itemSize * numVertices` elements, where numVertices is the number of vertices in the associated {@link THREE.BufferGeometry | BufferGeometry}.
-     * @param itemSize the number of values of the {@link array} that should be associated with a particular vertex.
-     * For instance, if this attribute is storing a 3-component vector (such as a _position_, _normal_, or _color_),
-     * then itemSize should be `3`.
-     * @param normalized Applies to integer data only.
-     * Indicates how the underlying data in the buffer maps to the values in the GLSL code.
-     * For instance, if {@link array} is an instance of `UInt16Array`, and  {@link normalized} is true,
-     * the values `0` - `+65535` in the array data will be mapped to `0.0f` - `+1.0f` in the GLSL attribute.
-     * An `Int16Array` (signed) would map from `-32768` - `+32767` to `-1.0f` - `+1.0f`.
-     * If normalized is false, the values will be converted to floats unmodified,
-     * i.e. `32767` becomes `32767.0f`.
-     * Default `false`.
-     * @throws `TypeError` When the {@link array} is not a `TypedArray`;
+     * Constructs a new buffer attribute.
+     *
+     * @param {TypedArray} array - The array holding the attribute data.
+     * @param {number} itemSize - The item size.
+     * @param {boolean} [normalized=false] - Whether the data are normalized or not.
      */
     constructor(array: TypedArray, itemSize: number, normalized?: boolean);
-
     /**
-     * Unique number for this attribute instance.
-     */
-    readonly id: number;
-
-    /**
-     * Optional name for this attribute instance.
-     * @defaultValue ''
-     */
-    name: string;
-
-    /**
-     * The {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray | TypedArray} holding data stored in the buffer.
-     * @returns `TypedArray`
-     */
-    array: TypedArray;
-
-    /**
-     * The length of vectors that are being stored in the {@link BufferAttribute.array | array}.
-     * @remarks Expects a `Integer`
-     */
-    itemSize: number;
-
-    /**
-     * Defines the intended usage pattern of the data store for optimization purposes.
-     * Corresponds to the {@link BufferAttribute.usage | usage} parameter of
-     * {@link https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/bufferData | WebGLRenderingContext.bufferData}.
-     * @remarks
-     * After the initial use of a buffer, its usage cannot be changed. Instead, instantiate a new one and set the desired usage before the next render.
-     * @see {@link https://threejs.org/docs/index.html#api/en/constants/BufferAttributeUsage | Buffer Attribute Usage Constants} for all possible values.
-     * @see {@link BufferAttribute.setUsage | setUsage}
-     * @defaultValue {@link THREE.StaticDrawUsage | THREE.StaticDrawUsage}.
-     */
-    usage: Usage;
-
-    /**
-     * Configures the bound GPU type for use in shaders. Either {@link FloatType} or {@link IntType}, default is {@link FloatType}.
+     * This flag can be used for type testing.
      *
-     * Note: this only has an effect for integer arrays and is not configurable for float arrays. For lower precision
-     * float types, see https://threejs.org/docs/#api/en/core/bufferAttributeTypes/BufferAttributeTypes.
-     */
-    gpuType: AttributeGPUType;
-
-    /**
-     * This can be used to only update some components of stored vectors (for example, just the component related to
-     * color). Use the {@link .addUpdateRange} function to add ranges to this array.
-     */
-    updateRanges: Array<{
-        /**
-         * Position at which to start update.
-         */
-        start: number;
-        /**
-         * The number of components to update.
-         */
-        count: number;
-    }>;
-
-    /**
-     * A version number, incremented every time the {@link BufferAttribute.needsUpdate | needsUpdate} property is set to true.
-     * @remarks Expects a `Integer`
-     * @defaultValue `0`
-     */
-    version: number;
-
-    /**
-     * Indicates how the underlying data in the buffer maps to the values in the GLSL shader code.
-     * @see `constructor` above for details.
-     * @defaultValue `false`
-     */
-    normalized: boolean;
-
-    /**
-     * Represents the number of items this buffer attribute stores. It is internally computed by dividing the
-     * {@link BufferAttribute.array | array}'s length by the {@link BufferAttribute.itemSize | itemSize}. Read-only
-     * property.
-     */
-    readonly count: number;
-
-    /**
-     * Flag to indicate that this attribute has changed and should be re-sent to the GPU.
-     * Set this to true when you modify the value of the array.
-     * @remarks Setting this to true also increments the {@link BufferAttribute.version | version}.
-     * @remarks _set-only property_.
-     */
-    set needsUpdate(value: boolean);
-
-    /**
-     * Read-only flag to check if a given object is of type {@link BufferAttribute}.
-     * @remarks This is a _constant_ value
-     * @defaultValue `true`
+     * @default true
      */
     readonly isBufferAttribute: true;
-
     /**
-     * A callback function that is executed after the Renderer has transferred the attribute array data to the GPU.
+     * The ID of the buffer attribute.
+     */
+    readonly id: number;
+    /**
+     * The name of the buffer attribute.
+     */
+    name: string;
+    /**
+     * The array holding the attribute data. It should have `itemSize * numVertices`
+     * elements, where `numVertices` is the number of vertices in the associated geometry.
+     */
+    array: TypedArray;
+    /**
+     * The number of values of the array that should be associated with a particular vertex.
+     * For instance, if this attribute is storing a 3-component vector (such as a position,
+     * normal, or color), then the value should be `3`.
+     */
+    itemSize: number;
+    /**
+     * Represents the number of items this buffer attribute stores. It is internally computed
+     * by dividing the `array` length by the `itemSize`.
+     */
+    readonly count: number;
+    /**
+     * Applies to integer data only. Indicates how the underlying data in the buffer maps to
+     * the values in the GLSL code. For instance, if `array` is an instance of `UInt16Array`,
+     * and `normalized` is `true`, the values `0 - +65535` in the array data will be mapped to
+     * `0.0f - +1.0f` in the GLSL attribute. If `normalized` is `false`, the values will be converted
+     * to floats unmodified, i.e. `65535` becomes `65535.0f`.
+     */
+    normalized: boolean;
+    /**
+     * Defines the intended usage pattern of the data store for optimization purposes.
+     *
+     * Note: After the initial use of a buffer, its usage cannot be changed. Instead,
+     * instantiate a new one and set the desired usage before the next render.
+     *
+     * @default StaticDrawUsage
+     */
+    usage: Usage;
+    /**
+     * This can be used to only update some components of stored vectors (for example, just the
+     * component related to color). Use the `addUpdateRange()` function to add ranges to this array.
+     */
+    updateRanges: Array<{
+        start: number;
+        count: number;
+    }>;
+    /**
+     * Configures the bound GPU type for use in shaders.
+     *
+     * Note: this only has an effect for integer arrays and is not configurable for float arrays.
+     * For lower precision float types, use `Float16BufferAttribute`.
+     *
+     * @default FloatType
+     */
+    gpuType: AttributeGPUType;
+    /**
+     * A version number, incremented every time the `needsUpdate` is set to `true`.
+     */
+    version: number;
+    /**
+     * A callback function that is executed after the renderer has transferred the attribute
+     * array data to the GPU.
      */
     onUploadCallback: () => void;
-
     /**
-     * Sets the value of the {@link onUploadCallback} property.
-     * @see Example: {@link https://threejs.org/examples/#webgl_buffergeometry | WebGL / BufferGeometry} this is used to free memory after the buffer has been transferred to the GPU.
-     * @see {@link onUploadCallback}
-     * @param callback function that is executed after the Renderer has transferred the attribute array data to the GPU.
+     * Flag to indicate that this attribute has changed and should be re-sent to
+     * the GPU. Set this to `true` when you modify the value of the array.
+     *
+     * @default false
+     * @param {boolean} value
      */
-    onUpload(callback: () => void): this;
-
+    set needsUpdate(value: boolean);
     /**
-     * Set {@link BufferAttribute.usage | usage}
-     * @remarks
-     * After the initial use of a buffer, its usage cannot be changed. Instead, instantiate a new one and set the desired usage before the next render.
-     * @see {@link https://threejs.org/docs/index.html#api/en/constants/BufferAttributeUsage | Buffer Attribute Usage Constants} for all possible values.
-     * @see {@link BufferAttribute.usage | usage}
-     * @param value Corresponds to the {@link BufferAttribute.usage | usage} parameter of
-     * {@link https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/bufferData | WebGLRenderingContext.bufferData}.
+     * Sets the usage of this buffer attribute.
+     *
+     * @param {(StaticDrawUsage|DynamicDrawUsage|StreamDrawUsage|StaticReadUsage|DynamicReadUsage|StreamReadUsage|StaticCopyUsage|DynamicCopyUsage|StreamCopyUsage)} value - The usage to set.
+     * @return {BufferAttribute} A reference to this buffer attribute.
      */
-    setUsage(usage: Usage): this;
-
+    setUsage(value: Usage): this;
     /**
-     * Adds a range of data in the data array to be updated on the GPU. Adds an object describing the range to the
-     * {@link .updateRanges} array.
+     * Adds a range of data in the data array to be updated on the GPU.
+     *
+     * @param {number} start - Position at which to start update.
+     * @param {number} count - The number of components to update.
      */
     addUpdateRange(start: number, count: number): void;
-
     /**
-     * Clears the {@link .updateRanges} array.
+     * Clears the update ranges.
      */
     clearUpdateRanges(): void;
-
     /**
-     * @returns a copy of this {@link BufferAttribute}.
-     */
-    clone(): BufferAttribute;
-
-    /**
-     * Copies another {@link BufferAttribute} to this {@link BufferAttribute}.
-     * @param bufferAttribute
+     * Copies the values of the given buffer attribute to this instance.
+     *
+     * @param {BufferAttribute} source - The buffer attribute to copy.
+     * @return {BufferAttribute} A reference to this instance.
      */
     copy(source: BufferAttribute): this;
-
     /**
-     * Copy a vector from bufferAttribute[index2] to {@link BufferAttribute.array | array}[index1].
-     * @param index1
-     * @param bufferAttribute
-     * @param index2
+     * Copies a vector from the given buffer attribute to this one. The start
+     * and destination position in the attribute buffers are represented by the
+     * given indices.
+     *
+     * @param {number} index1 - The destination index into this buffer attribute.
+     * @param {BufferAttribute} attribute - The buffer attribute to copy from.
+     * @param {number} index2 - The source index into the given buffer attribute.
+     * @return {BufferAttribute} A reference to this instance.
      */
     copyAt(index1: number, attribute: BufferAttribute, index2: number): this;
-
     /**
-     * Copy the array given here (which can be a normal array or `TypedArray`) into {@link BufferAttribute.array | array}.
-     * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray/set | TypedArray.set} for notes on requirements if copying a `TypedArray`.
+     * Copies the given array data into this buffer attribute.
+     *
+     * @param {(TypedArray|Array)} array - The array to copy.
+     * @return {BufferAttribute} A reference to this instance.
      */
     copyArray(array: ArrayLike<number>): this;
-
     /**
-     * Applies matrix {@link Matrix3 | m} to every Vector3 element of this {@link BufferAttribute}.
-     * @param m
+     * Applies the given 3x3 matrix to the given attribute. Works with
+     * item size `2` and `3`.
+     *
+     * @param {Matrix3} m - The matrix to apply.
+     * @return {BufferAttribute} A reference to this instance.
      */
     applyMatrix3(m: Matrix3): this;
-
     /**
-     * Applies matrix {@link Matrix4 | m} to every Vector3 element of this {@link BufferAttribute}.
-     * @param m
+     * Applies the given 4x4 matrix to the given attribute. Only works with
+     * item size `3`.
+     *
+     * @param {Matrix4} m - The matrix to apply.
+     * @return {BufferAttribute} A reference to this instance.
      */
     applyMatrix4(m: Matrix4): this;
-
     /**
-     * Applies normal matrix {@link Matrix3 | m} to every Vector3 element of this {@link BufferAttribute}.
-     * @param m
+     * Applies the given 3x3 normal matrix to the given attribute. Only works with
+     * item size `3`.
+     *
+     * @param {Matrix3} m - The normal matrix to apply.
+     * @return {BufferAttribute} A reference to this instance.
      */
     applyNormalMatrix(m: Matrix3): this;
-
     /**
-     * Applies matrix {@link Matrix4 | m} to every Vector3 element of this {@link BufferAttribute}, interpreting the elements as a direction vectors.
-     * @param m
+     * Applies the given 4x4 matrix to the given attribute. Only works with
+     * item size `3` and with direction vectors.
+     *
+     * @param {Matrix4} m - The matrix to apply.
+     * @return {BufferAttribute} A reference to this instance.
      */
     transformDirection(m: Matrix4): this;
-
     /**
-     * Calls {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray/set | TypedArray.set}( {@link value}, {@link offset} )
-     * on the {@link BufferAttribute.array | array}.
-     * @param value {@link Array | Array} or `TypedArray` from which to copy values.
-     * @param offset index of the {@link BufferAttribute.array | array} at which to start copying. Expects a `Integer`. Default `0`.
-     * @throws `RangeError` When {@link offset} is negative or is too large.
+     * Sets the given array data in the buffer attribute.
+     *
+     * @param {(TypedArray|Array)} value - The array data to set.
+     * @param {number} [offset=0] - The offset in this buffer attribute's array.
+     * @return {BufferAttribute} A reference to this instance.
      */
     set(value: ArrayLike<number> | ArrayBufferView, offset?: number): this;
-
     /**
      * Returns the given component of the vector at the given index.
+     *
+     * @param {number} index - The index into the buffer attribute.
+     * @param {number} component - The component index.
+     * @return {number} The returned value.
      */
     getComponent(index: number, component: number): number;
-
     /**
-     * Sets the given component of the vector at the given index.
+     * Sets the given value to the given component of the vector at the given index.
+     *
+     * @param {number} index - The index into the buffer attribute.
+     * @param {number} component - The component index.
+     * @param {number} value - The value to set.
+     * @return {BufferAttribute} A reference to this instance.
      */
     setComponent(index: number, component: number, value: number): void;
-
     /**
      * Returns the x component of the vector at the given index.
-     * @param index Expects a `Integer`
+     *
+     * @param {number} index - The index into the buffer attribute.
+     * @return {number} The x component.
      */
     getX(index: number): number;
-
     /**
      * Sets the x component of the vector at the given index.
-     * @param index Expects a `Integer`
-     * @param x
+     *
+     * @param {number} index - The index into the buffer attribute.
+     * @param {number} x - The value to set.
+     * @return {BufferAttribute} A reference to this instance.
      */
     setX(index: number, x: number): this;
-
     /**
      * Returns the y component of the vector at the given index.
-     * @param index Expects a `Integer`
+     *
+     * @param {number} index - The index into the buffer attribute.
+     * @return {number} The y component.
      */
     getY(index: number): number;
-
     /**
      * Sets the y component of the vector at the given index.
-     * @param index Expects a `Integer`
-     * @param y
+     *
+     * @param {number} index - The index into the buffer attribute.
+     * @param {number} y - The value to set.
+     * @return {BufferAttribute} A reference to this instance.
      */
     setY(index: number, y: number): this;
-
     /**
      * Returns the z component of the vector at the given index.
-     * @param index Expects a `Integer`
+     *
+     * @param {number} index - The index into the buffer attribute.
+     * @return {number} The z component.
      */
     getZ(index: number): number;
-
     /**
      * Sets the z component of the vector at the given index.
-     * @param index Expects a `Integer`
-     * @param z
+     *
+     * @param {number} index - The index into the buffer attribute.
+     * @param {number} z - The value to set.
+     * @return {BufferAttribute} A reference to this instance.
      */
     setZ(index: number, z: number): this;
-
     /**
      * Returns the w component of the vector at the given index.
-     * @param index Expects a `Integer`
+     *
+     * @param {number} index - The index into the buffer attribute.
+     * @return {number} The w component.
      */
     getW(index: number): number;
-
     /**
      * Sets the w component of the vector at the given index.
-     * @param index Expects a `Integer`
-     * @param w
+     *
+     * @param {number} index - The index into the buffer attribute.
+     * @param {number} w - The value to set.
+     * @return {BufferAttribute} A reference to this instance.
      */
-    setW(index: number, z: number): this;
-
+    setW(index: number, w: number): this;
     /**
-     * Sets the x and y components of the vector at the given index.
-     * @param index Expects a `Integer`
-     * @param x
-     * @param y
+     * Sets the x and y component of the vector at the given index.
+     *
+     * @param {number} index - The index into the buffer attribute.
+     * @param {number} x - The value for the x component to set.
+     * @param {number} y - The value for the y component to set.
+     * @return {BufferAttribute} A reference to this instance.
      */
     setXY(index: number, x: number, y: number): this;
-
     /**
-     * Sets the x, y and z components of the vector at the given index.
-     * @param index Expects a `Integer`
-     * @param x
-     * @param y
-     * @param z
+     * Sets the x, y and z component of the vector at the given index.
+     *
+     * @param {number} index - The index into the buffer attribute.
+     * @param {number} x - The value for the x component to set.
+     * @param {number} y - The value for the y component to set.
+     * @param {number} z - The value for the z component to set.
+     * @return {BufferAttribute} A reference to this instance.
      */
     setXYZ(index: number, x: number, y: number, z: number): this;
-
     /**
-     * Sets the x, y, z and w components of the vector at the given index.
-     * @param index Expects a `Integer`
-     * @param x
-     * @param y
-     * @param z
-     * @param w
+     * Sets the x, y, z and w component of the vector at the given index.
+     *
+     * @param {number} index - The index into the buffer attribute.
+     * @param {number} x - The value for the x component to set.
+     * @param {number} y - The value for the y component to set.
+     * @param {number} z - The value for the z component to set.
+     * @param {number} w - The value for the w component to set.
+     * @return {BufferAttribute} A reference to this instance.
      */
     setXYZW(index: number, x: number, y: number, z: number, w: number): this;
-
     /**
-     * Convert this object to three.js to the `data.attributes` part of {@link https://github.com/mrdoob/three.js/wiki/JSON-Geometry-format-4 | JSON Geometry format v4},
+     * Sets the given callback function that is executed after the Renderer has transferred
+     * the attribute array data to the GPU. Can be used to perform clean-up operations after
+     * the upload when attribute data are not needed anymore on the CPU side.
+     *
+     * @param {Function} callback - The `onUpload()` callback.
+     * @return {BufferAttribute} A reference to this instance.
+     */
+    onUpload(callback: () => void): this;
+    /**
+     * Returns a new buffer attribute with copied values from this instance.
+     *
+     * @return {BufferAttribute} A clone of this instance.
+     */
+    clone(): BufferAttribute;
+    /**
+     * Serializes the buffer attribute into JSON.
+     *
+     * @return {Object} A JSON object representing the serialized buffer attribute.
      */
     toJSON(): BufferAttributeJSON;
-
     /**
-     * Disposes of the buffer attribute. Available only in {@link WebGPURenderer}.
+     * Frees the GPU-related resources allocated by this instance. Available only in {@link WebGPURenderer}.
      */
     dispose(): void;
-}
-
-/**
- * A {@link THREE.BufferAttribute | BufferAttribute} for {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int8Array: Int8Array}
- * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray#typedarray_objects | TypedArray}
- * @see {@link THREE.BufferAttribute | BufferAttribute} for details and for inherited methods and properties.
- * @see {@link https://threejs.org/docs/index.html#api/en/core/bufferAttributeTypes/BufferAttributeTypes | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/core/BufferAttribute.js | Source}
- */
-export class Int8BufferAttribute extends BufferAttribute {
-    /**
-     * This creates a new {@link THREE.Int8BufferAttribute | Int8BufferAttribute} object.
-     * @param array This can be a typed or untyped (normal) array or an integer length. An array value will be converted to `Int8Array`.
-     * If a length is given a new `TypedArray` will created, initialized with all elements set to zero.
-     * @param itemSize the number of values of the {@link array} that should be associated with a particular vertex.
-     * For instance, if this attribute is storing a 3-component vector (such as a _position_, _normal_, or _color_),
-     * then itemSize should be `3`.
-     * @param normalized Applies to integer data only.
-     * Indicates how the underlying data in the buffer maps to the values in the GLSL code.
-     * For instance, if {@link array} is an instance of `UInt16Array`, and  {@link normalized} is true,
-     * the values `0` - `+65535` in the array data will be mapped to `0.0f` - `+1.0f` in the GLSL attribute.
-     * An `Int16Array` (signed) would map from `-32768` - `+32767` to `-1.0f` - `+1.0f`.
-     * If normalized is false, the values will be converted to floats unmodified,
-     * i.e. `32767` becomes `32767.0f`.
-     * Default `false`.
-     */
-    constructor(
-        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
-        itemSize: number,
-        normalized?: boolean,
-    );
-}
-
-/**
- * A {@link THREE.BufferAttribute | BufferAttribute} for {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array: Uint8Array}
- * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray#typedarray_objects | TypedArray}
- * @see {@link THREE.BufferAttribute | BufferAttribute} for details and for inherited methods and properties.
- * @see {@link https://threejs.org/docs/index.html#api/en/core/bufferAttributeTypes/BufferAttributeTypes | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/core/BufferAttribute.js | Source}
- */
-export class Uint8BufferAttribute extends BufferAttribute {
-    /**
-     * This creates a new {@link THREE.Uint8BufferAttribute | Uint8BufferAttribute} object.
-     * @param array This can be a typed or untyped (normal) array or an integer length. An array value will be converted to `Uint8Array`.
-     * If a length is given a new `TypedArray` will created, initialized with all elements set to zero.
-     * @param itemSize the number of values of the {@link array} that should be associated with a particular vertex.
-     * For instance, if this attribute is storing a 3-component vector (such as a _position_, _normal_, or _color_),
-     * then itemSize should be `3`.
-     * @param normalized Applies to integer data only.
-     * Indicates how the underlying data in the buffer maps to the values in the GLSL code.
-     * For instance, if {@link array} is an instance of `UInt16Array`, and  {@link normalized} is true,
-     * the values `0` - `+65535` in the array data will be mapped to `0.0f` - `+1.0f` in the GLSL attribute.
-     * An `Int16Array` (signed) would map from `-32768` - `+32767` to `-1.0f` - `+1.0f`.
-     * If normalized is false, the values will be converted to floats unmodified,
-     * i.e. `32767` becomes `32767.0f`.
-     * Default `false`.
-     * @see {@link THREE.BufferAttribute | BufferAttribute}
-     */
-    constructor(
-        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
-        itemSize: number,
-        normalized?: boolean,
-    );
-}
-
-/**
- * A {@link THREE.BufferAttribute | BufferAttribute} for {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8ClampedArray: Uint8ClampedArray}
- * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray#typedarray_objects | TypedArray}
- * @see {@link THREE.BufferAttribute | BufferAttribute} for details and for inherited methods and properties.
- * @see {@link https://threejs.org/docs/index.html#api/en/core/bufferAttributeTypes/BufferAttributeTypes | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/core/BufferAttribute.js | Source}
- */
-export class Uint8ClampedBufferAttribute extends BufferAttribute {
-    /**
-     * This creates a new {@link THREE.Uint8ClampedBufferAttribute | Uint8ClampedBufferAttribute} object.
-     * @param array This can be a typed or untyped (normal) array or an integer length. An array value will be converted to `Uint8ClampedArray`.
-     * If a length is given a new `TypedArray` will created, initialized with all elements set to zero.
-     * @param itemSize the number of values of the {@link array} that should be associated with a particular vertex.
-     * For instance, if this attribute is storing a 3-component vector (such as a _position_, _normal_, or _color_),
-     * then itemSize should be `3`.
-     * @param normalized Applies to integer data only.
-     * Indicates how the underlying data in the buffer maps to the values in the GLSL code.
-     * For instance, if {@link array} is an instance of `UInt16Array`, and  {@link normalized} is true,
-     * the values `0` - `+65535` in the array data will be mapped to `0.0f` - `+1.0f` in the GLSL attribute.
-     * An `Int16Array` (signed) would map from `-32768` - `+32767` to `-1.0f` - `+1.0f`.
-     * If normalized is false, the values will be converted to floats unmodified,
-     * i.e. `32767` becomes `32767.0f`.
-     * Default `false`.
-     * @see {@link THREE.BufferAttribute | BufferAttribute}
-     */
-    constructor(
-        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
-        itemSize: number,
-        normalized?: boolean,
-    );
-}
-
-/**
- * A {@link THREE.BufferAttribute | BufferAttribute} for {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int16Array: Int16Array}
- * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray#typedarray_objects | TypedArray}
- * @see {@link THREE.BufferAttribute | BufferAttribute} for details and for inherited methods and properties.
- * @see {@link https://threejs.org/docs/index.html#api/en/core/bufferAttributeTypes/BufferAttributeTypes | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/core/BufferAttribute.js | Source}
- */
-export class Int16BufferAttribute extends BufferAttribute {
-    /**
-     * This creates a new {@link THREE.Int16BufferAttribute | Int16BufferAttribute} object.
-     * @param array This can be a typed or untyped (normal) array or an integer length. An array value will be converted to `Int16Array`.
-     * If a length is given a new `TypedArray` will created, initialized with all elements set to zero.
-     * @param itemSize the number of values of the {@link array} that should be associated with a particular vertex.
-     * For instance, if this attribute is storing a 3-component vector (such as a _position_, _normal_, or _color_),
-     * then itemSize should be `3`.
-     * @param normalized Applies to integer data only.
-     * Indicates how the underlying data in the buffer maps to the values in the GLSL code.
-     * For instance, if {@link array} is an instance of `UInt16Array`, and  {@link normalized} is true,
-     * the values `0` - `+65535` in the array data will be mapped to `0.0f` - `+1.0f` in the GLSL attribute.
-     * An `Int16Array` (signed) would map from `-32768` - `+32767` to `-1.0f` - `+1.0f`.
-     * If normalized is false, the values will be converted to floats unmodified,
-     * i.e. `32767` becomes `32767.0f`.
-     * Default `false`.
-     * @see {@link THREE.BufferAttribute | BufferAttribute}
-     */
-    constructor(
-        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
-        itemSize: number,
-        normalized?: boolean,
-    );
-}
-
-/**
- * A {@link THREE.BufferAttribute | BufferAttribute} for {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint16Array: Uint16Array}
- * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray#typedarray_objects | TypedArray}
- * @see {@link THREE.BufferAttribute | BufferAttribute} for details and for inherited methods and properties.
- * @see {@link https://threejs.org/docs/index.html#api/en/core/bufferAttributeTypes/BufferAttributeTypes | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/core/BufferAttribute.js | Source}
- */
-export class Uint16BufferAttribute extends BufferAttribute {
-    /**
-     * This creates a new {@link THREE.Uint16BufferAttribute | Uint16BufferAttribute} object.
-     * @param array This can be a typed or untyped (normal) array or an integer length. An array value will be converted to `Uint16Array`.
-     * If a length is given a new `TypedArray` will created, initialized with all elements set to zero.
-     * @param itemSize the number of values of the {@link array} that should be associated with a particular vertex.
-     * For instance, if this attribute is storing a 3-component vector (such as a _position_, _normal_, or _color_),
-     * then itemSize should be `3`.
-     * @param normalized Applies to integer data only.
-     * Indicates how the underlying data in the buffer maps to the values in the GLSL code.
-     * For instance, if {@link array} is an instance of `UInt16Array`, and  {@link normalized} is true,
-     * the values `0` - `+65535` in the array data will be mapped to `0.0f` - `+1.0f` in the GLSL attribute.
-     * An `Int16Array` (signed) would map from `-32768` - `+32767` to `-1.0f` - `+1.0f`.
-     * If normalized is false, the values will be converted to floats unmodified,
-     * i.e. `32767` becomes `32767.0f`.
-     * Default `false`.
-     * @see {@link THREE.BufferAttribute | BufferAttribute}
-     */
-    constructor(
-        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
-        itemSize: number,
-        normalized?: boolean,
-    );
-}
-
-/**
- * A {@link THREE.BufferAttribute | BufferAttribute} for {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array: Int32Array}
- * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray#typedarray_objects | TypedArray}
- * @see {@link THREE.BufferAttribute | BufferAttribute} for details and for inherited methods and properties.
- * @see {@link https://threejs.org/docs/index.html#api/en/core/bufferAttributeTypes/BufferAttributeTypes | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/core/BufferAttribute.js | Source}
- */
-export class Int32BufferAttribute extends BufferAttribute {
-    /**
-     * This creates a new {@link THREE.Int32BufferAttribute | Int32BufferAttribute} object.
-     * @param array This can be a typed or untyped (normal) array or an integer length. An array value will be converted to `Int32Array`.
-     * If a length is given a new `TypedArray` will created, initialized with all elements set to zero.
-     * @param itemSize the number of values of the {@link array} that should be associated with a particular vertex.
-     * For instance, if this attribute is storing a 3-component vector (such as a _position_, _normal_, or _color_),
-     * then itemSize should be `3`.
-     * @param normalized Applies to integer data only.
-     * Indicates how the underlying data in the buffer maps to the values in the GLSL code.
-     * For instance, if {@link array} is an instance of `UInt16Array`, and  {@link normalized} is true,
-     * the values `0` - `+65535` in the array data will be mapped to `0.0f` - `+1.0f` in the GLSL attribute.
-     * An `Int16Array` (signed) would map from `-32768` - `+32767` to `-1.0f` - `+1.0f`.
-     * If normalized is false, the values will be converted to floats unmodified,
-     * i.e. `32767` becomes `32767.0f`.
-     * Default `false`.
-     * @see {@link THREE.BufferAttribute | BufferAttribute}
-     */
-    constructor(
-        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
-        itemSize: number,
-        normalized?: boolean,
-    );
-}
-
-/**
- * A {@link THREE.BufferAttribute | BufferAttribute} for {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint32Array: Uint32Array}
- * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray#typedarray_objects | TypedArray}
- * @see {@link THREE.BufferAttribute | BufferAttribute} for details and for inherited methods and properties.
- * @see {@link https://threejs.org/docs/index.html#api/en/core/bufferAttributeTypes/BufferAttributeTypes | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/core/BufferAttribute.js | Source}
- */
-export class Uint32BufferAttribute extends BufferAttribute {
-    /**
-     * This creates a new {@link THREE.Uint32BufferAttribute | Uint32BufferAttribute} object.
-     * @param array This can be a typed or untyped (normal) array or an integer length. An array value will be converted to `Uint32Array`.
-     * If a length is given a new `TypedArray` will created, initialized with all elements set to zero.
-     * @param itemSize the number of values of the {@link array} that should be associated with a particular vertex.
-     * For instance, if this attribute is storing a 3-component vector (such as a _position_, _normal_, or _color_),
-     * then itemSize should be `3`.
-     * @param normalized Applies to integer data only.
-     * Indicates how the underlying data in the buffer maps to the values in the GLSL code.
-     * For instance, if {@link array} is an instance of `UInt16Array`, and  {@link normalized} is true,
-     * the values `0` - `+65535` in the array data will be mapped to `0.0f` - `+1.0f` in the GLSL attribute.
-     * An `Int16Array` (signed) would map from `-32768` - `+32767` to `-1.0f` - `+1.0f`.
-     * If normalized is false, the values will be converted to floats unmodified,
-     * i.e. `32767` becomes `32767.0f`.
-     * Default `false`.
-     * @see {@link THREE.BufferAttribute | BufferAttribute}
-     */
-    constructor(
-        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
-        itemSize: number,
-        normalized?: boolean,
-    );
-}
-
-/**
- * A {@link THREE.BufferAttribute | BufferAttribute} for {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint16Array: Uint16Array}
- * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray#typedarray_objects | TypedArray}
- * @see {@link THREE.BufferAttribute | BufferAttribute} for details and for inherited methods and properties.
- * @see {@link https://threejs.org/docs/index.html#api/en/core/bufferAttributeTypes/BufferAttributeTypes | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/core/BufferAttribute.js | Source}
- */
-export class Float16BufferAttribute extends BufferAttribute {
-    /**
-     * This creates a new {@link THREE.Float16BufferAttribute | Float16BufferAttribute} object.
-     * @param array This can be a typed or untyped (normal) array or an integer length. An array value will be converted to `Uint16Array`.
-     * If a length is given a new `TypedArray` will created, initialized with all elements set to zero.
-     * @param itemSize the number of values of the {@link array} that should be associated with a particular vertex.
-     * For instance, if this attribute is storing a 3-component vector (such as a _position_, _normal_, or _color_),
-     * then itemSize should be `3`.
-     * @param normalized Applies to integer data only.
-     * Indicates how the underlying data in the buffer maps to the values in the GLSL code.
-     * For instance, if {@link array} is an instance of `UInt16Array`, and  {@link normalized} is true,
-     * the values `0` - `+65535` in the array data will be mapped to `0.0f` - `+1.0f` in the GLSL attribute.
-     * An `Int16Array` (signed) would map from `-32768` - `+32767` to `-1.0f` - `+1.0f`.
-     * If normalized is false, the values will be converted to floats unmodified,
-     * i.e. `32767` becomes `32767.0f`.
-     * Default `false`.
-     * @see {@link THREE.BufferAttribute | BufferAttribute}
-     */
-    constructor(
-        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
-        itemSize: number,
-        normalized?: boolean,
-    );
-}
-
-/**
- * A {@link THREE.BufferAttribute | BufferAttribute} for {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array: Float32Array}
- * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray#typedarray_objects | TypedArray}
- * @see {@link THREE.BufferAttribute | BufferAttribute} for details and for inherited methods and properties.
- * @see {@link https://threejs.org/docs/index.html#api/en/core/bufferAttributeTypes/BufferAttributeTypes | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/core/BufferAttribute.js | Source}
- */
-export class Float32BufferAttribute extends BufferAttribute {
-    /**
-     * This creates a new {@link THREE.Float32BufferAttribute | Float32BufferAttribute} object.
-     * @param array This can be a typed or untyped (normal) array or an integer length. An array value will be converted to `Float32Array`.
-     * If a length is given a new `TypedArray` will created, initialized with all elements set to zero.
-     * @param itemSize the number of values of the {@link array} that should be associated with a particular vertex.
-     * For instance, if this attribute is storing a 3-component vector (such as a _position_, _normal_, or _color_),
-     * then itemSize should be `3`.
-     * @param normalized Applies to integer data only.
-     * Indicates how the underlying data in the buffer maps to the values in the GLSL code.
-     * For instance, if {@link array} is an instance of `UInt16Array`, and  {@link normalized} is true,
-     * the values `0` - `+65535` in the array data will be mapped to `0.0f` - `+1.0f` in the GLSL attribute.
-     * An `Int16Array` (signed) would map from `-32768` - `+32767` to `-1.0f` - `+1.0f`.
-     * If normalized is false, the values will be converted to floats unmodified,
-     * i.e. `32767` becomes `32767.0f`.
-     * Default `false`.
-     * @see {@link THREE.BufferAttribute | BufferAttribute}
-     */
-    constructor(
-        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
-        itemSize: number,
-        normalized?: boolean,
-    );
 }

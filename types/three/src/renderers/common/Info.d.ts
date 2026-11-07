@@ -139,8 +139,16 @@ declare class Info {
      * Tracks texture memory explicitly, updating counts and byte tracking.
      *
      * @param {Texture} texture
+     * @param {Object} options - The texture's size and level information.
      */
-    createTexture(texture: Texture): void;
+    createTexture(texture: Texture, options: { width: number; height: number; depth: number; levels: number }): void;
+    /**
+     * Updates the tracked memory of a texture when its default texture is replaced with the loaded one.
+     *
+     * @param {Texture} texture
+     * @param {Object} options - The texture's size and level information.
+     */
+    updateTexture(texture: Texture, options: { width: number; height: number; depth: number; levels: number }): void;
     /**
      * Tracks texture memory explicitly, updating counts and byte tracking.
      *

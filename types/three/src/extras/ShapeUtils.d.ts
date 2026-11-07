@@ -2,24 +2,30 @@ import { Vector2Like } from "../math/Vector2.js";
 
 /**
  * A class containing utility functions for shapes.
- * @remarks Note that these are all linear functions so it is necessary to calculate separately for x, y (and z, w if present) components of a vector.
- * @see {@link https://threejs.org/docs/index.html#api/en/extras/ShapeUtils | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/extras/ShapeUtils.js | Source}
+ *
+ * @hideconstructor
  */
 export class ShapeUtils {
     /**
      * Calculate area of a ( 2D ) contour polygon.
+     *
+     * @param {Array<Vector2>} contour - An array of 2D points.
+     * @return {number} The area.
      */
     static area(contour: readonly Vector2Like[]): number;
-
     /**
-     * Note that this is a linear function so it is necessary to calculate separately for x, y components of a polygon.
-     * @remarks Used internally by {@link THREE.Path | Path}, {@link THREE.ExtrudeGeometry | ExtrudeGeometry} and {@link THREE.ShapeGeometry | ShapeGeometry}.
+     * Returns `true` if the given contour uses a clockwise winding order.
+     *
+     * @param {Array<Vector2>} pts - An array of 2D points defining a polygon.
+     * @return {boolean} Whether the given contour uses a clockwise winding order or not.
      */
     static isClockWise(pts: readonly Vector2Like[]): boolean;
-
     /**
-     * Used internally by {@link THREE.ExtrudeGeometry | ExtrudeGeometry} and {@link THREE.ShapeGeometry | ShapeGeometry} to calculate faces in shapes with holes.
+     * Triangulates the given shape definition.
+     *
+     * @param {Array<Vector2>} contour - An array of 2D points defining the contour.
+     * @param {Array<Array<Vector2>>} holes - An array that holds arrays of 2D points defining the holes.
+     * @return {Array<Array<number>>} An array that holds for each face definition an array with three indices.
      */
-    static triangulateShape(contour: Vector2Like[], holes: Vector2Like[][]): number[][];
+    static triangulateShape(contour: Vector2Like[], holes: Vector2Like[][]): Array<Array<number>>;
 }

@@ -4,192 +4,209 @@ import { BufferAttribute, TypedArray } from "./BufferAttribute.js";
 import { InterleavedBuffer } from "./InterleavedBuffer.js";
 
 /**
- * @see {@link https://threejs.org/docs/index.html#api/en/core/InterleavedBufferAttribute | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/core/InterleavedBufferAttribute.js | Source}
+ * An alternative version of a buffer attribute with interleaved data. Interleaved
+ * attributes share a common interleaved data storage ({@link InterleavedBuffer}) and refer with
+ * different offsets into the buffer.
  */
 export class InterleavedBufferAttribute {
     /**
-     * Create a new instance of {@link THREE.InterleavedBufferAttribute | InterleavedBufferAttribute}.
-     * @param interleavedBuffer
-     * @param itemSize
-     * @param offset
-     * @param normalized Default `false`.
+     * Constructs a new interleaved buffer attribute.
+     *
+     * @param {InterleavedBuffer} interleavedBuffer - The buffer holding the interleaved data.
+     * @param {number} itemSize - The item size.
+     * @param {number} offset - The attribute offset into the buffer.
+     * @param {boolean} [normalized=false] - Whether the data are normalized or not.
      */
     constructor(interleavedBuffer: InterleavedBuffer, itemSize: number, offset: number, normalized?: boolean);
-
     /**
-     * Optional name for this attribute instance.
-     * @defaultValue `''`
-     */
-    name: string;
-
-    /**
-     * The {@link InterleavedBuffer | InterleavedBuffer} instance passed in the constructor.
-     */
-    data: InterleavedBuffer;
-
-    /**
-     * How many values make up each item.
-     * @remarks Expects a `Integer`
-     */
-    itemSize: number;
-
-    /**
-     * The offset in the underlying array buffer where an item starts.
-     * @remarks Expects a `Integer`
-     */
-    offset: number;
-
-    /**
-     * @defaultValue `false`
-     */
-    normalized: boolean;
-
-    /**
-     * The value of {@link data | .data}.{@link InterleavedBuffer.count | count}.
-     * If the buffer is storing a 3-component item (such as a _position, normal, or color_), then this will count the number of such items stored.
-     * @remarks _get-only property_.
-     * @remarks Expects a `Integer`
-     */
-    get count(): number;
-
-    /**
-     * The value of {@link InterleavedBufferAttribute.data | data}.{@link InterleavedBuffer.array | array}.
-     * @remarks _get-only property_.
-     */
-    get array(): TypedArray;
-
-    /**
-     * Flag to indicate that the {@link data | .data} ({@link InterleavedBuffer}) attribute has changed and should be re-sent to the GPU.
-     * @remarks Setting this to have the same result of setting true also increments the {@link InterleavedBuffer.needsUpdate | InterleavedBuffer.needsUpdate} of {@link data | .data}.
-     * @remarks Setting this to true also increments the {@link InterleavedBuffer.version | InterleavedBuffer.version}.
-     * @remarks _set-only property_.
-     */
-    set needsUpdate(value: boolean);
-
-    /**
-     * Read-only flag to check if a given object is of type {@link InterleavedBufferAttribute}.
-     * @remarks This is a _constant_ value
-     * @defaultValue `true`
+     * This flag can be used for type testing.
+     *
+     * @default true
      */
     readonly isInterleavedBufferAttribute: true;
-
     /**
-     * Applies matrix {@link Matrix4 | m} to every Vector3 element of this InterleavedBufferAttribute.
-     * @param m
+     * The name of the buffer attribute.
+     */
+    name: string;
+    /**
+     * The buffer holding the interleaved data.
+     */
+    data: InterleavedBuffer;
+    /**
+     * The item size, see {@link BufferAttribute#itemSize}.
+     */
+    itemSize: number;
+    /**
+     * The attribute offset into the buffer.
+     */
+    offset: number;
+    /**
+     * Whether the data are normalized or not, see {@link BufferAttribute#normalized}
+     */
+    normalized: boolean;
+    /**
+     * The item count of this buffer attribute.
+     */
+    get count(): number;
+    /**
+     * The array holding the interleaved buffer attribute data.
+     */
+    get array(): TypedArray;
+    /**
+     * Flag to indicate that this attribute has changed and should be re-sent to
+     * the GPU. Set this to `true` when you modify the value of the array.
+     *
+     * @default false
+     * @param {boolean} value
+     */
+    set needsUpdate(value: boolean);
+    /**
+     * Applies the given 4x4 matrix to the given attribute. Only works with
+     * item size `3`.
+     *
+     * @param {Matrix4} m - The matrix to apply.
+     * @return {InterleavedBufferAttribute} A reference to this instance.
      */
     applyMatrix4(m: Matrix4): this;
-
     /**
-     * Applies normal matrix {@link Matrix3 | m} to every Vector3 element of this InterleavedBufferAttribute.
-     * @param m
+     * Applies the given 3x3 normal matrix to the given attribute. Only works with
+     * item size `3`.
+     *
+     * @param {Matrix3} m - The normal matrix to apply.
+     * @return {InterleavedBufferAttribute} A reference to this instance.
      */
     applyNormalMatrix(m: Matrix3): this;
-
     /**
-     * Applies matrix {@link Matrix4 | m} to every Vector3 element of this InterleavedBufferAttribute, interpreting the elements as a direction vectors.
-     * @param m
+     * Applies the given 4x4 matrix to the given attribute. Only works with
+     * item size `3` and with direction vectors.
+     *
+     * @param {Matrix4} m - The matrix to apply.
+     * @return {InterleavedBufferAttribute} A reference to this instance.
      */
     transformDirection(m: Matrix4): this;
-
     /**
      * Returns the given component of the vector at the given index.
+     *
+     * @param {number} index - The index into the buffer attribute.
+     * @param {number} component - The component index.
+     * @return {number} The returned value.
      */
     getComponent(index: number, component: number): number;
-
     /**
-     * Sets the given component of the vector at the given index.
+     * Sets the given value to the given component of the vector at the given index.
+     *
+     * @param {number} index - The index into the buffer attribute.
+     * @param {number} component - The component index.
+     * @param {number} value - The value to set.
+     * @return {InterleavedBufferAttribute} A reference to this instance.
      */
     setComponent(index: number, component: number, value: number): this;
-
     /**
-     * Returns the x component of the item at the given index.
-     * @param index Expects a `Integer`
-     */
-    getX(index: number): number;
-
-    /**
-     * Sets the x component of the item at the given index.
-     * @param index Expects a `Integer`
-     * @param x Expects a `Float`
+     * Sets the x component of the vector at the given index.
+     *
+     * @param {number} index - The index into the buffer attribute.
+     * @param {number} x - The value to set.
+     * @return {InterleavedBufferAttribute} A reference to this instance.
      */
     setX(index: number, x: number): this;
-
     /**
-     * Returns the y component of the item at the given index.
-     * @param index Expects a `Integer`
-     */
-    getY(index: number): number;
-
-    /**
-     * Sets the y component of the item at the given index.
-     * @param index Expects a `Integer`
-     * @param y Expects a `Float`
+     * Sets the y component of the vector at the given index.
+     *
+     * @param {number} index - The index into the buffer attribute.
+     * @param {number} y - The value to set.
+     * @return {InterleavedBufferAttribute} A reference to this instance.
      */
     setY(index: number, y: number): this;
-
     /**
-     * Returns the z component of the item at the given index.
-     * @param index Expects a `Integer`
-     */
-    getZ(index: number): number;
-
-    /**
-     * Sets the z component of the item at the given index.
-     * @param index Expects a `Integer`
-     * @param z Expects a `Float`
+     * Sets the z component of the vector at the given index.
+     *
+     * @param {number} index - The index into the buffer attribute.
+     * @param {number} z - The value to set.
+     * @return {InterleavedBufferAttribute} A reference to this instance.
      */
     setZ(index: number, z: number): this;
-
     /**
-     * Returns the w component of the item at the given index.
-     * @param index Expects a `Integer`
+     * Sets the w component of the vector at the given index.
+     *
+     * @param {number} index - The index into the buffer attribute.
+     * @param {number} w - The value to set.
+     * @return {InterleavedBufferAttribute} A reference to this instance.
+     */
+    setW(index: number, w: number): this;
+    /**
+     * Returns the x component of the vector at the given index.
+     *
+     * @param {number} index - The index into the buffer attribute.
+     * @return {number} The x component.
+     */
+    getX(index: number): number;
+    /**
+     * Returns the y component of the vector at the given index.
+     *
+     * @param {number} index - The index into the buffer attribute.
+     * @return {number} The y component.
+     */
+    getY(index: number): number;
+    /**
+     * Returns the z component of the vector at the given index.
+     *
+     * @param {number} index - The index into the buffer attribute.
+     * @return {number} The z component.
+     */
+    getZ(index: number): number;
+    /**
+     * Returns the w component of the vector at the given index.
+     *
+     * @param {number} index - The index into the buffer attribute.
+     * @return {number} The w component.
      */
     getW(index: number): number;
-
     /**
-     * Sets the w component of the item at the given index.
-     * @param index Expects a `Integer`
-     * @param w Expects a `Float`
-     */
-    setW(index: number, z: number): this;
-
-    /**
-     * Sets the x and y components of the item at the given index.
-     * @param index Expects a `Integer`
-     * @param x Expects a `Float`
-     * @param y Expects a `Float`
+     * Sets the x and y component of the vector at the given index.
+     *
+     * @param {number} index - The index into the buffer attribute.
+     * @param {number} x - The value for the x component to set.
+     * @param {number} y - The value for the y component to set.
+     * @return {InterleavedBufferAttribute} A reference to this instance.
      */
     setXY(index: number, x: number, y: number): this;
     /**
-     * Sets the x, y and z components of the item at the given index.
-     * @param index Expects a `Integer`
-     * @param x Expects a `Float`
-     * @param y Expects a `Float`
-     * @param z Expects a `Float`
+     * Sets the x, y and z component of the vector at the given index.
+     *
+     * @param {number} index - The index into the buffer attribute.
+     * @param {number} x - The value for the x component to set.
+     * @param {number} y - The value for the y component to set.
+     * @param {number} z - The value for the z component to set.
+     * @return {InterleavedBufferAttribute} A reference to this instance.
      */
     setXYZ(index: number, x: number, y: number, z: number): this;
-
     /**
-     * Sets the x, y, z and w components of the item at the given index.
-     * @param index Expects a `Integer`
-     * @param x Expects a `Float`
-     * @param y Expects a `Float`
-     * @param z Expects a `Float`
-     * @param w Expects a `Float`
+     * Sets the x, y, z and w component of the vector at the given index.
+     *
+     * @param {number} index - The index into the buffer attribute.
+     * @param {number} x - The value for the x component to set.
+     * @param {number} y - The value for the y component to set.
+     * @param {number} z - The value for the z component to set.
+     * @param {number} w - The value for the w component to set.
+     * @return {InterleavedBufferAttribute} A reference to this instance.
      */
     setXYZW(index: number, x: number, y: number, z: number, w: number): this;
-
     /**
-     * Creates a clone of this {@link InterleavedBufferAttribute}.
-     * @param data This object holds shared array buffers required for properly cloning geometries with interleaved attributes.
+     * Returns a new buffer attribute with copied values from this instance.
+     *
+     * If no parameter is provided, cloning an interleaved buffer attribute will de-interleave buffer data.
+     *
+     * @param {Object} [data] - An object with interleaved buffers that allows to retain the interleaved property.
+     * @return {BufferAttribute|InterleavedBufferAttribute} A clone of this instance.
      */
     clone(data?: {}): BufferAttribute;
-
     /**
-     * Serializes this {@link InterleavedBufferAttribute}.
-     * Converting to {@link https://github.com/mrdoob/three.js/wiki/JSON-Geometry-format-4 | JSON Geometry format v4},
-     * @param data This object holds shared array buffers required for properly serializing geometries with interleaved attributes.
+     * Serializes the buffer attribute into JSON.
+     *
+     * If no parameter is provided, cloning an interleaved buffer attribute will de-interleave buffer data.
+     *
+     * @param {Object} [data] - An optional value holding meta information about the serialization.
+     * @return {Object} A JSON object representing the serialized buffer attribute.
      */
     toJSON(data?: {}): {
         isInterleavedBufferAttribute: true;
