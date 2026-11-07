@@ -7664,7 +7664,7 @@ index 27bb1fefd..24299167b 100644
  }
 -import { EventDispatcher } from './EventDispatcher.js';
 diff --git a/jsdoc-testing/jsdoc/src/core/BufferGeometry.d.ts b/jsdoc-testing/jsdoc/src/core/BufferGeometry.d.ts
-index 9906f15d4..2dd3f4e6a 100644
+index 9906f15d4..0b47c3667 100644
 --- a/jsdoc-testing/jsdoc/src/core/BufferGeometry.d.ts
 +++ b/jsdoc-testing/jsdoc/src/core/BufferGeometry.d.ts
 @@ -1,3 +1,66 @@
@@ -7770,8 +7770,7 @@ index 9906f15d4..2dd3f4e6a 100644
 -     * @type {string}
 -     * @readonly
       */
--    readonly uuid: string;
-+    uuid: string;
+     readonly uuid: string;
      /**
       * The name of the geometry.
 -     *
@@ -8449,7 +8448,7 @@ index 3f95ae1bb..0aec7fd4d 100644
  }
 -import { InterleavedBuffer } from './InterleavedBuffer.js';
 diff --git a/jsdoc-testing/jsdoc/src/core/InterleavedBuffer.d.ts b/jsdoc-testing/jsdoc/src/core/InterleavedBuffer.d.ts
-index c6054ce83..bc5e6ddce 100644
+index c6054ce83..6b0aa349d 100644
 --- a/jsdoc-testing/jsdoc/src/core/InterleavedBuffer.d.ts
 +++ b/jsdoc-testing/jsdoc/src/core/InterleavedBuffer.d.ts
 @@ -1,3 +1,6 @@
@@ -8529,8 +8528,7 @@ index c6054ce83..bc5e6ddce 100644
 -     * @type {string}
 -     * @readonly
       */
--    readonly uuid: string;
-+    uuid: string;
+     readonly uuid: string;
      /**
       * A callback function that is executed after the renderer has transferred the attribute array
       * data to the GPU.
@@ -8848,7 +8846,7 @@ index 34b3c6175..7345c28ca 100644
      mask: number;
      /**
 diff --git a/jsdoc-testing/jsdoc/src/core/Object3D.d.ts b/jsdoc-testing/jsdoc/src/core/Object3D.d.ts
-index 4685b6f52..1757b148c 100644
+index 4685b6f52..128b87f82 100644
 --- a/jsdoc-testing/jsdoc/src/core/Object3D.d.ts
 +++ b/jsdoc-testing/jsdoc/src/core/Object3D.d.ts
 @@ -1,72 +1,182 @@
@@ -8976,8 +8974,7 @@ index 4685b6f52..1757b148c 100644
 -     * @type {string}
 -     * @readonly
       */
--    readonly uuid: string;
-+    uuid: string;
+     readonly uuid: string;
      /**
       * The name of the 3D object.
 -     *
@@ -9468,15 +9465,6 @@ index 4685b6f52..1757b148c 100644
      /**
       * Updates the transformation matrix in local space by computing it from the current
       * position, rotation and scale values.
-@@ -557,7 +700,7 @@ export class Object3D extends EventDispatcher {
-      * @param {boolean} [force=false] - When set to `true`, a recomputation of world matrices is forced even
-      * when {@link Object3D#matrixWorldNeedsUpdate} is `false`.
-      */
--    updateWorldMatrix(updateParents?: boolean, updateChildren?: boolean, force?: boolean): void;
-+    updateWorldMatrix(updateParents: boolean, updateChildren: boolean, force?: boolean): void;
-     /**
-      * Serializes the 3D object into JSON.
-      *
 @@ -565,14 +708,14 @@ export class Object3D extends EventDispatcher {
       * @return {Object} A JSON object representing the serialized 3D object.
       * @see {@link ObjectLoader#parse}
@@ -9519,7 +9507,7 @@ index 4685b6f52..1757b148c 100644
 -import { Quaternion } from '../math/Quaternion.js';
 -import { Euler } from '../math/Euler.js';
 diff --git a/jsdoc-testing/jsdoc/src/core/Raycaster.d.ts b/jsdoc-testing/jsdoc/src/core/Raycaster.d.ts
-index 5dacc4d2f..df0a6782c 100644
+index 5dacc4d2f..3a9768651 100644
 --- a/jsdoc-testing/jsdoc/src/core/Raycaster.d.ts
 +++ b/jsdoc-testing/jsdoc/src/core/Raycaster.d.ts
 @@ -1,3 +1,84 @@
@@ -9633,18 +9621,14 @@ index 5dacc4d2f..df0a6782c 100644
       * @default Infinity
       */
      far: number;
-@@ -38,10 +115,9 @@ export class Raycaster {
+@@ -38,7 +115,6 @@ export class Raycaster {
       * billboarded objects like sprites. This field can be set manually or
       * is set when calling `setFromCamera()`.
       *
 -     * @type {?Camera}
       * @default null
       */
--    camera: Camera | null;
-+    camera: Camera;
-     /**
-      * Allows to selectively ignore 3D objects when performing intersection tests.
-      * The following code example ensures that only 3D objects on layer `1` will be
+     camera: Camera | null;
 @@ -50,8 +126,6 @@ export class Raycaster {
       * raycaster.layers.set( 1 );
       * object.layers.enable( 1 );
@@ -10097,7 +10081,7 @@ index 11621efd2..4b6aa0a6d 100644
 +
 +export { RenderTarget3D };
 diff --git a/jsdoc-testing/jsdoc/src/core/Timer.d.ts b/jsdoc-testing/jsdoc/src/core/Timer.d.ts
-index d47c2d4bd..51a0a26ae 100644
+index d47c2d4bd..17cbd58e6 100644
 --- a/jsdoc-testing/jsdoc/src/core/Timer.d.ts
 +++ b/jsdoc-testing/jsdoc/src/core/Timer.d.ts
 @@ -12,15 +12,8 @@
@@ -10139,7 +10123,7 @@ index d47c2d4bd..51a0a26ae 100644
       * @return {Timer} A reference to this timer.
       */
 -    update(timestamp: number): Timer;
-+    update(timestamp?: number): this;
++    update(timestamp: number): this;
  }
 -declare function handleVisibilityChange(): void;
 -export {};
