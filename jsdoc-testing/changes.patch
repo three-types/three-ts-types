@@ -32637,3 +32637,1373 @@ index 91ed09ab6..83c0f4b25 100644
  }
 -import { Object3D } from '../core/Object3D.js';
 -import { Euler } from '../math/Euler.js';
+diff --git a/jsdoc-testing/jsdoc/src/textures/CanvasTexture.d.ts b/jsdoc-testing/jsdoc/src/textures/CanvasTexture.d.ts
+index ee88d4d2b..a3245b84d 100644
+--- a/jsdoc-testing/jsdoc/src/textures/CanvasTexture.d.ts
++++ b/jsdoc-testing/jsdoc/src/textures/CanvasTexture.d.ts
+@@ -1,3 +1,13 @@
++import {
++    MagnificationTextureFilter,
++    Mapping,
++    MinificationTextureFilter,
++    PixelFormat,
++    TextureDataType,
++    Wrapping,
++} from "../constants.js";
++import { Texture } from "./Texture.js";
++
+ /**
+  * Creates a texture from a canvas element.
+  *
+@@ -6,7 +16,7 @@
+  *
+  * @augments Texture
+  */
+-export class CanvasTexture extends Texture {
++export class CanvasTexture<TCanvas = HTMLCanvasElement> extends Texture<TCanvas> {
+     /**
+      * Constructs a new texture.
+      *
+@@ -20,7 +30,17 @@ export class CanvasTexture extends Texture {
+      * @param {number} [type=UnsignedByteType] - The texture type.
+      * @param {number} [anisotropy=Texture.DEFAULT_ANISOTROPY] - The anisotropy value.
+      */
+-    constructor(canvas?: HTMLCanvasElement, mapping?: number, wrapS?: number, wrapT?: number, magFilter?: number, minFilter?: number, format?: number, type?: number, anisotropy?: number);
++    constructor(
++        canvas?: TCanvas,
++        mapping?: Mapping,
++        wrapS?: Wrapping,
++        wrapT?: Wrapping,
++        magFilter?: MagnificationTextureFilter,
++        minFilter?: MinificationTextureFilter,
++        format?: PixelFormat,
++        type?: TextureDataType,
++        anisotropy?: number,
++    );
+     /**
+      * This flag can be used for type testing.
+      *
+@@ -28,6 +48,5 @@ export class CanvasTexture extends Texture {
+      * @readonly
+      * @default true
+      */
+-    readonly isCanvasTexture: boolean;
++    readonly isCanvasTexture: true;
+ }
+-import { Texture } from './Texture.js';
+diff --git a/jsdoc-testing/jsdoc/src/textures/CompressedArrayTexture.d.ts b/jsdoc-testing/jsdoc/src/textures/CompressedArrayTexture.d.ts
+index 96dee3662..eab46463e 100644
+--- a/jsdoc-testing/jsdoc/src/textures/CompressedArrayTexture.d.ts
++++ b/jsdoc-testing/jsdoc/src/textures/CompressedArrayTexture.d.ts
+@@ -1,3 +1,10 @@
++import { CompressedPixelFormat, TextureDataType, Wrapping } from "../constants.js";
++import { CompressedTexture, CompressedTextureImageData, CompressedTextureMipmap } from "./CompressedTexture.js";
++
++export interface CompressedArrayTextureImageData extends CompressedTextureImageData {
++    depth: number;
++}
++
+ /**
+  * Creates a texture 2D array based on data in compressed form.
+  *
+@@ -5,7 +12,7 @@
+  *
+  * @augments CompressedTexture
+  */
+-export class CompressedArrayTexture extends CompressedTexture {
++export class CompressedArrayTexture extends CompressedTexture<CompressedArrayTextureImageData> {
+     /**
+      * Constructs a new compressed array texture.
+      *
+@@ -17,7 +24,14 @@ export class CompressedArrayTexture extends CompressedTexture {
+      * @param {number} [format=RGBAFormat] - The min filter value.
+      * @param {number} [type=UnsignedByteType] - The min filter value.
+      */
+-    constructor(mipmaps: Array<Object>, width: number, height: number, depth: number, format?: number, type?: number);
++    constructor(
++        mipmaps: CompressedTextureMipmap[],
++        width: number,
++        height: number,
++        depth: number,
++        format?: CompressedPixelFormat,
++        type?: TextureDataType,
++    );
+     /**
+      * This flag can be used for type testing.
+      *
+@@ -25,7 +39,7 @@ export class CompressedArrayTexture extends CompressedTexture {
+      * @readonly
+      * @default true
+      */
+-    readonly isCompressedArrayTexture: boolean;
++    readonly isCompressedArrayTexture: true;
+     /**
+      * This defines how the texture is wrapped in the depth and corresponds to
+      * *W* in UVW mapping.
+@@ -33,7 +47,7 @@ export class CompressedArrayTexture extends CompressedTexture {
+      * @type {(RepeatWrapping|ClampToEdgeWrapping|MirroredRepeatWrapping)}
+      * @default ClampToEdgeWrapping
+      */
+-    wrapR: (RepeatWrapping | number | MirroredRepeatWrapping);
++    wrapR: Wrapping;
+     /**
+      * A set of all layers which need to be updated in the texture.
+      *
+@@ -46,7 +60,7 @@ export class CompressedArrayTexture extends CompressedTexture {
+      * @param {CompressedArrayTexture} source - The texture to copy.
+      * @return {CompressedArrayTexture} A reference to this instance.
+      */
+-    copy(source: CompressedArrayTexture): CompressedArrayTexture;
++    copy(source: CompressedArrayTexture): this;
+     /**
+      * Describes that a specific layer of the texture needs to be updated.
+      * Normally when {@link Texture#needsUpdate} is set to `true`, the
+@@ -62,4 +76,3 @@ export class CompressedArrayTexture extends CompressedTexture {
+      */
+     clearLayerUpdates(): void;
+ }
+-import { CompressedTexture } from './CompressedTexture.js';
+diff --git a/jsdoc-testing/jsdoc/src/textures/CompressedCubeTexture.d.ts b/jsdoc-testing/jsdoc/src/textures/CompressedCubeTexture.d.ts
+index 05f09fbfb..f81d6b2a1 100644
+--- a/jsdoc-testing/jsdoc/src/textures/CompressedCubeTexture.d.ts
++++ b/jsdoc-testing/jsdoc/src/textures/CompressedCubeTexture.d.ts
+@@ -1,3 +1,6 @@
++import { CompressedPixelFormat, TextureDataType } from "../constants.js";
++import { CompressedTexture, CompressedTextureImageData } from "./CompressedTexture.js";
++
+ /**
+  * Creates a cube texture based on data in compressed form.
+  *
+@@ -5,7 +8,7 @@
+  *
+  * @augments CompressedTexture
+  */
+-export class CompressedCubeTexture extends CompressedTexture {
++export class CompressedCubeTexture extends CompressedTexture<CompressedTextureImageData[]> {
+     /**
+      * Constructs a new compressed texture.
+      *
+@@ -13,7 +16,7 @@ export class CompressedCubeTexture extends CompressedTexture {
+      * @param {number} [format=RGBAFormat] - The texture format.
+      * @param {number} [type=UnsignedByteType] - The texture type.
+      */
+-    constructor(images: Array<CompressedTexture>, format?: number, type?: number);
++    constructor(images: CompressedTextureImageData[], format?: CompressedPixelFormat, type?: TextureDataType);
+     /**
+      * This flag can be used for type testing.
+      *
+@@ -21,7 +24,7 @@ export class CompressedCubeTexture extends CompressedTexture {
+      * @readonly
+      * @default true
+      */
+-    readonly isCompressedCubeTexture: boolean;
++    readonly isCompressedCubeTexture: true;
+     /**
+      * This flag can be used for type testing.
+      *
+@@ -29,7 +32,5 @@ export class CompressedCubeTexture extends CompressedTexture {
+      * @readonly
+      * @default true
+      */
+-    readonly isCubeTexture: boolean;
+-    image: CompressedTexture[];
++    readonly isCubeTexture: true;
+ }
+-import { CompressedTexture } from './CompressedTexture.js';
+diff --git a/jsdoc-testing/jsdoc/src/textures/CompressedTexture.d.ts b/jsdoc-testing/jsdoc/src/textures/CompressedTexture.d.ts
+index ec26ff057..0c5cff0ba 100644
+--- a/jsdoc-testing/jsdoc/src/textures/CompressedTexture.d.ts
++++ b/jsdoc-testing/jsdoc/src/textures/CompressedTexture.d.ts
+@@ -1,3 +1,25 @@
++import {
++    CompressedPixelFormat,
++    MagnificationTextureFilter,
++    Mapping,
++    MinificationTextureFilter,
++    TextureDataType,
++    Wrapping,
++} from "../constants.js";
++import { TypedArray } from "../core/BufferAttribute.js";
++import { Texture } from "./Texture.js";
++
++export interface CompressedTextureMipmap {
++    data: TypedArray;
++    width: number;
++    height: number;
++}
++
++export interface CompressedTextureImageData {
++    width: number;
++    height: number;
++}
++
+ /**
+  * Creates a texture based on data in compressed form.
+  *
+@@ -5,7 +27,7 @@
+  *
+  * @augments Texture
+  */
+-export class CompressedTexture extends Texture {
++export class CompressedTexture<TImageData = CompressedTextureImageData> extends Texture<TImageData> {
+     /**
+      * Constructs a new compressed texture.
+      *
+@@ -23,7 +45,20 @@ export class CompressedTexture extends Texture {
+      * @param {number} [anisotropy=Texture.DEFAULT_ANISOTROPY] - The anisotropy value.
+      * @param {string} [colorSpace=NoColorSpace] - The color space.
+      */
+-    constructor(mipmaps?: Array<Object>, width: number, height: number, format?: number, type?: number, mapping?: number, wrapS?: number, wrapT?: number, magFilter?: number, minFilter?: number, anisotropy?: number, colorSpace?: string);
++    constructor(
++        mipmaps: CompressedTextureMipmap[] | undefined,
++        width: number,
++        height: number,
++        format?: CompressedPixelFormat,
++        type?: TextureDataType,
++        mapping?: Mapping,
++        wrapS?: Wrapping,
++        wrapT?: Wrapping,
++        magFilter?: MagnificationTextureFilter,
++        minFilter?: MinificationTextureFilter,
++        anisotropy?: number,
++        colorSpace?: string,
++    );
+     /**
+      * This flag can be used for type testing.
+      *
+@@ -31,6 +66,12 @@ export class CompressedTexture extends Texture {
+      * @readonly
+      * @default true
+      */
+-    readonly isCompressedTexture: boolean;
++    readonly isCompressedTexture: true;
++    /**
++     * This array holds for all mipmaps (including the bases mip) the data and dimensions.
++     *
++     * @type {Array<Object>}
++     */
++    mipmaps: CompressedTextureMipmap[];
++    format: CompressedPixelFormat;
+ }
+-import { Texture } from './Texture.js';
+diff --git a/jsdoc-testing/jsdoc/src/textures/CubeDepthTexture.d.ts b/jsdoc-testing/jsdoc/src/textures/CubeDepthTexture.d.ts
+index c436fb9e7..169e67962 100644
+--- a/jsdoc-testing/jsdoc/src/textures/CubeDepthTexture.d.ts
++++ b/jsdoc-testing/jsdoc/src/textures/CubeDepthTexture.d.ts
+@@ -1,10 +1,29 @@
++import {
++    DepthTexturePixelFormat,
++    MagnificationTextureFilter,
++    Mapping,
++    MinificationTextureFilter,
++    TextureDataType,
++    Wrapping,
++} from "../constants.js";
++import { DepthTexture, DepthTextureImageData } from "./DepthTexture.js";
++
++export type CubeDepthTextureImageData = [
++    DepthTextureImageData,
++    DepthTextureImageData,
++    DepthTextureImageData,
++    DepthTextureImageData,
++    DepthTextureImageData,
++    DepthTextureImageData,
++];
++
+ /**
+  * This class can be used to automatically save the depth information of a
+  * cube rendering into a cube texture with depth format. Used for PointLight shadows.
+  *
+  * @augments DepthTexture
+  */
+-export class CubeDepthTexture extends DepthTexture {
++export class CubeDepthTexture extends DepthTexture<CubeDepthTextureImageData> {
+     /**
+      * Constructs a new cube depth texture.
+      *
+@@ -18,12 +37,17 @@ export class CubeDepthTexture extends DepthTexture {
+      * @param {number} [anisotropy=Texture.DEFAULT_ANISOTROPY] - The anisotropy value.
+      * @param {number} [format=DepthFormat] - The texture format.
+      */
+-    constructor(size: number, type?: number, mapping?: number, wrapS?: number, wrapT?: number, magFilter?: number, minFilter?: number, anisotropy?: number, format?: number);
+-    image: {
+-        width: number;
+-        height: number;
+-        depth: number;
+-    }[];
++    constructor(
++        size: number,
++        type?: TextureDataType,
++        mapping?: Mapping,
++        wrapS?: Wrapping,
++        wrapT?: Wrapping,
++        magFilter?: MagnificationTextureFilter,
++        minFilter?: MinificationTextureFilter,
++        anisotropy?: number,
++        format?: DepthTexturePixelFormat,
++    );
+     /**
+      * This flag can be used for type testing.
+      *
+@@ -31,7 +55,7 @@ export class CubeDepthTexture extends DepthTexture {
+      * @readonly
+      * @default true
+      */
+-    readonly isCubeDepthTexture: boolean;
++    readonly isCubeDepthTexture: true;
+     /**
+      * Set to true for cube texture handling in WebGLTextures.
+      *
+@@ -39,13 +63,12 @@ export class CubeDepthTexture extends DepthTexture {
+      * @readonly
+      * @default true
+      */
+-    readonly isCubeTexture: boolean;
+-    set images(value: Array<new (width?: number, height?: number) => HTMLImageElement>);
++    readonly isCubeTexture: true;
++    set images(value: CubeDepthTextureImageData);
+     /**
+      * Alias for {@link CubeDepthTexture#image}.
+      *
+      * @type {Array<Image>}
+      */
+-    get images(): Array<new (width?: number, height?: number) => HTMLImageElement>;
++    get images(): CubeDepthTextureImageData;
+ }
+-import { DepthTexture } from './DepthTexture.js';
+diff --git a/jsdoc-testing/jsdoc/src/textures/CubeTexture.d.ts b/jsdoc-testing/jsdoc/src/textures/CubeTexture.d.ts
+index 76c1ce43d..df15890d5 100644
+--- a/jsdoc-testing/jsdoc/src/textures/CubeTexture.d.ts
++++ b/jsdoc-testing/jsdoc/src/textures/CubeTexture.d.ts
+@@ -1,3 +1,13 @@
++import {
++    CubeTextureMapping,
++    MagnificationTextureFilter,
++    MinificationTextureFilter,
++    PixelFormat,
++    TextureDataType,
++    Wrapping,
++} from "../constants.js";
++import { Texture } from "./Texture.js";
++
+ /**
+  * Creates a cube texture made up of six images.
+  *
+@@ -14,7 +24,7 @@
+  *
+  * @augments Texture
+  */
+-export class CubeTexture extends Texture {
++export class CubeTexture<TImage = unknown> extends Texture<TImage[]> {
+     /**
+      * Constructs a new cube texture.
+      *
+@@ -29,7 +39,18 @@ export class CubeTexture extends Texture {
+      * @param {number} [anisotropy=Texture.DEFAULT_ANISOTROPY] - The anisotropy value.
+      * @param {string} [colorSpace=NoColorSpace] - The color space value.
+      */
+-    constructor(images?: Array<new (width?: number, height?: number) => HTMLImageElement>, mapping?: number, wrapS?: number, wrapT?: number, magFilter?: number, minFilter?: number, format?: number, type?: number, anisotropy?: number, colorSpace?: string);
++    constructor(
++        images?: TImage[],
++        mapping?: CubeTextureMapping,
++        wrapS?: Wrapping,
++        wrapT?: Wrapping,
++        magFilter?: MagnificationTextureFilter,
++        minFilter?: MinificationTextureFilter,
++        format?: PixelFormat,
++        type?: TextureDataType,
++        anisotropy?: number,
++        colorSpace?: string,
++    );
+     /**
+      * This flag can be used for type testing.
+      *
+@@ -37,13 +58,13 @@ export class CubeTexture extends Texture {
+      * @readonly
+      * @default true
+      */
+-    readonly isCubeTexture: boolean;
+-    set images(value: Array<new (width?: number, height?: number) => HTMLImageElement>);
++    readonly isCubeTexture: true;
++    mapping: CubeTextureMapping;
++    set images(value: TImage[]);
+     /**
+      * Alias for {@link CubeTexture#image}.
+      *
+      * @type {Array<Image>}
+      */
+-    get images(): Array<new (width?: number, height?: number) => HTMLImageElement>;
++    get images(): TImage[];
+ }
+-import { Texture } from './Texture.js';
+diff --git a/jsdoc-testing/jsdoc/src/textures/Data3DTexture.d.ts b/jsdoc-testing/jsdoc/src/textures/Data3DTexture.d.ts
+index abdcba564..f579e0695 100644
+--- a/jsdoc-testing/jsdoc/src/textures/Data3DTexture.d.ts
++++ b/jsdoc-testing/jsdoc/src/textures/Data3DTexture.d.ts
+@@ -1,10 +1,21 @@
++import { Wrapping } from "../constants.js";
++import { TypedArray } from "../core/BufferAttribute.js";
++import { Texture } from "./Texture.js";
++
++export interface Data3DTextureImageData {
++    data: TypedArray | null;
++    width: number;
++    height: number;
++    depth: number;
++}
++
+ /**
+  * Creates a three-dimensional texture from raw data, with parameters to
+  * divide it into width, height, and depth.
+  *
+  * @augments Texture
+  */
+-export class Data3DTexture extends Texture {
++export class Data3DTexture extends Texture<Data3DTextureImageData> {
+     /**
+      * Constructs a new data array texture.
+      *
+@@ -21,7 +32,7 @@ export class Data3DTexture extends Texture {
+      * @readonly
+      * @default true
+      */
+-    readonly isData3DTexture: boolean;
++    readonly isData3DTexture: true;
+     /**
+      * This defines how the texture is wrapped in the depth and corresponds to
+      * *W* in UVW mapping.
+@@ -29,13 +40,12 @@ export class Data3DTexture extends Texture {
+      * @type {(RepeatWrapping|ClampToEdgeWrapping|MirroredRepeatWrapping)}
+      * @default ClampToEdgeWrapping
+      */
+-    wrapR: (RepeatWrapping | number | MirroredRepeatWrapping);
++    wrapR: Wrapping;
+     /**
+      * Copies the values of the given texture to this instance.
+      *
+      * @param {Data3DTexture} source - The texture to copy.
+      * @return {Data3DTexture} A reference to this instance.
+      */
+-    copy(source: Data3DTexture): Data3DTexture;
++    copy(source: Data3DTexture): this;
+ }
+-import { Texture } from './Texture.js';
+diff --git a/jsdoc-testing/jsdoc/src/textures/DataArrayTexture.d.ts b/jsdoc-testing/jsdoc/src/textures/DataArrayTexture.d.ts
+index c93a79f69..018b3caf7 100644
+--- a/jsdoc-testing/jsdoc/src/textures/DataArrayTexture.d.ts
++++ b/jsdoc-testing/jsdoc/src/textures/DataArrayTexture.d.ts
+@@ -1,9 +1,20 @@
++import { Wrapping } from "../constants.js";
++import { TypedArray } from "../core/BufferAttribute.js";
++import { Texture } from "./Texture.js";
++
++export interface DataArrayTextureImageData {
++    data: TypedArray | null;
++    width: number;
++    height: number;
++    depth: number;
++}
++
+ /**
+  * Creates an array of textures directly from raw buffer data.
+  *
+  * @augments Texture
+  */
+-export class DataArrayTexture extends Texture {
++export class DataArrayTexture extends Texture<DataArrayTextureImageData> {
+     /**
+      * Constructs a new data array texture.
+      *
+@@ -20,7 +31,7 @@ export class DataArrayTexture extends Texture {
+      * @readonly
+      * @default true
+      */
+-    readonly isDataArrayTexture: boolean;
++    readonly isDataArrayTexture: true;
+     /**
+      * This defines how the texture is wrapped in the depth and corresponds to
+      * *W* in UVW mapping.
+@@ -28,7 +39,7 @@ export class DataArrayTexture extends Texture {
+      * @type {(RepeatWrapping|ClampToEdgeWrapping|MirroredRepeatWrapping)}
+      * @default ClampToEdgeWrapping
+      */
+-    wrapR: (RepeatWrapping | number | MirroredRepeatWrapping);
++    wrapR: Wrapping;
+     /**
+      * A set of all layers which need to be updated in the texture.
+      *
+@@ -41,7 +52,7 @@ export class DataArrayTexture extends Texture {
+      * @param {DataArrayTexture} source - The texture to copy.
+      * @return {DataArrayTexture} A reference to this instance.
+      */
+-    copy(source: DataArrayTexture): DataArrayTexture;
++    copy(source: DataArrayTexture): this;
+     /**
+      * Describes that a specific layer of the texture needs to be updated.
+      * Normally when {@link Texture#needsUpdate} is set to `true`, the
+@@ -57,4 +68,3 @@ export class DataArrayTexture extends Texture {
+      */
+     clearLayerUpdates(): void;
+ }
+-import { Texture } from './Texture.js';
+diff --git a/jsdoc-testing/jsdoc/src/textures/DataTexture.d.ts b/jsdoc-testing/jsdoc/src/textures/DataTexture.d.ts
+index 8bec07e5d..da32aa7a1 100644
+--- a/jsdoc-testing/jsdoc/src/textures/DataTexture.d.ts
++++ b/jsdoc-testing/jsdoc/src/textures/DataTexture.d.ts
+@@ -1,3 +1,21 @@
++import {
++    ColorSpace,
++    MagnificationTextureFilter,
++    Mapping,
++    MinificationTextureFilter,
++    PixelFormat,
++    TextureDataType,
++    Wrapping,
++} from "../constants.js";
++import { TypedArray } from "../core/BufferAttribute.js";
++import { Texture } from "./Texture.js";
++
++export interface DataTextureImageData {
++    data: TypedArray | null;
++    width: number;
++    height: number;
++}
++
+ /**
+  * Creates a texture directly from raw buffer data.
+  *
+@@ -8,7 +26,7 @@
+  *
+  * @augments Texture
+  */
+-export class DataTexture extends Texture {
++export class DataTexture extends Texture<DataTextureImageData> {
+     /**
+      * Constructs a new data texture.
+      *
+@@ -25,7 +43,20 @@ export class DataTexture extends Texture {
+      * @param {number} [anisotropy=Texture.DEFAULT_ANISOTROPY] - The anisotropy value.
+      * @param {string} [colorSpace=NoColorSpace] - The color space.
+      */
+-    constructor(data?: TypedArray | null, width?: number, height?: number, format?: number, type?: number, mapping?: number, wrapS?: number, wrapT?: number, magFilter?: number, minFilter?: number, anisotropy?: number, colorSpace?: string);
++    constructor(
++        data?: TypedArray | null,
++        width?: number,
++        height?: number,
++        format?: PixelFormat,
++        type?: TextureDataType,
++        mapping?: Mapping,
++        wrapS?: Wrapping,
++        wrapT?: Wrapping,
++        magFilter?: MagnificationTextureFilter,
++        minFilter?: MinificationTextureFilter,
++        anisotropy?: number,
++        colorSpace?: ColorSpace,
++    );
+     /**
+      * This flag can be used for type testing.
+      *
+@@ -33,6 +64,5 @@ export class DataTexture extends Texture {
+      * @readonly
+      * @default true
+      */
+-    readonly isDataTexture: boolean;
++    readonly isDataTexture: true;
+ }
+-import { Texture } from './Texture.js';
+diff --git a/jsdoc-testing/jsdoc/src/textures/DepthTexture.d.ts b/jsdoc-testing/jsdoc/src/textures/DepthTexture.d.ts
+index 3835525fd..8d9c9cc53 100644
+--- a/jsdoc-testing/jsdoc/src/textures/DepthTexture.d.ts
++++ b/jsdoc-testing/jsdoc/src/textures/DepthTexture.d.ts
+@@ -1,10 +1,31 @@
++import {
++    DepthTexturePixelFormat,
++    MagnificationTextureFilter,
++    Mapping,
++    MinificationTextureFilter,
++    TextureComparisonFunction,
++    TextureDataType,
++    Wrapping,
++} from "../constants.js";
++import { Texture, TextureJSON } from "./Texture.js";
++
++export interface DepthTextureImageData {
++    width: number | undefined;
++    height: number | undefined;
++    depth: number;
++}
++
++export interface DepthTextureJSON extends TextureJSON {
++    compareFunction: TextureComparisonFunction | null;
++}
++
+ /**
+  * This class can be used to automatically save the depth information of a
+  * rendering into a texture.
+  *
+  * @augments Texture
+  */
+-export class DepthTexture extends Texture {
++export class DepthTexture<TImage = DepthTextureImageData> extends Texture<TImage> {
+     /**
+      * Constructs a new depth texture.
+      *
+@@ -20,7 +41,19 @@ export class DepthTexture extends Texture {
+      * @param {number} [format=DepthFormat] - The texture format.
+      * @param {number} [depth=1] - The depth of the texture.
+      */
+-    constructor(width: number, height: number, type?: number, mapping?: number, wrapS?: number, wrapT?: number, magFilter?: number, minFilter?: number, anisotropy?: number, format?: number, depth?: number);
++    constructor(
++        width?: number,
++        height?: number,
++        type?: TextureDataType,
++        mapping?: Mapping,
++        wrapS?: Wrapping,
++        wrapT?: Wrapping,
++        magFilter?: MagnificationTextureFilter,
++        minFilter?: MinificationTextureFilter,
++        anisotropy?: number,
++        format?: DepthTexturePixelFormat,
++        depth?: number,
++    );
+     /**
+      * This flag can be used for type testing.
+      *
+@@ -28,15 +61,15 @@ export class DepthTexture extends Texture {
+      * @readonly
+      * @default true
+      */
+-    readonly isDepthTexture: boolean;
++    readonly isDepthTexture: true;
++    format: DepthTexturePixelFormat;
+     /**
+      * Code corresponding to the depth compare function.
+      *
+      * @type {?(NeverCompare|LessCompare|EqualCompare|LessEqualCompare|GreaterCompare|NotEqualCompare|GreaterEqualCompare|AlwaysCompare)}
+      * @default null
+      */
+-    compareFunction: (NeverCompare | LessCompare | EqualCompare | LessEqualCompare | GreaterCompare | NotEqualCompare | GreaterEqualCompare | AlwaysCompare) | null;
+-    copy(source: any): this;
+-    toJSON(meta: any): Object;
++    compareFunction: TextureComparisonFunction | null;
++    copy(source: DepthTexture<TImage>): this;
++    toJSON(meta?: string | {}): DepthTextureJSON;
+ }
+-import { Texture } from './Texture.js';
+diff --git a/jsdoc-testing/jsdoc/src/textures/ExternalTexture.d.ts b/jsdoc-testing/jsdoc/src/textures/ExternalTexture.d.ts
+index f898755c0..a67a326f9 100644
+--- a/jsdoc-testing/jsdoc/src/textures/ExternalTexture.d.ts
++++ b/jsdoc-testing/jsdoc/src/textures/ExternalTexture.d.ts
+@@ -1,3 +1,8 @@
++import { Texture } from "./Texture.js";
++
++interface GPUTexture {
++}
++
+ /**
+  * Represents a texture created externally with the same renderer context.
+  *
+@@ -6,7 +11,7 @@
+  *
+  * @augments Texture
+  */
+-export class ExternalTexture extends Texture {
++export class ExternalTexture extends Texture<null> {
+     /**
+      * Creates a new raw texture.
+      *
+@@ -27,7 +32,6 @@ export class ExternalTexture extends Texture {
+      * @readonly
+      * @default true
+      */
+-    readonly isExternalTexture: boolean;
+-    copy(source: any): this;
++    readonly isExternalTexture: true;
++    copy(source: ExternalTexture): this;
+ }
+-import { Texture } from './Texture.js';
+diff --git a/jsdoc-testing/jsdoc/src/textures/FramebufferTexture.d.ts b/jsdoc-testing/jsdoc/src/textures/FramebufferTexture.d.ts
+index 2fff4e842..750d4d360 100644
+--- a/jsdoc-testing/jsdoc/src/textures/FramebufferTexture.d.ts
++++ b/jsdoc-testing/jsdoc/src/textures/FramebufferTexture.d.ts
+@@ -1,3 +1,10 @@
++import { Texture } from "./Texture.js";
++
++export interface FramebufferTextureImageData {
++    width: number;
++    height: number;
++}
++
+ /**
+  * This class can only be used in combination with `copyFramebufferToTexture()` methods
+  * of renderers. It extracts the contents of the current bound framebuffer and provides it
+@@ -22,7 +29,7 @@
+  *
+  * @augments Texture
+  */
+-export class FramebufferTexture extends Texture {
++export class FramebufferTexture extends Texture<FramebufferTextureImageData> {
+     /**
+      * Constructs a new framebuffer texture.
+      *
+@@ -37,7 +44,6 @@ export class FramebufferTexture extends Texture {
+      * @readonly
+      * @default true
+      */
+-    readonly isFramebufferTexture: boolean;
+-    copy(source: any): this;
++    readonly isFramebufferTexture: true;
++    copy(source: FramebufferTexture): this;
+ }
+-import { Texture } from './Texture.js';
+diff --git a/jsdoc-testing/jsdoc/src/textures/HTMLTexture.d.ts b/jsdoc-testing/jsdoc/src/textures/HTMLTexture.d.ts
+index bdf594cf7..976e99758 100644
+--- a/jsdoc-testing/jsdoc/src/textures/HTMLTexture.d.ts
++++ b/jsdoc-testing/jsdoc/src/textures/HTMLTexture.d.ts
+@@ -1,3 +1,13 @@
++import {
++    MagnificationTextureFilter,
++    Mapping,
++    MinificationTextureFilter,
++    PixelFormat,
++    TextureDataType,
++    Wrapping,
++} from "../constants.js";
++import { Texture } from "./Texture.js";
++
+ /**
+  * Creates a texture from an HTML element.
+  *
+@@ -6,7 +16,7 @@
+  *
+  * @augments Texture
+  */
+-export class HTMLTexture extends Texture {
++export class HTMLTexture extends Texture<HTMLElement> {
+     /**
+      * Constructs a new texture.
+      *
+@@ -20,7 +30,17 @@ export class HTMLTexture extends Texture {
+      * @param {number} [type=UnsignedByteType] - The texture type.
+      * @param {number} [anisotropy=Texture.DEFAULT_ANISOTROPY] - The anisotropy value.
+      */
+-    constructor(element?: HTMLElement, mapping?: number, wrapS?: number, wrapT?: number, magFilter?: number, minFilter?: number, format?: number, type?: number, anisotropy?: number);
++    constructor(
++        element?: HTMLElement,
++        mapping?: Mapping,
++        wrapS?: Wrapping,
++        wrapT?: Wrapping,
++        magFilter?: MagnificationTextureFilter,
++        minFilter?: MinificationTextureFilter,
++        format?: PixelFormat,
++        type?: TextureDataType,
++        anisotropy?: number,
++    );
+     /**
+      * This flag can be used for type testing.
+      *
+@@ -28,6 +48,5 @@ export class HTMLTexture extends Texture {
+      * @readonly
+      * @default true
+      */
+-    readonly isHTMLTexture: boolean;
++    readonly isHTMLTexture: true;
+ }
+-import { Texture } from './Texture.js';
+diff --git a/jsdoc-testing/jsdoc/src/textures/Texture.d.ts b/jsdoc-testing/jsdoc/src/textures/Texture.d.ts
+index fd71f3aa8..f411686ae 100644
+--- a/jsdoc-testing/jsdoc/src/textures/Texture.d.ts
++++ b/jsdoc-testing/jsdoc/src/textures/Texture.d.ts
+@@ -1,3 +1,95 @@
++import {
++    AnyMapping,
++    AnyPixelFormat,
++    ColorSpace,
++    MagnificationTextureFilter,
++    Mapping,
++    MinificationTextureFilter,
++    PixelFormat,
++    PixelFormatGPU,
++    TextureDataType,
++    Wrapping,
++} from "../constants.js";
++import { EventDispatcher } from "../core/EventDispatcher.js";
++import { RenderTarget } from "../core/RenderTarget.js";
++import { Matrix3 } from "../math/Matrix3.js";
++import { Vector2 } from "../math/Vector2.js";
++import { CompressedTextureMipmap } from "./CompressedTexture.js";
++import { CubeTexture } from "./CubeTexture.js";
++import { TextureSource } from "./TextureSource.js";
++
++// NOTE: DOM upload fields are not implemented where parameters are accepted.
++export interface TextureParameters {
++    mapping?: AnyMapping | undefined;
++    // image?: TexImageSource | OffscreenCanvas | undefined;
++    // channel?: number | undefined;
++
++    wrapS?: Wrapping | undefined;
++    wrapT?: Wrapping | undefined;
++    wrapR?: Wrapping | undefined;
++
++    format?: PixelFormat | undefined;
++    internalFormat?: PixelFormatGPU | null | undefined;
++    type?: TextureDataType | undefined;
++    colorSpace?: ColorSpace | undefined;
++
++    magFilter?: MagnificationTextureFilter | undefined;
++    minFilter?: MinificationTextureFilter | undefined;
++    anisotropy?: number | undefined;
++
++    flipY?: boolean | undefined;
++
++    generateMipmaps?: boolean | undefined;
++    mipmapsAutoUpdate?: boolean | undefined;
++    // premultiplyAlpha?: boolean | undefined;
++    // unpackAlignment?: number | undefined;
++}
++
++export interface TextureJSON {
++    metadata: { version: number; type: string; generator: string };
++
++    uuid: string;
++    name: string;
++
++    image: string;
++
++    mapping: AnyMapping;
++    channel: number;
++
++    repeat: [x: number, y: number];
++    offset: [x: number, y: number];
++    center: [x: number, y: number];
++    rotation: number;
++
++    wrap: [wrapS: number, wrapT: number];
++
++    format: AnyPixelFormat;
++    internalFormat: PixelFormatGPU | null;
++    type: TextureDataType;
++    colorSpace: string;
++
++    minFilter: MinificationTextureFilter;
++    magFilter: MagnificationTextureFilter;
++    anisotropy: number;
++
++    flipY: boolean;
++
++    generateMipmaps: boolean;
++    mipmapsAutoUpdate: boolean;
++    premultiplyAlpha: boolean;
++    unpackAlignment: number;
++
++    userData?: Record<string, unknown>;
++}
++
++/** Shim for OffscreenCanvas. */
++// eslint-disable-next-line @typescript-eslint/no-empty-interface
++export interface OffscreenCanvas extends EventTarget {}
++
++export interface TextureEventMap {
++    dispose: {};
++}
++
+ /**
+  * Base class for all textures.
+  *
+@@ -6,7 +98,9 @@
+  *
+  * @augments EventDispatcher
+  */
+-export class Texture extends EventDispatcher {
++export class Texture<TImage = unknown, TEventMap extends TextureEventMap = TextureEventMap>
++    extends EventDispatcher<TEventMap>
++{
+     /**
+      * Constructs a new texture.
+      *
+@@ -21,7 +115,18 @@ export class Texture extends EventDispatcher {
+      * @param {number} [anisotropy=Texture.DEFAULT_ANISOTROPY] - The anisotropy value.
+      * @param {string} [colorSpace=NoColorSpace] - The color space.
+      */
+-    constructor(image?: Object | null, mapping?: number, wrapS?: number, wrapT?: number, magFilter?: number, minFilter?: number, format?: number, type?: number, anisotropy?: number, colorSpace?: string);
++    constructor(
++        image?: TImage,
++        mapping?: Mapping,
++        wrapS?: Wrapping,
++        wrapT?: Wrapping,
++        magFilter?: MagnificationTextureFilter,
++        minFilter?: MinificationTextureFilter,
++        format?: PixelFormat,
++        type?: TextureDataType,
++        anisotropy?: number,
++        colorSpace?: ColorSpace,
++    );
+     /**
+      * This flag can be used for type testing.
+      *
+@@ -29,7 +134,14 @@ export class Texture extends EventDispatcher {
+      * @readonly
+      * @default true
+      */
+-    readonly isTexture: boolean;
++    readonly isTexture: true;
++    /**
++     * The ID of the texture.
++     *
++     * @type {number}
++     * @readonly
++     */
++    readonly id: number;
+     /**
+      * The UUID of the texture.
+      *
+@@ -51,13 +163,13 @@ export class Texture extends EventDispatcher {
+      *
+      * @type {TextureSource}
+      */
+-    source: TextureSource;
++    source: TextureSource<TImage>;
+     /**
+      * An array holding user-defined mipmaps.
+      *
+      * @type {Array<Object>}
+      */
+-    mipmaps: Array<Object>;
++    mipmaps: CompressedTextureMipmap[] | CubeTexture[] | HTMLCanvasElement[];
+     /**
+      * How the texture is applied to the object. The value `UVMapping`
+      * is the default, where texture or uv coordinates are used to apply the map.
+@@ -65,7 +177,7 @@ export class Texture extends EventDispatcher {
+      * @type {(UVMapping|CubeReflectionMapping|CubeRefractionMapping|EquirectangularReflectionMapping|EquirectangularRefractionMapping)}
+      * @default UVMapping
+     */
+-    mapping: (number | CubeReflectionMapping | CubeRefractionMapping | EquirectangularReflectionMapping | EquirectangularRefractionMapping);
++    mapping: AnyMapping;
+     /**
+      * Lets you select the uv attribute to map the texture to. `0` for `uv`,
+      * `1` for `uv1`, `2` for `uv2` and `3` for `uv3`.
+@@ -81,7 +193,7 @@ export class Texture extends EventDispatcher {
+      * @type {(RepeatWrapping|ClampToEdgeWrapping|MirroredRepeatWrapping)}
+      * @default ClampToEdgeWrapping
+      */
+-    wrapS: (number | number | number);
++    wrapS: Wrapping;
+     /**
+      * This defines how the texture is wrapped horizontally and corresponds to
+      * *V* in UV mapping.
+@@ -89,21 +201,21 @@ export class Texture extends EventDispatcher {
+      * @type {(RepeatWrapping|ClampToEdgeWrapping|MirroredRepeatWrapping)}
+      * @default ClampToEdgeWrapping
+      */
+-    wrapT: (number | number | number);
++    wrapT: Wrapping;
+     /**
+      * How the texture is sampled when a texel covers more than one pixel.
+      *
+      * @type {(NearestFilter|NearestMipmapNearestFilter|NearestMipmapLinearFilter|LinearFilter|LinearMipmapNearestFilter|LinearMipmapLinearFilter)}
+      * @default LinearFilter
+      */
+-    magFilter: (NearestFilter | NearestMipmapNearestFilter | NearestMipmapLinearFilter | number | LinearMipmapNearestFilter | number);
++    magFilter: MagnificationTextureFilter;
+     /**
+      * How the texture is sampled when a texel covers less than one pixel.
+      *
+      * @type {(NearestFilter|NearestMipmapNearestFilter|NearestMipmapLinearFilter|LinearFilter|LinearMipmapNearestFilter|LinearMipmapLinearFilter)}
+      * @default LinearMipmapLinearFilter
+      */
+-    minFilter: (NearestFilter | NearestMipmapNearestFilter | NearestMipmapLinearFilter | number | LinearMipmapNearestFilter | number);
++    minFilter: MinificationTextureFilter;
+     /**
+      * The number of samples taken along the axis through the pixel that has the
+      * highest density of texels. By default, this value is `1`. A higher value
+@@ -120,7 +232,7 @@ export class Texture extends EventDispatcher {
+      * @type {number}
+      * @default RGBAFormat
+      */
+-    format: number;
++    format: AnyPixelFormat;
+     /**
+      * The default internal format is derived from {@link Texture#format} and {@link Texture#type} and
+      * defines how the texture data is going to be stored on the GPU.
+@@ -130,14 +242,14 @@ export class Texture extends EventDispatcher {
+      * @type {?string}
+      * @default null
+      */
+-    internalFormat: string | null;
++    internalFormat: PixelFormatGPU | null;
+     /**
+      * The data type of the texture.
+      *
+      * @type {number}
+      * @default UnsignedByteType
+      */
+-    type: number;
++    type: TextureDataType;
+     /**
+      * How much a single repetition of the texture is offset from the beginning,
+      * in each direction U and V. Typical range is `0.0` to `1.0`.
+@@ -252,14 +364,14 @@ export class Texture extends EventDispatcher {
+      *
+      * @type {Object}
+      */
+-    userData: Object;
++    userData: Record<string, any>;
+     /**
+      * This can be used to only update parts of a data texture (for example, just a few rows).
+      * Use the `addUpdateRange()` function to add ranges to this array.
+      *
+      * @type {Array<Object>}
+      */
+-    updateRanges: Array<Object>;
++    updateRanges: Array<{ start: number; count: number }>;
+     /**
+      * This starts at `0` and counts how many times {@link Texture#needsUpdate} is set to `true`.
+      *
+@@ -275,14 +387,14 @@ export class Texture extends EventDispatcher {
+      * @type {?Function}
+      * @default null
+      */
+-    onUpdate: Function | null;
++    onUpdate: ((texture: Texture) => void) | null;
+     /**
+      * An optional back reference to the textures render target.
+      *
+      * @type {?(RenderTarget|WebGLRenderTarget)}
+      * @default null
+      */
+-    renderTarget: (RenderTarget | WebGLRenderTarget) | null;
++    renderTarget: RenderTarget | null;
+     /**
+      * Indicates whether a texture belongs to a render target or not.
+      *
+@@ -316,7 +428,7 @@ export class Texture extends EventDispatcher {
+      * @readonly
+      * @default false
+      */
+-    readonly isPMREMTexture: boolean;
++    isPMREMTexture: boolean;
+     /**
+      * Whether the texture should use one of the 16 bit integer formats which are normalized
+      * to [0, 1] or [-1, 1] (depending on signed/unsigned) when sampled.
+@@ -328,22 +440,22 @@ export class Texture extends EventDispatcher {
+     /**
+      * The width of the texture in pixels.
+      */
+-    get width(): any;
++    get width(): number;
+     /**
+      * The height of the texture in pixels.
+      */
+-    get height(): any;
++    get height(): number;
+     /**
+      * The depth of the texture in pixels.
+      */
+-    get depth(): any;
+-    set image(value: Object | null);
++    get depth(): number;
++    set image(value: TImage);
+     /**
+      * The image object holding the texture data.
+      *
+      * @type {?Object}
+      */
+-    get image(): Object | null;
++    get image(): TImage;
+     /**
+      * Updates the texture transformation matrix from the properties {@link Texture#offset},
+      * {@link Texture#repeat}, {@link Texture#rotation}, and {@link Texture#center}.
+@@ -369,14 +481,14 @@ export class Texture extends EventDispatcher {
+      *
+      * @return {Texture} A clone of this instance.
+      */
+-    clone(): Texture;
++    clone(): this;
+     /**
+      * Copies the values of the given texture to this instance.
+      *
+      * @param {Texture} source - The texture to copy.
+      * @return {Texture} A reference to this instance.
+      */
+-    copy(source: Texture): Texture;
++    copy(source: Texture<TImage>): this;
+     /**
+      * Setting this property to `true` indicates the engine the texture
+      * must be updated in the next render. This triggers a texture upload
+@@ -391,7 +503,7 @@ export class Texture extends EventDispatcher {
+      * Sets this texture's properties based on `values`.
+      * @param {Object} values - A container with texture parameters.
+      */
+-    setValues(values: Object): void;
++    setValues(values: TextureParameters): void;
+     /**
+      * Serializes the texture into JSON.
+      *
+@@ -399,7 +511,7 @@ export class Texture extends EventDispatcher {
+      * @return {Object} A JSON object representing the serialized texture.
+      * @see {@link ObjectLoader#parse}
+      */
+-    toJSON(meta: (Object | string) | null): Object;
++    toJSON(meta?: string | {}): TextureJSON;
+     /**
+      * Frees the GPU-related resources allocated by this instance. Call this
+      * method whenever this instance is no longer used in your app.
+@@ -427,14 +539,22 @@ export class Texture extends EventDispatcher {
+      * @param {boolean} value
+      */
+     set needsPMREMUpdate(value: boolean);
++    /**
++     * The default image for all textures.
++     *
++     * @default null
++     */
++    static DEFAULT_IMAGE: null;
++    /**
++     * The default mapping for all textures.
++     *
++     * @default UVMapping
++     */
++    static DEFAULT_MAPPING: Mapping;
++    /**
++     * The default anisotropy value for all textures.
++     *
++     * @default 1
++     */
++    static DEFAULT_ANISOTROPY: number;
+ }
+-export namespace Texture {
+-    export let DEFAULT_IMAGE: (new (width?: number, height?: number) => HTMLImageElement) | null;
+-    export { UVMapping as DEFAULT_MAPPING };
+-    export let DEFAULT_ANISOTROPY: number;
+-}
+-import { EventDispatcher } from '../core/EventDispatcher.js';
+-import { TextureSource } from './TextureSource.js';
+-import { Vector2 } from '../math/Vector2.js';
+-import { Matrix3 } from '../math/Matrix3.js';
+-import { UVMapping } from '../constants.js';
+diff --git a/jsdoc-testing/jsdoc/src/textures/TextureSource.d.ts b/jsdoc-testing/jsdoc/src/textures/TextureSource.d.ts
+index a01902cee..490768cf1 100644
+--- a/jsdoc-testing/jsdoc/src/textures/TextureSource.d.ts
++++ b/jsdoc-testing/jsdoc/src/textures/TextureSource.d.ts
+@@ -1,7 +1,24 @@
++import { Vector2 } from "../math/Vector2.js";
++import { Vector3 } from "../math/Vector3.js";
++
++export type SerializedImage =
++    | string
++    | {
++        data: number[];
++        width: number;
++        height: number;
++        type: string;
++    };
++
++export interface TextureSourceJSON {
++    uuid: string;
++    url: SerializedImage | SerializedImage[];
++}
++
+ /**
+  * @deprecated since r186. Use {@link TextureSource} instead. `Source` has been renamed to `TextureSource`.
+  */
+-export class Source extends TextureSource {
++export class Source<TData> extends TextureSource<TData> {
+     /**
+      * This flag can be used for type testing.
+      *
+@@ -10,7 +27,7 @@ export class Source extends TextureSource {
+      * @readonly
+      * @default true
+      */
+-    readonly isSource: boolean;
++    readonly isSource: true;
+ }
+ /**
+  * Represents the data source of a texture.
+@@ -18,13 +35,13 @@ export class Source extends TextureSource {
+  * The main purpose of this class is to decouple the data definition from the texture
+  * definition so the same data can be used with multiple texture instances.
+  */
+-export class TextureSource {
++export class TextureSource<TData> {
+     /**
+      * Constructs a new texture source.
+      *
+      * @param {any} [data=null] - The data definition of a texture.
+      */
+-    constructor(data?: any);
++    constructor(data?: TData);
+     /**
+      * This flag can be used for type testing.
+      *
+@@ -32,7 +49,14 @@ export class TextureSource {
+      * @readonly
+      * @default true
+      */
+-    readonly isTextureSource: boolean;
++    readonly isTextureSource: true;
++    /**
++     * The ID of the source.
++     *
++     * @type {number}
++     * @readonly
++     */
++    readonly id: number;
+     /**
+      * The UUID of the source.
+      *
+@@ -45,7 +69,7 @@ export class TextureSource {
+      *
+      * @type {any}
+      */
+-    data: any;
++    data: TData;
+     /**
+      * This property is only relevant when {@link TextureSource#needsUpdate} is set to `true` and
+      * provides more control on how texture data should be processed. When `dataReady` is set
+@@ -70,7 +94,7 @@ export class TextureSource {
+      * @param {(Vector2|Vector3)} target - The target object the result is written into.
+      * @return {(Vector2|Vector3)} The dimensions of the source.
+      */
+-    getSize(target: (Vector2 | Vector3)): (Vector2 | Vector3);
++    getSize<TTarget extends Vector2 | Vector3>(target: TTarget): TTarget;
+     /**
+      * When the property is set to `true`, the engine allocates the memory
+      * for the texture (if necessary) and triggers the actual texture upload
+@@ -88,5 +112,5 @@ export class TextureSource {
+      * @return {Object} A JSON object representing the serialized source.
+      * @see {@link ObjectLoader#parse}
+      */
+-    toJSON(meta: (Object | string) | null): Object;
++    toJSON(meta?: string | {}): TextureSourceJSON;
+ }
+diff --git a/jsdoc-testing/jsdoc/src/textures/VideoFrameTexture.d.ts b/jsdoc-testing/jsdoc/src/textures/VideoFrameTexture.d.ts
+index bd25d7d01..5a74668ce 100644
+--- a/jsdoc-testing/jsdoc/src/textures/VideoFrameTexture.d.ts
++++ b/jsdoc-testing/jsdoc/src/textures/VideoFrameTexture.d.ts
+@@ -1,3 +1,13 @@
++import {
++    MagnificationTextureFilter,
++    Mapping,
++    MinificationTextureFilter,
++    PixelFormat,
++    TextureDataType,
++    Wrapping,
++} from "../constants.js";
++import { VideoTexture } from "./VideoTexture.js";
++
+ /**
+  * This class can be used as an alternative way to define video data. Instead of using
+  * an instance of `HTMLVideoElement` like with `VideoTexture`, `VideoFrameTexture` expects each frame is
+@@ -11,7 +21,7 @@
+  *
+  * @augments VideoTexture
+  */
+-export class VideoFrameTexture extends VideoTexture {
++export class VideoFrameTexture extends VideoTexture<VideoFrame | {}> {
+     /**
+      * Constructs a new video frame texture.
+      *
+@@ -24,7 +34,16 @@ export class VideoFrameTexture extends VideoTexture {
+      * @param {number} [type=UnsignedByteType] - The texture type.
+      * @param {number} [anisotropy=Texture.DEFAULT_ANISOTROPY] - The anisotropy value.
+      */
+-    constructor(mapping?: number, wrapS?: number, wrapT?: number, magFilter?: number, minFilter?: number, format?: number, type?: number, anisotropy?: number);
++    constructor(
++        mapping?: Mapping,
++        wrapS?: Wrapping,
++        wrapT?: Wrapping,
++        magFilter?: MagnificationTextureFilter,
++        minFilter?: MinificationTextureFilter,
++        format?: PixelFormat,
++        type?: TextureDataType,
++        anisotropy?: number,
++    );
+     /**
+      * This flag can be used for type testing.
+      *
+@@ -32,7 +51,7 @@ export class VideoFrameTexture extends VideoTexture {
+      * @readonly
+      * @default true
+      */
+-    readonly isVideoFrameTexture: boolean;
++    readonly isVideoFrameTexture: true;
+     /**
+      * Sets the current frame of the video. This will automatically update the texture
+      * so the data can be used for rendering.
+@@ -41,4 +60,3 @@ export class VideoFrameTexture extends VideoTexture {
+      */
+     setFrame(frame: VideoFrame): void;
+ }
+-import { VideoTexture } from './VideoTexture.js';
+diff --git a/jsdoc-testing/jsdoc/src/textures/VideoTexture.d.ts b/jsdoc-testing/jsdoc/src/textures/VideoTexture.d.ts
+index d4ba7a0fd..c10d67b73 100644
+--- a/jsdoc-testing/jsdoc/src/textures/VideoTexture.d.ts
++++ b/jsdoc-testing/jsdoc/src/textures/VideoTexture.d.ts
+@@ -1,3 +1,13 @@
++import {
++    MagnificationTextureFilter,
++    Mapping,
++    MinificationTextureFilter,
++    PixelFormat,
++    TextureDataType,
++    Wrapping,
++} from "../constants.js";
++import { Texture } from "./Texture.js";
++
+ /**
+  * A texture for use with a video.
+  *
+@@ -15,7 +25,7 @@
+  *
+  * @augments Texture
+  */
+-export class VideoTexture extends Texture {
++export class VideoTexture<TVideo = HTMLVideoElement> extends Texture<TVideo> {
+     /**
+      * Constructs a new video texture.
+      *
+@@ -29,7 +39,17 @@ export class VideoTexture extends Texture {
+      * @param {number} [type=UnsignedByteType] - The texture type.
+      * @param {number} [anisotropy=Texture.DEFAULT_ANISOTROPY] - The anisotropy value.
+      */
+-    constructor(video: HTMLVideoElement, mapping?: number, wrapS?: number, wrapT?: number, magFilter?: number, minFilter?: number, format?: number, type?: number, anisotropy?: number);
++    constructor(
++        video: TVideo,
++        mapping?: Mapping,
++        wrapS?: Wrapping,
++        wrapT?: Wrapping,
++        magFilter?: MagnificationTextureFilter,
++        minFilter?: MinificationTextureFilter,
++        format?: PixelFormat,
++        type?: TextureDataType,
++        anisotropy?: number,
++    );
+     /**
+      * This flag can be used for type testing.
+      *
+@@ -37,17 +57,8 @@ export class VideoTexture extends Texture {
+      * @readonly
+      * @default true
+      */
+-    readonly isVideoTexture: boolean;
+-    /**
+-     * The video frame request callback identifier, which is a positive integer.
+-     *
+-     * Value of 0 represents no scheduled rVFC.
+-     *
+-     * @private
+-     * @type {number}
+-     */
+-    private _requestVideoFrameCallbackId;
+-    clone(): any;
++    readonly isVideoTexture: true;
++    clone(): this;
+     /**
+      * This method is called automatically by the renderer and sets {@link Texture#needsUpdate}
+      * to `true` every time a new frame is available.
+@@ -56,4 +67,3 @@ export class VideoTexture extends Texture {
+      */
+     update(): void;
+ }
+-import { Texture } from './Texture.js';

@@ -310,6 +310,23 @@ const files = [
     'src/scenes/Fog',
     'src/scenes/FogExp2',
     'src/scenes/Scene',
+    'src/textures/CanvasTexture',
+    'src/textures/CompressedArrayTexture',
+    'src/textures/CompressedCubeTexture',
+    'src/textures/CompressedTexture',
+    'src/textures/CubeDepthTexture',
+    'src/textures/CubeTexture',
+    'src/textures/Data3DTexture',
+    'src/textures/DataArrayTexture',
+    'src/textures/DataTexture',
+    'src/textures/DepthTexture',
+    'src/textures/ExternalTexture',
+    'src/textures/FramebufferTexture',
+    'src/textures/HTMLTexture',
+    'src/textures/Texture',
+    'src/textures/TextureSource',
+    'src/textures/VideoFrameTexture',
+    'src/textures/VideoTexture',
 ];
 
 const inDir = './jsdoc';

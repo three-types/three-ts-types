@@ -10,36 +10,34 @@ import { Texture } from "./Texture.js";
 
 /**
  * Creates a cube texture made up of six images.
- * @remarks
- * {@link CubeTexture} is almost equivalent in functionality and usage to {@link Texture}.
- * The only differences are that the images are an array of _6_ images as opposed to a single image,
- * and the mapping options are {@link THREE.CubeReflectionMapping} (default) or {@link THREE.CubeRefractionMapping}
- * @example
- * ```typescript
+ *
+ * ```js
  * const loader = new THREE.CubeTextureLoader();
- * loader.setPath('textures/cube/pisa/');
- * const textureCube = loader.load(['px.png', 'nx.png', 'py.png', 'ny.png', 'pz.png', 'nz.png']);
- * const material = new THREE.MeshBasicMaterial({
- *     color: 0xffffff,
- *     envMap: textureCube
- * });
+ * loader.setPath( 'textures/cube/pisa/' );
+ *
+ * const textureCube = loader.load( [
+ * 	'px.png', 'nx.png', 'py.png', 'ny.png', 'pz.png', 'nz.png'
+ * ] );
+ *
+ * const material = new THREE.MeshBasicMaterial( { color: 0xffffff, envMap: textureCube } );
  * ```
- * @see {@link https://threejs.org/docs/index.html#api/en/textures/CubeTexture | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/textures/CubeTexture.js | Source}
+ *
+ * @augments Texture
  */
 export class CubeTexture<TImage = unknown> extends Texture<TImage[]> {
     /**
-     * This creates a new {@link THREE.CubeTexture | CubeTexture} object.
-     * @param images
-     * @param mapping See {@link CubeTexture.mapping | .mapping}. Default {@link THREE.CubeReflectionMapping}
-     * @param wrapS See {@link Texture.wrapS | .wrapS}. Default {@link THREE.ClampToEdgeWrapping}
-     * @param wrapT See {@link Texture.wrapT | .wrapT}. Default {@link THREE.ClampToEdgeWrapping}
-     * @param magFilter See {@link Texture.magFilter | .magFilter}. Default {@link THREE.LinearFilter}
-     * @param minFilter  See {@link Texture.minFilter | .minFilter}. Default {@link THREE.LinearMipmapLinearFilter}
-     * @param format See {@link Texture.format | .format}. Default {@link THREE.RGBAFormat}
-     * @param type See {@link Texture.type | .type}. Default {@link THREE.UnsignedByteType}
-     * @param anisotropy See {@link Texture.anisotropy | .anisotropy}. Default {@link THREE.Texture.DEFAULT_ANISOTROPY}
-     * @param colorSpace See {@link Texture.colorSpace | .colorSpace}. Default {@link NoColorSpace}
+     * Constructs a new cube texture.
+     *
+     * @param {Array<Image>} [images=[]] - An array holding a image for each side of a cube.
+     * @param {number} [mapping=CubeReflectionMapping] - The texture mapping.
+     * @param {number} [wrapS=ClampToEdgeWrapping] - The wrapS value.
+     * @param {number} [wrapT=ClampToEdgeWrapping] - The wrapT value.
+     * @param {number} [magFilter=LinearFilter] - The mag filter value.
+     * @param {number} [minFilter=LinearMipmapLinearFilter] - The min filter value.
+     * @param {number} [format=RGBAFormat] - The texture format.
+     * @param {number} [type=UnsignedByteType] - The texture type.
+     * @param {number} [anisotropy=Texture.DEFAULT_ANISOTROPY] - The anisotropy value.
+     * @param {string} [colorSpace=NoColorSpace] - The color space value.
      */
     constructor(
         images?: TImage[],
@@ -53,30 +51,20 @@ export class CubeTexture<TImage = unknown> extends Texture<TImage[]> {
         anisotropy?: number,
         colorSpace?: string,
     );
-
     /**
-     * Read-only flag to check if a given object is of type {@link CubeTexture}.
-     * @remarks This is a _constant_ value
-     * @defaultValue `true`
+     * This flag can be used for type testing.
+     *
+     * @type {boolean}
+     * @readonly
+     * @default true
      */
     readonly isCubeTexture: true;
-
+    mapping: CubeTextureMapping;
+    set images(value: TImage[]);
     /**
-     * An image object, typically created using the {@link THREE.CubeTextureLoader.load | CubeTextureLoader.load()} method.
-     * @see {@link Texture.image}
+     * Alias for {@link CubeTexture#image}.
+     *
+     * @type {Array<Image>}
      */
     get images(): TImage[];
-    set images(value: TImage[]);
-
-    /**
-     * @inheritDoc
-     * @defaultValue {@link THREE.CubeReflectionMapping}
-     */
-    mapping: CubeTextureMapping;
-
-    /**
-     * @inheritDoc
-     * @defaultValue `false`
-     */
-    flipY: boolean;
 }

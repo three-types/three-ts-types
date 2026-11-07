@@ -10,47 +10,38 @@ import {
 import { TypedArray } from "../core/BufferAttribute.js";
 import { Texture } from "./Texture.js";
 
+export interface DataTextureImageData {
+    data: TypedArray | null;
+    width: number;
+    height: number;
+}
+
 /**
- * Creates a texture directly from raw data, width and height.
- * @example
- * ```typescript
- * // create a buffer with color data
- * const width = 512;
- * const height = 512;
- * const size = width * height;
- * const data = new Uint8Array(4 * size);
- * const color = new THREE.Color(0xffffff);
- * const r = Math.floor(color.r * 255);
- * const g = Math.floor(color.g * 255);
- * const b = Math.floor(color.b * 255);
- * for (let i = 0; i & lt; size; i++) {
- *     const stride = i * 4;
- *     data[stride] = r;
- *     data[stride + 1] = g;
- *     data[stride + 2] = b;
- *     data[stride + 3] = 255;
- * }
- * // used the buffer to create a [name]
- * const texture = new THREE.DataTexture(data, width, height);
- * texture.needsUpdate = true;
- * ```
- * @see {@link https://threejs.org/docs/index.html#api/en/textures/DataTexture | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/textures/DataTexture.js | Source}
+ * Creates a texture directly from raw buffer data.
+ *
+ * The interpretation of the data depends on type and format: If the type is
+ * `UnsignedByteType`, a `Uint8Array` will be useful for addressing the
+ * texel data. If the format is `RGBAFormat`, data needs four values for
+ * one texel; Red, Green, Blue and Alpha (typically the opacity).
+ *
+ * @augments Texture
  */
 export class DataTexture extends Texture<DataTextureImageData> {
     /**
-     * @param data {@link https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView | ArrayBufferView} of the texture. Default `null`.
-     * @param width Width of the texture. Default `1`.
-     * @param height Height of the texture. Default `1`.
-     * @param format See {@link Texture.format | .format}. Default {@link THREE.RGBAFormat}
-     * @param type See {@link Texture.type | .type}. Default {@link THREE.UnsignedByteType}
-     * @param mapping See {@link Texture.mapping | .mapping}. Default {@link THREE.Texture.DEFAULT_MAPPING}
-     * @param wrapS See {@link Texture.wrapS | .wrapS}. Default {@link THREE.ClampToEdgeWrapping}
-     * @param wrapT See {@link Texture.wrapT | .wrapT}. Default {@link THREE.ClampToEdgeWrapping}
-     * @param magFilter See {@link Texture.magFilter | .magFilter}. Default {@link THREE.NearestFilter}
-     * @param minFilter  See {@link Texture.minFilter | .minFilter}. Default {@link THREE.NearestFilter}
-     * @param anisotropy See {@link Texture.anisotropy | .anisotropy}. Default {@link THREE.Texture.DEFAULT_ANISOTROPY}
-     * @param colorSpace See {@link Texture.colorSpace | .colorSpace}. Default {@link NoColorSpace}
+     * Constructs a new data texture.
+     *
+     * @param {?TypedArray} [data=null] - The buffer data.
+     * @param {number} [width=1] - The width of the texture.
+     * @param {number} [height=1] - The height of the texture.
+     * @param {number} [format=RGBAFormat] - The texture format.
+     * @param {number} [type=UnsignedByteType] - The texture type.
+     * @param {number} [mapping=Texture.DEFAULT_MAPPING] - The texture mapping.
+     * @param {number} [wrapS=ClampToEdgeWrapping] - The wrapS value.
+     * @param {number} [wrapT=ClampToEdgeWrapping] - The wrapT value.
+     * @param {number} [magFilter=NearestFilter] - The mag filter value.
+     * @param {number} [minFilter=NearestFilter] - The min filter value.
+     * @param {number} [anisotropy=Texture.DEFAULT_ANISOTROPY] - The anisotropy value.
+     * @param {string} [colorSpace=NoColorSpace] - The color space.
      */
     constructor(
         data?: TypedArray | null,
@@ -66,47 +57,12 @@ export class DataTexture extends Texture<DataTextureImageData> {
         anisotropy?: number,
         colorSpace?: ColorSpace,
     );
-
     /**
-     * Read-only flag to check if a given object is of type {@link DataTexture}.
-     * @remarks This is a _constant_ value
-     * @defaultValue `true`
+     * This flag can be used for type testing.
+     *
+     * @type {boolean}
+     * @readonly
+     * @default true
      */
     readonly isDataTexture: true;
-
-    /**
-     * @override
-     * @defaultValue {@link THREE.NearestFilter}
-     */
-    magFilter: MagnificationTextureFilter;
-
-    /**
-     * @override
-     * @defaultValue {@link THREE.NearestFilter}
-     */
-    minFilter: MinificationTextureFilter;
-
-    /**
-     * @override
-     * @defaultValue `false`
-     */
-    flipY: boolean;
-
-    /**
-     * @override
-     * @defaultValue `false`
-     */
-    generateMipmaps: boolean;
-
-    /**
-     * @override
-     * @defaultValue `1`
-     */
-    unpackAlignment: number;
-}
-
-export interface DataTextureImageData {
-    data: TypedArray | null;
-    width: number;
-    height: number;
 }
