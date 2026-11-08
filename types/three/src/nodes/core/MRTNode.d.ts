@@ -1,3 +1,4 @@
+import { RenderTarget } from "../../core/RenderTarget.js";
 import { ColorRepresentation } from "../../math/Color.js";
 import BlendMode from "../../renderers/common/BlendMode.js";
 import Color4 from "../../renderers/common/Color4.js";
@@ -29,6 +30,8 @@ declare class MRTNode extends OutputStructNode {
     has(name: string): boolean;
 
     get: (name: string) => Node;
+
+    isCompatible(renderTarget: RenderTarget): boolean;
 
     merge(mrtNode: MRTNode): MRTNode;
 }
