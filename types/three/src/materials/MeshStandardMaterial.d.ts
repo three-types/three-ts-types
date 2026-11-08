@@ -147,6 +147,7 @@ export interface MeshStandardMaterialProperties extends MaterialProperties {
     normalMapType: NormalMapTypes;
     /**
      * How much the normal map affects the material. Typical value range is `[0,1]`.
+     * Only affects tangent space normal maps.
      *
      * @default (1,1)
      */
