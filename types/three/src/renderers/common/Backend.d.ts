@@ -1,6 +1,7 @@
-import { CoordinateSystem } from "../../constants.js";
+import { CoordinateSystem, TimestampQuery } from "../../constants.js";
 import NodeBuilder from "../../nodes/core/NodeBuilder.js";
 import Renderer from "./Renderer.js";
+import TimestampQueryPool from "./TimestampQueryPool.js";
 
 declare module "../../core/Object3D.js" {
     interface Object3D {
@@ -18,6 +19,8 @@ export interface BackendParameters {
 export default abstract class Backend {
     renderer: Renderer | null;
     domElement: HTMLCanvasElement | OffscreenCanvas | null;
+    timestampQueryPool: { render: TimestampQueryPool | null; compute: TimestampQueryPool | null };
+    trackTimestamp: boolean;
 
     constructor(parameters?: BackendParameters);
 
@@ -26,4 +29,9 @@ export default abstract class Backend {
     abstract get coordinateSystem(): CoordinateSystem;
 
     getDomElement(): HTMLCanvasElement | OffscreenCanvas;
+
+    getTimestampFrames(type: TimestampQuery): number[];
+    getTimestamp(uid: string): number;
+    get hasTimestamp(): boolean;
+    hasTimestampQuery(uid: string): boolean;
 }

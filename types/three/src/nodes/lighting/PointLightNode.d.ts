@@ -6,7 +6,7 @@ import PointShadowNode from "./PointShadowNode.js";
 
 export const directPointLight: (params: {
     color: Node;
-    lightViewPosition: Node;
+    lightVector: Node;
     cutoffDistance: Node;
     decayExponent: Node;
 }) => DirectLightData;

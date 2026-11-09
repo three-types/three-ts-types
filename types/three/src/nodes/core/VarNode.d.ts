@@ -16,7 +16,10 @@ declare const VarNode: {
     new<TNodeType, TNode>(node: TNode, name?: string | null, readOnly?: boolean): VarNode<TNodeType, TNode>;
 };
 
-type VarNode<TNodeType, TNode> = Node<TNodeType> & VarNodeInterface<TNode>;
+type VarNode<TNodeType, TNode> =
+    & Node<TNodeType>
+    & VarNodeInterface<TNode>
+    & (TNode extends { element: infer TElement } ? { element: TElement } : {});
 
 export default VarNode;
 
