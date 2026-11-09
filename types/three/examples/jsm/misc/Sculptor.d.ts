@@ -90,14 +90,6 @@ export class Sculptor extends EventDispatcher<SculptorEventMap> {
      */
     enabled: boolean;
     /**
-     * Whether every stamp is repeated across the mesh's local `YZ` plane (`x = 0`).
-     * Drag and Scale follow the pointer and are not mirrored.
-     *
-     * @type {boolean}
-     * @default false
-     */
-    mirror: boolean;
-    /**
      * Connects pointer input to a DOM element.
      *
      * @param {HTMLElement} element - The element receiving pointer events.
