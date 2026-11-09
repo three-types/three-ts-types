@@ -2152,7 +2152,7 @@ index a28f46af3..f9b66a7ef 100644
  import { Loader } from 'three';
  import { DataTexture } from 'three';
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/misc/Sculptor.d.ts b/jsdoc-testing/jsdoc/examples/jsm/misc/Sculptor.d.ts
-index dc8534b7c..89eacdd86 100644
+index e7ebf9e1b..87a1373d1 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/misc/Sculptor.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/misc/Sculptor.d.ts
 @@ -1,3 +1,38 @@
@@ -2214,10 +2214,10 @@ index dc8534b7c..89eacdd86 100644
      /**
       * The mesh being sculpted.
       *
-@@ -68,27 +97,6 @@ export class Sculptor extends EventDispatcher {
-      * @default false
+@@ -60,27 +89,6 @@ export class Sculptor extends EventDispatcher {
+      * @default true
       */
-     mirror: boolean;
+     enabled: boolean;
 -    _sculptMesh: SculptorMesh;
 -    _sculpting: boolean;
 -    _activePointerId: any;
@@ -2242,7 +2242,7 @@ index dc8534b7c..89eacdd86 100644
      /**
       * Connects pointer input to a DOM element.
       *
-@@ -103,21 +111,6 @@ export class Sculptor extends EventDispatcher {
+@@ -95,21 +103,6 @@ export class Sculptor extends EventDispatcher {
       * Disconnects the sculptor. The mesh and its geometry are not disposed.
       */
      dispose(): void;
@@ -2264,12 +2264,11 @@ index dc8534b7c..89eacdd86 100644
      /**
       * Applies a ray stamp, starting a stroke on a hit. Call
       * {@link Sculptor#endStroke} after the last stamp.
-@@ -145,16 +138,6 @@ export class Sculptor extends EventDispatcher {
+@@ -137,15 +130,6 @@ export class Sculptor extends EventDispatcher {
       * @return {Sculptor} A reference to this sculptor.
       */
      endStroke(): Sculptor;
 -    _applyStroke(scaleDelta?: number): void;
--    _applyMirroredStroke(): void;
 -    _makeStroke(clientX: any, clientY: any, scale2: any): boolean;
 -    _sculptStroke(clientX: any, clientY: any): boolean;
 -    _updateDragDirection(clientX: any, clientY: any, scale2: any): boolean;
@@ -2281,7 +2280,7 @@ index dc8534b7c..89eacdd86 100644
      /**
       * Returns an independent copy of the active vertices and triangles, without
       * spare capacity. Suitable for export or geometry processing. The caller owns it.
-@@ -167,14 +150,14 @@ export class Sculptor extends EventDispatcher {
+@@ -158,14 +142,14 @@ export class Sculptor extends EventDispatcher {
       *
       * @return {('clay'|'brush'|'inflate'|'smooth'|'flatten'|'pinch'|'crease'|'drag'|'scale')} The tool name.
       */
@@ -2298,7 +2297,7 @@ index dc8534b7c..89eacdd86 100644
      /**
       * Returns the pointer brush radius in CSS pixels.
       *
-@@ -282,7 +265,3 @@ export class Sculptor extends EventDispatcher {
+@@ -273,7 +257,3 @@ export class Sculptor extends EventDispatcher {
       */
      pickFromPointer(clientX: number, clientY: number): boolean;
  }
