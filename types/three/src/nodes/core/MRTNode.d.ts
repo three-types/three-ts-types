@@ -1,12 +1,8 @@
-import { RenderTarget } from "../../core/RenderTarget.js";
 import { ColorRepresentation } from "../../math/Color.js";
 import BlendMode from "../../renderers/common/BlendMode.js";
 import Color4 from "../../renderers/common/Color4.js";
-import { Texture } from "../../textures/Texture.js";
 import { Node } from "../Nodes.js";
 import OutputStructNode from "./OutputStructNode.js";
-
-export function getTextureIndex(textures: ReadonlyArray<Texture>, name: string): number;
 
 declare class MRTNode extends OutputStructNode {
     outputNodes: { [name: string]: Node };
@@ -30,8 +26,6 @@ declare class MRTNode extends OutputStructNode {
     has(name: string): boolean;
 
     get: (name: string) => Node;
-
-    isCompatible(renderTarget: RenderTarget): boolean;
 
     merge(mrtNode: MRTNode): MRTNode;
 }
