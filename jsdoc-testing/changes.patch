@@ -20251,10 +20251,10 @@ index 40d563d39..aec52848f 100644
 +
 +export default MeshPhysicalNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/MeshSSSNodeMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/MeshSSSNodeMaterial.d.ts
-index ca33d8128..5ad95d202 100644
+index a4839b67e..1d209e949 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/MeshSSSNodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/MeshSSSNodeMaterial.d.ts
-@@ -1,52 +1,98 @@
+@@ -1,52 +1,102 @@
 -export default MeshSSSNodeMaterial;
 +import { LightingModelDirectInput } from "../../nodes/core/LightingModel.js";
 +import Node from "../../nodes/core/Node.js";
@@ -20282,6 +20282,8 @@ index ca33d8128..5ad95d202 100644
 +     * @param {boolean} [anisotropy=false] - Whether anisotropy is supported or not.
 +     * @param {boolean} [transmission=false] - Whether transmission is supported or not.
 +     * @param {boolean} [dispersion=false] - Whether dispersion is supported or not.
++     * @param {boolean} [retroreflection=false] - Whether retroreflection is supported or not.
++     * @param {boolean} [diffuseRoughness=false] - Whether diffuse roughness is supported or not.
 +     * @param {boolean} [sss=false] - Whether SSS is supported or not.
 +     */
 +    constructor(
@@ -20291,6 +20293,8 @@ index ca33d8128..5ad95d202 100644
 +        anisotropy?: boolean,
 +        transmission?: boolean,
 +        dispersion?: boolean,
++        retroreflection?: boolean,
++        diffuseRoughness?: boolean,
 +        sss?: boolean,
 +    );
 +    /**
@@ -20377,7 +20381,7 @@ index ca33d8128..5ad95d202 100644
       * @default true
       */
      get useSSS(): boolean;
-@@ -57,40 +103,8 @@ declare class MeshSSSNodeMaterial extends MeshPhysicalNodeMaterial {
+@@ -57,42 +107,8 @@ declare class MeshSSSNodeMaterial extends MeshPhysicalNodeMaterial {
       */
      setupLightingModel(): SSSLightingModel;
  }
@@ -20397,9 +20401,11 @@ index ca33d8128..5ad95d202 100644
 -     * @param {boolean} [anisotropy=false] - Whether anisotropy is supported or not.
 -     * @param {boolean} [transmission=false] - Whether transmission is supported or not.
 -     * @param {boolean} [dispersion=false] - Whether dispersion is supported or not.
+-     * @param {boolean} [retroreflection=false] - Whether retroreflection is supported or not.
+-     * @param {boolean} [diffuseRoughness=false] - Whether diffuse roughness is supported or not.
 -     * @param {boolean} [sss=false] - Whether SSS is supported or not.
 -     */
--    constructor(clearcoat?: boolean, sheen?: boolean, iridescence?: boolean, anisotropy?: boolean, transmission?: boolean, dispersion?: boolean, sss?: boolean);
+-    constructor(clearcoat?: boolean, sheen?: boolean, iridescence?: boolean, anisotropy?: boolean, transmission?: boolean, dispersion?: boolean, retroreflection?: boolean, diffuseRoughness?: boolean, sss?: boolean);
 -    /**
 -     * Whether the lighting model should use SSS or not.
 -     *

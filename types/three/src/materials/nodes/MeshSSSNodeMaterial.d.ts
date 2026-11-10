@@ -19,6 +19,8 @@ declare class SSSLightingModel extends PhysicalLightingModel {
      * @param {boolean} [anisotropy=false] - Whether anisotropy is supported or not.
      * @param {boolean} [transmission=false] - Whether transmission is supported or not.
      * @param {boolean} [dispersion=false] - Whether dispersion is supported or not.
+     * @param {boolean} [retroreflection=false] - Whether retroreflection is supported or not.
+     * @param {boolean} [diffuseRoughness=false] - Whether diffuse roughness is supported or not.
      * @param {boolean} [sss=false] - Whether SSS is supported or not.
      */
     constructor(
@@ -28,6 +30,8 @@ declare class SSSLightingModel extends PhysicalLightingModel {
         anisotropy?: boolean,
         transmission?: boolean,
         dispersion?: boolean,
+        retroreflection?: boolean,
+        diffuseRoughness?: boolean,
         sss?: boolean,
     );
     /**
