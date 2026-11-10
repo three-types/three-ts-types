@@ -10,7 +10,9 @@ import { Light, Mesh, Node, Texture, TextureNode, WebGPURenderer } from "three/w
  * the result. The function also receives the sample index, so stochastic sources can
  * vary their samples and converge as they accumulate. Call `update()` once per frame
  * to bake progressively, or pass a sample count to bake at once.
- * Bake at most 256 samples, since samples accumulate in half float precision.
+ * Samples accumulate in float precision with the 'float32-blendable' renderer feature. Without it,
+ * they accumulate in half float precision with jittered weights, up to 1024 samples; further
+ * samples are ignored.
  * Keep the source geometry and GI data static while accumulating. Call `reset()`
  * after changing transforms or lighting. Atlas charts need at least three texels
  * of padding; the resolve fills two texels around covered surfaces.
