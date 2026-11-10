@@ -28,6 +28,7 @@ import { Node, Scene, WebGPURenderer } from "three/webgpu";
  * instanced and batched meshes are ignored.
  *
  * This class can only be used with {@link WebGPURenderer} and a WebGPU backend.
+ * Requires `three-mesh-bvh` 0.9.18 or later.
  *
  * @three_import import { RayTracedRadiosity, rayTracedRadiosityIrradiance } from 'three/addons/lighting/RayTracedRadiosity.js';
  */
