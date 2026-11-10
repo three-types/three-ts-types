@@ -26,6 +26,7 @@ export { default as NodeObjectLoader } from "./loaders/nodes/NodeObjectLoader.js
 export * from "./nodes/Nodes.js";
 export { ClippingGroup } from "./objects/ClippingGroup.js";
 export { default as BlendMode } from "./renderers/common/BlendMode.js";
+export { default as GPUTimer } from "./renderers/common/GPUTimer.js";
 export { default as CanvasTarget } from "./renderers/common/CanvasTarget.js";
 export { default as CubeRenderTarget } from "./renderers/common/CubeRenderTarget.js";
 export { default as IndirectStorageBufferAttribute } from "./renderers/common/IndirectStorageBufferAttribute.js";
