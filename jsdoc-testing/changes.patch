@@ -1247,7 +1247,7 @@ index e82b5711c..8131a4ece 100644
 -import { Lighting } from 'three/webgpu';
 -import ClusteredLightsNode from '../tsl/lighting/ClusteredLightsNode.js';
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/lighting/LightMapper.d.ts b/jsdoc-testing/jsdoc/examples/jsm/lighting/LightMapper.d.ts
-index 60f7dd501..4752143e3 100644
+index d1a4bf49b..38e4de422 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/lighting/LightMapper.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/lighting/LightMapper.d.ts
 @@ -1,3 +1,5 @@
@@ -1256,7 +1256,7 @@ index 60f7dd501..4752143e3 100644
  /**
   * Bakes indirect diffuse irradiance into a light map. The irradiance is defined by a
   * function that returns a TSL node for a world-space position and normal, e.g. a prepared
-@@ -47,7 +49,7 @@ export class LightMapper {
+@@ -49,7 +51,7 @@ export class LightMapper {
       * @param {boolean} [options.variance=false] - Whether to also estimate the noise of each texel into {@link LightMapper#varianceTexture}. Requires the 'float32-blendable' renderer feature.
       * @param {boolean} [options.guides=false] - Whether to also rasterize the surface of each texel into {@link LightMapper#positionTexture} and {@link LightMapper#normalTexture}.
       */
@@ -1265,7 +1265,7 @@ index 60f7dd501..4752143e3 100644
          lights?: Light[] | undefined;
          variance?: boolean | undefined;
          guides?: boolean | undefined;
-@@ -63,7 +65,7 @@ export class LightMapper {
+@@ -65,7 +67,7 @@ export class LightMapper {
       *
       * @type {function(Node<vec3>, Node<vec3>, Node<float>): Node<vec3>}
       */
@@ -1274,7 +1274,7 @@ index 60f7dd501..4752143e3 100644
      /**
       * The light map size in texels.
       *
-@@ -78,8 +80,6 @@ export class LightMapper {
+@@ -80,8 +82,6 @@ export class LightMapper {
       * @default 0
       */
      readonly samples: number;
@@ -1283,7 +1283,7 @@ index 60f7dd501..4752143e3 100644
      /**
       * The baked light map. It stores linear diffuse irradiance in lux, without baked
       * albedo, material ambient occlusion, or display exposure, and uses `uv1`.
-@@ -97,7 +97,6 @@ export class LightMapper {
+@@ -99,7 +99,6 @@ export class LightMapper {
       * @readonly
       */
      readonly varianceTexture: Texture | null;
@@ -1291,7 +1291,7 @@ index 60f7dd501..4752143e3 100644
      /**
       * The world-space position of the surface of each texel, with the index of its chart + 1 in alpha,
       * or 0 in alpha for texels without a surface. A chart is a set of triangles that are connected in
-@@ -114,19 +113,6 @@ export class LightMapper {
+@@ -116,21 +115,6 @@ export class LightMapper {
       * @readonly
       */
      readonly normalTexture: Texture | null;
@@ -1302,6 +1302,8 @@ index 60f7dd501..4752143e3 100644
 -    _objects: any[];
 -    _jitter: import("three/tsl").UniformNode;
 -    _sample: import("three/tsl").UniformNode;
+-    _weight: import("three/tsl").UniformNode;
+-    _floatSums: any;
 -    _charts: number;
 -    _guidesNeedUpdate: boolean;
 -    _frontMaterial: NodeMaterial;
@@ -1311,7 +1313,26 @@ index 60f7dd501..4752143e3 100644
      /**
       * Returns a texture of the light mapper: `'color'`, the light map, or the inputs of a denoiser like
       * {@link DenoiseNode}: `'variance'` with the `variance` option, `'position'` and `'normal'` with
-@@ -165,45 +151,4 @@ export class LightMapper {
+@@ -161,18 +145,6 @@ export class LightMapper {
+      * @param {number} [samples=1] - The number of samples to add.
+      */
+     update(samples?: number): void;
+-    /**
+-     * Returns the weight of a sample. Similar samples added to a half float sum round in the same
+-     * direction, so their weights are spread over the rounding step of the sum, which grows with it,
+-     * and the samples round up and down evenly. The weights are also scaled down, so the sums of
+-     * bright texels stay below the largest half float, 65504, since the resolve divides by the sum
+-     * of the weights. Float sums weigh all samples the same.
+-     *
+-     * @private
+-     * @param {number} index - The index of the sample.
+-     * @return {number} The weight.
+-     */
+-    private _sampleWeight;
+     /**
+      * Discards the accumulated samples.
+      */
+@@ -181,45 +153,4 @@ export class LightMapper {
       * Frees all internal resources.
       */
      dispose(): void;
