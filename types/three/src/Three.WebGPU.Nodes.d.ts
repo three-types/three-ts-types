@@ -26,6 +26,7 @@ export * from "./nodes/Nodes.js";
 export { ClippingGroup } from "./objects/ClippingGroup.js";
 export { default as BlendMode } from "./renderers/common/BlendMode.js";
 export { default as CanvasTarget } from "./renderers/common/CanvasTarget.js";
+export { default as GPUTimer } from "./renderers/common/GPUTimer.js";
 export { default as IndirectStorageBufferAttribute } from "./renderers/common/IndirectStorageBufferAttribute.js";
 export { default as InspectorBase, type InspectorBaseEventMap } from "./renderers/common/InspectorBase.js";
 export { default as StorageBufferAttribute } from "./renderers/common/StorageBufferAttribute.js";

@@ -296,6 +296,7 @@ const files = [
     'src/renderers/common/ClippingContext',
     'src/renderers/common/Constants',
     'src/renderers/common/CubeRenderTarget',
+    'src/renderers/common/GPUTimer',
     'src/renderers/common/Info',
     'src/renderers/common/InspectorBase',
     'src/renderers/common/Lighting',

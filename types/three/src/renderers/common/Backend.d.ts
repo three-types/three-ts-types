@@ -26,4 +26,8 @@ export default abstract class Backend {
     abstract get coordinateSystem(): CoordinateSystem;
 
     getDomElement(): HTMLCanvasElement | OffscreenCanvas;
+
+    beginTimer(): number | object | null;
+
+    endTimer(measurement: number | object | null): Promise<number | null>;
 }
