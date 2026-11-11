@@ -1,0 +1,173 @@
+import * as THREE from 'three';
+
+import Stats from 'three/addons/libs/stats.module.js';
+
+import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { KTX2Loader } from 'three/addons/loaders/KTX2Loader.js';
+
+const params = {
+    image: 'ballroom',
+    fov: 40,
+    exposure: 1.0,
+    backgroundBlurriness: 0.0,
+};
+
+let stats;
+let camera, scene, renderer, controls;
+
+init();
+
+async function init() {
+    const container = document.getElementById('container');
+
+    camera = new THREE.PerspectiveCamera(params.fov, window.innerWidth / window.innerHeight, 0.1, 50);
+    camera.position.set(7, 0, 0);
+
+    scene = new THREE.Scene();
+
+    renderer = new THREE.WebGLRenderer();
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    container.appendChild(renderer.domElement);
+
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+
+    //
+
+    const sphereGeometry = new THREE.SphereGeometry(0.45, 64, 32);
+
+    const sphere01 = new THREE.Mesh(
+        sphereGeometry,
+        new THREE.MeshPhysicalMaterial({
+            transmission: 1.0,
+            thickness: 2.0,
+            metalness: 0.0,
+            roughness: 0.0,
+        }),
+    );
+    sphere01.position.z += 2;
+    scene.add(sphere01);
+
+    const sphere02 = new THREE.Mesh(
+        sphereGeometry,
+        new THREE.MeshStandardMaterial({
+            metalness: 0.0,
+            roughness: 1.0,
+        }),
+    );
+    sphere02.position.z += 1;
+    scene.add(sphere02);
+
+    const sphere03 = new THREE.Mesh(
+        sphereGeometry,
+        new THREE.MeshStandardMaterial({
+            metalness: 1.0,
+            roughness: 0.0,
+        }),
+    );
+    scene.add(sphere03);
+
+    const sphere04 = new THREE.Mesh(
+        sphereGeometry,
+        new THREE.MeshStandardMaterial({
+            metalness: 1.0,
+            roughness: 0.5,
+            color: 0x888888,
+        }),
+    );
+    sphere04.position.z -= 1;
+    scene.add(sphere04);
+
+    const sphere05 = new THREE.Mesh(
+        sphereGeometry,
+        new THREE.MeshStandardMaterial({
+            metalness: 0.0,
+            roughness: 0.0,
+            color: 0x6ab440,
+        }),
+    );
+    sphere05.position.z -= 2;
+    scene.add(sphere05);
+
+    const loader = new KTX2Loader().setPath('textures/pmrem/').detectSupport(renderer);
+
+    async function loadTexture(name) {
+        const texture = await loader.loadAsync(`${name}_2k.pmrem.ktx2`);
+
+        if (name !== params.image) {
+            texture.dispose();
+            return;
+        }
+
+        texture.isPMREMTexture = true;
+
+        if (scene.environment) scene.environment.dispose();
+
+        scene.environment = texture;
+        scene.background = texture;
+    }
+
+    stats = new Stats();
+    container.appendChild(stats.dom);
+
+    controls = new OrbitControls(camera, renderer.domElement);
+    controls.minDistance = 0.1;
+    controls.maxDistance = 20;
+    controls.enableDamping = true;
+
+    window.addEventListener('resize', onWindowResize);
+
+    const gui = new GUI();
+
+    gui.add(params, 'image', {
+        ballroom: 'ballroom',
+        'brown photostudio': 'brown_photostudio_02',
+        'cape hill': 'cape_hill',
+        cannon: 'cannon',
+        'metro noord': 'metro_noord',
+        'the sky is on fire': 'the_sky_is_on_fire',
+        'studio small 09': 'studio_small_09',
+        'wide street 01': 'wide_street_01',
+    }).onChange(loadTexture);
+
+    gui.add(params, 'exposure', 0, 2, 0.01);
+
+    gui.add(params, 'fov', 10, 100).onChange(() => {
+        camera.fov = params.fov;
+        camera.updateProjectionMatrix();
+    });
+
+    gui.add(params, 'backgroundBlurriness', 0, 1, 0.01).name('background blurriness');
+
+    gui.open();
+
+    await loadTexture(params.image);
+    renderer.setAnimationLoop(animate);
+}
+
+function onWindowResize() {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
+
+    renderer.setSize(width, height);
+}
+
+function animate() {
+    stats.begin();
+    render();
+    stats.end();
+}
+
+function render() {
+    renderer.toneMappingExposure = params.exposure;
+    scene.backgroundBlurriness = params.backgroundBlurriness;
+
+    controls.update();
+
+    renderer.render(scene, camera);
+}
