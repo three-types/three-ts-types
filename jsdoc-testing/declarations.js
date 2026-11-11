@@ -45,6 +45,7 @@ const files = [
     'examples/jsm/tsl/math/voronoiNoise',
     'examples/jsm/tsl/utils/GroundedSkybox',
     'examples/jsm/tsl/utils/HierarchicalHashedWeyl',
+    'examples/jsm/tsl/utils/RNoise',
     'examples/jsm/tsl/utils/SoftParticles',
     'examples/jsm/tsl/utils/SpecularHelpers',
     'examples/jsm/utils/MeshletGeometryUtils',
