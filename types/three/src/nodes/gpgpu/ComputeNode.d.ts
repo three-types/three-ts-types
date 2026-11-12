@@ -1,3 +1,4 @@
+import IndirectStorageBufferAttribute from "../../renderers/common/IndirectStorageBufferAttribute.js";
 import Renderer from "../../renderers/common/Renderer.js";
 import Node from "../core/Node.js";
 import UniformNode from "../core/UniformNode.js";
@@ -8,7 +9,7 @@ export default class ComputeNode extends Node {
     computeNode: Node;
     workgroupSize: number[];
     count: number | number[] | null;
-    dispatchSize: number | number[] | null;
+    dispatchSize: number | number[] | IndirectStorageBufferAttribute | null;
     name: string;
 
     onInitFunction: ((args: { renderer: Renderer }) => void) | null;
@@ -34,14 +35,14 @@ export const computeKernel: (node: Node, workgroupSize?: number[]) => ComputeNod
 
 export const compute: (
     node: Node,
-    count: number,
+    count: number | number[] | IndirectStorageBufferAttribute,
     workgroupSize?: number[],
 ) => ComputeNode;
 
 declare module "../core/Node.js" {
     interface NodeElements {
         compute: (
-            count: number,
+            count: number | number[] | IndirectStorageBufferAttribute,
             workgroupSize?: number[],
         ) => ComputeNode;
 
