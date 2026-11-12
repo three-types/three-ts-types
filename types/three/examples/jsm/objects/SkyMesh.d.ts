@@ -21,6 +21,12 @@ declare class SkyMesh extends Mesh<BoxGeometry, NodeMaterial> {
     readonly isSkyMesh: true;
 
     constructor();
+
+    /**
+     * Frees the GPU-related resources allocated by this instance. Call this
+     * method whenever the sky is no longer used in your app.
+     */
+    dispose(): void;
 }
 
 export { SkyMesh };

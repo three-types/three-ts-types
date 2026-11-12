@@ -25,4 +25,10 @@ export class Sky extends Mesh {
     material: ShaderMaterial;
 
     static SkyShader: object;
+
+    /**
+     * Frees the GPU-related resources allocated by this instance. Call this
+     * method whenever the sky is no longer used in your app.
+     */
+    dispose(): void;
 }
