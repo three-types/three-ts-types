@@ -1,2 +1,0 @@
-declare const _default: "\n#if defined( USE_COLOR ) || defined( USE_COLOR_ALPHA ) || defined( USE_INSTANCING_COLOR ) || defined( USE_BATCHING_COLOR )\n\n\tvColor = vec4( 1.0 );\n\n#endif\n\n#ifdef USE_COLOR_ALPHA\n\n\tvColor *= color;\n\n#elif defined( USE_COLOR )\n\n\tvColor.rgb *= color;\n\n#endif\n\n#ifdef USE_INSTANCING_COLOR\n\n\tvColor.rgb *= instanceColor.rgb;\n\n#endif\n\n#ifdef USE_BATCHING_COLOR\n\n\tvColor *= getBatchingColor( getIndirectIndex( gl_DrawID ) );\n\n#endif\n";
-export default _default;
