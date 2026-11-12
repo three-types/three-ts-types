@@ -6,6 +6,7 @@ import NodeFrame from "../../nodes/core/NodeFrame.js";
 import ComputeNode from "../../nodes/gpgpu/ComputeNode.js";
 import { Scene } from "../../scenes/Scene.js";
 import { Texture } from "../../textures/Texture.js";
+import IndirectStorageBufferAttribute from "./IndirectStorageBufferAttribute.js";
 import Renderer from "./Renderer.js";
 
 export interface InspectorBaseEventMap {
@@ -75,9 +76,12 @@ declare class InspectorBase<TEventMap extends InspectorBaseEventMap = InspectorB
      * When a compute operation is performed.
      *
      * @param {ComputeNode} computeNode - The compute node being executed.
-     * @param {number|Array<number>} dispatchSizeOrCount - The dispatch size or count.
+     * @param {number|Array<number>|IndirectStorageBufferAttribute} dispatchSizeOrCount - The dispatch size or count.
      */
-    computeAsync(computeNode: ComputeNode, dispatchSizeOrCount: number | number[]): void;
+    computeAsync(
+        computeNode: ComputeNode,
+        dispatchSizeOrCount: number | number[] | IndirectStorageBufferAttribute,
+    ): void;
     /**
      * Called when a compute operation begins.
      *
