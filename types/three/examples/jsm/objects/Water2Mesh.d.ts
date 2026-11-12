@@ -18,6 +18,7 @@ export interface WaterMeshOptions {
     flowMap?: Texture | null | undefined;
 
     color?: ColorRepresentation | undefined;
+    resolutionScale?: number | undefined;
     flowDirection?: Vector2 | undefined;
     flowSpeed?: number | undefined;
     reflectivity?: number | undefined;
@@ -26,6 +27,9 @@ export interface WaterMeshOptions {
 
 declare class WaterMesh extends Mesh<BufferGeometry, NodeMaterial> {
     readonly isWater: true;
+
+    get resolutionScale(): number;
+    set resolutionScale(value: number);
 
     constructor(geometry: BufferGeometry, options: WaterMeshOptions);
 }
