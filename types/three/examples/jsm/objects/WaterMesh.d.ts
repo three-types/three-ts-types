@@ -4,6 +4,7 @@ import {
     ColorRepresentation,
     Mesh,
     NodeMaterial,
+    Side,
     Texture,
     TextureNode,
     UniformNode,
@@ -19,6 +20,8 @@ export interface WaterMeshOptions {
     sunDirection?: Vector3 | undefined;
     waterColor?: ColorRepresentation | undefined;
     distortionScale?: number | undefined;
+    side?: Side | undefined;
+    fog?: boolean | undefined;
 }
 
 declare class WaterMesh extends Mesh<BufferGeometry, NodeMaterial> {
