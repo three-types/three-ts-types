@@ -7193,7 +7193,7 @@ index 929bf5258..c4d22b7da 100644
  }
 -import { PerspectiveCamera } from './PerspectiveCamera.js';
 diff --git a/jsdoc-testing/jsdoc/src/core/BufferAttribute.d.ts b/jsdoc-testing/jsdoc/src/core/BufferAttribute.d.ts
-index 27bb1fefd..24299167b 100644
+index 9c7b5805c..fe54c4e3c 100644
 --- a/jsdoc-testing/jsdoc/src/core/BufferAttribute.d.ts
 +++ b/jsdoc-testing/jsdoc/src/core/BufferAttribute.d.ts
 @@ -1,8 +1,47 @@
@@ -7259,32 +7259,22 @@ index 27bb1fefd..24299167b 100644
  }
  /**
   * Convenient class that can be used when creating a `Float16` buffer attribute with
-@@ -20,8 +63,6 @@ export class Float32BufferAttribute extends BufferAttribute {
+@@ -20,17 +63,25 @@ export class Float32BufferAttribute extends BufferAttribute {
   *
-  * This class automatically converts to and from FP16 via `Uint16Array` since `Float16Array`
-  * browser support is still problematic.
+  * The attribute data are stored in a `Float16Array`. If `Float16Array` is not supported,
+  * the class falls back to `Float32Array`.
 - *
 - * @augments BufferAttribute
   */
  export class Float16BufferAttribute extends BufferAttribute {
-     /**
-@@ -31,25 +72,16 @@ export class Float16BufferAttribute extends BufferAttribute {
-      * @param {number} itemSize - The item size.
-      * @param {boolean} [normalized=false] - Whether the data are normalized or not.
-      */
--    constructor(array: (Array<number> | Uint16Array), itemSize: number, normalized?: boolean);
 -    isFloat16BufferAttribute: boolean;
--    getX(index: any): number;
--    setX(index: any, x: any): this;
--    getY(index: any): number;
--    setY(index: any, y: any): this;
--    getZ(index: any): number;
--    setZ(index: any, z: any): this;
--    getW(index: any): number;
--    setW(index: any, w: any): this;
--    setXY(index: any, x: any, y: any): this;
--    setXYZ(index: any, x: any, y: any, z: any): this;
--    setXYZW(index: any, x: any, y: any, z: any, w: any): this;
++    /**
++     * Constructs a new buffer attribute.
++     *
++     * @param {(Array<number>|Float16Array)} array - The array holding the attribute data.
++     * @param {number} itemSize - The item size.
++     * @param {boolean} [normalized=false] - Whether the data are normalized or not.
++     */
 +    constructor(
 +        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
 +        itemSize: number,
@@ -7300,7 +7290,7 @@ index 27bb1fefd..24299167b 100644
   */
  export class Uint32BufferAttribute extends BufferAttribute {
      /**
-@@ -59,13 +91,15 @@ export class Uint32BufferAttribute extends BufferAttribute {
+@@ -40,13 +91,15 @@ export class Uint32BufferAttribute extends BufferAttribute {
       * @param {number} itemSize - The item size.
       * @param {boolean} [normalized=false] - Whether the data are normalized or not.
       */
@@ -7319,7 +7309,7 @@ index 27bb1fefd..24299167b 100644
   */
  export class Int32BufferAttribute extends BufferAttribute {
      /**
-@@ -75,13 +109,15 @@ export class Int32BufferAttribute extends BufferAttribute {
+@@ -56,13 +109,15 @@ export class Int32BufferAttribute extends BufferAttribute {
       * @param {number} itemSize - The item size.
       * @param {boolean} [normalized=false] - Whether the data are normalized or not.
       */
@@ -7338,7 +7328,7 @@ index 27bb1fefd..24299167b 100644
   */
  export class Uint16BufferAttribute extends BufferAttribute {
      /**
-@@ -91,13 +127,15 @@ export class Uint16BufferAttribute extends BufferAttribute {
+@@ -72,13 +127,15 @@ export class Uint16BufferAttribute extends BufferAttribute {
       * @param {number} itemSize - The item size.
       * @param {boolean} [normalized=false] - Whether the data are normalized or not.
       */
@@ -7357,7 +7347,7 @@ index 27bb1fefd..24299167b 100644
   */
  export class Int16BufferAttribute extends BufferAttribute {
      /**
-@@ -107,13 +145,15 @@ export class Int16BufferAttribute extends BufferAttribute {
+@@ -88,13 +145,15 @@ export class Int16BufferAttribute extends BufferAttribute {
       * @param {number} itemSize - The item size.
       * @param {boolean} [normalized=false] - Whether the data are normalized or not.
       */
@@ -7376,7 +7366,7 @@ index 27bb1fefd..24299167b 100644
   */
  export class Uint8ClampedBufferAttribute extends BufferAttribute {
      /**
-@@ -123,13 +163,15 @@ export class Uint8ClampedBufferAttribute extends BufferAttribute {
+@@ -104,13 +163,15 @@ export class Uint8ClampedBufferAttribute extends BufferAttribute {
       * @param {number} itemSize - The item size.
       * @param {boolean} [normalized=false] - Whether the data are normalized or not.
       */
@@ -7395,7 +7385,7 @@ index 27bb1fefd..24299167b 100644
   */
  export class Uint8BufferAttribute extends BufferAttribute {
      /**
-@@ -139,13 +181,15 @@ export class Uint8BufferAttribute extends BufferAttribute {
+@@ -120,13 +181,15 @@ export class Uint8BufferAttribute extends BufferAttribute {
       * @param {number} itemSize - The item size.
       * @param {boolean} [normalized=false] - Whether the data are normalized or not.
       */
@@ -7414,7 +7404,7 @@ index 27bb1fefd..24299167b 100644
   */
  export class Int8BufferAttribute extends BufferAttribute {
      /**
-@@ -155,7 +199,11 @@ export class Int8BufferAttribute extends BufferAttribute {
+@@ -136,7 +199,11 @@ export class Int8BufferAttribute extends BufferAttribute {
       * @param {number} itemSize - The item size.
       * @param {boolean} [normalized=false] - Whether the data are normalized or not.
       */
@@ -7427,7 +7417,7 @@ index 27bb1fefd..24299167b 100644
  }
  /**
   * This class stores data for an attribute (such as vertex positions, face
-@@ -165,7 +213,9 @@ export class Int8BufferAttribute extends BufferAttribute {
+@@ -146,7 +213,9 @@ export class Int8BufferAttribute extends BufferAttribute {
   * When working with vector-like data, the `fromBufferAttribute( attribute, index )`
   * helper methods on vector and color class might be helpful. E.g. {@link Vector3#fromBufferAttribute}.
   */
@@ -7438,7 +7428,7 @@ index 27bb1fefd..24299167b 100644
      /**
       * Constructs a new buffer attribute.
       *
-@@ -177,38 +227,31 @@ export class BufferAttribute extends EventDispatcher {
+@@ -158,38 +227,31 @@ export class BufferAttribute extends EventDispatcher {
      /**
       * This flag can be used for type testing.
       *
@@ -7482,7 +7472,7 @@ index 27bb1fefd..24299167b 100644
       */
      readonly count: number;
      /**
-@@ -217,8 +260,6 @@ export class BufferAttribute extends EventDispatcher {
+@@ -198,8 +260,6 @@ export class BufferAttribute extends EventDispatcher {
       * and `normalized` is `true`, the values `0 - +65535` in the array data will be mapped to
       * `0.0f - +1.0f` in the GLSL attribute. If `normalized` is `false`, the values will be converted
       * to floats unmodified, i.e. `65535` becomes `65535.0f`.
@@ -7491,7 +7481,7 @@ index 27bb1fefd..24299167b 100644
       */
      normalized: boolean;
      /**
-@@ -227,50 +268,39 @@ export class BufferAttribute extends EventDispatcher {
+@@ -208,50 +268,39 @@ export class BufferAttribute extends EventDispatcher {
       * Note: After the initial use of a buffer, its usage cannot be changed. Instead,
       * instantiate a new one and set the desired usage before the next render.
       *
@@ -7549,7 +7539,7 @@ index 27bb1fefd..24299167b 100644
       * @default false
       * @param {boolean} value
       */
-@@ -281,7 +311,7 @@ export class BufferAttribute extends EventDispatcher {
+@@ -262,7 +311,7 @@ export class BufferAttribute extends EventDispatcher {
       * @param {(StaticDrawUsage|DynamicDrawUsage|StreamDrawUsage|StaticReadUsage|DynamicReadUsage|StreamReadUsage|StaticCopyUsage|DynamicCopyUsage|StreamCopyUsage)} value - The usage to set.
       * @return {BufferAttribute} A reference to this buffer attribute.
       */
@@ -7558,7 +7548,7 @@ index 27bb1fefd..24299167b 100644
      /**
       * Adds a range of data in the data array to be updated on the GPU.
       *
-@@ -299,7 +329,7 @@ export class BufferAttribute extends EventDispatcher {
+@@ -280,7 +329,7 @@ export class BufferAttribute extends EventDispatcher {
       * @param {BufferAttribute} source - The buffer attribute to copy.
       * @return {BufferAttribute} A reference to this instance.
       */
@@ -7567,7 +7557,7 @@ index 27bb1fefd..24299167b 100644
      /**
       * Copies a vector from the given buffer attribute to this one. The start
       * and destination position in the attribute buffers are represented by the
-@@ -310,14 +340,14 @@ export class BufferAttribute extends EventDispatcher {
+@@ -291,14 +340,14 @@ export class BufferAttribute extends EventDispatcher {
       * @param {number} index2 - The source index into the given buffer attribute.
       * @return {BufferAttribute} A reference to this instance.
       */
@@ -7584,7 +7574,7 @@ index 27bb1fefd..24299167b 100644
      /**
       * Applies the given 3x3 matrix to the given attribute. Works with
       * item size `2` and `3`.
-@@ -325,7 +355,7 @@ export class BufferAttribute extends EventDispatcher {
+@@ -306,7 +355,7 @@ export class BufferAttribute extends EventDispatcher {
       * @param {Matrix3} m - The matrix to apply.
       * @return {BufferAttribute} A reference to this instance.
       */
@@ -7593,7 +7583,7 @@ index 27bb1fefd..24299167b 100644
      /**
       * Applies the given 4x4 matrix to the given attribute. Only works with
       * item size `3`.
-@@ -333,7 +363,7 @@ export class BufferAttribute extends EventDispatcher {
+@@ -314,7 +363,7 @@ export class BufferAttribute extends EventDispatcher {
       * @param {Matrix4} m - The matrix to apply.
       * @return {BufferAttribute} A reference to this instance.
       */
@@ -7602,7 +7592,7 @@ index 27bb1fefd..24299167b 100644
      /**
       * Applies the given 3x3 normal matrix to the given attribute. Only works with
       * item size `3`.
-@@ -341,7 +371,7 @@ export class BufferAttribute extends EventDispatcher {
+@@ -322,7 +371,7 @@ export class BufferAttribute extends EventDispatcher {
       * @param {Matrix3} m - The normal matrix to apply.
       * @return {BufferAttribute} A reference to this instance.
       */
@@ -7611,7 +7601,7 @@ index 27bb1fefd..24299167b 100644
      /**
       * Applies the given 4x4 matrix to the given attribute. Only works with
       * item size `3` and with direction vectors.
-@@ -349,7 +379,7 @@ export class BufferAttribute extends EventDispatcher {
+@@ -330,7 +379,7 @@ export class BufferAttribute extends EventDispatcher {
       * @param {Matrix4} m - The matrix to apply.
       * @return {BufferAttribute} A reference to this instance.
       */
@@ -7620,7 +7610,7 @@ index 27bb1fefd..24299167b 100644
      /**
       * Sets the given array data in the buffer attribute.
       *
-@@ -357,7 +387,7 @@ export class BufferAttribute extends EventDispatcher {
+@@ -338,7 +387,7 @@ export class BufferAttribute extends EventDispatcher {
       * @param {number} [offset=0] - The offset in this buffer attribute's array.
       * @return {BufferAttribute} A reference to this instance.
       */
@@ -7629,7 +7619,7 @@ index 27bb1fefd..24299167b 100644
      /**
       * Returns the given component of the vector at the given index.
       *
-@@ -374,7 +404,7 @@ export class BufferAttribute extends EventDispatcher {
+@@ -355,7 +404,7 @@ export class BufferAttribute extends EventDispatcher {
       * @param {number} value - The value to set.
       * @return {BufferAttribute} A reference to this instance.
       */
@@ -7638,7 +7628,7 @@ index 27bb1fefd..24299167b 100644
      /**
       * Returns the x component of the vector at the given index.
       *
-@@ -389,7 +419,7 @@ export class BufferAttribute extends EventDispatcher {
+@@ -370,7 +419,7 @@ export class BufferAttribute extends EventDispatcher {
       * @param {number} x - The value to set.
       * @return {BufferAttribute} A reference to this instance.
       */
@@ -7647,7 +7637,7 @@ index 27bb1fefd..24299167b 100644
      /**
       * Returns the y component of the vector at the given index.
       *
-@@ -404,7 +434,7 @@ export class BufferAttribute extends EventDispatcher {
+@@ -385,7 +434,7 @@ export class BufferAttribute extends EventDispatcher {
       * @param {number} y - The value to set.
       * @return {BufferAttribute} A reference to this instance.
       */
@@ -7656,7 +7646,7 @@ index 27bb1fefd..24299167b 100644
      /**
       * Returns the z component of the vector at the given index.
       *
-@@ -419,7 +449,7 @@ export class BufferAttribute extends EventDispatcher {
+@@ -400,7 +449,7 @@ export class BufferAttribute extends EventDispatcher {
       * @param {number} z - The value to set.
       * @return {BufferAttribute} A reference to this instance.
       */
@@ -7665,7 +7655,7 @@ index 27bb1fefd..24299167b 100644
      /**
       * Returns the w component of the vector at the given index.
       *
-@@ -434,7 +464,7 @@ export class BufferAttribute extends EventDispatcher {
+@@ -415,7 +464,7 @@ export class BufferAttribute extends EventDispatcher {
       * @param {number} w - The value to set.
       * @return {BufferAttribute} A reference to this instance.
       */
@@ -7674,7 +7664,7 @@ index 27bb1fefd..24299167b 100644
      /**
       * Sets the x and y component of the vector at the given index.
       *
-@@ -443,7 +473,7 @@ export class BufferAttribute extends EventDispatcher {
+@@ -424,7 +473,7 @@ export class BufferAttribute extends EventDispatcher {
       * @param {number} y - The value for the y component to set.
       * @return {BufferAttribute} A reference to this instance.
       */
@@ -7683,7 +7673,7 @@ index 27bb1fefd..24299167b 100644
      /**
       * Sets the x, y and z component of the vector at the given index.
       *
-@@ -453,7 +483,7 @@ export class BufferAttribute extends EventDispatcher {
+@@ -434,7 +483,7 @@ export class BufferAttribute extends EventDispatcher {
       * @param {number} z - The value for the z component to set.
       * @return {BufferAttribute} A reference to this instance.
       */
@@ -7692,7 +7682,7 @@ index 27bb1fefd..24299167b 100644
      /**
       * Sets the x, y, z and w component of the vector at the given index.
       *
-@@ -464,7 +494,7 @@ export class BufferAttribute extends EventDispatcher {
+@@ -445,7 +494,7 @@ export class BufferAttribute extends EventDispatcher {
       * @param {number} w - The value for the w component to set.
       * @return {BufferAttribute} A reference to this instance.
       */
@@ -7701,7 +7691,7 @@ index 27bb1fefd..24299167b 100644
      /**
       * Sets the given callback function that is executed after the Renderer has transferred
       * the attribute array data to the GPU. Can be used to perform clean-up operations after
-@@ -473,7 +503,7 @@ export class BufferAttribute extends EventDispatcher {
+@@ -454,7 +503,7 @@ export class BufferAttribute extends EventDispatcher {
       * @param {Function} callback - The `onUpload()` callback.
       * @return {BufferAttribute} A reference to this instance.
       */
@@ -7710,7 +7700,7 @@ index 27bb1fefd..24299167b 100644
      /**
       * Returns a new buffer attribute with copied values from this instance.
       *
-@@ -485,22 +515,9 @@ export class BufferAttribute extends EventDispatcher {
+@@ -466,22 +515,9 @@ export class BufferAttribute extends EventDispatcher {
       *
       * @return {Object} A JSON object representing the serialized buffer attribute.
       */

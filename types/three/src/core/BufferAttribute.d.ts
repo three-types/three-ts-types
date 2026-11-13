@@ -61,14 +61,14 @@ export class Float32BufferAttribute extends BufferAttribute {
  * Convenient class that can be used when creating a `Float16` buffer attribute with
  * a plain `Array` instance.
  *
- * This class automatically converts to and from FP16 via `Uint16Array` since `Float16Array`
- * browser support is still problematic.
+ * The attribute data are stored in a `Float16Array`. If `Float16Array` is not supported,
+ * the class falls back to `Float32Array`.
  */
 export class Float16BufferAttribute extends BufferAttribute {
     /**
      * Constructs a new buffer attribute.
      *
-     * @param {(Array<number>|Uint16Array)} array - The array holding the attribute data.
+     * @param {(Array<number>|Float16Array)} array - The array holding the attribute data.
      * @param {number} itemSize - The item size.
      * @param {boolean} [normalized=false] - Whether the data are normalized or not.
      */
