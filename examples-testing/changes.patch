@@ -15530,7 +15530,7 @@ index 2ad22271b..e873a5f46 100644
      // use lerp to smooth the movement
      collisionBoxPosUI = new THREE.Vector3().copy(collisionBox.position);
 diff --git a/examples-testing/examples/webgpu_compute_particles_snow.ts b/examples-testing/examples/webgpu_compute_particles_snow.ts
-index da365200c..b945aa640 100644
+index 40e93329e..65ad52bb8 100644
 --- a/examples-testing/examples/webgpu_compute_particles_snow.ts
 +++ b/examples-testing/examples/webgpu_compute_particles_snow.ts
 @@ -26,12 +26,14 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -16638,7 +16638,7 @@ index b96ba5f42..676326fed 100644
  const colorFolder = gui.addFolder('HDR');
  colorFolder.add(params.intensity, 'value', 0, 10, 0.1).name('Intensity');
 diff --git a/examples-testing/examples/webgpu_instance_mesh.ts b/examples-testing/examples/webgpu_instance_mesh.ts
-index 0abd2f26c..30705fb0c 100644
+index b1be165dc..eadc0e25b 100644
 --- a/examples-testing/examples/webgpu_instance_mesh.ts
 +++ b/examples-testing/examples/webgpu_instance_mesh.ts
 @@ -3,9 +3,9 @@ import { mix, range, normalWorld, oscSine, time } from 'three/tsl';
@@ -17820,7 +17820,7 @@ index 802ab90bd..f08d24448 100644
  
      const v0 = new THREE.Vector3();
 diff --git a/examples-testing/examples/webgpu_lights_rectarealight.ts b/examples-testing/examples/webgpu_lights_rectarealight.ts
-index 75e2cc442..66cbd8c58 100644
+index 8c656c48c..cd91e50fc 100644
 --- a/examples-testing/examples/webgpu_lights_rectarealight.ts
 +++ b/examples-testing/examples/webgpu_lights_rectarealight.ts
 @@ -8,9 +8,9 @@ import { RectAreaLightTexturesLib } from 'three/addons/lights/RectAreaLightTextu
@@ -18019,7 +18019,7 @@ index 96b8d414a..f817bdae4 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_lines_fat_raycasting.ts b/examples-testing/examples/webgpu_lines_fat_raycasting.ts
-index 5f7de12b6..1b8661c97 100644
+index baca80965..115beebce 100644
 --- a/examples-testing/examples/webgpu_lines_fat_raycasting.ts
 +++ b/examples-testing/examples/webgpu_lines_fat_raycasting.ts
 @@ -1,6 +1,7 @@
@@ -24066,7 +24066,7 @@ index f6edec750..a0064c0dc 100644
  
      const delta = timer.getDelta();
 diff --git a/examples-testing/examples/webgpu_shadowmap_array.ts b/examples-testing/examples/webgpu_shadowmap_array.ts
-index 03c7f2a45..eaa070f47 100644
+index 1cc3526e1..2abdbe1c9 100644
 --- a/examples-testing/examples/webgpu_shadowmap_array.ts
 +++ b/examples-testing/examples/webgpu_shadowmap_array.ts
 @@ -8,10 +8,10 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -24622,7 +24622,7 @@ index 1c2f7995c..a2aec4a43 100644
  let imageWidth = 1,
      imageHeight = 1;
 diff --git a/examples-testing/examples/webgpu_storage_buffer.ts b/examples-testing/examples/webgpu_storage_buffer.ts
-index 87aa8962a..f716a8c12 100644
+index ded17a063..4ffce2154 100644
 --- a/examples-testing/examples/webgpu_storage_buffer.ts
 +++ b/examples-testing/examples/webgpu_storage_buffer.ts
 @@ -2,8 +2,8 @@ import * as THREE from 'three/webgpu';
@@ -25914,7 +25914,7 @@ index 625a9d209..0509e361d 100644
      gui.addColor({ color: emissiveColor.value.getHexString(THREE.SRGBColorSpace) }, 'color')
          .onChange(value => emissiveColor.value.set(value))
 diff --git a/examples-testing/examples/webgpu_tsl_wood.ts b/examples-testing/examples/webgpu_tsl_wood.ts
-index 5a4e06502..f42fd5a76 100644
+index e7e3af114..443ad2928 100644
 --- a/examples-testing/examples/webgpu_tsl_wood.ts
 +++ b/examples-testing/examples/webgpu_tsl_wood.ts
 @@ -1,22 +1,30 @@
@@ -26020,7 +26020,7 @@ index 5a4e06502..f42fd5a76 100644
 +function createLabel(
 +    text: string,
 +    font: Font,
-+    material: THREE.MeshStandardMaterial,
++    material: THREE.MeshStandardNodeMaterial,
 +    position: { x: number; y: number; z: number },
 +) {
      const txt_geo = new TextGeometry(text, {
@@ -26044,7 +26044,7 @@ index 5a4e06502..f42fd5a76 100644
      label.rotateY(-Math.PI / 2);
  
 -    label.children[0].material = material;
-+    (label.children[0] as THREE.Mesh<TextGeometry, THREE.MeshStandardMaterial>).material = material;
++    (label.children[0] as THREE.Mesh<TextGeometry, THREE.MeshStandardNodeMaterial>).material = material;
      label.position.copy(position);
      base.add(label);
  }
@@ -26062,7 +26062,7 @@ index 5a4e06502..f42fd5a76 100644
  }
  
 -function add_custom_wood(text_mat) {
-+function add_custom_wood(text_mat: THREE.MeshStandardMaterial) {
++function add_custom_wood(text_mat: THREE.MeshStandardNodeMaterial) {
      // Add "Custom" label (positioned at the end of the grid)
      createLabel('custom', font, text_mat, getGridPosition(Math.round(WoodGenuses.length / 2 - 1), 5));
  
@@ -26523,7 +26523,7 @@ index 38099c6a5..c9e0380fc 100644
      const rayMarching = gui.addFolder('Ray Marching');
      rayMarching.add(params, 'resolution', 0.1, 1).onChange(resolution => {
 diff --git a/examples-testing/examples/webgpu_volume_lighting_rectarea.ts b/examples-testing/examples/webgpu_volume_lighting_rectarea.ts
-index 47c82841c..73084cc4c 100644
+index d70dae2eb..a89cb1ba4 100644
 --- a/examples-testing/examples/webgpu_volume_lighting_rectarea.ts
 +++ b/examples-testing/examples/webgpu_volume_lighting_rectarea.ts
 @@ -10,11 +10,11 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
