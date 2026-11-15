@@ -2372,7 +2372,7 @@ index 3a794d7df..40bd78652 100644
       * Called by the tiles renderer when the plugin is unregistered or the
       * tiles renderer is disposed.
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/pipelines/MeshletDrawingPipeline.d.ts b/jsdoc-testing/jsdoc/examples/jsm/pipelines/MeshletDrawingPipeline.d.ts
-index 9fe0becec..087c363d4 100644
+index 58a16b607..087c363d4 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/pipelines/MeshletDrawingPipeline.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/pipelines/MeshletDrawingPipeline.d.ts
 @@ -1,3 +1,15 @@
@@ -2483,7 +2483,7 @@ index 9fe0becec..087c363d4 100644
      /**
       * Prepares the meshlets and geometry LODs before `Renderer.compileAsync()` projects
       * the scene. Shared geometries are processed once, including meshes outside the frustum.
-@@ -219,846 +174,10 @@ export class MeshletDrawingPipeline extends StandardDrawingPipeline {
+@@ -219,848 +174,10 @@ export class MeshletDrawingPipeline extends StandardDrawingPipeline {
       * @param {Camera} camera - The camera.
       * @return {Promise} Resolves when the meshlets are ready.
       */
@@ -3088,6 +3088,7 @@ index 9fe0becec..087c363d4 100644
 -    geometries: Map<any, any>;
 -    wasted: number;
 -    version: number;
+-    retired: any[];
 -    /**
 -     * Adds the vertices and the triangles of the given geometry, if not added yet.
 -     *
@@ -3102,8 +3103,9 @@ index 9fe0becec..087c363d4 100644
 -     */
 -    remove(clusters: Object): void;
 -    /**
--     * Reclaims the elements of the removed geometries once they exceed half of the elements of the pool, so
--     * removing many geometries moves the geometries once.
+-     * Disposes the replaced buffers and reclaims the elements of the removed geometries once they exceed half of
+-     * the elements of the pool, so removing many geometries moves the geometries once. Called before an outer
+-     * render only, when no draw commands refer to the buffers of the pool.
 -     */
 -    update(): void;
 -    /**
