@@ -1,7 +1,10 @@
+import NodeBuilder from "./NodeBuilder.js";
 import PropertyNode from "./PropertyNode.js";
 
 interface ParameterNodeInterface {
     readonly isParameterNode: true;
+
+    getInputType(builder: NodeBuilder): string;
 }
 
 declare const ParameterNode: {
