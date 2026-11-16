@@ -15,7 +15,8 @@ import { Light, Mesh, Node, Texture, TextureNode, WebGPURenderer } from "three/w
  * samples are ignored.
  * Keep the source geometry and GI data static while accumulating. Call `reset()`
  * after changing transforms or lighting. Atlas charts need at least three texels
- * of padding; the resolve fills two texels around covered surfaces.
+ * of padding; the resolve fills two texels around covered surfaces. The alpha of the light map
+ * is its coverage, e.g. for {@link SeamStitchGenerator} and {@link GutterFillGenerator}.
  * Irradiance uses linear BT.709/sRGB primaries in lux.
  * Do not include material ambient occlusion, base color, or exposure in the source
  * irradiance. Material occlusion is applied once at runtime. Keep any contributions
@@ -90,7 +91,8 @@ export class LightMapper {
     /**
      * The baked light map. It stores linear diffuse irradiance in lux, without baked
      * albedo, material ambient occlusion, or display exposure, and uses `uv1`.
-     * Values are not divided by pi, matching the runtime light map input.
+     * Values are not divided by pi, matching the runtime light map input. Alpha is the
+     * coverage: 1 at the texels with samples, 0 at the padding and elsewhere.
      *
      * @type {Texture}
      */

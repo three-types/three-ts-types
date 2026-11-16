@@ -16879,10 +16879,10 @@ index ab4e49677..d5662716d 100644
          light.color.setHSL(h, s, l);
          light.position.set(x, y, z);
 diff --git a/examples-testing/examples/webgpu_lightmap_baking.ts b/examples-testing/examples/webgpu_lightmap_baking.ts
-index a22cefdf1..77979b5b0 100644
+index a79da1af5..7b00ed49b 100644
 --- a/examples-testing/examples/webgpu_lightmap_baking.ts
 +++ b/examples-testing/examples/webgpu_lightmap_baking.ts
-@@ -4,9 +4,9 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+@@ -5,9 +5,9 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { Inspector } from 'three/addons/inspector/Inspector.js';
  import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
  import { LightMapper } from 'three/addons/lighting/LightMapper.js';
@@ -16891,10 +16891,10 @@ index a22cefdf1..77979b5b0 100644
  import { RayTracedRadiosity, rayTracedRadiosityIrradiance } from 'three/addons/lighting/RayTracedRadiosity.js';
 -import { unwrapUVs } from 'three/addons/utils/unwrapUVs.js';
 +import { unwrapUVs, UnwrapUVsResult } from 'three/addons/utils/unwrapUVs.js';
+ import { SeamStitchGenerator } from 'three/addons/utils/SeamStitchGenerator.js';
+ import { GutterFillGenerator } from 'three/addons/utils/GutterFillGenerator.js';
  
- import WebGPU from 'three/addons/capabilities/WebGPU.js';
- 
-@@ -16,11 +16,27 @@ if (WebGPU.isAvailable() === false) {
+@@ -19,16 +19,32 @@ if (WebGPU.isAvailable() === false) {
      throw new Error('No WebGPU support');
  }
  
@@ -16902,7 +16902,12 @@ index a22cefdf1..77979b5b0 100644
 -let world, meshes, materials;
 -let radiosity,
 -    lightMapper,
--    denoiseNode = null;
+-    denoiseNode = null,
+-    seamStitch,
+-    gutterFill,
+-    stitchedTarget,
+-    filledTarget,
+-    stitchedAtlas = null;
 +interface World {
 +    root: THREE.Group;
 +    lightMapped: THREE.Group;
@@ -16923,12 +16928,17 @@ index a22cefdf1..77979b5b0 100644
 +    materials: Set<THREE.MeshStandardNodeMaterial>;
 +let radiosity: RayTracedRadiosity | undefined,
 +    lightMapper: LightMapper | undefined,
-+    denoiseNode: DenoiseNode | null = null;
++    denoiseNode: DenoiseNode | null = null,
++    seamStitch: SeamStitchGenerator,
++    gutterFill: GutterFillGenerator,
++    stitchedTarget: THREE.RenderTarget,
++    filledTarget: THREE.RenderTarget,
++    stitchedAtlas: UnwrapUVsResult | null | undefined = null;
  let needsBake = false,
-     denoised = false;
- 
-@@ -30,8 +46,11 @@ const params = {
-     denoise: false,
+     denoised = false,
+     finished = false;
+@@ -41,8 +57,11 @@ const params = {
+     fillGutters: true,
  };
  
 -const scenes = { 'Cornell Box': createCornellBox, Courtyard: loadCourtyard };
@@ -16941,7 +16951,7 @@ index a22cefdf1..77979b5b0 100644
  
  // phones have less GPU memory, 4096² takes over 1 GB with the denoiser
  
-@@ -41,7 +60,7 @@ const phone = window.matchMedia('(pointer: coarse)').matches;
+@@ -52,7 +71,7 @@ const phone = window.matchMedia('(pointer: coarse)').matches;
  // many per frame as keep the frame rate of the display
  
  const rays = 512;
@@ -16950,7 +16960,7 @@ index a22cefdf1..77979b5b0 100644
  
  let bakedRays = 0,
      raysPerFrame = 8,
-@@ -70,11 +89,11 @@ async function init() {
+@@ -81,11 +100,11 @@ async function init() {
  
      controls = new OrbitControls(camera, renderer.domElement);
  
@@ -16964,7 +16974,7 @@ index a22cefdf1..77979b5b0 100644
      gui.add(params, 'scene', Object.keys(scenes)).name('Scene').onChange(setScene);
      gui.add(params, 'resolution', phone ? [256, 1024, 2048] : [256, 1024, 2048, 4096])
          .name('Light Map Resolution')
-@@ -109,7 +128,11 @@ async function setScene() {
+@@ -136,7 +155,11 @@ async function setScene() {
      controls.update();
  
      meshes = [];
@@ -16977,7 +16987,7 @@ index a22cefdf1..77979b5b0 100644
      materials = new Set(meshes.map(mesh => mesh.material));
  
      requestBake();
-@@ -213,7 +236,14 @@ async function loadCourtyard() {
+@@ -240,7 +263,14 @@ async function loadCourtyard() {
          color => new THREE.MeshStandardNodeMaterial({ color }),
      );
  
@@ -16993,7 +17003,7 @@ index a22cefdf1..77979b5b0 100644
          const mesh = new THREE.Mesh(geometry, material);
          mesh.position.set(x, y, z);
          parent.add(mesh);
-@@ -268,7 +298,7 @@ async function loadCourtyard() {
+@@ -295,7 +325,7 @@ async function loadCourtyard() {
  
      // fountain
  
@@ -17002,7 +17012,7 @@ index a22cefdf1..77979b5b0 100644
          Array.from({ length: 8 }, (v, i) =>
              new THREE.Vector2(radius, 0).rotateAround(new THREE.Vector2(), ((i + 0.5) * Math.PI) / 4),
          );
-@@ -318,16 +348,16 @@ function bake() {
+@@ -345,16 +375,16 @@ function bake() {
  
      // each mesh gets a new geometry with light map UVs, also for another resolution
  
@@ -17022,7 +17032,7 @@ index a22cefdf1..77979b5b0 100644
      radiosity.update(renderer, scene);
  
      // the light map accumulates one sample per frame in animate()
-@@ -335,7 +365,7 @@ function bake() {
+@@ -362,7 +392,7 @@ function bake() {
      // to denoise, the light mapper also bakes the inputs of the denoiser: the variance of each texel
      // and the surfaces of the texels as guides, which take more memory
  
@@ -17031,8 +17041,35 @@ index a22cefdf1..77979b5b0 100644
          variance: params.denoise,
          guides: params.denoise,
      });
-@@ -359,7 +389,7 @@ function bake() {
-     setLightMap(lightMapper.getTextureNode());
+@@ -396,14 +426,14 @@ function finishLightMap() {
+ 
+     // the light map has its coverage in alpha, the stitched light map also the stitched texels
+ 
+-    let map = denoiseNode !== null ? denoiseNode.getTexture() : lightMapper.texture;
++    let map = denoiseNode !== null ? denoiseNode.getTexture() : lightMapper!.texture;
+ 
+     if (params.stitchSeams) {
+         // finding the seams takes a moment, once per atlas
+ 
+-        if (stitchedAtlas !== world.atlas) {
+-            seamStitch.setGeometry(world.lightMapped);
+-            stitchedAtlas = world.atlas;
++        if (stitchedAtlas !== world!.atlas) {
++            seamStitch.setGeometry(world!.lightMapped);
++            stitchedAtlas = world!.atlas;
+         }
+ 
+         map = seamStitch.generate(map, stitchedTarget).texture;
+@@ -411,14 +441,14 @@ function finishLightMap() {
+ 
+     if (params.fillGutters) map = gutterFill.generate(map, filledTarget).texture;
+ 
+-    if (map === lightMapper.texture) setLightMap(lightMapper.getTextureNode());
++    if (map === lightMapper!.texture) setLightMap(lightMapper!.getTextureNode());
+     else if (denoiseNode !== null && map === denoiseNode.getTexture()) setLightMap(denoiseNode);
+     else setLightMap(texture(map));
+ 
+     finished = true;
  }
  
 -function setLightMap(lightMapNode) {
@@ -17040,7 +17077,7 @@ index a22cefdf1..77979b5b0 100644
      for (const material of materials) {
          material.lightMapNode = lightMapNode;
          material.needsUpdate = true;
-@@ -407,9 +437,9 @@ function animate() {
+@@ -466,9 +496,9 @@ function animate() {
          const budget = Math.min(raysPerFrame, rays - bakedRays);
          const samples = Math.ceil(budget / 8);
  
