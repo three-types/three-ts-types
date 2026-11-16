@@ -9,7 +9,8 @@ export type AtomicMethod =
     | typeof AtomicFunctionNode.ATOMIC_MIN
     | typeof AtomicFunctionNode.ATOMIC_AND
     | typeof AtomicFunctionNode.ATOMIC_OR
-    | typeof AtomicFunctionNode.ATOMIC_XOR;
+    | typeof AtomicFunctionNode.ATOMIC_XOR
+    | typeof AtomicFunctionNode.ATOMIC_EXCHANGE;
 
 interface AtomicFunctionNodeInterface {
     method: AtomicMethod;
@@ -34,6 +35,7 @@ declare const AtomicFunctionNode: {
     readonly ATOMIC_AND: "atomicAnd";
     readonly ATOMIC_OR: "atomicOr";
     readonly ATOMIC_XOR: "atomicXor";
+    readonly ATOMIC_EXCHANGE: "atomicExchange";
 };
 
 export type AtomicFunctionNode<TNodeType> = Node<TNodeType> & AtomicFunctionNodeInterface;
@@ -88,4 +90,9 @@ export const atomicOr: <TNodeType>(
 export const atomicXor: <TNodeType>(
     pointerNode: Node<TNodeType>,
     valueNode: Node,
+) => AtomicFunctionNode<TNodeType>;
+
+export const atomicExchange: <TNodeType>(
+    pointerNode: Node<TNodeType>,
+    valueNode: Node | number,
 ) => AtomicFunctionNode<TNodeType>;
