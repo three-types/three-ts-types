@@ -699,8 +699,9 @@ export class Object3D<TEventMap extends Object3DEventMap = Object3DEventMap> ext
      * @param {boolean} [updateChildren=false] Whether descendant nodes should be updated or not.
      * @param {boolean} [force=false] - When set to `true`, a recomputation of world matrices is forced even
      * when {@link Object3D#matrixWorldNeedsUpdate} is `false`.
+     * @return {boolean} Whether the world matrix has changed or not.
      */
-    updateWorldMatrix(updateParents?: boolean, updateChildren?: boolean, force?: boolean): void;
+    updateWorldMatrix(updateParents?: boolean, updateChildren?: boolean, force?: boolean): boolean;
     /**
      * Serializes the 3D object into JSON.
      *

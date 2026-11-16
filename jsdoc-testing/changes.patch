@@ -6809,7 +6809,7 @@ index 716729b6a..33dcfc918 100644
  }
 -import { PerspectiveCamera } from './PerspectiveCamera.js';
 diff --git a/jsdoc-testing/jsdoc/src/cameras/Camera.d.ts b/jsdoc-testing/jsdoc/src/cameras/Camera.d.ts
-index 67a368630..11c3f98e1 100644
+index c63c411b6..11c3f98e1 100644
 --- a/jsdoc-testing/jsdoc/src/cameras/Camera.d.ts
 +++ b/jsdoc-testing/jsdoc/src/cameras/Camera.d.ts
 @@ -1,56 +1,42 @@
@@ -6871,7 +6871,7 @@ index 67a368630..11c3f98e1 100644
      get reversedDepth(): boolean;
 -    copy(source: any, recursive: any): this;
 -    updateMatrixWorld(force: any): void;
--    updateWorldMatrix(updateParents: any, updateChildren: any, force?: boolean): void;
+-    updateWorldMatrix(updateParents: any, updateChildren: any, force?: boolean): boolean;
 -    clone(): any;
 +    clone(): this;
 +    copy(source: Camera, recursive?: boolean): this;
@@ -9019,7 +9019,7 @@ index 34b3c6175..7345c28ca 100644
      mask: number;
      /**
 diff --git a/jsdoc-testing/jsdoc/src/core/Object3D.d.ts b/jsdoc-testing/jsdoc/src/core/Object3D.d.ts
-index 4685b6f52..128b87f82 100644
+index 7b3349ab2..4512c5a66 100644
 --- a/jsdoc-testing/jsdoc/src/core/Object3D.d.ts
 +++ b/jsdoc-testing/jsdoc/src/core/Object3D.d.ts
 @@ -1,72 +1,182 @@
@@ -9638,7 +9638,7 @@ index 4685b6f52..128b87f82 100644
      /**
       * Updates the transformation matrix in local space by computing it from the current
       * position, rotation and scale values.
-@@ -565,14 +708,14 @@ export class Object3D extends EventDispatcher {
+@@ -566,14 +709,14 @@ export class Object3D extends EventDispatcher {
       * @return {Object} A JSON object representing the serialized 3D object.
       * @see {@link ObjectLoader#parse}
       */
@@ -9655,7 +9655,7 @@ index 4685b6f52..128b87f82 100644
      /**
       * Copies the values of the given 3D object to this instance.
       *
-@@ -580,7 +723,7 @@ export class Object3D extends EventDispatcher {
+@@ -581,7 +724,7 @@ export class Object3D extends EventDispatcher {
       * @param {boolean} [recursive=true] - When set to `true`, descendants of the 3D object are cloned.
       * @return {Object3D} A reference to this instance.
       */
@@ -9664,7 +9664,7 @@ index 4685b6f52..128b87f82 100644
      /**
       * Frees the GPU-related resources allocated by this instance. Call this
       * method whenever this instance is no longer used in your app.
-@@ -592,14 +735,3 @@ export class Object3D extends EventDispatcher {
+@@ -593,14 +736,3 @@ export class Object3D extends EventDispatcher {
       */
      dispose(): void;
  }
