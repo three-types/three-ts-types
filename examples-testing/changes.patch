@@ -12704,7 +12704,7 @@ index c8e959a0b..6eca15605 100644
          });
      });
 diff --git a/examples-testing/examples/webgl_shadowmap_pcss.ts b/examples-testing/examples/webgl_shadowmap_pcss.ts
-index de5426883..6d750ce4b 100644
+index c48ede4cb..53e06dea8 100644
 --- a/examples-testing/examples/webgl_shadowmap_pcss.ts
 +++ b/examples-testing/examples/webgl_shadowmap_pcss.ts
 @@ -4,10 +4,10 @@ import Stats from 'three/addons/libs/stats.module.js';
@@ -12730,12 +12730,12 @@ index de5426883..6d750ce4b 100644
      );
  
      shader = shader.replace(
-         '\t\t\tif ( frustumTest ) {\n\t\t\t\tfloat depth = texture2D( shadowMap, shadowCoord.xy ).r;',
+         '\t\t\tif ( frustumTest ) {\n\t\t\t\tfloat depth = textureLod( shadowMap, shadowCoord.xy, 0.0 ).r;',
          '\t\t\tif ( frustumTest ) {\n' +
 -            document.getElementById('PCSSGetShadow').textContent +
 +            document.getElementById('PCSSGetShadow')!.textContent +
              '\n' +
-             '\t\t\t\tfloat depth = texture2D( shadowMap, shadowCoord.xy ).r;',
+             '\t\t\t\tfloat depth = textureLod( shadowMap, shadowCoord.xy, 0.0 ).r;',
      );
 diff --git a/examples-testing/examples/webgl_shadowmap_performance.ts b/examples-testing/examples/webgl_shadowmap_performance.ts
 index 24aa3621f..4f8337d25 100644
