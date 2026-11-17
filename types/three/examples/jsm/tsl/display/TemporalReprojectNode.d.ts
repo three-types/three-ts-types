@@ -6,6 +6,7 @@ export interface TemporalReprojectNodeOptions {
     mode?: TemporalReprojectMode | undefined;
     hitPointReprojection?: boolean | undefined;
     accumulate?: boolean | undefined;
+    normalDecode?: ((value: Node<"vec4">) => Node<"vec3">) | undefined;
 }
 
 declare class TemporalReprojectNode extends Node<"vec4"> {
@@ -14,6 +15,7 @@ declare class TemporalReprojectNode extends Node<"vec4"> {
     beautyNode: Node<"vec4">;
     depthNode: TextureNode;
     normalNode: TextureNode;
+    normalDecode: (value: Node<"vec4">) => Node<"vec3">;
     velocityNode: TextureNode;
     camera: Camera;
 
