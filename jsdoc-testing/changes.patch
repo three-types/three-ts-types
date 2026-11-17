@@ -29717,7 +29717,7 @@ index 02c358fed..c0f24a55b 100644
       * Starts timing the passes the renderer issues.
       */
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/Info.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/Info.d.ts
-index 64fdb5580..191f727f6 100644
+index e328ba4e2..e6fc92143 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/Info.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/common/Info.d.ts
 @@ -1,4 +1,8 @@
@@ -29730,9 +29730,9 @@ index 64fdb5580..191f727f6 100644
  /**
   * This renderer module provides a series of statistical information
   * about the GPU memory and the rendering process. Useful for debugging
-@@ -46,7 +50,15 @@ declare class Info {
+@@ -45,7 +49,14 @@ declare class Info {
+      * @property {number} points - The number of rendered point primitives of the current frame.
       * @property {number} lines - The number of rendered line primitives of the current frame.
-      * @property {number} timestamp - The timestamp of the frame.
       */
 -    readonly render: Object;
 +    readonly render: {
@@ -29742,25 +29742,23 @@ index 64fdb5580..191f727f6 100644
 +        triangles: number;
 +        points: number;
 +        lines: number;
-+        timestamp: number;
 +    };
      /**
       * Compute related metrics.
       *
-@@ -56,7 +68,11 @@ declare class Info {
+@@ -54,7 +65,10 @@ declare class Info {
+      * @property {number} calls - The number of compute calls since the app has been started.
       * @property {number} frameCalls - The number of compute calls of the current frame.
-      * @property {number} timestamp - The timestamp of the frame when using `renderer.computeAsync()`.
       */
 -    readonly compute: Object;
 +    readonly compute: {
 +        calls: number;
 +        frameCalls: number;
-+        timestamp: number;
 +    };
      /**
       * Memory related metrics.
       *
-@@ -82,14 +98,27 @@ declare class Info {
+@@ -80,14 +94,27 @@ declare class Info {
       * @property {number} uniformBuffersSize - The memory size of active uniform buffers in bytes.
       * @property {number} total - The total memory size in bytes.
       */
@@ -29796,7 +29794,7 @@ index 64fdb5580..191f727f6 100644
      /**
       * This method should be executed per draw call and updates the corresponding metrics.
       *
-@@ -112,28 +141,20 @@ declare class Info {
+@@ -110,28 +137,20 @@ declare class Info {
       * @param {Texture} texture
       * @param {Object} options - The texture's size and level information.
       */
@@ -29827,7 +29825,7 @@ index 64fdb5580..191f727f6 100644
      /**
       * Tracks a regular attribute memory explicitly.
       *
-@@ -176,45 +197,6 @@ declare class Info {
+@@ -174,45 +193,6 @@ declare class Info {
       * @param {ReadbackBuffer} readbackBuffer - The readback buffer to track.
       */
      destroyReadbackBuffer(readbackBuffer: ReadbackBuffer): void;
@@ -30138,7 +30136,7 @@ index 70218d55a..21a89871b 100644
 +
 +export default ReadbackBuffer;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/Renderer.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/Renderer.d.ts
-index cc7fad926..1789887dd 100644
+index 1a70b8df0..eb3ba858e 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/Renderer.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/common/Renderer.d.ts
 @@ -1,8 +1,77 @@
@@ -30160,7 +30158,7 @@ index cc7fad926..1789887dd 100644
 +import CanvasTarget from './CanvasTarget.js';
 +import ClippingContext from './ClippingContext.js';
 +import Backend from './Backend.js';
-+import { CoordinateSystem, ShadowMapType, TextureDataType, TimestampQuery, ToneMapping } from "../../constants.js";
++import { CoordinateSystem, ShadowMapType, TextureDataType, ToneMapping } from "../../constants.js";
 +import ContextNode from '../../nodes/core/ContextNode.js';
 +import { Camera } from '../../cameras/Camera.js';
 +import { Object3D } from '../../core/Object3D.js';
@@ -31077,16 +31075,7 @@ index cc7fad926..1789887dd 100644
      /**
       * Checks if the given feature is supported by the selected backend.
       *
-@@ -1341,7 +981,7 @@ declare class Renderer {
-      * @return {Promise<boolean>} A Promise that resolves with a bool that indicates whether the feature is supported or not.
-      */
-     hasFeatureAsync(name: string): Promise<boolean>;
--    resolveTimestampsAsync(type?: string): Promise<any>;
-+    resolveTimestampsAsync(type?: TimestampQuery): Promise<number | undefined>;
-     /**
-      * Checks if the given feature is supported by the selected backend. If the
-      * renderer has not been initialized, this method always returns `false`.
-@@ -1365,7 +1005,7 @@ declare class Renderer {
+@@ -1370,7 +1010,7 @@ declare class Renderer {
       * @param {Texture} texture - The texture.
       * @return {Promise} A Promise that resolves when the texture has been initialized.
       */
@@ -31095,7 +31084,7 @@ index cc7fad926..1789887dd 100644
      /**
       * Initializes the given texture. Useful for preloading a texture rather than waiting until first render
       * (which can cause noticeable lags due to decode and GPU upload overhead).
-@@ -1398,7 +1038,7 @@ declare class Renderer {
+@@ -1403,7 +1043,7 @@ declare class Renderer {
       * @param {number} [srcLevel=0] - The source mip level to copy from.
       * @param {number} [dstLevel=0] - The destination mip level to copy to.
       */
@@ -31104,7 +31093,7 @@ index cc7fad926..1789887dd 100644
      /**
       * Reads pixel data from the given render target.
       *
-@@ -1413,64 +1053,6 @@ declare class Renderer {
+@@ -1418,64 +1058,6 @@ declare class Renderer {
       * @return {Promise<TypedArray>} A Promise that resolves when the read has been finished. The resolve provides the read data as a typed array.
       */
      readRenderTargetPixelsAsync(renderTarget: RenderTarget, x: number, y: number, width: number, height: number, textureIndex?: number, faceIndex?: number): Promise<TypedArray>;
@@ -31169,7 +31158,7 @@ index cc7fad926..1789887dd 100644
      /**
       * This method represents the default render object function that manages the render lifecycle
       * of the object.
-@@ -1485,7 +1067,7 @@ declare class Renderer {
+@@ -1490,7 +1072,7 @@ declare class Renderer {
       * @param {?ClippingContext} clippingContext - The clipping context.
       * @param {?string} [passId=null] - An optional ID for identifying the pass.
       */
@@ -31178,7 +31167,7 @@ index cc7fad926..1789887dd 100644
      /**
       * Checks if the given compatibility is supported by the selected backend.
       *
-@@ -1493,42 +1075,6 @@ declare class Renderer {
+@@ -1498,42 +1080,6 @@ declare class Renderer {
       * @return {boolean} Whether the compatibility is supported or not.
       */
      hasCompatibility(name: string): boolean;
@@ -31221,7 +31210,7 @@ index cc7fad926..1789887dd 100644
      /**
       * Alias for `compileAsync()`.
       *
-@@ -1539,17 +1085,12 @@ declare class Renderer {
+@@ -1544,17 +1090,12 @@ declare class Renderer {
       * @param {onProgressCallback} [onProgress] - Executed while the compilation is in progress.
       * @return {function(Object3D, Camera, ?Scene, ?onProgressCallback): Promise|undefined} A Promise that resolves when the compile has been finished.
       */
@@ -31335,13 +31324,15 @@ index 756fb3360..e0970f7db 100644
 +
 +export default StandardDrawingPipeline;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/TimestampQueryPool.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/TimestampQueryPool.d.ts
-index f18cad9f8..22d8868ac 100644
+index 5986581be..fa5397238 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/TimestampQueryPool.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/common/TimestampQueryPool.d.ts
-@@ -1,10 +1,9 @@
+@@ -1,4 +1,3 @@
 -export default TimestampQueryPool;
  /**
-  * Abstract base class of a timestamp query pool.
+  * Abstract base class of a timestamp query pool. While GPU timers are active, the backend
+  * allocates queries for its render and compute calls. Each query keeps the timers that were
+@@ -6,7 +5,7 @@ export default TimestampQueryPool;
   *
   * @abstract
   */
@@ -31350,39 +31341,60 @@ index f18cad9f8..22d8868ac 100644
      /**
       * Creates a new timestamp query pool.
       *
-@@ -57,7 +56,7 @@ declare class TimestampQueryPool {
+@@ -32,20 +31,20 @@ declare class TimestampQueryPool {
       *
-      * @type {Array<number>}
+      * @type {Set<Object>}
       */
--    frames: Array<number>;
-+    frames: number[];
+-    timers: Set<Object>;
++    timers: Set<object>;
      /**
-      * This property is used to avoid multiple concurrent resolve operations.
-      * The WebGL backend uses it as a boolean flag. In context of WebGPU, it holds
-@@ -78,7 +77,7 @@ declare class TimestampQueryPool {
+      * Starts a GPU timer. It measures the queries allocated until {@link TimestampQueryPool#endTimer}.
       *
-      * @return {Array<number>} The timestamp frames.
+      * @returns {Object} The timer.
       */
--    getTimestampFrames(): Array<number>;
-+    getTimestampFrames(): number[];
+-    beginTimer(): Object;
++    beginTimer(): object;
      /**
-      * Returns the timestamp for a given render context.
+      * Ends the given GPU timer.
       *
-@@ -101,7 +100,7 @@ declare class TimestampQueryPool {
-      * @param {number} frameId - The current frame identifier.
-      * @returns {?number}
+      * @param {Object} timer - The timer returned by {@link TimestampQueryPool#beginTimer}.
+      * @returns {Promise<Object>} A Promise that resolves with the timer once all its queries are read back.
       */
--    allocateQueriesForContext(): number | null;
-+    abstract allocateQueriesForContext(uid: string, frameId: number): number | null;
+-    endTimer(timer: Object): Promise<Object>;
++    endTimer(timer: object): Promise<object>;
      /**
-      * Resolve all timestamps and return data (or process them).
+      * Returns the GPU time of the given timer in milliseconds.
       *
-@@ -109,11 +108,13 @@ declare class TimestampQueryPool {
-      * @async
-      * @returns {Promise<number>|number} The resolved timestamp value.
+@@ -53,14 +52,14 @@ declare class TimestampQueryPool {
+      * @param {Object} timer - The timer, ended and resolved.
+      * @returns {?number} The GPU time, or `null` if queries couldn't be read back.
       */
--    resolveQueriesAsync(): Promise<number> | number;
-+    abstract resolveQueriesAsync(): Promise<number> | number;
+-    getDuration(): number | null;
++    abstract getDuration(timer: object): number | null;
+     /**
+      * Returns the active timers for a new query, `null` without active timers.
+      *
+      * @protected
+      * @returns {?Array<Object>} The timers.
+      */
+-    protected _retainTimers(): Array<Object> | null;
++    protected _retainTimers(): object[] | null;
+     /**
+      * Releases the timers of a query once it is read back, and resolves the ended timers
+      * without pending queries.
+@@ -69,17 +68,19 @@ declare class TimestampQueryPool {
+      * @param {Array<Object>} timers - The timers returned by {@link TimestampQueryPool#_retainTimers}.
+      * @param {boolean} lost - Whether the query couldn't be read back.
+      */
+-    protected _releaseTimers(timers: Array<Object>, lost: boolean): void;
++    protected _releaseTimers(timers: object[], lost: boolean): void;
+     /**
+      * Reads back the queries that are ready.
+      *
+      * @abstract
+      */
+-    resolveQueries(): void;
++    abstract resolveQueries(): void;
      /**
       * Dispose of the query pool.
       *
