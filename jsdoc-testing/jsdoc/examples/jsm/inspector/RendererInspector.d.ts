@@ -1,0 +1,48 @@
+export class RendererInspector extends InspectorBase {
+    currentFrame: Object | null;
+    currentContext: any;
+    currentRender: any;
+    currentCompute: any;
+    currentNodes: any[] | null;
+    lastFrame: Object | null;
+    frames: any[];
+    framesLib: {};
+    maxFrames: number;
+    _lastFinishTime: number;
+    _lastRenderedFinishTime: number;
+    overdraw: boolean;
+    _overdrawMaterial: MeshBasicNodeMaterial | null;
+    _renderingOverdraw: boolean;
+    isRendererInspector: boolean;
+    getParent(): any;
+    fps: number | undefined;
+    _renderOverdraw(): void;
+    _getFPS(): number;
+    _createFrame(): {
+        frameId: any;
+        finished: boolean;
+        pendingTimers: number;
+        deltaTime: number;
+        startTime: number;
+        finishTime: number;
+        miscellaneous: number;
+        children: never[];
+        renders: never[];
+        computes: never[];
+    };
+    getPrimaryPass(): any;
+    getFrame(): Object | null;
+    getFrameById(frameId: any): any;
+    updateTabs(): void;
+    resolveFrame(): void;
+    _beginTimer(stats: any): void;
+    _endTimer(frame: any, stats: any): void;
+    _resolveFrameIfComplete(frame: any): void;
+    get isAvailable(): boolean;
+    addFrame(frame: any): void;
+    inspect(node: any): void;
+    beginCompute(uid: any, computeNode: any): void;
+    beginRender(uid: any, scene: any, camera: any, renderTarget: any): void;
+}
+import { InspectorBase } from 'three/webgpu';
+import { MeshBasicNodeMaterial } from 'three/webgpu';

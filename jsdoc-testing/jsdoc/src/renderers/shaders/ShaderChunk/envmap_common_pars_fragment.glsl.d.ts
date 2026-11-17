@@ -1,0 +1,2 @@
+declare const _default: "\n#ifdef USE_ENVMAP\n\n\tuniform float envMapIntensity;\n\tuniform mat3 envMapRotation;\n\tuniform samplerCube envMap;\n\n\t#ifdef ENVMAP_TYPE_PMREM\n\n\t\t// Invert PMREMGenerator.lodToRoughness(). Matches Filament's perceptualRoughnessToLod().\n\t\t// https://github.com/google/filament/blob/main/shaders/src/surface_light_indirect.fs\n\t\tfloat roughnessToMip( const in float roughness ) {\n\n\t\t\tfloat r = clamp( roughness, 0.0, 1.0 );\n\n\t\t\treturn ENVMAP_MAX_LOD * r * ( 2.0 - r );\n\n\t\t}\n\n\t#endif\n\n#endif\n";
+export default _default;
