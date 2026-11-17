@@ -23,6 +23,28 @@ export const packNormalToRGB: (node: Node<"vec3"> | Vector3) => Node<"vec3">;
 export const unpackRGBToNormal: (node: Node<"vec3"> | Node<"vec4"> | Vector3) => Node<"vec3">;
 
 /**
+ * Encodes a nonzero direction as signed octahedral coordinates in `[-1, 1]`
+ * (Cigolle et al., {@link https://jcgt.org/published/0003/02/01/ A Survey of Efficient Representations for Independent Unit Vectors}, 2014).
+ * Store the result in a signed two-channel format such as RG16F or RG16 snorm. The input does not need to be normalized.
+ *
+ * @tsl
+ * @function
+ * @param {Node<vec3>} normal - The nonzero direction to encode.
+ * @return {Node<vec2>} The signed octahedral coordinates.
+ */
+export const packNormalToOctahedral: (normal: Node<"vec3"> | Vector3) => Node<"vec2">;
+
+/**
+ * Decodes signed octahedral coordinates into a unit direction.
+ *
+ * @tsl
+ * @function
+ * @param {Node<vec2>} encoded - The signed octahedral coordinates in `[-1, 1]`.
+ * @return {Node<vec3>} The normalized direction.
+ */
+export const unpackOctahedralToNormal: (encoded: Node<"vec2"> | Vector2) => Node<"vec3">;
+
+/**
  * Unpacks a tangent space normal, reconstructing the Z component by projecting the X,Y coordinates onto the hemisphere.
  * The X,Y coordinates are expected to be in the [-1, 1] range.
  *

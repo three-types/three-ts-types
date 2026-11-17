@@ -23106,7 +23106,7 @@ index f930f57cc..8a139c828 100644
          }
      }
 diff --git a/examples-testing/examples/webgpu_postprocessing_ssr_animation.ts b/examples-testing/examples/webgpu_postprocessing_ssr_animation.ts
-index c4989ea13..8b4ba5b94 100644
+index c25766760..e8ea3522e 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ssr_animation.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ssr_animation.ts
 @@ -42,10 +42,16 @@ const params = {
@@ -23130,7 +23130,16 @@ index c4989ea13..8b4ba5b94 100644
  let time = 0;
  
  init();
-@@ -260,7 +266,7 @@ async function init() {
+@@ -186,7 +192,7 @@ async function init() {
+     const scenePassVelocity = scenePass.getTextureNode('velocity');
+     const scenePassDiffuseColor = scenePass.getTextureNode('diffuseColor');
+ 
+-    const normalDecode = value => unpackOctahedralToNormal(value.rg);
++    const normalDecode = (value: THREE.Node<'vec4'>) => unpackOctahedralToNormal(value.rg);
+     const sceneNormal = sample(uv => normalDecode(scenePassNormal.sample(uv)));
+     const sceneRoughness = sample(uv => scenePassVelocity.sample(uv).z);
+ 
+@@ -267,7 +273,7 @@ async function init() {
                  break;
          }
  
@@ -23139,7 +23148,7 @@ index c4989ea13..8b4ba5b94 100644
          renderPipeline.outputColorTransform = true;
          renderPipeline.needsUpdate = true;
      }
-@@ -276,24 +282,24 @@ async function init() {
+@@ -283,24 +289,24 @@ async function init() {
  
      // GUI
  
@@ -23169,10 +23178,10 @@ index c4989ea13..8b4ba5b94 100644
          .add(params, 'roughness', 0, 1)
          .name('Roughness')
 diff --git a/examples-testing/examples/webgpu_postprocessing_ssr_mirror.ts b/examples-testing/examples/webgpu_postprocessing_ssr_mirror.ts
-index d5eb9244e..dec01d610 100644
+index e7c593c6f..d6e2bd9d8 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ssr_mirror.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ssr_mirror.ts
-@@ -40,8 +40,12 @@ const params = {
+@@ -41,8 +41,12 @@ const params = {
      blurQuality: 1,
  };
  
@@ -23187,7 +23196,7 @@ index d5eb9244e..dec01d610 100644
  
  init();
  
-@@ -60,13 +64,13 @@ async function init() {
+@@ -61,13 +65,13 @@ async function init() {
          model = gltf.scene;
  
          model.traverse(function (object) {
@@ -23205,7 +23214,7 @@ index d5eb9244e..dec01d610 100644
              }
          });
  
-@@ -148,14 +152,14 @@ async function init() {
+@@ -152,14 +156,14 @@ async function init() {
          binaryRefine: params.binaryRefine,
      }).toInspector('SSR');
  
@@ -23222,7 +23231,7 @@ index d5eb9244e..dec01d610 100644
  
          switch (params.output) {
              case 'Beauty':
-@@ -182,14 +186,14 @@ async function init() {
+@@ -186,14 +190,14 @@ async function init() {
  
      // GUI
  
@@ -23239,7 +23248,7 @@ index d5eb9244e..dec01d610 100644
      ssrGui.add(params, 'enabled').name('Enabled').onChange(updateOutput);
      ssrGui.add(params, 'intensity', 0, 1).name('Intensity').onChange(updateParameters);
      ssrGui.add(params, 'quality', 0, 1, 0.01).name('Quality').onChange(updateParameters);
-@@ -197,20 +201,21 @@ async function init() {
+@@ -201,20 +205,21 @@ async function init() {
      ssrGui.add(params, 'maxDistance', 0, 1).name('Max distance').onChange(updateParameters);
      ssrGui.add(params, 'thickness', 0, 0.05).name('Thickness').onChange(updateParameters);
  
@@ -23265,10 +23274,10 @@ index d5eb9244e..dec01d610 100644
          });
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_ssr_stochastic.ts b/examples-testing/examples/webgpu_postprocessing_ssr_stochastic.ts
-index 737e55a84..a7e73cf6c 100644
+index 5789c3230..8f8a098e6 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ssr_stochastic.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ssr_stochastic.ts
-@@ -23,9 +23,9 @@ import {
+@@ -24,9 +24,9 @@ import {
      renderOutput,
      saturation,
  } from 'three/tsl';
@@ -23281,7 +23290,7 @@ index 737e55a84..a7e73cf6c 100644
  import { sharpen } from 'three/addons/tsl/display/SharpenNode.js';
  import { traa } from 'three/addons/tsl/display/TRAANode.js';
  
-@@ -40,7 +40,7 @@ import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
+@@ -41,7 +41,7 @@ import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
  // but scoped to this example rather than modifying the core library.
  const _indirectSpecular = THREE.PhysicalLightingModel.prototype.indirectSpecular;
  THREE.PhysicalLightingModel.prototype.indirectSpecular = function (builder) {
@@ -23290,7 +23299,7 @@ index 737e55a84..a7e73cf6c 100644
  
      if (this.clearcoatRadiance) {
          this.clearcoatRadiance.assign(vec3(0));
-@@ -51,7 +51,7 @@ THREE.PhysicalLightingModel.prototype.indirectSpecular = function (builder) {
+@@ -52,7 +52,7 @@ THREE.PhysicalLightingModel.prototype.indirectSpecular = function (builder) {
  
  const OUTPUT_COMPARE_DENOISE = 8;
  const OUTPUT_COMPARE_SSR = 9;
@@ -23299,7 +23308,7 @@ index 737e55a84..a7e73cf6c 100644
  const compareSplit = uniform(0.5);
  const compareResolution = uniform(new THREE.Vector2(window.innerWidth, window.innerHeight));
  
-@@ -59,7 +59,7 @@ function isCompareMode() {
+@@ -60,7 +60,7 @@ function isCompareMode() {
      return params.output === OUTPUT_COMPARE_DENOISE || params.output === OUTPUT_COMPARE_SSR;
  }
  
@@ -23308,7 +23317,7 @@ index 737e55a84..a7e73cf6c 100644
      const compareColor = mix(left, right, step(compareSplit, screenUV.x));
      const lineWidth = float(1).div(compareResolution.x);
      const onLine = float(1).sub(step(lineWidth, abs(screenUV.x.sub(compareSplit))));
-@@ -115,11 +115,23 @@ const params = {
+@@ -116,11 +116,23 @@ const params = {
      },
  };
  
@@ -23337,7 +23346,7 @@ index 737e55a84..a7e73cf6c 100644
  
  init();
  
-@@ -135,12 +147,12 @@ async function init() {
+@@ -136,12 +148,12 @@ async function init() {
          gltf.scene.scale.multiplyScalar(0.1);
  
          gltf.scene.traverse(function (object) {
@@ -23353,7 +23362,16 @@ index 737e55a84..a7e73cf6c 100644
          });
  
          model = gltf.scene;
-@@ -295,18 +307,18 @@ async function init() {
+@@ -219,7 +231,7 @@ async function init() {
+     const diffuseTexture = scenePass.getTexture('diffuseColor');
+     diffuseTexture.type = THREE.UnsignedByteType;
+ 
+-    const normalDecode = value => unpackOctahedralToNormal(value.rg);
++    const normalDecode = (value: THREE.Node<'vec4'>) => unpackOctahedralToNormal(value.rg);
+     const sceneNormal = sample(uv => normalDecode(scenePassNormal.sample(uv)));
+ 
+     // metalness in diffuseColor.a, roughness in velocity.z (no separate metalrough MRT)
+@@ -303,18 +315,18 @@ async function init() {
          'Accumulation Speed (Alpha)': 6,
      };
  
@@ -23375,7 +23393,7 @@ index 737e55a84..a7e73cf6c 100644
      denoiseGui.add(params.denoise, 'enabled').name('Enabled').onChange(applyParams);
      denoiseGui.add(params.denoise, 'lumaPhi', 0, 3).name('Luma phi').onChange(applyParams);
      denoiseGui.add(params.denoise, 'depthPhi', 0, 50).name('Depth phi').onChange(applyParams);
-@@ -316,7 +328,7 @@ async function init() {
+@@ -324,7 +336,7 @@ async function init() {
      denoiseGui.add(params.denoise, 'strength', 0.5, 0.95).name('Strength').onChange(applyParams);
      denoiseGui.add(params.denoise, 'adapt', 0, 1).name('Adapt').onChange(applyParams);
  
@@ -23384,7 +23402,7 @@ index 737e55a84..a7e73cf6c 100644
      temporalReprojectGui
          .add(params.temporalReproject, 'maxFrames', 1, 128, 1)
          .name('History frames')
-@@ -334,24 +346,25 @@ async function init() {
+@@ -342,24 +354,25 @@ async function init() {
          .name('Hit point reprojection')
          .onChange(applyParams);
  
@@ -23415,7 +23433,7 @@ index 737e55a84..a7e73cf6c 100644
          lightGui
              .add(directionalLight.position, axis, -30, 30)
              .name(axis.toUpperCase())
-@@ -403,7 +416,7 @@ function applyParams() {
+@@ -411,7 +424,7 @@ function applyParams() {
      }
  }
  
@@ -23424,7 +23442,7 @@ index 737e55a84..a7e73cf6c 100644
      let rgb = source.rgb;
  
      rgb = renderOutput(vec4(rgb, 1), THREE.AgXToneMapping, THREE.SRGBColorSpace).rgb;
-@@ -414,7 +427,7 @@ function applyGrading(source) {
+@@ -422,7 +435,7 @@ function applyGrading(source) {
      return vec4(rgb, 1);
  }
  
@@ -23433,7 +23451,7 @@ index 737e55a84..a7e73cf6c 100644
      if (!params.post.traa) return applyGrading(source);
      let temporal = temporalOutputs.get(source);
      if (temporal === undefined) {
-@@ -438,7 +451,7 @@ function applyPost() {
+@@ -446,7 +459,7 @@ function applyPost() {
  function updateOutputNode() {
      if (!renderPipeline) return;
  
@@ -23442,7 +23460,7 @@ index 737e55a84..a7e73cf6c 100644
  
      switch (params.output) {
          case 0:
-@@ -468,7 +481,7 @@ function updateOutputNode() {
+@@ -476,7 +489,7 @@ function updateOutputNode() {
      releaseCompareControls();
  
      renderPipeline.outputColorTransform = params.output === 6 || params.output === 7;
@@ -23451,7 +23469,7 @@ index 737e55a84..a7e73cf6c 100644
      renderPipeline.needsUpdate = true;
  }
  
-@@ -484,7 +497,7 @@ function releaseCompareControls() {
+@@ -492,7 +505,7 @@ function releaseCompareControls() {
      controls.enabled = true;
  }
  
