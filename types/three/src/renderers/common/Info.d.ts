@@ -48,7 +48,6 @@ declare class Info {
      * @property {number} triangles - The number of rendered triangle primitives of the current frame.
      * @property {number} points - The number of rendered point primitives of the current frame.
      * @property {number} lines - The number of rendered line primitives of the current frame.
-     * @property {number} timestamp - The timestamp of the frame.
      */
     readonly render: {
         calls: number;
@@ -57,7 +56,6 @@ declare class Info {
         triangles: number;
         points: number;
         lines: number;
-        timestamp: number;
     };
     /**
      * Compute related metrics.
@@ -66,12 +64,10 @@ declare class Info {
      * @readonly
      * @property {number} calls - The number of compute calls since the app has been started.
      * @property {number} frameCalls - The number of compute calls of the current frame.
-     * @property {number} timestamp - The timestamp of the frame when using `renderer.computeAsync()`.
      */
     readonly compute: {
         calls: number;
         frameCalls: number;
-        timestamp: number;
     };
     /**
      * Memory related metrics.

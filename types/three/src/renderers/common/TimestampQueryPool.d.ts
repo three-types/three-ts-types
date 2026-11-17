@@ -1,5 +1,7 @@
 /**
- * Abstract base class of a timestamp query pool.
+ * Abstract base class of a timestamp query pool. While GPU timers are active, the backend
+ * allocates queries for its render and compute calls. Each query keeps the timers that were
+ * active when it was allocated and adds its timestamps to them once it is read back.
  *
  * @abstract
  */
@@ -11,32 +13,12 @@ declare abstract class TimestampQueryPool {
      */
     constructor(maxQueries?: number);
     /**
-     * Whether to track timestamps or not.
-     *
-     * @type {boolean}
-     * @default true
-     */
-    trackTimestamp: boolean;
-    /**
      * Maximum number of queries this pool can hold.
      *
      * @type {number}
      * @default 256
      */
     maxQueries: number;
-    /**
-     * How many queries allocated so far.
-     *
-     * @type {number}
-     * @default 0
-     */
-    currentQueryIndex: number;
-    /**
-     * Tracks offsets for different contexts.
-     *
-     * @type {Map<string, number>}
-     */
-    queryOffsets: Map<string, number>;
     /**
      * Whether the pool has been disposed or not.
      *
@@ -45,70 +27,54 @@ declare abstract class TimestampQueryPool {
      */
     isDisposed: boolean;
     /**
-     * The total frame duration until the next update.
+     * The active GPU timers.
      *
-     * @type {number}
-     * @default 0
+     * @type {Set<Object>}
      */
-    lastValue: number;
+    timers: Set<object>;
     /**
-     * Stores all timestamp frames.
+     * Starts a GPU timer. It measures the queries allocated until {@link TimestampQueryPool#endTimer}.
      *
-     * @type {Array<number>}
+     * @returns {Object} The timer.
      */
-    frames: number[];
+    beginTimer(): object;
     /**
-     * This property is used to avoid multiple concurrent resolve operations.
-     * The WebGL backend uses it as a boolean flag. In context of WebGPU, it holds
-     * the promise of the current resolve operation.
+     * Ends the given GPU timer.
      *
-     * @type {boolean|Promise<number>}
-     * @default false
+     * @param {Object} timer - The timer returned by {@link TimestampQueryPool#beginTimer}.
+     * @returns {Promise<Object>} A Promise that resolves with the timer once all its queries are read back.
      */
-    pendingResolve: boolean | Promise<number>;
+    endTimer(timer: object): Promise<object>;
     /**
-     * Stores the latest timestamp for each render context.
-     *
-     * @type {Map<string, number>}
-     */
-    timestamps: Map<string, number>;
-    /**
-     * Returns all timestamp frames.
-     *
-     * @return {Array<number>} The timestamp frames.
-     */
-    getTimestampFrames(): number[];
-    /**
-     * Returns the timestamp for a given render context.
-     *
-     * @param {string} uid - A unique identifier for the render context.
-     * @return {?number} The timestamp, or undefined if not available.
-     */
-    getTimestamp(uid: string): number | null;
-    /**
-     * Returns whether a timestamp is available for a given render context.
-     *
-     * @param {string} uid - A unique identifier for the render context.
-     * @return {boolean} True if a timestamp is available, false otherwise.
-     */
-    hasTimestampQuery(uid: string): boolean;
-    /**
-     * Allocate queries for a specific uid.
+     * Returns the GPU time of the given timer in milliseconds.
      *
      * @abstract
-     * @param {string} uid - A unique identifier for the render context.
-     * @param {number} frameId - The current frame identifier.
-     * @returns {?number}
+     * @param {Object} timer - The timer, ended and resolved.
+     * @returns {?number} The GPU time, or `null` if queries couldn't be read back.
      */
-    abstract allocateQueriesForContext(uid: string, frameId: number): number | null;
+    abstract getDuration(timer: object): number | null;
     /**
-     * Resolve all timestamps and return data (or process them).
+     * Returns the active timers for a new query, `null` without active timers.
+     *
+     * @protected
+     * @returns {?Array<Object>} The timers.
+     */
+    protected _retainTimers(): object[] | null;
+    /**
+     * Releases the timers of a query once it is read back, and resolves the ended timers
+     * without pending queries.
+     *
+     * @protected
+     * @param {Array<Object>} timers - The timers returned by {@link TimestampQueryPool#_retainTimers}.
+     * @param {boolean} lost - Whether the query couldn't be read back.
+     */
+    protected _releaseTimers(timers: object[], lost: boolean): void;
+    /**
+     * Reads back the queries that are ready.
      *
      * @abstract
-     * @async
-     * @returns {Promise<number>|number} The resolved timestamp value.
      */
-    abstract resolveQueriesAsync(): Promise<number> | number;
+    abstract resolveQueries(): void;
     /**
      * Dispose of the query pool.
      *

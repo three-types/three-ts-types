@@ -1,5 +1,5 @@
 import { Camera } from "../../cameras/Camera.js";
-import { CoordinateSystem, ShadowMapType, TextureDataType, TimestampQuery, ToneMapping } from "../../constants.js";
+import { CoordinateSystem, ShadowMapType, TextureDataType, ToneMapping } from "../../constants.js";
 import { BufferAttribute, TypedArray } from "../../core/BufferAttribute.js";
 import { BufferGeometry, GeometryGroup } from "../../core/BufferGeometry.js";
 import { Object3D } from "../../core/Object3D.js";
@@ -1024,7 +1024,12 @@ declare class Renderer {
      * @return {Promise<boolean>} A Promise that resolves with a bool that indicates whether the feature is supported or not.
      */
     hasFeatureAsync(name: string): Promise<boolean>;
-    resolveTimestampsAsync(type?: TimestampQuery): Promise<number | undefined>;
+    /**
+     * @async
+     * @deprecated since r188. Use {@link GPUTimer} instead.
+     * @return {Promise<null>} A Promise that resolves with `null`.
+     */
+    resolveTimestampsAsync(): Promise<null>;
     /**
      * Checks if the given feature is supported by the selected backend. If the
      * renderer has not been initialized, this method always returns `false`.
