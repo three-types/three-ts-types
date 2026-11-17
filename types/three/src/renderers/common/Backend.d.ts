@@ -27,7 +27,9 @@ export default abstract class Backend {
 
     getDomElement(): HTMLCanvasElement | OffscreenCanvas;
 
-    beginTimer(): number | object | null;
+    beginTimer(): object | null;
 
-    endTimer(measurement: number | object | null): Promise<number | null>;
+    endTimer(timer: object | null): Promise<number | null>;
+
+    resolveTimestamps(): void;
 }

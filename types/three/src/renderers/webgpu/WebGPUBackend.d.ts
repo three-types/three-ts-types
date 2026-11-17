@@ -8,6 +8,9 @@ interface GPUCanvasContext {}
 export interface WebGPUBackendParameters extends BackendParameters {
     alpha?: boolean | undefined;
     requiredLimits?: Record<string, number> | undefined;
+    /**
+     * @deprecated "trackTimestamp" has been removed. Use "GPUTimer" instead.
+     */
     trackTimestamp?: boolean | undefined;
     device?: GPUDevice | undefined;
     powerPreference?:
