@@ -8,14 +8,14 @@ import { Water } from 'three/addons/objects/Water.js';
 import { Sky } from 'three/addons/objects/Sky.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 
-let container, stats, timer;
-let camera, scene, renderer;
-let controls, water, sun, sky, mesh, bloomPass;
+let container, stats: Stats, timer: THREE.Timer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+let controls: OrbitControls, water: Water, sun: THREE.Vector3, sky: Sky, mesh: THREE.Mesh, bloomPass: UnrealBloomPass;
 
 init();
 
 function init() {
-    container = document.getElementById('container');
+    container = document.getElementById('container')!;
 
     //
 
@@ -92,7 +92,7 @@ function init() {
     const pmremGenerator = new THREE.PMREMGenerator(renderer);
     const sceneEnv = new THREE.Scene();
 
-    let renderTarget;
+    let renderTarget: THREE.WebGLRenderTarget;
 
     function updateSun() {
         const phi = THREE.MathUtils.degToRad(90 - parameters.elevation);

@@ -23,10 +23,10 @@ import { TeapotGeometry } from 'three/addons/geometries/TeapotGeometry.js';
 
 const RESOLVE_LAYER = 2;
 
-let camera, scene, renderer;
-let renderPipeline;
-let lightGroup, planesGroup;
-let params;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let renderPipeline: THREE.RenderPipeline;
+let lightGroup: THREE.Group, planesGroup: THREE.Group;
+let params: { mode: string; animated: boolean };
 
 const timer = new THREE.Timer();
 
@@ -185,7 +185,7 @@ function init() {
 
     // transparent pass
 
-    const opaqueDepthTexture = opaquePass.getTexture('depth');
+    const opaqueDepthTexture = opaquePass.getTexture('depth') as THREE.DepthTexture;
 
     const transparentPass = pass(scene, camera, { depthTexture: opaqueDepthTexture, autoClearDepth: false });
     transparentPass.name = 'transparent pass';
@@ -213,8 +213,8 @@ function init() {
         animated: true,
     };
 
-    const gui = renderer.inspector.createParameters('Settings');
-    gui.add(params, 'mode', ['forward', 'deferred']).onChange(value => {
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
+    gui.add(params, 'mode', ['forward', 'deferred']).onChange((value: string) => {
         renderPipeline.outputNode = value === 'forward' ? forwardPass : deferredNode;
         renderPipeline.needsUpdate = true;
     });

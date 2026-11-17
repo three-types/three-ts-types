@@ -3,9 +3,9 @@ import { texture } from 'three/tsl';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let camera, scene, controls, renderer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, controls: OrbitControls, renderer: THREE.WebGPURenderer;
 
-let quad, renderTarget;
+let quad: THREE.QuadMesh, renderTarget: THREE.RenderTarget;
 
 const dpr = window.devicePixelRatio;
 

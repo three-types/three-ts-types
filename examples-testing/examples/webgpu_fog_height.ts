@@ -4,8 +4,8 @@ import { exponentialHeightFogFactor, uniform, renderGroup, fog, color } from 'th
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let camera, scene, renderer;
-let controls;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let controls: OrbitControls;
 
 init();
 
@@ -69,7 +69,7 @@ function init() {
 
     // gui
 
-    const gui = renderer.inspector.createParameters('Fog Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Fog Settings');
 
     gui.add(density, 'value', 0.001, 0.1).step(0.0001).name('Density');
     gui.add(height, 'value', -5, 5).name('Height');

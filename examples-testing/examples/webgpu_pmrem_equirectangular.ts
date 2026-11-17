@@ -5,7 +5,7 @@ import { UltraHDRLoader } from 'three/addons/loaders/UltraHDRLoader.js';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let camera, scene, renderer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
 
 init();
 

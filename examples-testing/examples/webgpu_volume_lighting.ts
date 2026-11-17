@@ -10,9 +10,9 @@ import { TeapotGeometry } from 'three/addons/geometries/TeapotGeometry.js';
 import { bayer16 } from 'three/addons/tsl/math/Bayer.js';
 import { gaussianBlur } from 'three/addons/tsl/display/GaussianBlurNode.js';
 
-let renderer, scene, camera;
-let volumetricMesh, teapot, pointLight, spotLight;
-let renderPipeline;
+let renderer: THREE.WebGPURenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
+let volumetricMesh: THREE.Mesh, teapot: THREE.Mesh, pointLight: THREE.PointLight, spotLight: THREE.SpotLight;
+let renderPipeline: THREE.RenderPipeline;
 
 init();
 
@@ -86,12 +86,12 @@ function init() {
     const volumetricMaterial = new THREE.VolumeNodeMaterial();
     volumetricMaterial.steps = 12;
     volumetricMaterial.offsetNode = bayer16(screenCoordinate); // Add dithering to reduce banding
-    volumetricMaterial.scatteringNode = Fn(({ positionRay }) => {
+    volumetricMaterial.scatteringNode = Fn(({ positionRay }: { positionRay: THREE.Node<'vec3'> }) => {
         // Return the amount of fog based on the noise texture
 
         const timeScaled = vec3(time, 0, time.mul(0.3));
 
-        const sampleGrain = (scale, timeScale = 1) =>
+        const sampleGrain = (scale: number, timeScale = 1) =>
             texture3D(noiseTexture3D, positionRay.add(timeScaled.mul(timeScale)).mul(scale).mod(1), 0).r.add(0.5);
 
         let density = sampleGrain(0.1);
@@ -198,7 +198,7 @@ function init() {
         denoise: true,
     };
 
-    const gui = renderer.inspector.createParameters('Volumetric Lighting');
+    const gui = (renderer.inspector as Inspector).createParameters('Volumetric Lighting');
 
     const rayMarching = gui.addFolder('Ray Marching');
     rayMarching.add(params, 'resolution', 0.1, 1).onChange(resolution => {

@@ -16,10 +16,10 @@ import {
 
 import WebGPU from 'three/addons/capabilities/WebGPU.js';
 
-let camera, scene, renderer;
-let computeInitNode, computeToPing, computeToPong;
-let pingTexture, pongTexture;
-let material;
+let camera: THREE.OrthographicCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let computeInitNode: THREE.ComputeNode, computeToPing: THREE.ComputeNode, computeToPong: THREE.ComputeNode;
+let pingTexture: THREE.StorageTexture, pongTexture: THREE.StorageTexture;
+let material: THREE.MeshBasicMaterial;
 let phase = true;
 let lastUpdate = -1;
 
@@ -55,7 +55,7 @@ async function init() {
         pongTexture.type = THREE.HalfFloatType;
     }
 
-    const rand2 = Fn(([n]) => {
+    const rand2 = Fn(([n]: [THREE.Node<'vec2'>]) => {
         return n.dot(vec2(12.9898, 4.1414)).sin().mul(43758.5453).fract();
     });
 
@@ -81,7 +81,7 @@ async function init() {
     computeInitNode = computeInit().compute(width * height);
 
     // compute ping-pong: blur function using .load() for textureLoad
-    const blur = Fn(([readTex, uv]) => {
+    const blur = Fn(([readTex, uv]: [THREE.StorageTextureNode, THREE.Node<'ivec2'>]) => {
         const c0 = readTex.load(uv.add(ivec2(-1, 1)));
         const c1 = readTex.load(uv.add(ivec2(-1, -1)));
         const c2 = readTex.load(uv.add(ivec2(0, 0)));
@@ -92,7 +92,7 @@ async function init() {
     });
 
     // compute loop: read from one texture, blur, write to another
-    const computePingPong = Fn(([readTex, writeTex]) => {
+    const computePingPong = Fn(([readTex, writeTex]: [THREE.StorageTextureNode, THREE.StorageTextureNode]) => {
         const posX = instanceIndex.mod(width);
         const posY = instanceIndex.div(width);
         const indexUV = ivec2(int(posX), int(posY));

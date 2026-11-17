@@ -42,10 +42,16 @@ const params = {
     orbit: false,
 };
 
-let camera, scene, renderer, renderPipeline;
-let controls, timer, floor, torusKnot;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    renderPipeline: THREE.RenderPipeline;
+let controls: OrbitControls,
+    timer: THREE.Timer,
+    floor: THREE.Mesh<THREE.PlaneGeometry, THREE.MeshStandardNodeMaterial>,
+    torusKnot: THREE.Mesh;
 
-const spheres = [];
+const spheres: THREE.Mesh<THREE.SphereGeometry, THREE.MeshStandardNodeMaterial>[] = [];
 let time = 0;
 
 init();
@@ -267,7 +273,7 @@ async function init() {
                 break;
         }
 
-        renderPipeline.outputNode = outputNode;
+        renderPipeline.outputNode = outputNode!;
         renderPipeline.outputColorTransform = true;
         renderPipeline.needsUpdate = true;
     }
@@ -283,24 +289,24 @@ async function init() {
 
     // GUI
 
-    const displayGui = renderer.inspector.createParameters('Display');
+    const displayGui = (renderer.inspector as Inspector).createParameters('Display');
     displayGui.add(params, 'output', ['Beauty', 'SSR', 'SSR DN']).name('Output').onChange(updateOutput);
     displayGui.add(params, 'traa').name('TRAA').onChange(updateOutput);
 
-    const ssrGui = renderer.inspector.createParameters('SSR');
+    const ssrGui = (renderer.inspector as Inspector).createParameters('SSR');
     ssrGui.add(params, 'quality', 0, 1, 0.01).name('Quality').onChange(updateParameters);
     ssrGui.add(params, 'binaryRefine').name('Binary refine').onChange(updateParameters);
     ssrGui.add(params, 'maxDistance', 0.01, 50, 0.01).name('Max distance').onChange(updateParameters);
     ssrGui.add(params, 'thickness', 0, 0.5, 0.001).name('Thickness').onChange(updateParameters);
 
-    const denoiseGui = renderer.inspector.createParameters('Denoising');
+    const denoiseGui = (renderer.inspector as Inspector).createParameters('Denoising');
     denoiseGui
         .add(params, 'denoise')
         .name('Enabled')
         .onChange(value => (denoiseEnabled.value = Number(value)));
     denoiseGui.add(params, 'lumaPhi', 0, 3).name('Luma phi').onChange(updateParameters);
 
-    const sceneGui = renderer.inspector.createParameters('Scene');
+    const sceneGui = (renderer.inspector as Inspector).createParameters('Scene');
     sceneGui
         .add(params, 'roughness', 0, 1)
         .name('Roughness')

@@ -6,9 +6,14 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import * as Curves from 'three/addons/curves/CurveExtras.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let container, stats;
+let container: HTMLElement, stats: Stats;
 
-let camera, scene, renderer, splineCamera, cameraHelper, cameraEye;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGLRenderer,
+    splineCamera: THREE.PerspectiveCamera,
+    cameraHelper: THREE.CameraHelper,
+    cameraEye: THREE.Mesh;
 
 const direction = new THREE.Vector3();
 const binormal = new THREE.Vector3();
@@ -78,9 +83,18 @@ const splines = {
     SampleClosedSpline: sampleClosedSpline,
 };
 
-let parent, tubeGeometry, mesh;
+let parent: THREE.Object3D, tubeGeometry: THREE.TubeGeometry, mesh: THREE.Mesh;
 
-const params = {
+const params: {
+    spline: keyof typeof splines;
+    scale: number;
+    extrusionSegments: number;
+    radiusSegments: number;
+    closed: boolean;
+    animationView: boolean;
+    lookAhead: boolean;
+    cameraHelper: boolean;
+} = {
     spline: 'GrannyKnot',
     scale: 4,
     extrusionSegments: 100,
@@ -125,7 +139,7 @@ function setScale() {
     mesh.scale.set(params.scale, params.scale, params.scale);
 }
 
-function addGeometry(geometry) {
+function addGeometry(geometry: THREE.BufferGeometry) {
     // 3D shape
 
     mesh = new THREE.Mesh(geometry, material);
@@ -143,7 +157,7 @@ function animateCamera() {
 init();
 
 function init() {
-    container = document.getElementById('container');
+    container = document.getElementById('container')!;
 
     // camera
 
@@ -202,7 +216,7 @@ function init() {
     const gui = new GUI({ width: 285 });
 
     const folderGeometry = gui.addFolder('Geometry');
-    folderGeometry.add(params, 'spline', Object.keys(splines)).onChange(function () {
+    folderGeometry.add(params, 'spline', Object.keys(splines) as (keyof typeof splines)[]).onChange(function () {
         addTube();
     });
     folderGeometry

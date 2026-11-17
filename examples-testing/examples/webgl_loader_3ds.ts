@@ -3,8 +3,8 @@ import * as THREE from 'three';
 import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
 import { TDSLoader } from 'three/addons/loaders/TDSLoader.js';
 
-let container, controls;
-let camera, scene, renderer;
+let container: HTMLDivElement, controls: TrackballControls;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
 
 init();
 
@@ -29,9 +29,9 @@ function init() {
     loader.setResourcePath('models/3ds/portalgun/textures/');
     loader.load('models/3ds/portalgun/portalgun.3ds', function (object) {
         object.traverse(function (child) {
-            if (child.isMesh) {
-                child.material.specular.setScalar(0.1);
-                child.material.normalMap = normal;
+            if ((child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhongMaterial>).isMesh) {
+                (child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhongMaterial>).material.specular.setScalar(0.1);
+                (child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhongMaterial>).material.normalMap = normal;
             }
         });
 

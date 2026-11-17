@@ -3,8 +3,11 @@ import { output, saturation, uniform, vec4 } from 'three/tsl';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let camera, scene, renderer, renderPipeline;
-let object;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    renderPipeline: THREE.DirectRenderPipeline;
+let object: THREE.Object3D;
 
 init();
 
@@ -55,7 +58,7 @@ function init() {
 
     // GUI
 
-    const gui = renderer.inspector.createParameters('Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
     gui.add(saturationFactor, 'value', 0, 1, 0.01).name('Saturation');
 
     //

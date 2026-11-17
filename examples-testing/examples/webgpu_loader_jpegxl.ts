@@ -18,9 +18,9 @@ scene.background = new THREE.Color(0x17191e);
 const camera = new THREE.OrthographicCamera(-4, 4, 2, -2, 0.1, 10);
 camera.position.z = 2;
 const geometry = new THREE.PlaneGeometry(2.8, 1.4);
-const labels = [];
+const labels: { label: HTMLDivElement; x: number; y: number }[] = [];
 
-const gui = renderer.inspector.createParameters('JPEG XL');
+const gui = (renderer.inspector as Inspector).createParameters('JPEG XL');
 gui.add(renderer, 'toneMapping', {
     Linear: THREE.LinearToneMapping,
     Reinhard: THREE.ReinhardToneMapping,
@@ -43,7 +43,7 @@ function animate() {
     renderer.render(scene, camera);
 }
 
-async function addImage(loader, name, url, x) {
+async function addImage(loader: THREE.Loader<THREE.DataTexture>, name: string, url: string, x: number) {
     const material = new THREE.MeshStandardNodeMaterial({ color: 0x000000, emissive: 0xffffff });
     const mesh = new THREE.Mesh(geometry, material);
     mesh.name = name + ' HDR';
@@ -57,14 +57,15 @@ async function addImage(loader, name, url, x) {
     } catch (error) {
         material.emissive.set(0x252830);
         material.toneMapped = false;
-        addLabel('Not supported: ' + error.message.replace(/^\w+Loader: /, ''), x, 0).style.fontSize = '12px';
+        addLabel('Not supported: ' + (error as Error).message.replace(/^\w+Loader: /, ''), x, 0).style.fontSize =
+            '12px';
         console.warn(name + ' HDR not supported:', error);
     }
 
     material.needsUpdate = true;
 }
 
-function addLabel(text, x, y) {
+function addLabel(text: string, x: number, y: number) {
     const label = document.createElement('div');
     label.className = 'lbl';
     label.textContent = text;

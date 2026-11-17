@@ -13,13 +13,13 @@ const params = {
     backgroundBlurriness: 0.0,
 };
 
-let stats;
-let camera, scene, renderer, controls;
+let stats: Stats;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, controls: OrbitControls;
 
 init();
 
 async function init() {
-    const container = document.getElementById('container');
+    const container = document.getElementById('container')!;
 
     camera = new THREE.PerspectiveCamera(params.fov, window.innerWidth / window.innerHeight, 0.1, 50);
     camera.position.set(7, 0, 0);
@@ -93,7 +93,7 @@ async function init() {
 
     const loader = new KTX2Loader().setPath('textures/pmrem/').detectSupport(renderer);
 
-    async function loadTexture(name) {
+    async function loadTexture(name: string) {
         const texture = await loader.loadAsync(`${name}_2k.pmrem.ktx2`);
 
         if (name !== params.image) {

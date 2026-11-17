@@ -5,7 +5,7 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { SimplifyModifier } from 'three/addons/modifiers/SimplifyModifier.js';
 
-let renderer, scene, camera;
+let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
 
 init();
 
@@ -32,7 +32,7 @@ function init() {
     scene.add(camera);
 
     new GLTFLoader().load('models/gltf/LeePerrySmith/LeePerrySmith.glb', function (gltf) {
-        const mesh = gltf.scene.children[0];
+        const mesh = gltf.scene.children[0] as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>;
         mesh.position.x = -3;
         mesh.rotation.y = Math.PI / 2;
         scene.add(mesh);

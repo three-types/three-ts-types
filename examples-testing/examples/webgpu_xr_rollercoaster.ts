@@ -10,10 +10,14 @@ import {
 import { VRButton } from 'three/addons/webxr/VRButton.js';
 import { setupWebGLXRFallback } from 'three/addons/webxr/WebGLXRFallback.js';
 
-let mesh, material, geometry;
-let renderer, renderPipeline;
+let mesh: THREE.Mesh, material: THREE.Material, geometry: THREE.BufferGeometry;
+let renderer: THREE.WebGPURenderer, renderPipeline: THREE.DirectRenderPipeline;
 
-const rendererParameters = { antialias: true, outputBufferType: THREE.UnsignedByteType, multiview: false };
+const rendererParameters: THREE.WebGPURendererParameters = {
+    antialias: true,
+    outputBufferType: THREE.UnsignedByteType,
+    multiview: false,
+};
 
 renderer = createRenderer();
 setRenderer(renderer);
@@ -24,7 +28,7 @@ document.body.appendChild(VRButton.createButton(renderer, { optionalFeatures: ['
 //
 
 function createRenderer(forceWebGL = false) {
-    const parameters = { ...rendererParameters };
+    const parameters: THREE.WebGPURendererParameters = { ...rendererParameters };
 
     if (forceWebGL === true) parameters.forceWebGL = true;
 
@@ -38,7 +42,7 @@ function createRenderer(forceWebGL = false) {
     return renderer;
 }
 
-function setRenderer(newRenderer, oldRenderer = null) {
+function setRenderer(newRenderer: THREE.WebGPURenderer, oldRenderer: THREE.WebGPURenderer | null = null) {
     if (oldRenderer === null) {
         document.body.appendChild(newRenderer.domElement);
     } else {
@@ -114,7 +118,7 @@ const curve = (function () {
     const vector2 = new THREE.Vector3();
 
     return {
-        getPointAt: function (t) {
+        getPointAt: function (t: number) {
             t = t * PI2;
 
             const x = Math.sin(t * 3) * Math.cos(t * 4) * 50;
@@ -124,7 +128,7 @@ const curve = (function () {
             return vector.set(x, y, z).multiplyScalar(2);
         },
 
-        getTangentAt: function (t) {
+        getTangentAt: function (t: number) {
             const delta = 0.0001;
             const t1 = Math.max(0, t - delta);
             const t2 = Math.min(1, t + delta);
@@ -157,7 +161,7 @@ mesh = new THREE.Mesh(geometry, material);
 mesh.position.y = 0.1;
 scene.add(mesh);
 
-const funfairs = [];
+const funfairs: THREE.Mesh[] = [];
 
 //
 

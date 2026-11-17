@@ -3,9 +3,9 @@ import { mix, range, normalWorld, oscSine, time } from 'three/tsl';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let camera, scene, renderer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
 
-let mesh;
+let mesh: THREE.InstancedMesh;
 const amount = parseInt(window.location.search.slice(1)) || 10;
 const count = Math.pow(amount, 3);
 const dummy = new THREE.Object3D();
@@ -38,7 +38,7 @@ function init() {
 
         //
 
-        const gui = renderer.inspector.createParameters('Settings');
+        const gui = (renderer.inspector as Inspector).createParameters('Settings');
         gui.add(mesh, 'count', 1, count, 1).name('instance count');
     });
 

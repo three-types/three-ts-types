@@ -5,7 +5,15 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { NRRDLoader } from 'three/addons/loaders/NRRDLoader.js';
 import { VolumeRenderShader1 } from 'three/addons/shaders/VolumeShader.js';
 
-let renderer, scene, camera, controls, material, volconfig, cmtextures;
+type ColorMap = 'gray' | 'viridis';
+
+let renderer: THREE.WebGLRenderer,
+    scene: THREE.Scene,
+    camera: THREE.OrthographicCamera,
+    controls: OrbitControls,
+    material: THREE.ShaderMaterial,
+    volconfig: { clim1: number; clim2: number; renderstyle: string; isothreshold: number; colormap: ColorMap },
+    cmtextures: { [K in ColorMap]: THREE.Texture };
 
 init();
 
@@ -100,7 +108,7 @@ function init() {
 }
 
 function updateUniforms() {
-    material.uniforms['u_clim'].value.set(volconfig.clim1, volconfig.clim2);
+    (material.uniforms['u_clim'].value as THREE.Vector2).set(volconfig.clim1, volconfig.clim2);
     material.uniforms['u_renderstyle'].value = volconfig.renderstyle == 'mip' ? 0 : 1; // 0: MIP, 1: ISO
     material.uniforms['u_renderthreshold'].value = volconfig.isothreshold; // For ISO renderstyle
     material.uniforms['u_cmdata'].value = cmtextures[volconfig.colormap];

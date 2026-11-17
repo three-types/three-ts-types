@@ -4,7 +4,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { PCDLoader } from 'three/addons/loaders/PCDLoader.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let camera, scene, renderer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
 
 init();
 render();
@@ -30,7 +30,7 @@ function init() {
 
     const loader = new PCDLoader();
 
-    const loadPointCloud = function (file) {
+    const loadPointCloud = function (file: string) {
         loader.load('./models/pcd/' + file, function (points) {
             points.geometry.center();
             points.geometry.rotateX(Math.PI);

@@ -5,10 +5,11 @@ import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js';
 
 //
 
-let container;
+let container: HTMLDivElement;
 
-let camera, scene, renderer;
-let mesh1, mesh2;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+let mesh1: THREE.Mesh<THREE.PlaneGeometry, THREE.MeshStandardMaterial>,
+    mesh2: THREE.Mesh<THREE.PlaneGeometry, THREE.MeshStandardMaterial>;
 
 init();
 render();
@@ -115,7 +116,7 @@ function render() {
 
 //
 
-function exportGLTF(input) {
+function exportGLTF(input: THREE.Object3D[]) {
     const gltfExporter = new GLTFExporter();
 
     const options = {
@@ -138,7 +139,7 @@ function exportGLTF(input) {
     );
 }
 
-document.getElementById('export_objects').addEventListener('click', function () {
+document.getElementById('export_objects')!.addEventListener('click', function () {
     exportGLTF([mesh1, mesh2]);
 });
 
@@ -146,7 +147,7 @@ const link = document.createElement('a');
 link.style.display = 'none';
 document.body.appendChild(link); // Firefox workaround, see #6594
 
-function save(blob, filename) {
+function save(blob: Blob, filename: string) {
     link.href = URL.createObjectURL(blob);
     link.download = filename;
     link.click();
@@ -154,10 +155,10 @@ function save(blob, filename) {
     // URL.revokeObjectURL( url ); breaks Firefox...
 }
 
-function saveString(text, filename) {
+function saveString(text: string, filename: string) {
     save(new Blob([text], { type: 'text/plain' }), filename);
 }
 
-function saveArrayBuffer(buffer, filename) {
+function saveArrayBuffer(buffer: ArrayBuffer, filename: string) {
     save(new Blob([buffer], { type: 'application/octet-stream' }), filename);
 }

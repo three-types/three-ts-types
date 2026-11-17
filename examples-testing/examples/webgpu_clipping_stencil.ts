@@ -4,9 +4,9 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let camera, scene, renderer, object;
-let planes, planeObjects, planeHelpers;
-let timer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, object: THREE.Group;
+let planes: THREE.Plane[], planeObjects: THREE.Mesh[], planeHelpers: THREE.PlaneHelper[];
+let timer: THREE.Timer;
 
 const params = {
     animate: true,
@@ -29,7 +29,12 @@ const params = {
 
 init();
 
-function createPlaneStencilGroup(geometry, plane, stencilBit, renderOrder) {
+function createPlaneStencilGroup(
+    geometry: THREE.TorusKnotGeometry,
+    plane: THREE.Plane,
+    stencilBit: number,
+    renderOrder: number,
+) {
     const group = new THREE.ClippingGroup();
     group.clippingPlanes = [plane];
 
@@ -184,7 +189,7 @@ function init() {
 
     // GUI
 
-    const gui = renderer.inspector.createParameters('Clipping settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Clipping settings');
     gui.add(params, 'animate');
 
     const planeX = gui.addFolder('planeX');

@@ -4,7 +4,7 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
 
 import { positionLocal, time, mod, instancedBufferAttribute, rotate, screenUV, color, vec2 } from 'three/tsl';
 
-let camera, scene, renderer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
 
 init();
 
@@ -54,7 +54,7 @@ function init() {
         Green: true,
     };
 
-    const gui = renderer.inspector.createParameters('Layers');
+    const gui = (renderer.inspector as Inspector).createParameters('Layers');
 
     gui.add(layers, 'Red').onChange(() => {
         camera.layers.toggle(0);
@@ -73,7 +73,7 @@ function init() {
     window.addEventListener('resize', onWindowResize);
 }
 
-function getMaterial(count, color, sprite) {
+function getMaterial(count: number, color: number, sprite: THREE.Texture) {
     // instance data
 
     const positions = [];
@@ -117,11 +117,11 @@ function getMaterial(count, color, sprite) {
 
     // TSL
 
-    const instancePosition = instancedBufferAttribute(positionAttribute);
-    const instanceDirection = instancedBufferAttribute(directionAttribute);
-    const instanceRotation = instancedBufferAttribute(rotationAttribute);
+    const instancePosition = instancedBufferAttribute<'vec3'>(positionAttribute);
+    const instanceDirection = instancedBufferAttribute<'vec3'>(directionAttribute);
+    const instanceRotation = instancedBufferAttribute<'vec3'>(rotationAttribute);
 
-    const localTime = instancedBufferAttribute(timeAttribute).add(time.mul(0.02));
+    const localTime = instancedBufferAttribute<'float'>(timeAttribute).add(time.mul(0.02));
     const modTime = mod(localTime, 1.0);
 
     const rotatedPosition = rotate(positionLocal, instanceRotation.mul(modTime.mul(20)));

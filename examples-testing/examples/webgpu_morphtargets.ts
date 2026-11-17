@@ -4,12 +4,16 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let container, camera, scene, renderer, mesh;
+let container: HTMLElement,
+    camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    mesh: THREE.Mesh;
 
 init();
 
 function init() {
-    container = document.getElementById('container');
+    container = document.getElementById('container')!;
 
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0x8fbcd4);
@@ -64,7 +68,7 @@ function createGeometry() {
     const spherePositions = [];
 
     // for the second morph target, we'll twist the cubes vertices
-    const twistPositions = [];
+    const twistPositions: number[] = [];
     const direction = new THREE.Vector3(1, 0, 0);
     const vertex = new THREE.Vector3();
 
@@ -101,13 +105,13 @@ function initGUI() {
         Twist: 0,
     };
 
-    const gui = renderer.inspector.createParameters('Morph Targets');
+    const gui = (renderer.inspector as Inspector).createParameters('Morph Targets');
 
     gui.add(params, 'Spherify', 0, 1, 0.01).onChange(function (value) {
-        mesh.morphTargetInfluences[0] = value;
+        mesh.morphTargetInfluences![0] = value;
     });
     gui.add(params, 'Twist', 0, 1, 0.01).onChange(function (value) {
-        mesh.morphTargetInfluences[1] = value;
+        mesh.morphTargetInfluences![1] = value;
     });
 }
 

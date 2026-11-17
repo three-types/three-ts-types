@@ -2,9 +2,9 @@ import * as THREE from 'three';
 
 import Stats from 'three/addons/libs/stats.module.js';
 
-let container, stats;
+let container: HTMLElement, stats: Stats;
 
-let camera, scene, renderer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
 
 let mouseX = 0,
     mouseY = 0;
@@ -15,7 +15,7 @@ let windowHalfY = window.innerHeight / 2;
 init();
 
 function init() {
-    container = document.getElementById('container');
+    container = document.getElementById('container')!;
 
     camera = new THREE.PerspectiveCamera(20, window.innerWidth / window.innerHeight, 1, 10000);
     camera.position.z = 1800;
@@ -33,7 +33,7 @@ function init() {
     canvas.width = 128;
     canvas.height = 128;
 
-    const context = canvas.getContext('2d');
+    const context = canvas.getContext('2d')!;
     const gradient = context.createRadialGradient(
         canvas.width / 2,
         canvas.height / 2,
@@ -77,7 +77,8 @@ function init() {
     const geometry1 = new THREE.IcosahedronGeometry(radius, 1);
 
     const count = geometry1.attributes.position.count;
-    const arrayType = typeof Float16Array !== 'undefined' ? Float16Array : Float32Array;
+    // @ts-expect-error
+    const arrayType: THREE.TypedArrayConstructor = typeof Float16Array !== 'undefined' ? Float16Array : Float32Array;
     geometry1.setAttribute('color', new THREE.BufferAttribute(new arrayType(count * 3), 3));
 
     const geometry2 = geometry1.clone();
@@ -155,7 +156,7 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function onDocumentMouseMove(event) {
+function onDocumentMouseMove(event: MouseEvent) {
     mouseX = event.clientX - windowHalfX;
     mouseY = event.clientY - windowHalfY;
 }

@@ -9,11 +9,16 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { UltraHDRLoader } from 'three/addons/loaders/UltraHDRLoader.js';
 
-import { WaterMesh } from 'three/addons/objects/Water2Mesh.js';
+import { WaterMesh, WaterNode } from 'three/addons/objects/Water2Mesh.js';
 import { DRACOLoader, DRACO_GLTF_CONFIG } from 'three/addons/loaders/DRACOLoader.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-let scene, camera, renderer, water, renderPipeline, controls;
+let scene: THREE.Scene,
+    camera: THREE.PerspectiveCamera,
+    renderer: THREE.WebGPURenderer,
+    water: WaterMesh,
+    renderPipeline: THREE.RenderPipeline,
+    controls: OrbitControls;
 
 const params = {
     color: '#99e0ff',
@@ -156,8 +161,8 @@ async function init() {
 
     // gui
 
-    const gui = renderer.inspector.createParameters('Water');
-    const waterNode = water.material.colorNode;
+    const gui = (renderer.inspector as Inspector).createParameters('Water');
+    const waterNode = water.material.colorNode as WaterNode;
 
     gui.addColor(params, 'color').onChange(function (value) {
         waterNode.color.value.set(value);

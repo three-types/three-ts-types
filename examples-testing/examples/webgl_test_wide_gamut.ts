@@ -9,12 +9,12 @@ import {
 
 import WebGL from 'three/addons/capabilities/WebGL.js';
 
-let container, camera, renderer, loader;
-let sceneL, sceneR, textureL, textureR;
+let container: HTMLElement, camera: THREE.PerspectiveCamera, renderer: THREE.WebGLRenderer, loader: THREE.TextureLoader;
+let sceneL: THREE.Scene, sceneR: THREE.Scene, textureL: THREE.Texture, textureR: THREE.Texture;
 
 let sliderPos = window.innerWidth / 2;
 
-const slider = document.querySelector('.slider');
+const slider = document.querySelector('.slider') as HTMLElement;
 
 const isP3Context = WebGL.isColorSpaceAvailable(DisplayP3ColorSpace);
 
@@ -30,7 +30,7 @@ if (isP3Context) {
 init();
 
 function init() {
-    container = document.querySelector('.container');
+    container = document.querySelector('.container')!;
 
     sceneL = new THREE.Scene();
     sceneR = new THREE.Scene();
@@ -72,7 +72,7 @@ async function initTextures() {
 }
 
 function initSlider() {
-    function onPointerDown() {
+    function onPointerDown(event: PointerEvent) {
         if (event.isPrimary === false) return;
 
         window.addEventListener('pointermove', onPointerMove);
@@ -84,10 +84,10 @@ function initSlider() {
         window.removeEventListener('pointerup', onPointerUp);
     }
 
-    function onPointerMove(e) {
+    function onPointerMove(event: PointerEvent) {
         if (event.isPrimary === false) return;
 
-        updateSlider(e.pageX);
+        updateSlider(event.pageX);
     }
 
     updateSlider(sliderPos);
@@ -96,7 +96,7 @@ function initSlider() {
     slider.addEventListener('pointerdown', onPointerDown);
 }
 
-function updateSlider(offset) {
+function updateSlider(offset: number) {
     sliderPos = Math.max(10, Math.min(window.innerWidth - 10, offset));
 
     slider.style.left = sliderPos - slider.offsetWidth / 2 + 'px';
@@ -108,13 +108,13 @@ function onWindowResize() {
 
     renderer.setSize(window.innerWidth, window.innerHeight);
 
-    THREE.TextureUtils.contain(sceneL.background, window.innerWidth / window.innerHeight);
-    THREE.TextureUtils.contain(sceneR.background, window.innerWidth / window.innerHeight);
+    THREE.TextureUtils.contain(sceneL.background as THREE.Texture, window.innerWidth / window.innerHeight);
+    THREE.TextureUtils.contain(sceneR.background as THREE.Texture, window.innerWidth / window.innerHeight);
 
     updateSlider(sliderPos);
 }
 
-function onGamutChange({ matches }) {
+function onGamutChange({ matches }: MediaQueryListEvent) {
     renderer.outputColorSpace = isP3Context && matches ? DisplayP3ColorSpace : THREE.SRGBColorSpace;
 
     textureL.needsUpdate = true;

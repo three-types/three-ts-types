@@ -4,14 +4,18 @@ import Stats from 'three/addons/libs/stats.module.js';
 
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let camera, scene, renderer, stats, parameters;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGLRenderer,
+    stats: Stats,
+    parameters: [[number, number, number], THREE.Texture, number][];
 let mouseX = 0,
     mouseY = 0;
 
 let windowHalfX = window.innerWidth / 2;
 let windowHalfY = window.innerHeight / 2;
 
-const materials = [];
+const materials: THREE.PointsMaterial[] = [];
 
 init();
 
@@ -27,7 +31,7 @@ function init() {
 
     const textureLoader = new THREE.TextureLoader();
 
-    const assignSRGB = texture => {
+    const assignSRGB = (texture: THREE.Texture) => {
         texture.colorSpace = THREE.SRGBColorSpace;
     };
 
@@ -126,7 +130,7 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function onPointerMove(event) {
+function onPointerMove(event: PointerEvent) {
     if (event.isPrimary === false) return;
 
     mouseX = event.clientX - windowHalfX;

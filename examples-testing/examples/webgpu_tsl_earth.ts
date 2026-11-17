@@ -21,7 +21,12 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let camera, scene, renderer, controls, globe, timer;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    controls: OrbitControls,
+    globe: THREE.Mesh<THREE.SphereGeometry, THREE.MeshStandardNodeMaterial>,
+    timer: THREE.Timer;
 
 init();
 
@@ -138,7 +143,7 @@ function init() {
 
     // debug
 
-    const gui = renderer.inspector.createParameters('Parameters');
+    const gui = (renderer.inspector as Inspector).createParameters('Parameters');
 
     gui.addColor({ color: atmosphereDayColor.value.getHex(THREE.SRGBColorSpace) }, 'color')
         .onChange(value => {

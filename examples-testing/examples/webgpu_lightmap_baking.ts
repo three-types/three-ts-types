@@ -5,9 +5,9 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
 import { LightMapper } from 'three/addons/lighting/LightMapper.js';
-import { denoise } from 'three/addons/tsl/display/DenoiseNode.js';
+import DenoiseNode, { denoise } from 'three/addons/tsl/display/DenoiseNode.js';
 import { RayTracedRadiosity, rayTracedRadiosityIrradiance } from 'three/addons/lighting/RayTracedRadiosity.js';
-import { unwrapUVs } from 'three/addons/utils/unwrapUVs.js';
+import { unwrapUVs, UnwrapUVsResult } from 'three/addons/utils/unwrapUVs.js';
 import { SeamStitchGenerator } from 'three/addons/utils/SeamStitchGenerator.js';
 import { GutterFillGenerator } from 'three/addons/utils/GutterFillGenerator.js';
 
@@ -19,16 +19,32 @@ if (WebGPU.isAvailable() === false) {
     throw new Error('No WebGPU support');
 }
 
-let camera, scene, renderer, controls, status;
-let world, meshes, materials;
-let radiosity,
-    lightMapper,
-    denoiseNode = null,
-    seamStitch,
-    gutterFill,
-    stitchedTarget,
-    filledTarget,
-    stitchedAtlas = null;
+interface World {
+    root: THREE.Group;
+    lightMapped: THREE.Group;
+    background: THREE.Color | THREE.Texture;
+    cacheSize: number;
+    camera: THREE.Vector3;
+    target: THREE.Vector3;
+    atlas?: UnwrapUVsResult;
+}
+
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    controls: OrbitControls,
+    status: HTMLElement;
+let world: World | undefined,
+    meshes: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardNodeMaterial>[],
+    materials: Set<THREE.MeshStandardNodeMaterial>;
+let radiosity: RayTracedRadiosity | undefined,
+    lightMapper: LightMapper | undefined,
+    denoiseNode: DenoiseNode | null = null,
+    seamStitch: SeamStitchGenerator,
+    gutterFill: GutterFillGenerator,
+    stitchedTarget: THREE.RenderTarget,
+    filledTarget: THREE.RenderTarget,
+    stitchedAtlas: UnwrapUVsResult | null | undefined = null;
 let needsBake = false,
     denoised = false,
     finished = false;
@@ -41,8 +57,11 @@ const params = {
     fillGutters: true,
 };
 
-const scenes = { 'Cornell Box': createCornellBox, Courtyard: loadCourtyard };
-const worlds = {};
+const scenes: Record<string, () => World | Promise<World>> = {
+    'Cornell Box': createCornellBox,
+    Courtyard: loadCourtyard,
+};
+const worlds: Record<string, World> = {};
 
 // phones have less GPU memory, 4096² takes over 1 GB with the denoiser
 
@@ -52,7 +71,7 @@ const phone = window.matchMedia('(pointer: coarse)').matches;
 // many per frame as keep the frame rate of the display
 
 const rays = 512;
-const frameTimes = [];
+const frameTimes: number[] = [];
 
 let bakedRays = 0,
     raysPerFrame = 8,
@@ -81,11 +100,11 @@ async function init() {
 
     controls = new OrbitControls(camera, renderer.domElement);
 
-    status = document.getElementById('status');
+    status = document.getElementById('status')!;
 
     // GUI
 
-    const gui = renderer.inspector.createParameters('Light Baking');
+    const gui = (renderer.inspector as Inspector).createParameters('Light Baking');
     gui.add(params, 'scene', Object.keys(scenes)).name('Scene').onChange(setScene);
     gui.add(params, 'resolution', phone ? [256, 1024, 2048] : [256, 1024, 2048, 4096])
         .name('Light Map Resolution')
@@ -136,7 +155,11 @@ async function setScene() {
     controls.update();
 
     meshes = [];
-    world.lightMapped.traverse(object => object.isMesh && meshes.push(object));
+    world.lightMapped.traverse(
+        object =>
+            (object as THREE.Mesh).isMesh &&
+            meshes.push(object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardNodeMaterial>),
+    );
     materials = new Set(meshes.map(mesh => mesh.material));
 
     requestBake();
@@ -240,7 +263,14 @@ async function loadCourtyard() {
         color => new THREE.MeshStandardNodeMaterial({ color }),
     );
 
-    function add(parent, geometry, material, x, y, z) {
+    function add(
+        parent: THREE.Object3D,
+        geometry: THREE.BufferGeometry,
+        material: THREE.MeshStandardNodeMaterial,
+        x: number,
+        y: number,
+        z: number,
+    ) {
         const mesh = new THREE.Mesh(geometry, material);
         mesh.position.set(x, y, z);
         parent.add(mesh);
@@ -295,7 +325,7 @@ async function loadCourtyard() {
 
     // fountain
 
-    const octagon = radius =>
+    const octagon = (radius: number) =>
         Array.from({ length: 8 }, (v, i) =>
             new THREE.Vector2(radius, 0).rotateAround(new THREE.Vector2(), ((i + 0.5) * Math.PI) / 4),
         );
@@ -345,16 +375,16 @@ function bake() {
 
     // each mesh gets a new geometry with light map UVs, also for another resolution
 
-    if (world.atlas?.resolution !== params.resolution) {
+    if (world!.atlas?.resolution !== params.resolution) {
         const geometries = new Set(meshes.map(mesh => mesh.geometry));
-        world.atlas = unwrapUVs(world.lightMapped, { resolution: params.resolution, padding: 3 });
+        world!.atlas = unwrapUVs(world!.lightMapped, { resolution: params.resolution, padding: 3 })!;
 
         for (const geometry of geometries) geometry.dispose();
     }
 
     // rays through a BVH of the scene, with the bounces cached in a light map of their own
 
-    radiosity = new RayTracedRadiosity({ cacheSize: world.cacheSize });
+    radiosity = new RayTracedRadiosity({ cacheSize: world!.cacheSize });
     radiosity.update(renderer, scene);
 
     // the light map accumulates one sample per frame in animate()
@@ -362,7 +392,7 @@ function bake() {
     // to denoise, the light mapper also bakes the inputs of the denoiser: the variance of each texel
     // and the surfaces of the texels as guides, which take more memory
 
-    lightMapper = new LightMapper(renderer, world.atlas.resolution, rayTracedRadiosityIrradiance(radiosity), {
+    lightMapper = new LightMapper(renderer, world!.atlas.resolution, rayTracedRadiosityIrradiance(radiosity), {
         variance: params.denoise,
         guides: params.denoise,
     });
@@ -396,14 +426,14 @@ function finishLightMap() {
 
     // the light map has its coverage in alpha, the stitched light map also the stitched texels
 
-    let map = denoiseNode !== null ? denoiseNode.getTexture() : lightMapper.texture;
+    let map = denoiseNode !== null ? denoiseNode.getTexture() : lightMapper!.texture;
 
     if (params.stitchSeams) {
         // finding the seams takes a moment, once per atlas
 
-        if (stitchedAtlas !== world.atlas) {
-            seamStitch.setGeometry(world.lightMapped);
-            stitchedAtlas = world.atlas;
+        if (stitchedAtlas !== world!.atlas) {
+            seamStitch.setGeometry(world!.lightMapped);
+            stitchedAtlas = world!.atlas;
         }
 
         map = seamStitch.generate(map, stitchedTarget).texture;
@@ -411,14 +441,14 @@ function finishLightMap() {
 
     if (params.fillGutters) map = gutterFill.generate(map, filledTarget).texture;
 
-    if (map === lightMapper.texture) setLightMap(lightMapper.getTextureNode());
+    if (map === lightMapper!.texture) setLightMap(lightMapper!.getTextureNode());
     else if (denoiseNode !== null && map === denoiseNode.getTexture()) setLightMap(denoiseNode);
     else setLightMap(texture(map));
 
     finished = true;
 }
 
-function setLightMap(lightMapNode) {
+function setLightMap(lightMapNode: THREE.Node | null) {
     for (const material of materials) {
         material.lightMapNode = lightMapNode;
         material.needsUpdate = true;
@@ -466,9 +496,9 @@ function animate() {
         const budget = Math.min(raysPerFrame, rays - bakedRays);
         const samples = Math.ceil(budget / 8);
 
-        radiosity.rays = Math.max(Math.ceil(budget / samples), 2);
-        lightMapper.update(samples);
-        bakedRays += samples * radiosity.rays;
+        radiosity!.rays = Math.max(Math.ceil(budget / samples), 2);
+        lightMapper!.update(samples);
+        bakedRays += samples * radiosity!.rays;
 
         status.textContent = `Baking: ${bakedRays} / ${rays} rays per texel`;
     } else {

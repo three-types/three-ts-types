@@ -16,7 +16,13 @@ const params = {
     sharpness: 0.2,
 };
 
-let camera, scene, renderer, renderPipeline, controls, mixer, timer;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    renderPipeline: THREE.RenderPipeline,
+    controls: OrbitControls,
+    mixer: THREE.AnimationMixer,
+    timer: THREE.Timer;
 
 init();
 
@@ -100,14 +106,14 @@ async function init() {
 
     // gui
 
-    const gui = renderer.inspector.createParameters('Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
     gui.add(params, 'upscaleMethod', ['Bilinear', 'TAAU']).onChange(updatePipeline);
     gui.add(params, 'resolutionScale', 0.25, 1.0, 0.25).onChange(value => {
         scenePass.setResolutionScale(value);
     });
     gui.add(params, 'sharpening').onChange(updatePipeline);
     gui.add(params, 'sharpness', 0, 2, 0.05).onChange(value => {
-        sharpenNode.sharpness.value = value;
+        (sharpenNode.sharpness as THREE.ConstNode<'float', number>).value = value;
     });
 
     updatePipeline();

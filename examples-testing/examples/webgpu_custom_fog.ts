@@ -7,9 +7,18 @@ import { SkyMesh } from 'three/addons/objects/SkyMesh.js';
 import { TerrainGenerator } from 'three/addons/generators/TerrainGenerator.js';
 import { ForestGenerator } from 'three/addons/generators/ForestGenerator.js';
 
-let camera, scene, renderer, controls, timer;
-let terrain, forest, terrainGroup, forestGroup;
-let sky, sun, sunLight, pmremGenerator, envScene, envRenderTarget;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    controls: FirstPersonControls,
+    timer: THREE.Timer;
+let terrain: TerrainGenerator, forest: ForestGenerator, terrainGroup: THREE.Group, forestGroup: THREE.Group;
+let sky: SkyMesh,
+    sun: THREE.Vector3,
+    sunLight: THREE.DirectionalLight,
+    pmremGenerator: THREE.PMREMGenerator,
+    envScene: THREE.Scene,
+    envRenderTarget: THREE.CubeRenderTarget;
 
 const parameters = {
     elevation: 11, // sun height above the horizon, in degrees ( low = golden hour )
@@ -129,7 +138,7 @@ async function init() {
 
     // gui
 
-    const gui = renderer.inspector.createParameters('Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
 
     const skyFolder = gui.addFolder('Sun');
     skyFolder.add(parameters, 'elevation', 1, 40).step(0.5).name('elevation').onChange(updateSun);

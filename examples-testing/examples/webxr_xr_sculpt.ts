@@ -2,15 +2,18 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { XRButton } from 'three/addons/webxr/XRButton.js';
 import { XRControllerModelFactory } from 'three/addons/webxr/XRControllerModelFactory.js';
-import { Sculptor } from 'three/addons/misc/Sculptor.js';
+import { Sculptor, SculptorTool } from 'three/addons/misc/Sculptor.js';
 
-let renderer, scene, camera, controls;
-let controller1, controller2, controllerGrip1, controllerGrip2;
-let sculptor, mesh;
-let cursor1, cursor2;
-let activeController = null;
+let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera, controls: OrbitControls;
+let controller1: THREE.XRTargetRaySpace,
+    controller2: THREE.XRTargetRaySpace,
+    controllerGrip1: THREE.XRGripSpace,
+    controllerGrip2: THREE.XRGripSpace;
+let sculptor: Sculptor, mesh: THREE.Mesh;
+let cursor1: THREE.Mesh, cursor2: THREE.Mesh;
+let activeController: THREE.XRTargetRaySpace | null = null;
 
-const tools = ['clay', 'brush', 'inflate', 'smooth', 'flatten', 'pinch', 'crease'];
+const tools: SculptorTool[] = ['clay', 'brush', 'inflate', 'smooth', 'flatten', 'pinch', 'crease'];
 let toolIndex = 0;
 const brushRadius = 0.06;
 const strokeInterval = 1000 / 90;
@@ -81,7 +84,7 @@ function init() {
 
     const controllerModelFactory = new XRControllerModelFactory();
 
-    function onSelectStart() {
+    function onSelectStart(this: THREE.XRTargetRaySpace) {
         if (activeController !== null) return;
 
         activeController = this;
@@ -89,7 +92,7 @@ function init() {
         sculptor.beginStroke();
     }
 
-    function onSelectEnd() {
+    function onSelectEnd(this: THREE.XRTargetRaySpace) {
         if (activeController !== this) return;
 
         activeController = null;
@@ -102,12 +105,12 @@ function init() {
         sculptor.setNegative(!sculptor.getNegative());
     }
 
-    function onConnected(event) {
+    function onConnected(this: THREE.XRTargetRaySpace, event: { data: XRInputSource }) {
         this.userData.inputSource = event.data;
         this.userData.thumbMoved = false;
     }
 
-    function onDisconnected() {
+    function onDisconnected(this: THREE.XRTargetRaySpace) {
         this.userData.inputSource = null;
         this.userData.thumbMoved = false;
 
@@ -184,7 +187,7 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function handleController(controller, cursor, time) {
+function handleController(controller: THREE.XRTargetRaySpace, cursor: THREE.Mesh, time: number) {
     const inputSource = controller.userData.inputSource;
 
     // Pause while tracking is lost; the controller retains its last pose.
@@ -245,7 +248,7 @@ function handleController(controller, cursor, time) {
     }
 }
 
-function animate(time) {
+function animate(time: number) {
     handleController(controller1, cursor1, time);
     handleController(controller2, cursor2, time);
 

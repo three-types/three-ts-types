@@ -8,11 +8,11 @@ import { Sky } from 'three/addons/objects/Sky.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { DRACOLoader, DRACO_GLTF_CONFIG } from 'three/addons/loaders/DRACOLoader.js';
 
-let mixer;
+let mixer: THREE.AnimationMixer;
 
 const timer = new THREE.Timer();
 timer.connect(document);
-const container = document.getElementById('container');
+const container = document.getElementById('container')!;
 
 const stats = new Stats();
 container.appendChild(stats.dom);
@@ -39,7 +39,7 @@ uniforms['cloudElevation'].value = 1;
 uniforms['sunPosition'].value.set(-0.8, 0.19, 0.56); // elevation: 11, azimuth: -55
 
 const pmremGenerator = new THREE.PMREMGenerator(renderer);
-const environment = pmremGenerator.fromScene(sky).texture;
+const environment = pmremGenerator.fromScene(sky as unknown as THREE.Scene).texture;
 scene.environment = environment;
 
 const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 100);

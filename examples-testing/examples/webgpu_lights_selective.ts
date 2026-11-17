@@ -6,7 +6,14 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { TeapotGeometry } from 'three/addons/geometries/TeapotGeometry.js';
 
-let camera, scene, renderer, light1, light2, light3, light4, controls;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    light1: THREE.PointLight,
+    light2: THREE.PointLight,
+    light3: THREE.PointLight,
+    light4: THREE.PointLight,
+    controls: OrbitControls;
 
 init();
 
@@ -33,7 +40,7 @@ function init() {
 
     // lights
 
-    const addLight = (hexColor, power = 1700, distance = 100) => {
+    const addLight = (hexColor: number, power = 1700, distance = 100) => {
         const material = new THREE.MeshStandardNodeMaterial();
         material.colorNode = color(hexColor);
         material.lights = false;
@@ -106,7 +113,7 @@ function init() {
 
     // gui
 
-    const gui = renderer.inspector.createParameters('Material');
+    const gui = (renderer.inspector as Inspector).createParameters('Material');
 
     gui.add(centerObject.material, 'roughness', 0, 1, 0.01);
     gui.add(centerObject.material, 'metalness', 0, 1, 0.01);

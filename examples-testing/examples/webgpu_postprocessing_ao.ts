@@ -13,9 +13,9 @@ import {
     colorSpaceToWorking,
     builtinAOContext,
 } from 'three/tsl';
-import { ao } from 'three/addons/tsl/display/GTAONode.js';
-import { ssao } from 'three/addons/tsl/display/SSAONode.js';
-import { traa } from 'three/addons/tsl/display/TRAANode.js';
+import GTAONode, { ao } from 'three/addons/tsl/display/GTAONode.js';
+import SSAONode, { ssao } from 'three/addons/tsl/display/SSAONode.js';
+import TRAANode, { traa } from 'three/addons/tsl/display/TRAANode.js';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
@@ -25,9 +25,15 @@ import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.j
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let camera, scene, renderer, renderPipeline, controls;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    renderPipeline: THREE.RenderPipeline,
+    controls: OrbitControls;
 
-let aoPass, traaPass, transparentMesh;
+let aoPass: GTAONode | SSAONode,
+    traaPass: TRAANode,
+    transparentMesh: THREE.Mesh<THREE.PlaneGeometry, THREE.MeshStandardNodeMaterial>;
 
 const params = {
     aoType: 'GTAO',
@@ -169,7 +175,7 @@ async function init() {
 
     // wall-mounted spotlights
 
-    function addSpotLight(position, targetPosition) {
+    function addSpotLight(position: THREE.Vector3, targetPosition: THREE.Vector3) {
         const light = new THREE.SpotLight(0xffe09e, 40);
         light.position.copy(position);
         light.angle = 0.6;
@@ -192,7 +198,7 @@ async function init() {
     const floorCanvas = document.createElement('canvas');
     floorCanvas.width = tilesX * 32;
     floorCanvas.height = tilesZ * 32;
-    const floorCtx = floorCanvas.getContext('2d');
+    const floorCtx = floorCanvas.getContext('2d')!;
 
     for (let x = 0; x < tilesX; x++) {
         for (let z = 0; z < tilesZ; z++) {
@@ -252,7 +258,7 @@ async function init() {
 
     const columnMat = new THREE.MeshStandardMaterial({ color: '#e8e4de', roughness: 0.5, metalness: 0 });
 
-    function addColumn(x, z) {
+    function addColumn(x: number, z: number) {
         const columnGroup = new THREE.Group();
 
         const base = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.2, 0.6), columnMat);
@@ -393,7 +399,7 @@ async function init() {
 
     // picture frames
 
-    function addFrame(x, y, z, width, height, paintColor, rotY = 0) {
+    function addFrame(x: number, y: number, z: number, width: number, height: number, paintColor: string, rotY = 0) {
         const frameGroup = new THREE.Group();
         const t = 0.1;
 
@@ -494,7 +500,7 @@ async function init() {
 
     // GUI
 
-    const gui = renderer.inspector.createParameters('Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
     gui.add(params, 'aoType', ['GTAO', 'SSAO'])
         .name('AO type')
         .onChange(() => {
@@ -554,14 +560,14 @@ function updateParameters() {
     aoPass.resolutionScale = params.resolutionScale;
 
     if (params.aoType === 'SSAO') {
-        aoPass.intensity.value = params.intensity;
-        aoPass.bias.value = params.bias;
-        aoPass.blurEnabled = params.blurEnabled;
-        aoPass.blurSharpness.value = params.blurSharpness;
+        (aoPass as SSAONode).intensity.value = params.intensity;
+        (aoPass as SSAONode).bias.value = params.bias;
+        (aoPass as SSAONode).blurEnabled = params.blurEnabled;
+        (aoPass as SSAONode).blurSharpness.value = params.blurSharpness;
     } else {
-        aoPass.scale.value = params.scale;
-        aoPass.thickness.value = params.thickness;
-        aoPass.useTemporalFiltering = params.temporalFiltering;
+        (aoPass as GTAONode).scale.value = params.scale;
+        (aoPass as GTAONode).thickness.value = params.thickness;
+        (aoPass as GTAONode).useTemporalFiltering = params.temporalFiltering;
     }
 }
 

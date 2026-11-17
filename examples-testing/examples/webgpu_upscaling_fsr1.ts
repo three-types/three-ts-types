@@ -13,7 +13,13 @@ const params = {
     resolutionScale: 0.5,
 };
 
-let camera, scene, renderer, renderPipeline, controls, mixer, timer;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    renderPipeline: THREE.RenderPipeline,
+    controls: OrbitControls,
+    mixer: THREE.AnimationMixer,
+    timer: THREE.Timer;
 
 init();
 
@@ -89,7 +95,7 @@ async function init() {
 
     // gui
 
-    const gui = renderer.inspector.createParameters('Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
     gui.add(params, 'upscaleMethod', ['Bilinear', 'FSR1']).onChange(updatePipeline);
     gui.add(params, 'resolutionScale', 0.25, 1.0, 0.25).onChange(value => {
         scenePass.setResolutionScale(value);

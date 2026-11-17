@@ -1,12 +1,12 @@
 import * as THREE from 'three/webgpu';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { JoltPhysics } from 'three/addons/physics/JoltPhysics.js';
+import { JoltPhysics, JoltPhysicsObject } from 'three/addons/physics/JoltPhysics.js';
 import Stats from 'three/addons/libs/stats.module.js';
 
-let camera, scene, renderer, stats;
-let physics, position;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, stats: Stats;
+let physics: JoltPhysicsObject, position: THREE.Vector3;
 
-let boxes, spheres;
+let boxes: THREE.InstancedMesh, spheres: THREE.InstancedMesh;
 
 init();
 

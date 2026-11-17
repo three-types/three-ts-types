@@ -25,7 +25,11 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let camera, scene, renderer, renderPipeline, controls;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    renderPipeline: THREE.RenderPipeline,
+    controls: OrbitControls;
 
 init();
 
@@ -44,36 +48,51 @@ function init() {
 
     // TSL functions
 
-    const toRadialUv = Fn(([uv, multiplier, rotation, offset]) => {
-        const centeredUv = uv.sub(0.5).toVar();
-        const distanceToCenter = centeredUv.length();
-        const angle = atan(centeredUv.y, centeredUv.x);
-        const radialUv = vec2(angle.add(PI).div(TWO_PI), distanceToCenter).toVar();
-        radialUv.mulAssign(multiplier);
-        radialUv.x.addAssign(rotation);
-        radialUv.y.addAssign(offset);
+    const toRadialUv = Fn(
+        ([uv, multiplier, rotation, offset]: [
+            THREE.Node<'vec2'>,
+            THREE.Node<'vec2'>,
+            THREE.Node<'float'>,
+            THREE.Node<'float'>,
+        ]) => {
+            const centeredUv = uv.sub(0.5).toVar();
+            const distanceToCenter = centeredUv.length();
+            const angle = atan(centeredUv.y, centeredUv.x);
+            const radialUv = vec2(angle.add(PI).div(TWO_PI), distanceToCenter).toVar();
+            radialUv.mulAssign(multiplier);
+            radialUv.x.addAssign(rotation);
+            radialUv.y.addAssign(offset);
 
-        return radialUv;
-    });
+            return radialUv;
+        },
+    );
 
-    const toSkewedUv = Fn(([uv, skew]) => {
+    const toSkewedUv = Fn(([uv, skew]: [THREE.Node<'vec2'>, THREE.Node<'vec2'>]) => {
         return vec2(uv.x.add(uv.y.mul(skew.x)), uv.y.add(uv.x.mul(skew.y)));
     });
 
-    const twistedCylinder = Fn(([position, parabolStrength, parabolOffset, parabolAmplitude, time]) => {
-        const angle = atan(position.z, position.x).toVar();
-        const elevation = position.y;
+    const twistedCylinder = Fn(
+        ([position, parabolStrength, parabolOffset, parabolAmplitude, time]: [
+            THREE.Node<'vec3'>,
+            THREE.Node<'float'>,
+            THREE.Node<'float'>,
+            THREE.Node<'float'>,
+            THREE.Node<'float'>,
+        ]) => {
+            const angle = atan(position.z, position.x).toVar();
+            const elevation = position.y;
 
-        // parabol
-        const radius = parabolStrength.mul(position.y.sub(parabolOffset)).pow(2).add(parabolAmplitude).toVar();
+            // parabol
+            const radius = parabolStrength.mul(position.y.sub(parabolOffset)).pow(2).add(parabolAmplitude).toVar();
 
-        // turbulences
-        radius.addAssign(sin(elevation.sub(time).mul(20).add(angle.mul(2))).mul(0.05));
+            // turbulences
+            radius.addAssign(sin(elevation.sub(time).mul(20).add(angle.mul(2))).mul(0.05));
 
-        const twistedPosition = vec3(cos(angle).mul(radius), elevation, sin(angle).mul(radius));
+            const twistedPosition = vec3(cos(angle).mul(radius), elevation, sin(angle).mul(radius));
 
-        return twistedPosition;
-    });
+            return twistedPosition;
+        },
+    );
 
     // uniforms
 
@@ -260,7 +279,7 @@ function init() {
 
     // debug
 
-    const gui = renderer.inspector.createParameters('Parameters');
+    const gui = (renderer.inspector as Inspector).createParameters('Parameters');
 
     gui.addColor({ color: emissiveColor.value.getHexString(THREE.SRGBColorSpace) }, 'color')
         .onChange(value => emissiveColor.value.set(value))

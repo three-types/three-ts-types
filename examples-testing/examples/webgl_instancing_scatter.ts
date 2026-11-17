@@ -5,7 +5,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import Stats from 'three/addons/libs/stats.module.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let camera, scene, renderer, stats;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, stats: Stats;
 
 const api = {
     count: 2000,
@@ -15,11 +15,11 @@ const api = {
     backgroundColor: 0xe39469,
 };
 
-let stemMesh, blossomMesh;
-let stemGeometry, blossomGeometry;
-let stemMaterial, blossomMaterial;
+let stemMesh: THREE.InstancedMesh, blossomMesh: THREE.InstancedMesh;
+let stemGeometry: THREE.BufferGeometry, blossomGeometry: THREE.BufferGeometry;
+let stemMaterial: THREE.Material | THREE.Material[], blossomMaterial: THREE.Material | THREE.Material[];
 
-let sampler;
+let sampler: MeshSurfaceSampler;
 const count = api.count;
 const ages = new Float32Array(count);
 const scales = new Float32Array(count);
@@ -35,21 +35,21 @@ const surfaceMaterial = new THREE.MeshLambertMaterial({ color: api.surfaceColor,
 const surface = new THREE.Mesh(surfaceGeometry, surfaceMaterial);
 
 // Source: https://gist.github.com/gre/1650294
-const easeOutCubic = function (t) {
+const easeOutCubic = function (t: number) {
     return --t * t * t + 1;
 };
 
 // Scaling curve causes particles to grow quickly, ease gradually into full scale, then
 // disappear quickly. More of the particle's lifetime is spent around full scale.
-const scaleCurve = function (t) {
+const scaleCurve = function (t: number) {
     return Math.abs(easeOutCubic((t > 0.5 ? 1 - t : t) * 2));
 };
 
 const loader = new GLTFLoader();
 
 loader.load('./models/gltf/Flower/Flower.glb', function (gltf) {
-    const _stemMesh = gltf.scene.getObjectByName('Stem');
-    const _blossomMesh = gltf.scene.getObjectByName('Blossom');
+    const _stemMesh = gltf.scene.getObjectByName('Stem') as THREE.Mesh;
+    const _blossomMesh = gltf.scene.getObjectByName('Blossom') as THREE.Mesh;
 
     stemGeometry = _stemMesh.geometry.clone();
     blossomGeometry = _blossomMesh.geometry.clone();
@@ -179,7 +179,7 @@ function resample() {
     blossomMesh.instanceMatrix.needsUpdate = true;
 }
 
-function resampleParticle(i) {
+function resampleParticle(i: number) {
     sampler.sample(_position, _normal);
     _normal.add(_position);
 
@@ -192,7 +192,7 @@ function resampleParticle(i) {
     blossomMesh.setMatrixAt(i, dummy.matrix);
 }
 
-function updateParticle(i) {
+function updateParticle(i: number) {
     // Update lifecycle.
 
     ages[i] += 0.005;

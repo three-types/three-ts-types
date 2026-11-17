@@ -5,13 +5,13 @@ import Stats from 'three/addons/libs/stats.module.js';
 import { ColladaLoader } from 'three/addons/loaders/ColladaLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let container, stats, timer, controls;
-let camera, scene, renderer, mixer;
+let container: HTMLElement, stats: Stats, timer: THREE.Timer, controls: OrbitControls;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, mixer: THREE.AnimationMixer;
 
 init();
 
 function init() {
-    container = document.getElementById('container');
+    container = document.getElementById('container')!;
 
     camera = new THREE.PerspectiveCamera(25, window.innerWidth / window.innerHeight, 1, 1000);
     camera.position.set(15, 10, -15);
@@ -25,7 +25,7 @@ function init() {
 
     const loader = new ColladaLoader();
     loader.load('./models/collada/stormtrooper/stormtrooper.dae', function (collada) {
-        const avatar = collada.scene;
+        const avatar = collada!.scene;
         const animations = avatar.animations;
 
         mixer = new THREE.AnimationMixer(avatar);

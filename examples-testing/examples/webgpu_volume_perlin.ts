@@ -10,8 +10,8 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
 
 const REFINEMENT_STEPS = 4;
 
-let renderer, scene, camera;
-let mesh;
+let renderer: THREE.WebGPURenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
+let mesh: THREE.Mesh<THREE.BoxGeometry, THREE.NodeMaterial>;
 
 init();
 
@@ -60,52 +60,64 @@ function init() {
 
     // Shader
 
-    const opaqueRaymarchingTexture = Fn(({ texture, steps, threshold, refine }) => {
-        const finalColor = vec4(0).toVar();
+    const opaqueRaymarchingTexture = Fn(
+        ({
+            texture,
+            steps,
+            threshold,
+            refine,
+        }: {
+            texture: THREE.Texture3DNode;
+            steps: THREE.Node<'float'>;
+            threshold: THREE.Node<'float'>;
+            refine: THREE.Node<'bool'>;
+        }) => {
+            const finalColor = vec4(0).toVar();
 
-        const positionPrev = vec3(0).toVar();
-        const hasPrev = bool(false).toVar();
+            const positionPrev = vec3(0).toVar();
+            const hasPrev = bool(false).toVar();
 
-        RaymarchingBox(steps, ({ positionRay }) => {
-            const mapValue = texture.sample(positionRay.add(0.5)).r.toVar();
+            RaymarchingBox(steps, ({ positionRay }) => {
+                const mapValue = texture.sample(positionRay.add(0.5)).r.toVar();
 
-            If(mapValue.greaterThan(threshold), () => {
-                const surfacePos = positionRay.toVar();
+                If(mapValue.greaterThan(threshold), () => {
+                    const surfacePos = positionRay.toVar();
 
-                If(refine.and(hasPrev), () => {
-                    // The surface lies between the previous sample (below the threshold)
-                    // and the current one (above it). Bisect that interval to localize
-                    // the crossing precisely.
+                    If(refine.and(hasPrev), () => {
+                        // The surface lies between the previous sample (below the threshold)
+                        // and the current one (above it). Bisect that interval to localize
+                        // the crossing precisely.
 
-                    const p0 = positionPrev.toVar();
-                    const p1 = positionRay.toVar();
+                        const p0 = positionPrev.toVar();
+                        const p1 = positionRay.toVar();
 
-                    Loop(REFINEMENT_STEPS, () => {
-                        const pm = p0.add(p1).mul(0.5).toConst();
-                        const dm = texture.sample(pm.add(0.5)).r.toConst();
+                        Loop(REFINEMENT_STEPS, () => {
+                            const pm = p0.add(p1).mul(0.5).toConst();
+                            const dm = texture.sample(pm.add(0.5)).r.toConst();
 
-                        const isGreater = dm.greaterThan(threshold);
+                            const isGreater = dm.greaterThan(threshold);
 
-                        p1.assign(select(isGreater, pm, p1).uniformFlow());
-                        p0.assign(select(isGreater, p0, pm).uniformFlow());
+                            p1.assign(select(isGreater, pm, p1).uniformFlow());
+                            p0.assign(select(isGreater, p0, pm).uniformFlow());
+                        });
+
+                        surfacePos.assign(p1);
                     });
 
-                    surfacePos.assign(p1);
+                    const p = vec3(surfacePos).add(0.5);
+
+                    finalColor.rgb.assign(texture.normal(p).mul(0.5).add(surfacePos.mul(1.5).add(0.25)));
+                    finalColor.a.assign(1);
+                    Break();
                 });
 
-                const p = vec3(surfacePos).add(0.5);
-
-                finalColor.rgb.assign(texture.normal(p).mul(0.5).add(surfacePos.mul(1.5).add(0.25)));
-                finalColor.a.assign(1);
-                Break();
+                positionPrev.assign(positionRay);
+                hasPrev.assign(true);
             });
 
-            positionPrev.assign(positionRay);
-            hasPrev.assign(true);
-        });
-
-        return finalColor;
-    });
+            return finalColor;
+        },
+    );
 
     //
 
@@ -128,7 +140,7 @@ function init() {
 
     //
 
-    const gui = renderer.inspector.createParameters('Parameters');
+    const gui = (renderer.inspector as Inspector).createParameters('Parameters');
     gui.add(threshold, 'value', 0, 1, 0.01).name('threshold');
     gui.add(steps, 'value', 0, 300, 1).name('steps');
     gui.add(refine, 'value').name('refine');

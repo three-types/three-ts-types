@@ -1,11 +1,11 @@
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let camera, scene, renderer;
-let pointLight, pointLight2;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let pointLight: THREE.PointLight, pointLight2: THREE.PointLight;
 
 init();
 
@@ -18,7 +18,7 @@ async function init() {
 
     // lights
 
-    function createLight(color) {
+    function createLight(color: number) {
         const intensity = 200;
 
         const light = new THREE.PointLight(color, intensity, 20);
@@ -28,8 +28,8 @@ async function init() {
         light.shadow.radius = 10;
 
         let geometry = new THREE.SphereGeometry(0.3, 12, 6);
-        let material = new THREE.MeshBasicMaterial({ color: color });
-        material.color.multiplyScalar(intensity);
+        let material: THREE.Material = new THREE.MeshBasicMaterial({ color: color });
+        (material as THREE.MeshBasicMaterial).color.multiplyScalar(intensity);
         let sphere = new THREE.Mesh(geometry, material);
         light.add(sphere);
 
@@ -109,7 +109,7 @@ function generateTexture() {
     canvas.width = 2;
     canvas.height = 2;
 
-    const context = canvas.getContext('2d');
+    const context = canvas.getContext('2d')!;
     context.fillStyle = 'white';
     context.fillRect(0, 1, 2, 1);
 

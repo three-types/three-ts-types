@@ -6,11 +6,16 @@ import { InteractionManager } from 'three/addons/interaction/InteractionManager.
 
 if (!('requestPaint' in HTMLCanvasElement.prototype)) {
     installHtmlInCanvasPolyfill();
+    // @ts-ignore
     info.innerHTML +=
         '<br><a href="https://github.com/WICG/html-in-canvas" target="_blank">HTML-in-Canvas API</a> not available. Using <a href="https://github.com/repalash/three-html-render" target="_blank">polyfill</a>.';
 }
 
-let camera, scene, renderer, mesh, interactions;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGLRenderer,
+    mesh: THREE.Mesh<RoundedBoxGeometry, THREE.MeshStandardMaterial>,
+    interactions: InteractionManager;
 
 init();
 
@@ -70,7 +75,7 @@ function init() {
 
     // Button click handler
 
-    element.querySelector('button').addEventListener('click', function () {
+    element.querySelector('button')!.addEventListener('click', function () {
         this.textContent = 'Clicked!';
     });
 
@@ -84,7 +89,7 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function animate(time) {
+function animate(time: number) {
     mesh.rotation.x = Math.sin(time * 0.0005) * 0.5;
     mesh.rotation.y = Math.cos(time * 0.0008) * 0.5;
 

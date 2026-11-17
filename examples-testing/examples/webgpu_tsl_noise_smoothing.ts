@@ -30,12 +30,19 @@ const params = {
     animate: true,
 };
 
-let renderer, computeQuad, displayQuad, targets, history, current, display, blurredDisplay;
+let renderer: THREE.WebGPURenderer,
+    computeQuad: THREE.QuadMesh,
+    displayQuad: THREE.QuadMesh,
+    targets: THREE.RenderTarget[],
+    history: THREE.TextureNode,
+    current: THREE.TextureNode,
+    display: THREE.Node,
+    blurredDisplay: THREE.Node;
 let samples = 0;
 
-const framesElement = document.getElementById('frames');
+const framesElement = document.getElementById('frames')!;
 
-const mode = uniform(modes[params.mode]);
+const mode = uniform(modes[params.mode as keyof typeof modes]);
 const index = uniform(0, 'uint');
 const blend = uniform(1);
 
@@ -68,7 +75,7 @@ function init() {
 
     // interleaved gradient noise scrolls diagonally per frame, wrapping the index to keep float precision
 
-    const noises = {
+    const noises: Record<string, THREE.Node<'float'>> = {
         'Hierarchical Hashed Weyl': hierarchicalHashedWeyl(screenCoordinate, index, 1),
         'Interleaved Gradient Noise': interleavedGradientNoise(
             screenCoordinate.add(float(index.mod(256)).mul(5.588238)),
@@ -103,28 +110,28 @@ function init() {
     };
 
     computeQuad = new THREE.QuadMesh(new THREE.NodeMaterial());
-    computeQuad.material.fragmentNode = createComputeNode();
+    (computeQuad.material as THREE.NodeMaterial).fragmentNode = createComputeNode();
 
     // sigma = 0 selects a sigma = 1 Gaussian with kernel radius 3
 
     const divider = screenCoordinate.x.sub(screenSize.x.mul(0.5)).abs().lessThan(1);
-    const output = channel => divider.select(vec4(1, 0.3, 0.1, 1), vec4(vec3(channel), 1));
+    const output = (channel: THREE.Node<'float'>) => divider.select(vec4(1, 0.3, 0.1, 1), vec4(vec3(channel), 1));
 
     display = output(current.sample(screenUV).r);
     blurredDisplay = output(gaussianBlur(current, null, 0).r);
 
     displayQuad = new THREE.QuadMesh(new THREE.NodeMaterial());
-    displayQuad.material.fragmentNode = params.spatialBlur ? blurredDisplay : display;
+    (displayQuad.material as THREE.NodeMaterial).fragmentNode = params.spatialBlur ? blurredDisplay : display;
 
-    const gui = renderer.inspector.createParameters('Settings');
-    gui.add(params, 'mode', Object.keys(modes)).onChange(value => {
-        mode.value = modes[value];
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
+    gui.add(params, 'mode', Object.keys(modes)).onChange((value: string) => {
+        mode.value = modes[value as keyof typeof modes];
         samples = 0;
     });
-    gui.add(params, 'noise', Object.keys(noises)).onChange(value => {
-        computeQuad.material.fragmentNode = createComputeNode();
-        computeQuad.material.needsUpdate = true;
-        document.getElementById('noiseLabel').textContent = value;
+    gui.add(params, 'noise', Object.keys(noises)).onChange((value: string) => {
+        (computeQuad.material as THREE.NodeMaterial).fragmentNode = createComputeNode();
+        (computeQuad.material as THREE.NodeMaterial).needsUpdate = true;
+        document.getElementById('noiseLabel')!.textContent = value;
         samples = 0;
     });
     gui.add(params, 'pixelSize', 1, 8, 1).name('pixel size').onChange(onWindowResize);
@@ -133,9 +140,9 @@ function init() {
         .onChange(() => (samples = 0));
     gui.add(params, 'spatialBlur')
         .name('spatial blur')
-        .onChange(value => {
-            displayQuad.material.fragmentNode = value ? blurredDisplay : display;
-            displayQuad.material.needsUpdate = true;
+        .onChange((value: boolean) => {
+            (displayQuad.material as THREE.NodeMaterial).fragmentNode = value ? blurredDisplay : display;
+            (displayQuad.material as THREE.NodeMaterial).needsUpdate = true;
         });
     gui.add(params, 'animate').onChange(() => (samples = 0));
 
@@ -161,7 +168,7 @@ function animate() {
 
     samples++;
     blend.value = params.temporalBlur ? 1 / samples : 1;
-    framesElement.textContent = params.temporalBlur ? samples : 1;
+    framesElement.textContent = String(params.temporalBlur ? samples : 1);
 
     renderer.setRenderTarget(targets[0]);
     computeQuad.render(renderer);

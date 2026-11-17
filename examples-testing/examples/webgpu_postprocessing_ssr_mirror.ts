@@ -41,8 +41,12 @@ const params = {
     blurQuality: 1,
 };
 
-let camera, scene, model, renderer, renderPipeline;
-let controls;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    model: THREE.Group,
+    renderer: THREE.WebGPURenderer,
+    renderPipeline: THREE.RenderPipeline;
+let controls: OrbitControls;
 
 init();
 
@@ -61,13 +65,13 @@ async function init() {
         model = gltf.scene;
 
         model.traverse(function (object) {
-            if (object.material) {
-                if (object.material.name === 'Lense_Casing') {
-                    object.material.transparent = true;
+            if ((object as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material) {
+                if ((object as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material.name === 'Lense_Casing') {
+                    (object as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material.transparent = true;
                 }
 
                 // Avoid overdrawing
-                object.material.side = THREE.FrontSide;
+                (object as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material.side = THREE.FrontSide;
             }
         });
 
@@ -152,14 +156,14 @@ async function init() {
         binaryRefine: params.binaryRefine,
     }).toInspector('SSR');
 
-    const raw = passTexture(reflection, reflection.getRenderTarget().texture);
+    const raw = passTexture(reflection as unknown as THREE.PassNode, reflection.getRenderTarget().texture);
     const blurred = reflection.getTextureNode();
     const blurEnabled = uniform(1);
     const combined = scenePassColor.rgb.add(mix(raw.rgb, blurred.rgb, blurEnabled));
     const spatialAA = smaa(vec4(combined, 1));
 
     function updateOutput() {
-        let view;
+        let view!: THREE.Node;
 
         switch (params.output) {
             case 'Beauty':
@@ -186,14 +190,14 @@ async function init() {
 
     // GUI
 
-    const displayGui = renderer.inspector.createParameters('Display');
+    const displayGui = (renderer.inspector as Inspector).createParameters('Display');
     displayGui
         .add(params, 'output', ['Beauty', 'SSR', 'SSR DN'])
         .name('Output')
         .info('DN means denoise; this mirror example uses spatial blur rather than stochastic denoising.')
         .onChange(updateOutput);
 
-    const ssrGui = renderer.inspector.createParameters('SSR');
+    const ssrGui = (renderer.inspector as Inspector).createParameters('SSR');
     ssrGui.add(params, 'enabled').name('Enabled').onChange(updateOutput);
     ssrGui.add(params, 'intensity', 0, 1).name('Intensity').onChange(updateParameters);
     ssrGui.add(params, 'quality', 0, 1, 0.01).name('Quality').onChange(updateParameters);
@@ -201,20 +205,21 @@ async function init() {
     ssrGui.add(params, 'maxDistance', 0, 1).name('Max distance').onChange(updateParameters);
     ssrGui.add(params, 'thickness', 0, 0.05).name('Thickness').onChange(updateParameters);
 
-    const blurGui = renderer.inspector.createParameters('Blur');
+    const blurGui = (renderer.inspector as Inspector).createParameters('Blur');
     blurGui
         .add(params, 'blur')
         .name('Enabled')
         .onChange(value => (blurEnabled.value = Number(value)));
     blurGui.add(params, 'blurQuality', 1, 3, 1).name('Quality').onChange(updateParameters);
 
-    const sceneGui = renderer.inspector.createParameters('Scene');
+    const sceneGui = (renderer.inspector as Inspector).createParameters('Scene');
     sceneGui
         .add(params, 'roughness', 0, 1)
         .name('Roughness')
         .onChange(value => {
             model?.traverse(object => {
-                if (object.material) object.material.roughness = value;
+                if ((object as THREE.Mesh).material)
+                    (object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).material.roughness = value;
             });
         });
 

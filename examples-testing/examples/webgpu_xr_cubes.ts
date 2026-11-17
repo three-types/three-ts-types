@@ -5,19 +5,31 @@ import { XRButton } from 'three/addons/webxr/XRButton.js';
 import { XRControllerModelFactory } from 'three/addons/webxr/XRControllerModelFactory.js';
 import { setupWebGLXRFallback } from 'three/addons/webxr/WebGLXRFallback.js';
 
+type CubeMesh = THREE.Mesh<THREE.BufferGeometry, THREE.MeshLambertMaterial> & {
+    currentHex: number;
+};
+
 const timer = new THREE.Timer();
 timer.connect(document);
 
-const rendererParameters = { antialias: true, outputBufferType: THREE.UnsignedByteType, multiview: true };
+const rendererParameters: THREE.WebGPURendererParameters = {
+    antialias: true,
+    outputBufferType: THREE.UnsignedByteType,
+    multiview: true,
+};
 const controllerModelFactory = new XRControllerModelFactory();
 
-let container;
-let camera, scene, raycaster, renderer, renderPipeline;
+let container: HTMLDivElement;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    raycaster: THREE.Raycaster,
+    renderer: THREE.WebGPURenderer,
+    renderPipeline: THREE.DirectRenderPipeline;
 
-let room;
+let room: THREE.LineSegments;
 
-let controller, controllerGrip;
-let INTERSECTED;
+let controller: THREE.XRTargetRaySpace, controllerGrip: THREE.XRGripSpace;
+let INTERSECTED: CubeMesh | undefined;
 
 init();
 
@@ -85,7 +97,7 @@ function init() {
 }
 
 function createRenderer(forceWebGL = false) {
-    const parameters = { ...rendererParameters };
+    const parameters: THREE.WebGPURendererParameters = { ...rendererParameters };
 
     if (forceWebGL === true) parameters.forceWebGL = true;
 
@@ -98,7 +110,7 @@ function createRenderer(forceWebGL = false) {
     return renderer;
 }
 
-function setRenderer(newRenderer, oldRenderer = null) {
+function setRenderer(newRenderer: THREE.WebGPURenderer, oldRenderer: THREE.WebGPURenderer | null = null) {
     if (controller !== undefined) scene.remove(controller);
     if (controllerGrip !== undefined) scene.remove(controllerGrip);
 
@@ -118,14 +130,14 @@ function setupControllers() {
     controller = renderer.xr.getController(0);
     controller.addEventListener('selectstart', onSelectStart);
     controller.addEventListener('selectend', onSelectEnd);
-    controller.addEventListener('connected', function (event) {
+    controller.addEventListener('connected', function (this: THREE.XRTargetRaySpace, event) {
         const targetRayMode = event.data.targetRayMode;
 
         if (targetRayMode === 'tracked-pointer' || targetRayMode === 'gaze') {
-            this.add(buildController(event.data));
+            this.add(buildController(event.data)!);
         }
     });
-    controller.addEventListener('disconnected', function () {
+    controller.addEventListener('disconnected', function (this: THREE.XRTargetRaySpace) {
         this.remove(this.children[0]);
     });
     scene.add(controller);
@@ -135,15 +147,15 @@ function setupControllers() {
     scene.add(controllerGrip);
 }
 
-function onSelectStart() {
+function onSelectStart(this: THREE.XRTargetRaySpace) {
     this.userData.isSelecting = true;
 }
 
-function onSelectEnd() {
+function onSelectEnd(this: THREE.XRTargetRaySpace) {
     this.userData.isSelecting = false;
 }
 
-function buildController(data) {
+function buildController(data: XRInputSource) {
     let geometry, material;
 
     switch (data.targetRayMode) {
@@ -199,7 +211,7 @@ function animate() {
         if (INTERSECTED != intersects[0].object) {
             if (INTERSECTED) INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex);
 
-            INTERSECTED = intersects[0].object;
+            INTERSECTED = intersects[0].object as CubeMesh;
             INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
             INTERSECTED.material.emissive.setHex(0xff0000);
         }

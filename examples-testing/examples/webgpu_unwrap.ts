@@ -5,19 +5,28 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
-import { unwrapUVs } from 'three/addons/utils/unwrapUVs.js';
+import { unwrapUVs, UnwrapUVsResult } from 'three/addons/utils/unwrapUVs.js';
 
-let camera, scene, renderer, controls;
-let status, atlasCanvas, islandTexture;
-let previewMaterial, islandMaterial, densityMaterial;
-let atlasSize, densityTarget;
-let loader, objLoader;
-let root, result;
-let originals = [];
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, controls: OrbitControls;
+let status: HTMLElement, atlasCanvas: HTMLCanvasElement, islandTexture: THREE.CanvasTexture;
+let previewMaterial: THREE.MeshStandardMaterial,
+    islandMaterial: THREE.MeshBasicNodeMaterial,
+    densityMaterial: THREE.MeshBasicNodeMaterial;
+let atlasSize: THREE.UniformNode<'float', number>, densityTarget: THREE.UniformNode<'float', number>;
+let loader: GLTFLoader, objLoader: OBJLoader;
+let root: THREE.Object3D | undefined, result: UnwrapUVsResult | null | undefined;
+let originals: { mesh: THREE.Mesh; geometry: THREE.BufferGeometry; material: THREE.Material | THREE.Material[] }[] = [];
 let loadId = 0,
     unwrapId = 0;
 
-const params = {
+const params: {
+    model: string;
+    mode: 'lightmap' | 'normal';
+    resolution: number;
+    useInputUVs: boolean;
+    view: string;
+    referenceDensity: number;
+} = {
     model: 'DamagedHelmet/glTF/DamagedHelmet.gltf',
     mode: 'lightmap',
     resolution: 2048,
@@ -29,8 +38,8 @@ const params = {
 init().catch(reportError);
 
 async function init() {
-    status = document.getElementById('status');
-    atlasCanvas = document.getElementById('atlas');
+    status = document.getElementById('status')!;
+    atlasCanvas = document.getElementById('atlas') as HTMLCanvasElement;
 
     // scene
 
@@ -115,13 +124,13 @@ async function init() {
     // parameters
 
     const query = new URLSearchParams(location.search);
-    if (query.has('model')) params.model = query.get('model');
+    if (query.has('model')) params.model = query.get('model')!;
     if (query.get('mode') === 'normal') params.mode = 'normal';
-    if (['1024', '2048', '4096', '8192', '16384'].includes(query.get('resolution')))
+    if (['1024', '2048', '4096', '8192', '16384'].includes(query.get('resolution')!))
         params.resolution = Number(query.get('resolution'));
     params.useInputUVs = query.get('authored') === 'true';
 
-    const gui = renderer.inspector.createParameters('UV unwrap');
+    const gui = (renderer.inspector as Inspector).createParameters('UV unwrap');
     gui.add(params, 'model', {
         'Damaged Helmet': 'DamagedHelmet/glTF/DamagedHelmet.gltf',
         Soldier: 'Soldier.glb',
@@ -151,7 +160,7 @@ async function init() {
     })
         .name('Model')
         .listen()
-        .onChange(value => loadModel(value).catch(reportError));
+        .onChange((value: string) => loadModel(value).catch(reportError));
     gui.add(params, 'view', {
         'UV grid': 'checker',
         'UV islands': 'islands',
@@ -239,7 +248,7 @@ async function unwrap() {
     let summary = '';
     try {
         const start = performance.now();
-        result = unwrapUVs(root, {
+        result = unwrapUVs(root!, {
             mode: params.mode,
             useInputUVs: params.useInputUVs,
             resolution: Number(params.resolution),
@@ -266,28 +275,28 @@ async function unwrap() {
         updateMaterials();
     } catch (error) {
         result = null;
-        const canvas = document.getElementById('atlas');
-        canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+        const canvas = document.getElementById('atlas') as HTMLCanvasElement;
+        canvas.getContext('2d')!.clearRect(0, 0, canvas.width, canvas.height);
         islandTexture.needsUpdate = true;
         for (const item of originals) item.mesh.material = item.material;
-        reportError(error);
-        if (summary) status.textContent = `${summary}\n${error.message}`;
+        reportError(error as Error);
+        if (summary) status.textContent = `${summary}\n${(error as Error).message}`;
     }
 }
 
 function drawAtlas() {
     // Cap the preview canvas; 8K and 16K atlases would need up to 1 GB of canvas memory.
-    const size = Math.min(result.resolution, 4096);
+    const size = Math.min(result!.resolution, 4096);
     if (atlasCanvas.width !== size) {
         islandTexture.dispose();
         atlasCanvas.width = atlasCanvas.height = size;
     }
 
-    const context = atlasCanvas.getContext('2d');
+    const context = atlasCanvas.getContext('2d')!;
     context.fillStyle = '#000';
     context.fillRect(0, 0, atlasCanvas.width, atlasCanvas.height);
-    const paths = result.charts.map(() => new Path2D());
-    for (const record of result.meshes) {
+    const paths = result!.charts.map(() => new Path2D());
+    for (const record of result!.meshes) {
         const geometry = record.mesh.geometry,
             uv = geometry.attributes.uv1,
             index = geometry.index;
@@ -296,7 +305,7 @@ function drawAtlas() {
             if (chart < 0) continue;
             const path = paths[chart];
             for (let j = 0; j < 3; j++) {
-                const v = index.getX(face * 3 + j),
+                const v = index!.getX(face * 3 + j),
                     x = uv.getX(v) * atlasCanvas.width,
                     y = (1 - uv.getY(v)) * atlasCanvas.height;
                 if (j === 0) path.moveTo(x, y);
@@ -308,7 +317,7 @@ function drawAtlas() {
     }
 
     // Fill the chart gutters too, so filtering at island edges does not sample black.
-    context.lineWidth = (2 * result.padding * size) / result.resolution;
+    context.lineWidth = (2 * result!.padding * size) / result!.resolution;
     context.lineJoin = 'round';
     for (let chart = 0; chart < paths.length; chart++) {
         context.fillStyle = context.strokeStyle = `hsl(${(chart * 137.508) % 360},65%,60%)`;
@@ -319,12 +328,12 @@ function drawAtlas() {
     islandTexture.needsUpdate = true;
 }
 
-async function loadModel(name) {
+async function loadModel(name: string) {
     params.model = name;
     const id = ++loadId;
     status.textContent = 'Loading model…';
     status.classList.remove('error', 'warning');
-    let loaded;
+    let loaded: THREE.Object3D;
     if (name === 'torus-knot' || name === 'tube') {
         const curve = new THREE.CatmullRomCurve3([
             new THREE.Vector3(-2, 0, 0),
@@ -365,7 +374,12 @@ async function loadModel(name) {
     root = loaded;
     originals = [];
     root.traverse(mesh => {
-        if (mesh.isMesh) originals.push({ mesh, geometry: mesh.geometry, material: mesh.material });
+        if ((mesh as THREE.Mesh).isMesh)
+            originals.push({
+                mesh: mesh as THREE.Mesh,
+                geometry: (mesh as THREE.Mesh).geometry,
+                material: (mesh as THREE.Mesh).material,
+            });
     });
     scene.add(root);
     const box = new THREE.Box3().setFromObject(root),
@@ -381,18 +395,20 @@ async function loadModel(name) {
     return result;
 }
 
-function disposeModel(object) {
-    object.traverse(mesh => {
+function disposeModel(object: THREE.Object3D) {
+    object.traverse(object => {
+        const mesh = object as THREE.Mesh;
         if (!mesh.isMesh) return;
         mesh.geometry.dispose();
-        for (const material of [].concat(mesh.material)) {
-            for (const value of Object.values(material)) if (value && value.isTexture) value.dispose();
+        for (const material of ([] as THREE.Material[]).concat(mesh.material)) {
+            for (const value of Object.values(material))
+                if (value && value.isTexture) (value as THREE.Texture).dispose();
             material.dispose();
         }
     });
 }
 
-function reportError(error) {
+function reportError(error: Error) {
     status.classList.remove('warning');
     status.classList.add('error');
     status.textContent = error.message;

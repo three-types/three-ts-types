@@ -17,7 +17,7 @@ const hdrMediaQuery = window.matchMedia('(dynamic-range: high)');
 
 function updateHDRWarning() {
     const displayIsHDR = hdrMediaQuery.matches;
-    document.querySelector('#no-hdr').style.display = displayIsHDR ? 'none' : '';
+    (document.querySelector('#no-hdr') as HTMLDivElement).style.display = displayIsHDR ? 'none' : '';
 }
 
 hdrMediaQuery.addEventListener('change', updateHDRWarning);
@@ -79,7 +79,7 @@ const brushMesh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), brushMat);
 brushMesh.scale.set(300, 300, 1); // ~300px default brush size
 brushScene.add(brushMesh);
 
-function onPointerMove(e) {
+function onPointerMove(e: PointerEvent) {
     const rect = renderer.domElement.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
@@ -96,7 +96,7 @@ renderer.domElement.addEventListener('touchmove', e => e.preventDefault(), { pas
 renderer.domElement.addEventListener('touchend', e => e.preventDefault(), { passive: false });
 
 // GUI setup
-const gui = renderer.inspector.createParameters('Settings');
+const gui = (renderer.inspector as Inspector).createParameters('Settings');
 
 const colorFolder = gui.addFolder('HDR');
 colorFolder.add(params.intensity, 'value', 0, 10, 0.1).name('Intensity');

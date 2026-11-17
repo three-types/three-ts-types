@@ -4,9 +4,13 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GCodeLoader } from 'three/addons/loaders/GCodeLoader.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let camera, scene, renderer, controls, loader;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGLRenderer,
+    controls: OrbitControls,
+    loader: GCodeLoader;
 
-let model;
+let model: THREE.Group;
 
 const params = {
     asset: 'benchy',
@@ -45,8 +49,10 @@ function init() {
     gui.add(params, 'asset', assets).onChange(function (value) {
         if (model) {
             model.traverse(function (object) {
-                if (object.material) object.material.dispose();
-                if (object.geometry) object.geometry.dispose();
+                if ((object as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material)
+                    (object as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material.dispose();
+                if ((object as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).geometry)
+                    (object as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).geometry.dispose();
             });
 
             scene.remove(model);
@@ -58,7 +64,7 @@ function init() {
     gui.open();
 }
 
-function loadAsset(asset) {
+function loadAsset(asset: string) {
     loader.load('models/gcode/' + asset + '.gcode', function (object) {
         model = object;
         model.position.copy(positions[assets.indexOf(asset)]);

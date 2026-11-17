@@ -24,11 +24,13 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let camera, scene, renderer;
-let mixer, objects, timer;
-let model, floor, floorPosition;
-let renderPipeline;
-let controls;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let mixer: THREE.AnimationMixer, objects: THREE.Group, timer: THREE.Timer;
+let model: THREE.Group,
+    floor: THREE.Mesh<THREE.CylinderGeometry, THREE.MeshStandardNodeMaterial>,
+    floorPosition: THREE.Vector3;
+let renderPipeline: THREE.RenderPipeline;
+let controls: OrbitControls;
 
 init();
 
@@ -70,7 +72,7 @@ function init() {
     loader.load('models/gltf/Michelle.glb', function (gltf) {
         model = gltf.scene;
         model.traverse(child => {
-            if (child.isMesh) {
+            if ((child as THREE.Mesh).isMesh) {
                 child.castShadow = true;
                 child.receiveShadow = true;
             }
@@ -173,7 +175,10 @@ function init() {
     const causticNoise = voronoi3d(positionWorld.mul(6), t);
 
     //material.colorNode = colorNode;
-    floor.material.colorNode = causticFade.mix(material.colorNode, material.colorNode.add(causticNoise));
+    floor.material.colorNode = causticFade.mix(
+        material.colorNode as THREE.Node<'vec4'>,
+        (material.colorNode as THREE.Node<'vec4'>).add(causticNoise),
+    );
 
     // renderer
 
@@ -196,7 +201,7 @@ function init() {
 
     // gui
 
-    const gui = renderer.inspector.createParameters('Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
 
     floorPosition = new THREE.Vector3(0, 0.2, 0);
 

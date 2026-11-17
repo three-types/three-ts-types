@@ -6,8 +6,8 @@ import { ClearPass } from 'three/addons/postprocessing/ClearPass.js';
 import { MaskPass, ClearMaskPass } from 'three/addons/postprocessing/MaskPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 
-let camera, composer, renderer;
-let box, torus;
+let camera: THREE.PerspectiveCamera, composer: EffectComposer, renderer: THREE.WebGLRenderer;
+let box: THREE.Mesh, torus: THREE.Mesh;
 
 init();
 

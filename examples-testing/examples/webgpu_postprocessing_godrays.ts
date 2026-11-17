@@ -9,7 +9,11 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let camera, controls, scene, renderer, renderPipeline;
+let camera: THREE.PerspectiveCamera,
+    controls: OrbitControls,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    renderPipeline: THREE.RenderPipeline;
 
 const params = {
     enabledBlur: true,
@@ -30,12 +34,15 @@ async function init() {
     const gltf = await loader.loadAsync('models/gltf/godrays_demo.glb');
     scene.add(gltf.scene);
 
-    const pillars = gltf.scene.getObjectByName('concrete');
+    const pillars = gltf.scene.getObjectByName('concrete') as THREE.Mesh<
+        THREE.BufferGeometry,
+        THREE.MeshStandardMaterial
+    >;
     pillars.material = new THREE.MeshStandardMaterial({
         color: 0x333333,
     });
 
-    const base = gltf.scene.getObjectByName('base');
+    const base = gltf.scene.getObjectByName('base') as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>;
     base.material = new THREE.MeshStandardMaterial({
         color: 0x333333,
         side: THREE.DoubleSide,
@@ -66,7 +73,7 @@ async function init() {
     // shadow setup
 
     scene.traverse(obj => {
-        if (obj.isMesh === true) {
+        if ((obj as THREE.Mesh).isMesh === true) {
             obj.castShadow = true;
             obj.receiveShadow = true;
         }
@@ -126,7 +133,7 @@ async function init() {
 
     // GUI
 
-    const gui = renderer.inspector.createParameters('Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
     const godraysFolder = gui.addFolder('Godrays');
     godraysFolder.add(godraysPass.raymarchSteps, 'value', 24, 120).step(1).name('raymarch steps');
     godraysFolder.add(godraysPass.density, 'value', 0, 1).name('density');

@@ -7,8 +7,11 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-let camera;
-let renderPipeline, renderer, mixer, timer;
+let camera: THREE.PerspectiveCamera;
+let renderPipeline: THREE.RenderPipeline,
+    renderer: THREE.WebGPURenderer,
+    mixer: THREE.AnimationMixer,
+    timer: THREE.Timer;
 
 const params = {
     threshold: 0,
@@ -86,7 +89,7 @@ async function init() {
 
     //
 
-    const gui = renderer.inspector.createParameters('Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
 
     const bloomFolder = gui.addFolder('bloom');
 

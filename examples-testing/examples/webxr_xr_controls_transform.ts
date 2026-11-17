@@ -4,15 +4,15 @@ import { XRButton } from 'three/addons/webxr/XRButton.js';
 import { XRControllerModelFactory } from 'three/addons/webxr/XRControllerModelFactory.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 
-let container;
-let camera, scene, renderer;
+let container: HTMLDivElement;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
 let bloomPass;
-let controller1, controller2, line;
-let controllerGrip1, controllerGrip2;
+let controller1: THREE.XRTargetRaySpace, controller2: THREE.XRTargetRaySpace, line: THREE.Line;
+let controllerGrip1: THREE.XRGripSpace, controllerGrip2: THREE.XRGripSpace;
 
-let raycaster;
+let raycaster: THREE.Raycaster;
 
-let controls, group;
+let controls: TransformControls, group: THREE.Group;
 
 init();
 
@@ -156,7 +156,7 @@ function init() {
     window.addEventListener('resize', onWindowResize);
 }
 
-function onSelect(event) {
+function onSelect(event: THREE.Event<'select', THREE.XRTargetRaySpace>) {
     const controller = event.target;
 
     controller1.userData.active = false;
@@ -181,7 +181,7 @@ function onSelect(event) {
     }
 }
 
-function onControllerEvent(event) {
+function onControllerEvent(event: THREE.Event<'selectstart' | 'selectend' | 'move', THREE.XRTargetRaySpace>) {
     const controller = event.target;
 
     if (controller.userData.active === false) return;

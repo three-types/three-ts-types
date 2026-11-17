@@ -15,7 +15,7 @@ import {
 import { ssgi } from 'three/addons/tsl/display/SSGINode.js';
 import { temporalDenoise } from 'three/addons/tsl/display/DenoiseNode.js';
 import { traa } from 'three/addons/tsl/display/TRAANode.js';
-import { RapierPhysics } from 'three/addons/physics/RapierPhysics.js';
+import { RapierPhysics, RapierPhysicsObject } from 'three/addons/physics/RapierPhysics.js';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
@@ -28,14 +28,17 @@ const WALL_THICKNESS = 0.5;
 const CAM_FOV = 45;
 const EASE_SPEED = 8;
 
-let camera, scene, renderer, renderPipeline;
-let raycaster, pointer;
-let mouseLight;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    renderPipeline: THREE.RenderPipeline;
+let raycaster: THREE.Raycaster, pointer: THREE.Vector2;
+let mouseLight: THREE.PointLight;
 
-let physics;
+let physics: RapierPhysicsObject;
 let ballCount = 0;
-let ballsMesh = null;
-let wallMeshes = [];
+let ballsMesh: THREE.InstancedMesh<THREE.SphereGeometry, THREE.MeshPhysicalMaterial> | null = null;
+let wallMeshes: THREE.Mesh<THREE.BoxGeometry, THREE.MeshPhysicalMaterial>[] = [];
 const boxSize = { w: 8, h: BOX_HEIGHT, d: BOX_DEPTH };
 
 const whiteMaterial = new THREE.MeshPhysicalMaterial({
@@ -223,7 +226,12 @@ function createBox() {
     const hd = boxSize.d / 2;
     const t = WALL_THICKNESS;
 
-    const walls = [
+    const walls: {
+        size: [number, number, number];
+        pos: [number, number, number];
+        mat: THREE.MeshPhysicalMaterial;
+        noMesh?: boolean;
+    }[] = [
         { size: [boxSize.w, t, boxSize.d], pos: [0, -t / 2, 0], mat: whiteMaterial },
         { size: [boxSize.w, t, boxSize.d], pos: [0, boxSize.h + t / 2, 0], mat: whiteMaterial },
         { size: [boxSize.w, boxSize.h, t], pos: [0, hh, -hd - t / 2], mat: whiteMaterial },
@@ -272,7 +280,7 @@ function createBalls() {
     physics.addMesh(ballsMesh, 1, 0.5);
 }
 
-function onPointerDown(event) {
+function onPointerDown(event: PointerEvent) {
     activePointers.add(event.pointerId);
 
     if (event.pointerType === 'touch') {
@@ -282,7 +290,7 @@ function onPointerDown(event) {
     }
 }
 
-function onPointerUp(event) {
+function onPointerUp(event: PointerEvent) {
     activePointers.delete(event.pointerId);
 
     if (event.pointerType === 'touch') {
@@ -292,7 +300,7 @@ function onPointerUp(event) {
     }
 }
 
-function onPointerMove(event) {
+function onPointerMove(event: PointerEvent) {
     pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
     pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
@@ -326,8 +334,8 @@ function respawnBalls() {
 
         const index = Math.floor(Math.random() * ballCount);
 
-        physics.setMeshPosition(ballsMesh, position, index);
-        ballsMesh.userData.physics.body[index].wakeUp();
+        physics.setMeshPosition(ballsMesh!, position, index);
+        ballsMesh!.userData.physics.body[index].wakeUp();
     }
 }
 
@@ -370,7 +378,7 @@ function animate() {
         const _pushDir = new THREE.Vector3();
 
         for (let i = 0; i < ballCount; i++) {
-            ballsMesh.getMatrixAt(i, _matrix);
+            ballsMesh!.getMatrixAt(i, _matrix);
             _ballPos.setFromMatrixPosition(_matrix);
 
             const ray = new THREE.Ray(mouseRayOrigin, mouseRayDir);
@@ -384,7 +392,7 @@ function animate() {
                 _pushDir.normalize();
 
                 const strength = pushStrength * (1 - dist / pushRadius);
-                physics.applyImpulse(ballsMesh, _pushDir.multiplyScalar(strength), i);
+                physics.applyImpulse(ballsMesh!, _pushDir.multiplyScalar(strength), i);
             }
         }
     }

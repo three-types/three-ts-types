@@ -1,8 +1,8 @@
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let scene, camera, renderer, radianceMap;
+let scene: THREE.Scene, camera: THREE.PerspectiveCamera, renderer: THREE.WebGPURenderer, radianceMap: THREE.Texture;
 
 let gui;
 
@@ -101,7 +101,8 @@ function initGui() {
             scene.traverse(function (child) {
                 const tint = val ? 0xccccff : 0xffffff;
 
-                if (child.isMesh) child.material.color.setHex(tint);
+                if ((child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhysicalMaterial>).isMesh)
+                    (child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhysicalMaterial>).material.color.setHex(tint);
             });
 
             render();

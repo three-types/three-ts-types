@@ -22,7 +22,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { LoftGeometry } from 'three/addons/geometries/LoftGeometry.js';
 
-let group, camera, scene, renderer;
+let group: THREE.Group, camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
 
 init();
 
@@ -127,7 +127,7 @@ async function init() {
     pedestalMaterial.roughnessNode = veining.mul(0.14).add(0.07);
     pedestalMaterial.envMapIntensity = 1.5;
 
-    function addPedestal(x, z, radius, height) {
+    function addPedestal(x: number, z: number, radius: number, height: number) {
         const pedestal = new THREE.Mesh(createPedestalGeometry(radius, height), pedestalMaterial);
         pedestal.position.set(x, -5, z);
         pedestal.rotation.y = x * 0.7 + z * 1.3; // so the marbling differs per pedestal
@@ -383,7 +383,7 @@ async function init() {
     // shadows
 
     group.traverse(child => {
-        if (child.isMesh) child.castShadow = child.receiveShadow = true;
+        if ((child as THREE.Mesh).isMesh) child.castShadow = child.receiveShadow = true;
     });
 
     floor.castShadow = false;
@@ -397,10 +397,11 @@ async function init() {
     skeleton.visible = false;
     group.add(skeleton);
 
-    const lofts = [];
+    const lofts: THREE.Mesh<LoftGeometry, THREE.MeshStandardNodeMaterial>[] = [];
 
     group.traverse(child => {
-        if (child.isMesh && child.geometry.type === 'LoftGeometry') lofts.push(child);
+        if ((child as THREE.Mesh).isMesh && (child as THREE.Mesh).geometry.type === 'LoftGeometry')
+            lofts.push(child as THREE.Mesh<LoftGeometry, THREE.MeshStandardNodeMaterial>);
     });
 
     const lineMaterial = new THREE.LineBasicMaterial({ color: 0xaaccee });
@@ -411,9 +412,9 @@ async function init() {
         const { sections, closed } = mesh.geometry.parameters;
         const step = Math.max(1, Math.round(sections.length / 20));
 
-        const positions = [];
+        const positions: number[] = [];
 
-        function addRing(ring) {
+        function addRing(ring: THREE.Vector3[]) {
             const segments = closed ? ring.length : ring.length - 1;
 
             for (let j = 0; j < segments; j++) {
@@ -436,7 +437,7 @@ async function init() {
 
     // parameters
 
-    const gui = renderer.inspector.createParameters('Parameters');
+    const gui = (renderer.inspector as Inspector).createParameters('Parameters');
 
     gui.add({ sections: false }, 'sections').onChange(value => {
         skeleton.visible = value;
@@ -447,9 +448,9 @@ async function init() {
 
     gui.add({ wireframe: false }, 'wireframe').onChange(value => {
         group.traverse(child => {
-            if (child.isMesh) {
-                child.material.wireframe = value;
-                child.material.needsUpdate = true;
+            if ((child as THREE.Mesh).isMesh) {
+                (child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardNodeMaterial>).material.wireframe = value;
+                (child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardNodeMaterial>).material.needsUpdate = true;
             }
         });
     });
@@ -462,7 +463,7 @@ async function init() {
 // revolves a smoothed 2d profile ( x = radius, y = height ) into
 // circular sections, like a lathe
 
-function createRevolvedSections(profile, divisions, segments) {
+function createRevolvedSections(profile: THREE.Vector2[], divisions: number, segments: number) {
     const points = new THREE.SplineCurve(profile).getPoints(divisions);
 
     const sections = [];
@@ -483,7 +484,7 @@ function createRevolvedSections(profile, divisions, segments) {
     return sections;
 }
 
-function createPedestalGeometry(radius, height) {
+function createPedestalGeometry(radius: number, height: number) {
     // a stepped plinth, a tapered shaft and a cornice; revolved without
     // smoothing, one ring per profile point. doubled points split the
     // vertex normals, keeping those turnings crisp
@@ -876,7 +877,7 @@ function createStanchionGeometry() {
     return new LoftGeometry(sections, { capStart: true, capEnd: true });
 }
 
-function createRopeGeometry(length) {
+function createRopeGeometry(length: number) {
     // a cord sagging between two stanchions, with both ends buried in
     // their poles
 

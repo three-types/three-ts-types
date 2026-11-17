@@ -8,8 +8,8 @@ import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let renderer, scene, camera;
-let mesh;
+let renderer: THREE.WebGPURenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
+let mesh: THREE.Mesh;
 
 init();
 
@@ -34,7 +34,7 @@ function init() {
     canvas.width = 1;
     canvas.height = 32;
 
-    const context = canvas.getContext('2d');
+    const context = canvas.getContext('2d')!;
     const gradient = context.createLinearGradient(0, 0, 0, 32);
     gradient.addColorStop(0.0, '#014a84');
     gradient.addColorStop(0.5, '#0561a0');
@@ -87,7 +87,19 @@ function init() {
     // Shader
 
     const transparentRaymarchingTexture = Fn(
-        ({ texture, range = float(0.1), threshold = float(0.25), opacity = float(0.25), steps = float(100) }) => {
+        ({
+            texture,
+            range = float(0.1),
+            threshold = float(0.25),
+            opacity = float(0.25),
+            steps = float(100),
+        }: {
+            texture: THREE.TextureNode;
+            range: THREE.Node<'float'>;
+            threshold: THREE.Node<'float'>;
+            opacity: THREE.Node<'float'>;
+            steps: THREE.Node<'float'>;
+        }) => {
             const finalColor = vec4(0).toVar();
 
             RaymarchingBox(steps, ({ positionRay }) => {
@@ -142,7 +154,7 @@ function init() {
 
     //
 
-    const gui = renderer.inspector.createParameters('Parameters');
+    const gui = (renderer.inspector as Inspector).createParameters('Parameters');
     gui.add(threshold, 'value', 0, 1, 0.01).name('threshold');
     gui.add(opacity, 'value', 0, 1, 0.01).name('opacity');
     gui.add(range, 'value', 0, 1, 0.01).name('range');

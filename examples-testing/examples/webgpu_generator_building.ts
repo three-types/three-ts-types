@@ -10,8 +10,14 @@ import {
     pickBuildingColor,
 } from 'three/addons/generators/city/SkyscraperGenerator.js';
 
-let camera, scene, renderer, controls, generator, building, material;
-let sky, sunLight, pmremGenerator, envScene;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    controls: OrbitControls,
+    generator,
+    building: THREE.Mesh,
+    material: THREE.MeshStandardNodeMaterial;
+let sky: SkyMesh, sunLight: THREE.DirectionalLight, pmremGenerator: THREE.PMREMGenerator, envScene: THREE.Scene;
 
 // reused by updateSun(): the current sun direction and the key-light
 // colours it blends between as the sun nears the horizon or climbs high
@@ -108,7 +114,7 @@ async function init() {
     material = createSkyscraperMaterial(baseColor);
     generate();
 
-    const gui = renderer.inspector.createParameters('Building');
+    const gui = (renderer.inspector as Inspector).createParameters('Building');
     gui.add(parameters, 'seed', 0, 100, 1).onChange(generate);
     gui.add(parameters, 'height', 60, 200, 1).onChange(generate);
     gui.add(parameters, 'width', 18, 60, 1).onChange(generate);

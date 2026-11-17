@@ -20,8 +20,12 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import WebGPU from 'three/addons/capabilities/WebGPU.js';
 
-let camera, scene, renderer, renderPipeline, controls;
-let frontLight, reflectedFlashLight, bandMaterial;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    renderPipeline: THREE.RenderPipeline,
+    controls: OrbitControls;
+let frontLight: THREE.PointLight, reflectedFlashLight: THREE.PointLight, bandMaterial: THREE.MeshPhysicalNodeMaterial;
 
 const params = {
     enabled: true,
@@ -87,12 +91,12 @@ async function init() {
     controls.enableDamping = true;
     controls.update();
 
-    const gui = renderer.inspector.createParameters('Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
     gui.add(params, 'enabled').onChange(updateMaterial);
     gui.add(params, 'amount', 0, 1, 0.01).onChange(updateMaterial);
     gui.add(params, 'flashLight', 0, 30, 0.1)
         .name('flash light')
-        .onChange(value => (frontLight.intensity = value));
+        .onChange((value: number) => (frontLight.intensity = value));
 
     window.addEventListener('resize', onWindowResize);
 
@@ -168,7 +172,7 @@ function createFloor() {
 
     // fade procedural detail as its period approaches the pixel footprint,
     // which grows anisotropically at grazing angles and with distance
-    const bandlimit = p => p.fwidth().length().smoothstep(0.5, 1.5).oneMinus();
+    const bandlimit = (p: THREE.Node<'vec2'>) => p.fwidth().length().smoothstep(0.5, 1.5).oneMinus();
 
     // asphalt: tonal grain and broad worn patches
     const grain = mx_noise_float(position.mul(60))
@@ -181,7 +185,7 @@ function createFloor() {
     const puddle = mx_noise_float(position.mul(0.45).add(6.27)).smoothstep(0.25, 0.45);
 
     // bump: heightfield normal from finite differences of a fine noise, flattened in puddles
-    const bumpNoise = p => mx_noise_float(p.mul(180));
+    const bumpNoise = (p: THREE.Node<'vec2'>) => mx_noise_float(p.mul(180));
     const e = 0.002;
     const strength = puddle
         .oneMinus()
@@ -195,7 +199,7 @@ function createFloor() {
     material.normalNode = transformNormalToView(bump);
 
     // the surface relief wobbles the reflection; puddles stay calm
-    reflection.uvNode = reflection.uvNode.add(bump.xy.mul(0.03));
+    reflection.uvNode = reflection.uvNode!.add(bump.xy.mul(0.03));
 
     material.colorNode = mix(asphalt, asphalt.mul(0.3), puddle);
     material.roughnessNode = mix(
@@ -244,7 +248,7 @@ function createCones() {
     }
 }
 
-function createCone(orangeMaterial, bandMaterial) {
+function createCone(orangeMaterial: THREE.MeshPhysicalNodeMaterial, bandMaterial: THREE.MeshPhysicalNodeMaterial) {
     const cone = new THREE.Group();
 
     const base = new THREE.Mesh(createBaseGeometry(0.42, 0.04, 0.08), orangeMaterial);
@@ -284,12 +288,12 @@ function createCone(orangeMaterial, bandMaterial) {
     return cone;
 }
 
-function radiusAtHeight(y, bodyBottom, bodyHeight, radiusBottom, radiusTop) {
+function radiusAtHeight(y: number, bodyBottom: number, bodyHeight: number, radiusBottom: number, radiusTop: number) {
     const t = THREE.MathUtils.clamp((y - bodyBottom) / bodyHeight, 0, 1);
     return THREE.MathUtils.lerp(radiusBottom, radiusTop, t);
 }
 
-function createBaseGeometry(size, thickness, radius) {
+function createBaseGeometry(size: number, thickness: number, radius: number) {
     const half = size / 2;
 
     const shape = new THREE.Shape();

@@ -23,9 +23,9 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
 
 import WebGPU from 'three/addons/capabilities/WebGPU.js';
 
-let renderer, scene, camera;
-let mesh;
-let computeNode;
+let renderer: THREE.WebGPURenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
+let mesh: THREE.Mesh<THREE.BoxGeometry, THREE.NodeMaterial>;
+let computeNode: THREE.ComputeNode;
 
 if (WebGPU.isAvailable() === false) {
     document.body.appendChild(WebGPU.getErrorMessage());
@@ -58,7 +58,7 @@ async function init() {
     canvas.width = 1;
     canvas.height = 32;
 
-    const context = canvas.getContext('2d');
+    const context = canvas.getContext('2d')!;
     const gradient = context.createLinearGradient(0, 0, 0, 32);
     gradient.addColorStop(0.0, '#014a84');
     gradient.addColorStop(0.5, '#0561a0');
@@ -79,7 +79,7 @@ async function init() {
 
     const size = 200;
 
-    const computeCloud = Fn(({ storageTexture }) => {
+    const computeCloud = Fn(({ storageTexture }: { storageTexture: THREE.Storage3DTexture }) => {
         const scale = float(0.05);
         const id = instanceIndex;
 
@@ -111,7 +111,19 @@ async function init() {
     // Shader
 
     const transparentRaymarchingTexture = Fn(
-        ({ texture, range = float(0.14), threshold = float(0.08), opacity = float(0.18), steps = float(100) }) => {
+        ({
+            texture,
+            range = float(0.14),
+            threshold = float(0.08),
+            opacity = float(0.18),
+            steps = float(100),
+        }: {
+            texture: THREE.Texture3DNode;
+            range?: THREE.Node<'float'>;
+            threshold?: THREE.Node<'float'>;
+            opacity?: THREE.Node<'float'>;
+            steps?: THREE.Node<'float'>;
+        }) => {
             const finalColor = vec4(0).toVar();
 
             RaymarchingBox(steps, ({ positionRay }) => {
@@ -171,7 +183,7 @@ async function init() {
 
     renderer.compute(computeNode);
 
-    const gui = renderer.inspector.createParameters('Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
     gui.add(threshold, 'value', 0, 1, 0.01).name('threshold');
     gui.add(opacity, 'value', 0, 1, 0.01).name('opacity');
     gui.add(range, 'value', 0, 1, 0.01).name('range');

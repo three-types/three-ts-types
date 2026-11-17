@@ -40,9 +40,13 @@ import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let camera, scene, renderer, renderPipeline, controls;
-let environment;
-let currentModel;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    renderPipeline: THREE.RenderPipeline,
+    controls: OrbitControls;
+let environment: THREE.DataTexture | undefined;
+let currentModel: THREE.Group | undefined;
 
 init();
 
@@ -135,12 +139,12 @@ async function init() {
 
     // Model
 
-    const models = {
+    const models: Record<string, string> = {
         'Coffee Mug': 'models/gltf/coffeeMug.glb',
         'Damaged Helmet': 'models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf',
     };
 
-    function loadModel(name) {
+    function loadModel(name: string) {
         function loadEnvironment() {
             if (environment) return;
 
@@ -157,9 +161,9 @@ async function init() {
         if (currentModel) {
             scene.remove(currentModel);
             currentModel.traverse(child => {
-                if (child.isMesh) {
-                    child.geometry.dispose();
-                    child.material.dispose();
+                if ((child as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).isMesh) {
+                    (child as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).geometry.dispose();
+                    (child as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material.dispose();
                 }
             });
         }
@@ -304,7 +308,7 @@ async function init() {
 
     const retro = retroPass(scene, camera, { affineDistortion });
 
-    let retroPipeline = retro;
+    let retroPipeline: THREE.Node<'vec4'> | THREE.Node<'vec3'> = retro;
     retroPipeline = replaceDefaultUV(distortedUV, retroPipeline);
     retroPipeline = colorBleeding(retroPipeline, bleeding.add(distortedDelta));
     retroPipeline = bayerDither(retroPipeline, colorDepthSteps);
@@ -328,7 +332,7 @@ async function init() {
 
     // gui
 
-    const gui = renderer.inspector.createParameters('Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
 
     gui.add({ model: 'Coffee Mug' }, 'model', Object.keys(models)).name('Model').onChange(loadModel);
 

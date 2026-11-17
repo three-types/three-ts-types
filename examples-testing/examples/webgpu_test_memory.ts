@@ -1,16 +1,22 @@
 import * as THREE from 'three/webgpu';
 import { pass, mrt, packNormalToRGB, normalView, screenUV, context, sample, unpackRGBToNormal } from 'three/tsl';
-import { outline } from 'three/addons/tsl/display/OutlineNode.js';
-import { ao } from 'three/addons/tsl/display/GTAONode.js';
+import OutlineNode, { outline } from 'three/addons/tsl/display/OutlineNode.js';
+import GTAONode, { ao } from 'three/addons/tsl/display/GTAONode.js';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let camera, scene, renderer, light;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    light: THREE.DirectionalLight | null;
 let generateMeshes = true;
-let mesh;
-let renderPipeline;
-let aoNode, outlineNode, scenePass, prePass;
-const selectedObjects = [];
+let mesh: THREE.Mesh<THREE.SphereGeometry, THREE.MeshLambertMaterial>;
+let renderPipeline: THREE.RenderPipeline | null;
+let aoNode: GTAONode | null,
+    outlineNode: OutlineNode | null,
+    scenePass: THREE.PassNode | null,
+    prePass: THREE.PassNode | null;
+const selectedObjects: THREE.Mesh[] = [];
 
 const params = {
     castShadow: true,
@@ -75,7 +81,7 @@ async function init() {
     scene.add(plane);
 
     // Inspector UI
-    const gui = renderer.inspector.createParameters('Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
 
     gui.add(params, 'castShadow')
         .name('Cast Shadow')
@@ -125,7 +131,7 @@ function updatePostProcessing() {
         renderPipeline = new THREE.RenderPipeline(renderer);
 
         scenePass = pass(scene, camera);
-        let colorNode = scenePass;
+        let colorNode: THREE.Node<'vec4'> = scenePass;
 
         if (params.enableAO) {
             prePass = pass(scene, camera);
@@ -136,7 +142,7 @@ function updatePostProcessing() {
             );
 
             const prePassNormal = sample(uv => {
-                return unpackRGBToNormal(prePass.getTextureNode().sample(uv));
+                return unpackRGBToNormal(prePass!.getTextureNode().sample(uv));
             });
             const prePassDepth = prePass.getTextureNode('depth');
 
@@ -173,7 +179,7 @@ function createImage() {
     canvas.width = 256;
     canvas.height = 256;
 
-    const canvas2DContext = canvas.getContext('2d');
+    const canvas2DContext = canvas.getContext('2d')!;
     canvas2DContext.fillStyle =
         'rgb(' +
         Math.floor(Math.random() * 256) +
@@ -195,7 +201,7 @@ function animate() {
             scene.remove(mesh);
 
             mesh.geometry.dispose();
-            mesh.material.map.dispose();
+            mesh.material.map!.dispose();
             mesh.material.dispose();
         }
 

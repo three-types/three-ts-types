@@ -5,9 +5,9 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let camera, scene, renderer, timer;
-let dirLight, spotLight;
-let torusKnot, dirGroup;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, timer: THREE.Timer;
+let dirLight: THREE.DirectionalLight, spotLight: THREE.SpotLight;
+let torusKnot: THREE.Mesh<THREE.TorusKnotGeometry, THREE.MeshPhongNodeMaterial>, dirGroup: THREE.Group;
 
 init();
 
@@ -150,7 +150,7 @@ function resize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function animate(time) {
+function animate(time: number) {
     timer.update();
 
     const delta = timer.getDelta();

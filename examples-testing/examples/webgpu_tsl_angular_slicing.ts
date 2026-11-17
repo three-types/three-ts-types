@@ -8,7 +8,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { UltraHDRLoader } from 'three/addons/loaders/UltraHDRLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let camera, scene, renderer, controls;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, controls: OrbitControls;
 
 init();
 
@@ -45,10 +45,12 @@ function init() {
 
     // TSL functions
 
-    const inAngle = Fn(([position, angleStart, angleArc]) => {
-        const angle = atan(position.y, position.x).sub(angleStart).mod(TWO_PI).toVar();
-        return angle.greaterThan(0).and(angle.lessThan(angleArc));
-    });
+    const inAngle = Fn(
+        ([position, angleStart, angleArc]: [THREE.Node<'vec2'>, THREE.Node<'float'>, THREE.Node<'float'>]) => {
+            const angle = atan(position.y, position.x).sub(angleStart).mod(TWO_PI).toVar();
+            return angle.greaterThan(0).and(angle.lessThan(angleArc));
+        },
+    );
 
     // materials
 
@@ -104,9 +106,9 @@ function init() {
         const model = gltf.scene;
 
         model.traverse(child => {
-            if (child.isMesh) {
-                if (child.name === 'outerHull') child.material = slicedMaterial;
-                else child.material = defaultMaterial;
+            if ((child as THREE.Mesh).isMesh) {
+                if (child.name === 'outerHull') (child as THREE.Mesh).material = slicedMaterial;
+                else (child as THREE.Mesh).material = defaultMaterial;
 
                 child.castShadow = true;
                 child.receiveShadow = true;
@@ -152,7 +154,7 @@ function init() {
 
     // debug
 
-    const gui = renderer.inspector.createParameters('Parameters');
+    const gui = (renderer.inspector as Inspector).createParameters('Parameters');
     gui.add(sliceStart, 'value', -Math.PI, Math.PI, 0.001).name('sliceStart');
     gui.add(sliceArc, 'value', 0, Math.PI * 2, 0.001).name('sliceArc');
     gui.addColor({ color: sliceColor.value.getHexString(THREE.SRGBColorSpace) }, 'color').onChange(value =>

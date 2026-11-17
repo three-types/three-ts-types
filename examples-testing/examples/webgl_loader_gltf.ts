@@ -5,8 +5,16 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { UltraHDRLoader } from 'three/addons/loaders/UltraHDRLoader.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let camera, scene, renderer, controls;
-let currentModel, mixer;
+interface Model {
+    label: string;
+    name: string;
+    screenshot: string;
+    tags: string[];
+    variants: Record<string, string>;
+}
+
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, controls: OrbitControls;
+let currentModel: THREE.Group | null, mixer: THREE.AnimationMixer | null;
 let currentLoadId = 0;
 
 const timer = new THREE.Timer();
@@ -34,7 +42,7 @@ function init() {
 
         fetch('https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/model-index.json')
             .then(response => response.json())
-            .then(models => {
+            .then((models: Model[]) => {
                 const gui = new GUI();
                 const modelNames = models.map(m => m.name);
                 const params = { model: 'DamagedHelmet' };
@@ -44,7 +52,7 @@ function init() {
                 }
 
                 gui.add(params, 'model', modelNames).onChange(name => {
-                    const modelInfo = models.find(m => m.name === name);
+                    const modelInfo = models.find(m => m.name === name)!;
                     loadModel(modelInfo);
                 });
 
@@ -72,7 +80,7 @@ function init() {
     window.addEventListener('resize', onWindowResize);
 }
 
-function loadModel(modelInfo) {
+function loadModel(modelInfo: Model) {
     const variants = modelInfo.variants;
     const variant = variants['glTF-Binary'] || variants['glTF'];
     const url = `https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/${modelInfo.name}/${variant.endsWith('.glb') ? 'glTF-Binary' : 'glTF'}/${variant}`;
@@ -117,7 +125,12 @@ function loadModel(modelInfo) {
     });
 }
 
-function fitCameraToSelection(camera, controls, selection, fitOffset = 1.3) {
+function fitCameraToSelection(
+    camera: THREE.PerspectiveCamera,
+    controls: OrbitControls,
+    selection: THREE.Group,
+    fitOffset = 1.3,
+) {
     const box = new THREE.Box3();
     box.setFromObject(selection);
 

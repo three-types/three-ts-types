@@ -1,13 +1,13 @@
 import * as THREE from 'three';
 import { ARButton } from 'three/addons/webxr/ARButton.js';
 
-let container;
-let camera, scene, renderer;
-let controller1, controller2;
+let container: HTMLDivElement;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+let controller1: THREE.XRTargetRaySpace, controller2: THREE.XRTargetRaySpace;
 
-let reticle;
+let reticle: THREE.Mesh;
 
-let hitTestSource = null;
+let hitTestSource: XRHitTestSource | null = null;
 let hitTestSourceRequested = false;
 
 init();
@@ -81,14 +81,14 @@ function onWindowResize() {
 
 //
 
-function animate(timestamp, frame) {
+function animate(timestamp: DOMHighResTimeStamp, frame: XRFrame) {
     if (frame) {
         const referenceSpace = renderer.xr.getReferenceSpace();
-        const session = renderer.xr.getSession();
+        const session = renderer.xr.getSession()!;
 
         if (hitTestSourceRequested === false) {
             session.requestReferenceSpace('viewer').then(function (referenceSpace) {
-                session.requestHitTestSource({ space: referenceSpace }).then(function (source) {
+                session.requestHitTestSource!({ space: referenceSpace })!.then(function (source) {
                     hitTestSource = source;
                 });
             });
@@ -108,7 +108,7 @@ function animate(timestamp, frame) {
                 const hit = hitTestResults[0];
 
                 reticle.visible = true;
-                reticle.matrix.fromArray(hit.getPose(referenceSpace).transform.matrix);
+                reticle.matrix.fromArray(hit.getPose(referenceSpace!)!.transform.matrix);
             } else {
                 reticle.visible = false;
             }

@@ -2,7 +2,7 @@ import { Matrix4 } from "../../math/Matrix4.js";
 import Node from "../core/Node.js";
 import UniformNode from "../core/UniformNode.js";
 
-declare class VelocityNode extends Node {
+declare class VelocityNode extends Node<"vec2"> {
     projectionMatrix: Matrix4 | null;
 
     previousModelWorldMatrix: UniformNode<"mat4">;

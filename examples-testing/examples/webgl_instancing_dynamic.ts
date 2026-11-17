@@ -3,15 +3,19 @@ import * as THREE from 'three';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import TWEEN from 'three/addons/libs/tween.module.js';
 
-let camera, scene, renderer, timer, mesh;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGLRenderer,
+    timer: THREE.Timer,
+    mesh: THREE.InstancedMesh;
 
 const amount = 100;
 
 const count = Math.pow(amount, 2);
 const dummy = new THREE.Object3D();
 
-const seeds = [];
-const baseColors = [];
+const seeds: number[] = [];
+const baseColors: number[] = [];
 
 const color = new THREE.Color();
 const colors = [new THREE.Color(0x00ffff), new THREE.Color(0xffff00), new THREE.Color(0xff00ff)];
@@ -167,7 +171,7 @@ function animate() {
     }
 
     mesh.instanceMatrix.needsUpdate = true;
-    if (animation.t > 0) mesh.instanceColor.needsUpdate = true;
+    if (animation.t > 0) mesh.instanceColor!.needsUpdate = true;
 
     mesh.computeBoundingSphere();
 

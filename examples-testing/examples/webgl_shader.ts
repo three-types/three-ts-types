@@ -1,13 +1,13 @@
 import * as THREE from 'three';
 
-let camera, scene, renderer;
+let camera: THREE.OrthographicCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
 
-let uniforms;
+let uniforms: Record<string, THREE.IUniform<unknown>>;
 
 init();
 
 function init() {
-    const container = document.getElementById('container');
+    const container = document.getElementById('container')!;
 
     camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
 
@@ -21,8 +21,8 @@ function init() {
 
     const material = new THREE.ShaderMaterial({
         uniforms: uniforms,
-        vertexShader: document.getElementById('vertexShader').textContent,
-        fragmentShader: document.getElementById('fragmentShader').textContent,
+        vertexShader: document.getElementById('vertexShader')!.textContent!,
+        fragmentShader: document.getElementById('fragmentShader')!.textContent!,
     });
 
     const mesh = new THREE.Mesh(geometry, material);

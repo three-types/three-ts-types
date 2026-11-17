@@ -1,10 +1,14 @@
 import * as THREE from 'three/webgpu';
 import { pass } from 'three/tsl';
 
-let camera, reversedCamera, scene;
-let normalRenderer, logarithmicRenderer, reverseRenderer;
-let normalRenderPipeline, logarithmicRenderPipeline, reverseRenderPipeline;
-const meshes = [];
+let camera: THREE.PerspectiveCamera, reversedCamera: THREE.PerspectiveCamera, scene: THREE.Scene;
+let normalRenderer: THREE.WebGPURenderer,
+    logarithmicRenderer: THREE.WebGPURenderer,
+    reverseRenderer: THREE.WebGPURenderer;
+let normalRenderPipeline: THREE.RenderPipeline,
+    logarithmicRenderPipeline: THREE.RenderPipeline,
+    reverseRenderPipeline: THREE.RenderPipeline;
+const meshes: THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial>[] = [];
 
 init().then(animate);
 
@@ -95,21 +99,21 @@ async function init() {
         }
     }
 
-    const normalContainer = document.getElementById('container_normal');
+    const normalContainer = document.getElementById('container_normal')!;
     normalRenderer = new THREE.WebGPURenderer();
     normalRenderer.setPixelRatio(window.devicePixelRatio);
     normalRenderer.setSize(0.33 * window.innerWidth, window.innerHeight);
     normalRenderer.domElement.style.position = 'relative';
     normalContainer.appendChild(normalRenderer.domElement);
 
-    const logarithmicContainer = document.getElementById('container_logarithmic');
+    const logarithmicContainer = document.getElementById('container_logarithmic')!;
     logarithmicRenderer = new THREE.WebGPURenderer({ logarithmicDepthBuffer: true });
     logarithmicRenderer.setPixelRatio(window.devicePixelRatio);
     logarithmicRenderer.setSize(0.33 * window.innerWidth, window.innerHeight);
     logarithmicRenderer.domElement.style.position = 'relative';
     logarithmicContainer.appendChild(logarithmicRenderer.domElement);
 
-    const reverseContainer = document.getElementById('container_reverse');
+    const reverseContainer = document.getElementById('container_reverse')!;
     reverseRenderer = new THREE.WebGPURenderer({ reversedDepthBuffer: true });
     reverseRenderer.setPixelRatio(window.devicePixelRatio);
     reverseRenderer.setSize(0.33 * window.innerWidth, window.innerHeight);

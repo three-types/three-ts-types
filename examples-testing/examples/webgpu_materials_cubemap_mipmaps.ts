@@ -2,9 +2,9 @@ import * as THREE from 'three/webgpu';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let container;
+let container: HTMLDivElement;
 
-let camera, scene, renderer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
 
 init();
 
@@ -12,10 +12,10 @@ init();
 async function loadCubeTextureWithMipmaps() {
     const path = 'textures/cube/angus/';
     const format = '.jpg';
-    const mipmaps = [];
+    const mipmaps: THREE.CubeTexture[] = [];
     const maxLevel = 8;
 
-    async function loadCubeTexture(urls) {
+    async function loadCubeTexture(urls: string[]): Promise<THREE.CubeTexture> {
         return new Promise(function (resolve) {
             new THREE.CubeTextureLoader().load(urls, function (cubeTexture) {
                 resolve(cubeTexture);
@@ -24,10 +24,10 @@ async function loadCubeTextureWithMipmaps() {
     }
 
     // load mipmaps
-    const pendings = [];
+    const pendings: Promise<void>[] = [];
 
     for (let level = 0; level <= maxLevel; ++level) {
-        const urls = [];
+        const urls: string[] = [];
 
         for (let face = 0; face < 6; ++face) {
             urls.push(path + 'cube_m0' + level + '_c0' + face + format);
@@ -44,7 +44,7 @@ async function loadCubeTextureWithMipmaps() {
 
     await Promise.all(pendings);
 
-    const customizedCubeTexture = mipmaps.shift();
+    const customizedCubeTexture = mipmaps.shift()!;
     customizedCubeTexture.mipmaps = mipmaps;
     customizedCubeTexture.colorSpace = THREE.SRGBColorSpace;
     customizedCubeTexture.minFilter = THREE.LinearMipMapLinearFilter;

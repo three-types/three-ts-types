@@ -2,7 +2,7 @@ import * as THREE from 'three';
 
 import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
 
-let camera, scene, renderer, controls;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, controls: TrackballControls;
 
 init();
 

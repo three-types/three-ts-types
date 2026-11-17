@@ -5,7 +5,7 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let camera, scene, renderer, controls;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, controls: OrbitControls;
 
 init();
 
@@ -39,16 +39,16 @@ async function init() {
     const model = gltf.scene;
 
     // The draft sample asset currently uses clockwise triangle winding.
-    const geometries = new Set();
+    const geometries = new Set<THREE.BufferGeometry>();
 
     model.traverse(function (object) {
-        const geometry = object.geometry;
+        const geometry = (object as THREE.Mesh).geometry;
 
         if (geometry === undefined) return;
 
         if (geometries.has(geometry)) return;
 
-        const index = geometry.index;
+        const index = geometry.index!;
 
         for (let i = 0; i < index.count; i += 3) {
             const second = index.getX(i + 1);

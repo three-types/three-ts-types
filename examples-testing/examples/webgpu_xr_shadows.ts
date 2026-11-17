@@ -3,12 +3,21 @@ import * as THREE from 'three/webgpu';
 import { VRButton } from 'three/addons/webxr/VRButton.js';
 import { setupWebGLXRFallback } from 'three/addons/webxr/WebGLXRFallback.js';
 
-const rendererParameters = { antialias: true, outputBufferType: THREE.UnsignedByteType, multiview: false };
+const rendererParameters: THREE.WebGPURendererParameters = {
+    antialias: true,
+    outputBufferType: THREE.UnsignedByteType,
+    multiview: false,
+};
 const timer = new THREE.Timer();
 timer.connect(document);
 
-let camera, cameraRig, scene, renderer;
-let directionalLight, torusKnot, box, icosahedron, cone, glass;
+let camera: THREE.PerspectiveCamera, cameraRig: THREE.Group, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let directionalLight: THREE.DirectionalLight,
+    torusKnot: THREE.Mesh,
+    box: THREE.Mesh,
+    icosahedron: THREE.Mesh,
+    cone: THREE.Mesh,
+    glass: THREE.Mesh;
 
 init();
 
@@ -135,7 +144,7 @@ function init() {
 }
 
 function createRenderer(forceWebGL = false) {
-    const parameters = { ...rendererParameters };
+    const parameters: THREE.WebGPURendererParameters = { ...rendererParameters };
 
     if (forceWebGL === true) parameters.forceWebGL = true;
 
@@ -152,7 +161,7 @@ function createRenderer(forceWebGL = false) {
     return renderer;
 }
 
-function setRenderer(newRenderer, oldRenderer = null) {
+function setRenderer(newRenderer: THREE.WebGPURenderer, oldRenderer: THREE.WebGPURenderer | null = null) {
     if (oldRenderer === null) {
         document.body.appendChild(newRenderer.domElement);
     } else {

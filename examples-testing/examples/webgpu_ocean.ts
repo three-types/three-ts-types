@@ -1,6 +1,6 @@
 import * as THREE from 'three/webgpu';
 import { pass } from 'three/tsl';
-import { bloom } from 'three/addons/tsl/display/BloomNode.js';
+import BloomNode, { bloom } from 'three/addons/tsl/display/BloomNode.js';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
@@ -8,14 +8,17 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { WaterMesh } from 'three/addons/objects/WaterMesh.js';
 import { SkyMesh } from 'three/addons/objects/SkyMesh.js';
 
-let container;
-let camera, scene, renderer, renderPipeline;
-let controls, water, sun, sky, mesh, bloomPass;
+let container: HTMLElement;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    renderPipeline: THREE.RenderPipeline;
+let controls: OrbitControls, water: WaterMesh, sun: THREE.Vector3, sky: SkyMesh, mesh: THREE.Mesh, bloomPass: BloomNode;
 
 init();
 
 function init() {
-    container = document.getElementById('container');
+    container = document.getElementById('container')!;
 
     //
 
@@ -95,7 +98,7 @@ function init() {
     const pmremGenerator = new THREE.PMREMGenerator(renderer);
     const sceneEnv = new THREE.Scene();
 
-    let renderTarget;
+    let renderTarget: THREE.RenderTarget | undefined;
 
     function updateSun() {
         const phi = THREE.MathUtils.degToRad(90 - parameters.elevation);
@@ -136,7 +139,7 @@ function init() {
 
     // GUI
 
-    const gui = renderer.inspector.createParameters('Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
 
     const folderSky = gui.addFolder('Sky');
     folderSky.add(parameters, 'elevation', 0, 90, 0.1).onChange(updateSun);

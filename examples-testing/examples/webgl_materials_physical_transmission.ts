@@ -20,7 +20,7 @@ const params = {
     transmissionResolutionScale: 1,
 };
 
-let camera, scene, renderer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
 
 let mesh;
 
@@ -180,7 +180,7 @@ function generateTexture() {
     canvas.width = 2;
     canvas.height = 2;
 
-    const context = canvas.getContext('2d');
+    const context = canvas.getContext('2d')!;
     context.fillStyle = 'white';
     context.fillRect(0, 1, 2, 1);
 

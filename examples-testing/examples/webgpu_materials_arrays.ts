@@ -3,8 +3,8 @@ import * as THREE from 'three/webgpu';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let renderer, scene, camera, controls;
-let materials;
+let renderer: THREE.WebGPURenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera, controls: OrbitControls;
+let materials: THREE.MeshStandardMaterial[];
 
 const _a = new THREE.Vector3(),
     _b = new THREE.Vector3();
@@ -112,19 +112,19 @@ function init() {
 
 // rebuilds a polyhedron with a hole cut into each polygon face, like an open paper model
 
-function makeHoleyGeometry(geometry, verticesPerFace, holeScale = 0.6) {
+function makeHoleyGeometry(geometry: THREE.BufferGeometry, verticesPerFace: number, holeScale = 0.6) {
     if (geometry.index !== null) geometry = geometry.toNonIndexed();
 
     const position = geometry.getAttribute('position');
 
-    const positions = [];
+    const positions: number[] = [];
     const holey = new THREE.BufferGeometry();
 
     for (let face = 0; face < position.count / verticesPerFace; face++) {
         // collect the unique corner vertices of the face
 
-        const corners = [];
-        const keys = new Set();
+        const corners: THREE.Vector3[] = [];
+        const keys = new Set<string>();
 
         for (let i = 0; i < verticesPerFace; i++) {
             const v = new THREE.Vector3().fromBufferAttribute(position, face * verticesPerFace + i);
@@ -146,7 +146,7 @@ function makeHoleyGeometry(geometry, verticesPerFace, holeScale = 0.6) {
         const tangent = new THREE.Vector3().subVectors(corners[0], centroid).normalize();
         const bitangent = new THREE.Vector3().crossVectors(normal, tangent);
 
-        const angleOf = v => Math.atan2(_b.subVectors(v, centroid).dot(bitangent), _b.dot(tangent));
+        const angleOf = (v: THREE.Vector3) => Math.atan2(_b.subVectors(v, centroid).dot(bitangent), _b.dot(tangent));
         corners.sort((p, q) => angleOf(p) - angleOf(q));
 
         // bridge each outer edge with its scaled-down inner edge

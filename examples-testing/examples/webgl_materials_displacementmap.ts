@@ -6,8 +6,8 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 
-let stats;
-let camera, scene, renderer, controls;
+let stats: Stats;
+let camera: THREE.OrthographicCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, controls: OrbitControls;
 
 const settings = {
     metalness: 1.0,
@@ -19,9 +19,9 @@ const settings = {
     normalScale: 1.0,
 };
 
-let mesh, material;
+let mesh, material: THREE.MeshStandardMaterial;
 
-let pointLight, ambientLight;
+let pointLight: THREE.PointLight, ambientLight: THREE.AmbientLight;
 
 const height = 500; // of camera frustum
 
@@ -173,7 +173,7 @@ function init() {
 
     const loader = new OBJLoader();
     loader.load('models/obj/ninja/ninjaHead_Low.obj', function (group) {
-        const geometry = group.children[0].geometry;
+        const geometry = (group.children[0] as THREE.Mesh).geometry;
         geometry.center();
 
         mesh = new THREE.Mesh(geometry, material);

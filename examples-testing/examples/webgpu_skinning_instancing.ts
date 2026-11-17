@@ -4,10 +4,10 @@ import { gaussianBlur } from 'three/addons/tsl/display/GaussianBlurNode.js';
 
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-let camera, scene, renderer;
-let renderPipeline;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let renderPipeline: THREE.RenderPipeline;
 
-let mixer, timer;
+let mixer: THREE.AnimationMixer, timer: THREE.Timer;
 
 init();
 
@@ -53,7 +53,7 @@ function init() {
         const dummy = new THREE.Object3D();
 
         object.traverse(child => {
-            if (child.isMesh) {
+            if ((child as THREE.Mesh).isMesh) {
                 const oscNode = oscSine(time.mul(0.1));
 
                 // random colors between instances from 0x000000 to 0xFFFFFF
@@ -62,14 +62,22 @@ function init() {
                 // random [ 0, 1 ] values between instances
                 const randomMetalness = range(0, 1);
 
-                child.material = new THREE.MeshStandardNodeMaterial();
-                child.material.roughness = 0.1;
-                child.material.metalnessNode = mix(0.0, randomMetalness, oscNode);
-                child.material.colorNode = mix(color(0xffffff), randomColors, oscNode);
+                (child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardNodeMaterial>).material =
+                    new THREE.MeshStandardNodeMaterial();
+                (child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardNodeMaterial>).material.roughness = 0.1;
+                (child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardNodeMaterial>).material.metalnessNode =
+                    mix(0.0, randomMetalness, oscNode);
+                (child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardNodeMaterial>).material.colorNode = mix(
+                    color(0xffffff),
+                    randomColors,
+                    oscNode,
+                );
 
-                child.isInstancedMesh = true; // TODO: Resolve this hack
-                child.instanceMatrix = new THREE.InstancedBufferAttribute(new Float32Array(instanceCount * 16), 16);
-                child.instanceColor = null;
+                (child as { isInstancedMesh?: boolean }).isInstancedMesh = true; // TODO: Resolve this hack
+                (child as THREE.InstancedMesh<THREE.BufferGeometry, THREE.MeshStandardNodeMaterial>).instanceMatrix =
+                    new THREE.InstancedBufferAttribute(new Float32Array(instanceCount * 16), 16);
+                (child as THREE.InstancedMesh<THREE.BufferGeometry, THREE.MeshStandardNodeMaterial>).instanceColor =
+                    null;
                 child.count = instanceCount;
 
                 for (let i = 0; i < instanceCount; i++) {
@@ -78,7 +86,11 @@ function init() {
 
                     dummy.updateMatrix();
 
-                    dummy.matrix.toArray(child.instanceMatrix.array, i * 16);
+                    dummy.matrix.toArray(
+                        (child as THREE.InstancedMesh<THREE.BufferGeometry, THREE.MeshStandardNodeMaterial>)
+                            .instanceMatrix.array,
+                        i * 16,
+                    );
                 }
             }
         });

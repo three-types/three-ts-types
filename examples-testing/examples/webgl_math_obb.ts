@@ -5,9 +5,16 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 import Stats from 'three/addons/libs/stats.module.js';
 
-let camera, scene, renderer, timer, controls, stats, raycaster, hitbox;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGLRenderer,
+    timer: THREE.Timer,
+    controls: OrbitControls,
+    stats: Stats,
+    raycaster: THREE.Raycaster,
+    hitbox: THREE.Mesh;
 
-const objects = [],
+const objects: THREE.Mesh<THREE.BoxGeometry, THREE.MeshLambertMaterial>[] = [],
     mouse = new THREE.Vector2();
 
 init();
@@ -90,7 +97,7 @@ function init() {
     document.addEventListener('click', onClick);
 }
 
-function onClick(event) {
+function onClick(event: MouseEvent) {
     event.preventDefault();
 
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
@@ -126,7 +133,10 @@ function onClick(event) {
     }
 }
 
-function sortIntersections(a, b) {
+function sortIntersections(
+    a: { distance: number; object: THREE.Mesh<THREE.BoxGeometry, THREE.MeshLambertMaterial> },
+    b: { distance: number; object: THREE.Mesh<THREE.BoxGeometry, THREE.MeshLambertMaterial> },
+) {
     return a.distance - b.distance;
 }
 

@@ -9,10 +9,24 @@ import { CityGenerator, createBuildingMaterial, createRoadMaterial } from 'three
 import { LightProbeGrid } from 'three/addons/lighting/LightProbeGrid.js';
 import { LightProbeGridHelper } from 'three/addons/helpers/LightProbeGridHelper.js';
 
-let camera, scene, renderer, controls, timer;
-let cityGroup, cityProxy, materials, city, renderPipeline;
-let sky, sun, sunLight, pmremGenerator, envScene, envRenderTarget, cityBounds;
-let probes, probesHelper;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    controls: FirstPersonControls,
+    timer: THREE.Timer;
+let cityGroup: THREE.Group,
+    cityProxy: THREE.InstancedMesh,
+    materials: { building: THREE.MeshStandardNodeMaterial },
+    city: CityGenerator,
+    renderPipeline: THREE.RenderPipeline;
+let sky: SkyMesh,
+    sun: THREE.Vector3,
+    sunLight: THREE.DirectionalLight,
+    pmremGenerator: THREE.PMREMGenerator,
+    envScene: THREE.Scene,
+    envRenderTarget: THREE.CubeRenderTarget,
+    cityBounds: THREE.Box3;
+let probes: LightProbeGrid, probesHelper: LightProbeGridHelper;
 let bakeIndex = 0,
     bakePass = 0;
 
@@ -137,7 +151,7 @@ async function init() {
 
     // parameters
 
-    const gui = renderer.inspector.createParameters('City');
+    const gui = (renderer.inspector as Inspector).createParameters('City');
     gui.add(parameters, 'seed', 0, 100, 1)
         .debounce(300)
         .onChange(() => {
@@ -233,7 +247,7 @@ function generateCity() {
     if (cityProxy) {
         scene.remove(cityProxy);
         cityProxy.geometry.dispose();
-        cityProxy.material.dispose();
+        (cityProxy.material as THREE.Material).dispose();
         cityProxy.dispose();
     }
 
@@ -289,7 +303,7 @@ function updateProbes() {
     }
 }
 
-function toggleProbesHelper(value) {
+function toggleProbesHelper(value: boolean) {
     if (probesHelper === undefined) {
         probesHelper = new LightProbeGridHelper(probes, 3);
         scene.add(probesHelper);

@@ -2,8 +2,8 @@ import * as THREE from 'three';
 
 import Stats from 'three/addons/libs/stats.module.js';
 
-let stats, timer;
-let scene, camera, renderer, mixer;
+let stats: Stats, timer: THREE.Timer;
+let scene: THREE.Scene, camera: THREE.PerspectiveCamera, renderer: THREE.WebGLRenderer, mixer: THREE.AnimationMixer;
 
 init();
 

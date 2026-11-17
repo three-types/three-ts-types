@@ -3,9 +3,9 @@ import * as THREE from 'three/webgpu';
 const SCREEN_WIDTH = window.innerWidth;
 const SCREEN_HEIGHT = window.innerHeight;
 
-let container;
+let container: HTMLDivElement;
 
-let camera, scene1, scene2, renderer;
+let camera: THREE.PerspectiveCamera, scene1: THREE.Scene, scene2: THREE.Scene, renderer: THREE.WebGPURenderer;
 
 let mouseX = 0,
     mouseY = 0;
@@ -90,7 +90,7 @@ async function init() {
     addPainting(scene1, mesh1);
     addPainting(scene2, mesh2);
 
-    function addPainting(zscene, zmesh) {
+    function addPainting(zscene: THREE.Scene, zmesh: THREE.Mesh<THREE.PlaneGeometry, THREE.MeshBasicMaterial>) {
         const image = texturePainting1.image;
 
         zmesh.scale.x = image.width / 100;
@@ -131,9 +131,9 @@ async function init() {
     document.addEventListener('mousemove', onDocumentMouseMove);
 }
 
-function mipmap(size, color) {
+function mipmap(size: number, color: string) {
     const imageCanvas = document.createElement('canvas');
-    const context = imageCanvas.getContext('2d');
+    const context = imageCanvas.getContext('2d')!;
 
     imageCanvas.width = imageCanvas.height = size;
 
@@ -146,7 +146,7 @@ function mipmap(size, color) {
     return imageCanvas;
 }
 
-function onDocumentMouseMove(event) {
+function onDocumentMouseMove(event: MouseEvent) {
     mouseX = event.clientX - windowHalfX;
     mouseY = event.clientY - windowHalfY;
 }

@@ -4,8 +4,8 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
 
 import { Fn, uniform, instancedArray, float, vec2, color, instanceIndex } from 'three/tsl';
 
-let camera, scene, renderer;
-let computeNode;
+let camera: THREE.OrthographicCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let computeNode: THREE.ComputeNode;
 
 const pointerVector = new THREE.Vector2(-10.0, -10.0); // Out of bounds first
 const scaleVector = new THREE.Vector2(1, 1);
@@ -96,7 +96,7 @@ async function init() {
 
     // gui
 
-    const gui = renderer.inspector.createParameters('Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
 
     gui.add(scaleVector, 'x', 0, 1, 0.01);
     gui.add(scaleVector, 'y', 0, 1, 0.01);
@@ -108,7 +108,7 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function onMouseMove(event) {
+function onMouseMove(event: MouseEvent) {
     const x = event.clientX;
     const y = event.clientY;
 
