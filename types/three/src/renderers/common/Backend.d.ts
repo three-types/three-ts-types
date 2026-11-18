@@ -29,7 +29,7 @@ export default abstract class Backend {
 
     beginTimer(): object | null;
 
-    endTimer(timer: object | null): Promise<number | null>;
+    endTimer(timer: object | null): Promise<{ start: number | null; end: number | null; delta: number } | null>;
 
     resolveTimestamps(): void;
 }
