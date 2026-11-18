@@ -7,7 +7,6 @@ import LightsNode from "./LightsNode.js";
 export interface LightingContext {
     radiance: Node;
     irradiance: Node;
-    iblIrradiance: Node;
     ambientOcclusion: Node;
     reflectedLight: LightingModelReflectedLight;
     materialLightings: LightingNode[];
