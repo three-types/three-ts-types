@@ -1,11 +1,20 @@
 import { BoxGeometry, Mesh, NodeMaterial, UniformNode } from "three/webgpu";
 
 declare class SkyMesh extends Mesh<BoxGeometry, NodeMaterial> {
+    /**
+     * @deprecated since r188. Multiply {@link SkyMesh#mieCoefficient} by turbidity / 2 instead.
+     */
     turbidity: UniformNode<"float">;
     rayleigh: UniformNode<"float">;
     mieCoefficient: UniformNode<"float">;
     mieDirectionalG: UniformNode<"float">;
+    mieDirectionalGSpread: UniformNode<"float">;
+    mieColor: UniformNode<"color">;
+    mieAlbedo: UniformNode<"color">;
+    absorptionScale: UniformNode<"float">;
+    absorptionColor: UniformNode<"color">;
     sunPosition: UniformNode<"vec3">;
+    sunSize: UniformNode<"float">;
     cloudScale: UniformNode<"float">;
     cloudSpeed: UniformNode<"float">;
     cloudCoverage: UniformNode<"float">;
