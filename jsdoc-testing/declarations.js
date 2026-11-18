@@ -277,6 +277,7 @@ const files = [
     'src/nodes/display/BlendModes',
     'src/nodes/display/FrontFacingNode',
     'src/nodes/display/PremultiplyAlphaFunctions',
+    'src/nodes/lighting/OcclusionAwareIrradianceNode',
     'src/nodes/utils/EquirectUV',
     'src/nodes/utils/Packing',
     'src/objects/BatchedMesh',
