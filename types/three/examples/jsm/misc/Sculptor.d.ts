@@ -90,13 +90,14 @@ export class Sculptor extends EventDispatcher<SculptorEventMap> {
      */
     enabled: boolean;
     /**
-     * Whether every stamp is repeated across the mesh's local `YZ` plane (`x = 0`).
-     * Drag and Scale follow the pointer and are not mirrored.
+     * The mesh-local axis the mirror plane is perpendicular to. Every stamp is
+     * repeated across the plane through the mesh's local origin. Use `'none'` to
+     * disable mirroring. Drag and Scale follow the pointer and are not mirrored.
      *
-     * @type {boolean}
-     * @default false
+     * @type {('none'|'x'|'y'|'z')}
+     * @default 'none'
      */
-    mirror: boolean;
+    mirrorAxis: "none" | "x" | "y" | "z";
     /**
      * Connects pointer input to a DOM element.
      *
