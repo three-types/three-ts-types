@@ -55,6 +55,7 @@ declare class WebGLState {
     enable(id: number): void;
     disable(id: number): void;
     bindFramebuffer(target: number, framebuffer: WebGLFramebuffer | null): void;
+    getBoundFramebuffer(target: number): WebGLFramebuffer | null;
     drawBuffers(renderTarget: WebGLRenderTarget | null, framebuffer: WebGLFramebuffer | null): void;
     useProgram(program: WebGLProgram): boolean;
     setBlending(
