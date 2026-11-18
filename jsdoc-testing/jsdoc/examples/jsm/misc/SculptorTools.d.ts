@@ -1,0 +1,13 @@
+export function subdivisionPass(mesh: any, iTris: any, center: any, radius2: any, detail2: any): any;
+export function decimationPass(mesh: any, iTris: any, center: any, radius2: any, detail2: any): Uint32Array<ArrayBuffer>;
+export function getFrontVertices(mesh: any, iVertsInRadius: any, eyeDir: any): Uint32Array<ArrayBuffer>;
+export function areaNormal(mesh: any, iVerts: any): number[] | null;
+export function areaCenter(mesh: any, iVerts: any): number[];
+export function toolBrush(mesh: any, iVerts: any, aNormal: any, center: any, radiusSq: any, strength: any, negative: any): void;
+export function toolFlatten(mesh: any, iVerts: any, aNormal: any, aCenter2: any, center: any, radiusSq: any, strength: any, negative: any): void;
+export function toolInflate(mesh: any, iVerts: any, center: any, radiusSq: any, strength: any, negative: any): void;
+export function toolSmooth(mesh: any, iVerts: any, strength: any): void;
+export function toolPinch(mesh: any, iVerts: any, center: any, radiusSq: any, strength: any, negative: any): void;
+export function toolCrease(mesh: any, iVerts: any, aNormal: any, center: any, radiusSq: any, strength: any, negative: any): void;
+export function toolDrag(mesh: any, iVerts: any, center: any, radiusSq: any, dragDir: any): void;
+export function toolScale(mesh: any, iVerts: any, center: any, radiusSq: any, deltaScale: any): void;
