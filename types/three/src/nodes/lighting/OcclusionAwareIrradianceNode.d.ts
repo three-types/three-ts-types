@@ -1,5 +1,4 @@
 import Node from "../core/Node.js";
-import NodeBuilder from "../core/NodeBuilder.js";
 import LightingNode from "./LightingNode.js";
 
 /**
@@ -23,7 +22,6 @@ declare class OcclusionAwareIrradianceNode extends LightingNode {
      * @type {Node<vec3>}
      */
     node: Node<"vec3">;
-    setup(builder: NodeBuilder): void;
 }
 
 export default OcclusionAwareIrradianceNode;
