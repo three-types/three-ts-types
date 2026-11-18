@@ -11,14 +11,16 @@ import Renderer from "../../renderers/common/Renderer.js";
 import { Scene } from "../../scenes/Scene.js";
 import Node from "../core/Node.js";
 import NodeBuilder from "../core/NodeBuilder.js";
+import NodeFrame from "../core/NodeFrame.js";
 import LightsNode from "./LightsNode.js";
 
 declare class ShadowBaseNode extends Node {
     light: Light;
+    shadow: LightShadow;
 
     readonly isShadowBasedNode: true;
 
-    constructor(light: Light);
+    constructor(light: Light, shadow?: LightShadow);
 
     getShadowMaterial(): NodeMaterial;
 
@@ -40,6 +42,24 @@ declare class ShadowBaseNode extends Node {
     ) => void;
 
     setupShadowPosition(builder: NodeBuilder): void;
+
+    /**
+     * Updates the shadow. Must be implemented by subclasses.
+     *
+     * @abstract
+     * @param {NodeFrame} frame - A reference to the current node frame.
+     */
+    updateShadow(frame: NodeFrame): void;
+
+    /**
+     * Returns `true` if the shadow map must be rendered for the given frame. The shadow
+     * map is rendered once per camera and frame. Renders nested in the one that has
+     * updated the shadow map in the current frame share it.
+     *
+     * @param {NodeFrame} frame - A reference to the current node frame.
+     * @return {boolean} Whether the shadow map must be rendered.
+     */
+    needsRefresh(frame: NodeFrame): boolean;
 }
 
 export const shadowPositionWorld: Node;
