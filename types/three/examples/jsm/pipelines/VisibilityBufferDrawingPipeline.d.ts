@@ -2,6 +2,8 @@ import { MeshletDrawingPipeline } from "./MeshletDrawingPipeline.js";
 
 export interface VisibilityBufferDrawingPipelineParameters {
     lodThreshold?: number | undefined;
+    lodTransition?: number | undefined;
+    transitionScreenRadius?: number | undefined;
     shadowLodThreshold?: number | undefined;
     maxRasterSize?: number | undefined;
     debug?: boolean | undefined;
