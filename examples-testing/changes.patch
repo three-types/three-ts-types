@@ -16268,7 +16268,7 @@ index 4afa5d2d0..715c323a2 100644
  
              render();
 diff --git a/examples-testing/examples/webgpu_gaussian_splat.ts b/examples-testing/examples/webgpu_gaussian_splat.ts
-index 8ff688735..cd2de3937 100644
+index 9299b7c5b..42be8a58d 100644
 --- a/examples-testing/examples/webgpu_gaussian_splat.ts
 +++ b/examples-testing/examples/webgpu_gaussian_splat.ts
 @@ -6,7 +6,13 @@ import { SPZLoader } from 'three/addons/loaders/SPZLoader.js';
@@ -16310,10 +16310,10 @@ index 8ff688735..cd2de3937 100644
 +}
 +
 +const sources: Record<string, SplatSource> = {
-     millipede: {
-         name: 'Millipede (SPLAT)',
-         url: './models/splat/millipede.splat',
-@@ -92,7 +116,7 @@ async function init() {
+     splatLab: {
+         name: 'Splat Lab (SPZ v4)',
+         url: './models/spz/splat_lab.v4.spz',
+@@ -106,7 +130,7 @@ async function init() {
      controls.target.set(0, 0, 0);
      controls.update();
  
@@ -16322,7 +16322,7 @@ index 8ff688735..cd2de3937 100644
      gui.add(params, 'source', sourceNames)
          .name('Splat')
          .onChange(async value => {
-@@ -113,12 +137,12 @@ async function init() {
+@@ -127,12 +151,12 @@ async function init() {
      renderer.domElement.addEventListener('click', onClick);
  }
  
@@ -16337,7 +16337,7 @@ index 8ff688735..cd2de3937 100644
      // check drag distance
      const dx = event.clientX - pointerDownX;
      const dy = event.clientY - pointerDownY;
-@@ -131,7 +155,7 @@ function onClick(event) {
+@@ -145,7 +169,7 @@ function onClick(event) {
  
      raycaster.setFromCamera(pointer, camera);
  
@@ -16346,7 +16346,7 @@ index 8ff688735..cd2de3937 100644
      if (hit) {
          hitMarker.position.copy(hit.point);
          hitMarker.visible = true;
-@@ -140,7 +164,7 @@ function onClick(event) {
+@@ -154,7 +178,7 @@ function onClick(event) {
      }
  }
  
@@ -16355,7 +16355,7 @@ index 8ff688735..cd2de3937 100644
      const source = sources[sourceKey];
      const splatData = await new source.loader().loadAsync(source.url);
  
-@@ -159,19 +183,19 @@ async function loadSplatSource(sourceKey) {
+@@ -173,19 +197,19 @@ async function loadSplatSource(sourceKey) {
      updateLicenseInfo(source);
  }
  
@@ -16380,7 +16380,7 @@ index 8ff688735..cd2de3937 100644
      const credit = source.credit;
  
      if (credit === undefined) {
-@@ -195,20 +219,20 @@ function updateLicenseInfo(source) {
+@@ -209,20 +233,20 @@ function updateLicenseInfo(source) {
          '</a>.';
  }
  
