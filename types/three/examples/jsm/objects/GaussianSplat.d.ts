@@ -30,6 +30,8 @@ declare class GaussianSplat extends Mesh<InstancedBufferGeometry, NodeMaterial> 
     computeBoundingSphere(): void;
 
     updateSort(renderer: Renderer, camera: Camera): boolean;
+
+    dispose(): void;
 }
 
 export { GaussianSplat };

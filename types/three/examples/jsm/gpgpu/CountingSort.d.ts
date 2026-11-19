@@ -28,4 +28,6 @@ export class CountingSort {
     computeCPU(binFn: (index: number) => number): void;
 
     enableWebGLBuffers(): void;
+
+    dispose(): void;
 }
