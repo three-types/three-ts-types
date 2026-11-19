@@ -6410,63 +6410,6 @@ index 0a55bec42..b45da6b93 100644
          const light = new THREE.PointLight(0xffffff, 1.5, 2000, 0);
          light.color.setHSL(h, s, l);
          light.position.set(x, y, z);
-diff --git a/examples-testing/examples/webgl_lightprobe.ts b/examples-testing/examples/webgl_lightprobe.ts
-index 58f021e6d..1427cce47 100644
---- a/examples-testing/examples/webgl_lightprobe.ts
-+++ b/examples-testing/examples/webgl_lightprobe.ts
-@@ -8,12 +8,15 @@ import { LightProbeGenerator } from 'three/addons/lights/LightProbeGenerator.js'
- 
- import { LightProbeHelper } from 'three/addons/helpers/LightProbeHelper.js';
- 
--let mesh, renderer, scene, camera;
-+let mesh: THREE.Mesh<THREE.SphereGeometry, THREE.MeshStandardMaterial>,
-+    renderer: THREE.WebGLRenderer,
-+    scene: THREE.Scene,
-+    camera: THREE.PerspectiveCamera;
- 
- let gui;
- 
--let lightProbe;
--let directionalLight;
-+let lightProbe: THREE.LightProbe;
-+let directionalLight: THREE.DirectionalLight;
- 
- // linear color space
- const API = {
-@@ -58,7 +61,7 @@ function init() {
-     scene.add(directionalLight);
- 
-     // envmap
--    const genCubeUrls = function (prefix, postfix) {
-+    const genCubeUrls = function (prefix: string, postfix: string) {
-         return [
-             prefix + 'px' + postfix,
-             prefix + 'nx' + postfix,
-diff --git a/examples-testing/examples/webgl_lightprobe_cubecamera.ts b/examples-testing/examples/webgl_lightprobe_cubecamera.ts
-index 65425d4e7..a9a0533ef 100644
---- a/examples-testing/examples/webgl_lightprobe_cubecamera.ts
-+++ b/examples-testing/examples/webgl_lightprobe_cubecamera.ts
-@@ -4,9 +4,9 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
- import { LightProbeHelper } from 'three/addons/helpers/LightProbeHelper.js';
- import { LightProbeGenerator } from 'three/addons/lights/LightProbeGenerator.js';
- 
--let renderer, scene, camera, cubeCamera;
-+let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera, cubeCamera: THREE.CubeCamera;
- 
--let lightProbe;
-+let lightProbe: THREE.LightProbe;
- 
- init();
- 
-@@ -40,7 +40,7 @@ function init() {
-     scene.add(lightProbe);
- 
-     // envmap
--    const genCubeUrls = function (prefix, postfix) {
-+    const genCubeUrls = function (prefix: string, postfix: string) {
-         return [
-             prefix + 'px' + postfix,
-             prefix + 'nx' + postfix,
 diff --git a/examples-testing/examples/webgl_lightprobes.ts b/examples-testing/examples/webgl_lightprobes.ts
 index cd54fe8ea..3657ae50d 100644
 --- a/examples-testing/examples/webgl_lightprobes.ts
@@ -17142,81 +17085,6 @@ index a79da1af5..7b00ed49b 100644
  
          status.textContent = `Baking: ${bakedRays} / ${rays} rays per texel`;
      } else {
-diff --git a/examples-testing/examples/webgpu_lightprobe.ts b/examples-testing/examples/webgpu_lightprobe.ts
-index 3e90b6f66..342083547 100644
---- a/examples-testing/examples/webgpu_lightprobe.ts
-+++ b/examples-testing/examples/webgpu_lightprobe.ts
-@@ -1,6 +1,7 @@
- import * as THREE from 'three/webgpu';
- 
- import { Inspector } from 'three/addons/inspector/Inspector.js';
-+import { ParametersGroup } from 'three/addons/inspector/tabs/Parameters.js';
- 
- import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
- 
-@@ -8,12 +9,15 @@ import { LightProbeGenerator } from 'three/addons/lights/LightProbeGenerator.js'
- 
- import { LightProbeHelper } from 'three/addons/helpers/LightProbeHelperGPU.js';
- 
--let mesh, renderer, scene, camera;
-+let mesh: THREE.Mesh<THREE.SphereGeometry, THREE.MeshStandardMaterial>,
-+    renderer: THREE.WebGPURenderer,
-+    scene: THREE.Scene,
-+    camera: THREE.PerspectiveCamera;
- 
--let gui;
-+let gui: ParametersGroup;
- 
--let lightProbe;
--let directionalLight;
-+let lightProbe: THREE.LightProbe;
-+let directionalLight: THREE.DirectionalLight;
- 
- // linear color space
- const API = {
-@@ -59,7 +63,7 @@ function init() {
-     scene.add(directionalLight);
- 
-     // envmap
--    const genCubeUrls = function (prefix, postfix) {
-+    const genCubeUrls = function (prefix: string, postfix: string) {
-         return [
-             prefix + 'px' + postfix,
-             prefix + 'nx' + postfix,
-@@ -100,7 +104,7 @@ function init() {
-     });
- 
-     // gui
--    gui = renderer.inspector.createParameters('Intensity');
-+    gui = (renderer.inspector as Inspector).createParameters('Intensity');
- 
-     gui.add(API, 'lightProbeIntensity', 0, 1, 0.02)
-         .name('light probe')
-diff --git a/examples-testing/examples/webgpu_lightprobe_cubecamera.ts b/examples-testing/examples/webgpu_lightprobe_cubecamera.ts
-index 60fe6ccc9..c29cde36b 100644
---- a/examples-testing/examples/webgpu_lightprobe_cubecamera.ts
-+++ b/examples-testing/examples/webgpu_lightprobe_cubecamera.ts
-@@ -6,9 +6,9 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
- import { LightProbeHelper } from 'three/addons/helpers/LightProbeHelperGPU.js';
- import { LightProbeGenerator } from 'three/addons/lights/LightProbeGenerator.js';
- 
--let renderer, scene, camera, cubeCamera;
-+let renderer: THREE.WebGPURenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera, cubeCamera: THREE.CubeCamera;
- 
--let lightProbe;
-+let lightProbe: THREE.LightProbe;
- 
- init();
- 
-@@ -43,7 +43,7 @@ function init() {
-     scene.add(lightProbe);
- 
-     // envmap
--    const genCubeUrls = function (prefix, postfix) {
-+    const genCubeUrls = function (prefix: string, postfix: string) {
-         return [
-             prefix + 'px' + postfix,
-             prefix + 'nx' + postfix,
 diff --git a/examples-testing/examples/webgpu_lightprobes.ts b/examples-testing/examples/webgpu_lightprobes.ts
 index b2b0545e0..5d43a2e4b 100644
 --- a/examples-testing/examples/webgpu_lightprobes.ts
@@ -21918,7 +21786,7 @@ index 20118247a..cd513277f 100644
      gui.add(threshold, 'value', 0, 0.9).name('threshold');
      gui.add(samples, 'value', 2, 128, 1).name('samples');
 diff --git a/examples-testing/examples/webgpu_postprocessing_ao.ts b/examples-testing/examples/webgpu_postprocessing_ao.ts
-index fed1b7ea0..96d9bcac3 100644
+index 66eca9073..5c8f20cbe 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ao.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ao.ts
 @@ -13,9 +13,9 @@ import {
