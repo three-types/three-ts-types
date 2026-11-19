@@ -179,8 +179,6 @@ export interface WebGLProgramParameters {
     numSpotLightShadows: number;
     numSpotLightShadowsWithMaps: number;
 
-    numLightProbes: number;
-
     numLightProbeGrids: number;
 
     numClippingPlanes: number;

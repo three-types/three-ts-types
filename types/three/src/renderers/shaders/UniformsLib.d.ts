@@ -78,7 +78,6 @@ export const UniformsLib: {
     };
     lights: {
         ambientLightColor: IUniform<unknown[]>;
-        lightProbe: IUniform<unknown[]>;
         sunLights: {
             value: unknown[];
             properties: {
@@ -185,6 +184,7 @@ export const UniformsLib: {
         probesMin: IUniform<Vector3[]>;
         probesMax: IUniform<Vector3[]>;
         probesResolution: IUniform<Vector3[]>;
+        probesIntensity: IUniform<number[]>;
     };
     points: {
         diffuse: IUniform<Color>;

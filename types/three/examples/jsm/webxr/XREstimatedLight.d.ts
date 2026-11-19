@@ -1,4 +1,5 @@
 import { DirectionalLight, Group, LightProbe, Object3DEventMap, Texture, WebGLRenderer } from "three";
+import { LightProbeGridWebGL } from "../lighting/LightProbeGridWebGL.js";
 
 export class SessionLightProbe {
     xrLight: XREstimatedLight;
@@ -49,7 +50,15 @@ export interface XREstimatedLightEventMap extends Object3DEventMap {
  * To use this, as with all files in the /examples directory, you will have to include the file separately in your HTML.
  */
 export class XREstimatedLight extends Group<XREstimatedLightEventMap> {
-    lightProbe: LightProbe;
+    /**
+     * A 1x1x1 light probe grid that represents the estimated spherical harmonics irradiance.
+     */
+    lightProbeGrid: LightProbeGridWebGL;
+
+    /**
+     * @deprecated since r188. Use {@link XREstimatedLight#lightProbeGrid} instead.
+     */
+    get lightProbe(): LightProbeGridWebGL;
 
     directionalLight: DirectionalLight;
 
