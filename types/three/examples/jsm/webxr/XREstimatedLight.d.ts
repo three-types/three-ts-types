@@ -53,12 +53,7 @@ export class XREstimatedLight extends Group<XREstimatedLightEventMap> {
     /**
      * A 1x1x1 light probe grid that represents the estimated spherical harmonics irradiance.
      */
-    lightProbeGrid: LightProbeGridWebGL;
-
-    /**
-     * @deprecated since r188. Use {@link XREstimatedLight#lightProbeGrid} instead.
-     */
-    get lightProbe(): LightProbeGridWebGL;
+    lightProbe: LightProbeGridWebGL;
 
     directionalLight: DirectionalLight;
 
