@@ -1,0 +1,20 @@
+export function WebGLCapabilities(gl: any, extensions: any, parameters: any, utils: any): {
+    isWebGL2: boolean;
+    getMaxAnisotropy: () => any;
+    getMaxPrecision: (precision: any) => "highp" | "mediump" | "lowp";
+    textureFormatReadable: (textureFormat: any) => boolean;
+    textureTypeReadable: (textureType: any) => boolean;
+    precision: any;
+    logarithmicDepthBuffer: boolean;
+    reversedDepthBuffer: any;
+    maxTextures: any;
+    maxVertexTextures: any;
+    maxTextureSize: any;
+    maxCubemapSize: any;
+    maxAttributes: any;
+    maxVertexUniforms: any;
+    maxVaryings: any;
+    maxFragmentUniforms: any;
+    maxSamples: any;
+    samples: any;
+};
