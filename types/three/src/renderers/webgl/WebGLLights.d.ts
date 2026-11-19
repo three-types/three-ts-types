@@ -18,12 +18,9 @@ export interface WebGLLightsState {
         numPointShadows: number;
         numSpotShadows: number;
         numSpotMaps: number;
-
-        numLightProbes: number;
     };
 
     ambient: number[];
-    probe: unknown[];
     sun: unknown[];
     sunShadow: unknown[];
     sunShadowMap: unknown[];
@@ -44,7 +41,6 @@ export interface WebGLLightsState {
     pointShadowMatrix: unknown[];
     hemi: unknown[];
     numSpotLightShadowsWithMaps: number;
-    numLightProbes: number;
 }
 
 export class WebGLLights {

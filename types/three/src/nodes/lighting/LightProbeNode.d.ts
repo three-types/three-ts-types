@@ -1,10 +1,13 @@
 import { LightProbe } from "../../lights/LightProbe.js";
-import UniformArrayNode from "../accessors/UniformArrayNode.js";
 import AnalyticLightNode from "./AnalyticLightNode.js";
 
+/**
+ * @deprecated since r188.
+ */
 declare class LightProbeNode extends AnalyticLightNode<LightProbe> {
-    lightProbe: UniformArrayNode<"vec3">;
-
+    /**
+     * @deprecated since r188.
+     */
     constructor(light?: LightProbe | null);
 }
 
