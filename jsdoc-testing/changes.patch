@@ -2374,14 +2374,16 @@ index 3a794d7df..40bd78652 100644
       * Called by the tiles renderer when the plugin is unregistered or the
       * tiles renderer is disposed.
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/pipelines/MeshletDrawingPipeline.d.ts b/jsdoc-testing/jsdoc/examples/jsm/pipelines/MeshletDrawingPipeline.d.ts
-index 58a16b607..087c363d4 100644
+index 8ae61cd9d..2bd9c679d 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/pipelines/MeshletDrawingPipeline.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/pipelines/MeshletDrawingPipeline.d.ts
-@@ -1,3 +1,15 @@
+@@ -1,3 +1,17 @@
 +import { Camera, Object3D, StandardDrawingPipeline } from "three/webgpu";
 +
 +export interface MeshletDrawingPipelineParameters {
 +    lodThreshold?: number | undefined;
++    lodTransition?: number | undefined;
++    transitionScreenRadius?: number | undefined;
 +    shadowLodThreshold?: number | undefined;
 +    minScreenRadius?: number | undefined;
 +    coarseScreenRadius?: number | undefined;
@@ -2393,11 +2395,13 @@ index 58a16b607..087c363d4 100644
  /**
   * A GPU-driven drawing pipeline that renders compatible meshes as meshlets. Geometries are processed once into
   * clusters (meshlets) of 64 triangles with a chain of simplified levels of detail. Every frame, compute
-@@ -61,23 +73,8 @@ export class MeshletDrawingPipeline extends StandardDrawingPipeline {
+@@ -61,27 +75,8 @@ export class MeshletDrawingPipeline extends StandardDrawingPipeline {
       * Constructs a new meshlet drawing pipeline.
       *
       * @param {Object} [parameters] - The configuration parameter.
 -     * @param {number} [parameters.lodThreshold=1] - The projected error in pixels below which a simpler level of detail is selected.
+-     * @param {number} [parameters.lodTransition=0] - The fraction of `lodThreshold` over which adjacent levels of detail crossfade with a screen-door dither mask.
+-     * @param {number} [parameters.transitionScreenRadius=0] - The radius in pixels below which the levels of detail of objects switch without a transition, `0` crossfades all objects.
 -     * @param {number} [parameters.shadowLodThreshold=1] - The projected error in shadow map texels below which a simpler level of detail is selected for shadow casters.
 -     * @param {number} [parameters.minScreenRadius=0] - The radius in pixels below which objects are not drawn, `0` draws all objects.
 -     * @param {number} [parameters.coarseScreenRadius=0] - The radius in pixels below which objects are drawn with their simplest level of detail.
@@ -2405,8 +2409,10 @@ index 58a16b607..087c363d4 100644
 -     * @param {boolean} [parameters.occlusionCulling=true] - Whether the clusters hidden by other clusters should be culled.
 -     * @param {boolean} [parameters.depthPrepass=false] - Whether the depth of the clusters should be drawn before their material.
       */
--    constructor({ lodThreshold, shadowLodThreshold, minScreenRadius, coarseScreenRadius, debug, occlusionCulling, depthPrepass }?: {
+-    constructor({ lodThreshold, lodTransition, transitionScreenRadius, shadowLodThreshold, minScreenRadius, coarseScreenRadius, debug, occlusionCulling, depthPrepass }?: {
 -        lodThreshold?: number | undefined;
+-        lodTransition?: number | undefined;
+-        transitionScreenRadius?: number | undefined;
 -        shadowLodThreshold?: number | undefined;
 -        minScreenRadius?: number | undefined;
 -        coarseScreenRadius?: number | undefined;
@@ -2418,7 +2424,7 @@ index 58a16b607..087c363d4 100644
      /**
       * This flag can be used for type testing.
       *
-@@ -85,7 +82,7 @@ export class MeshletDrawingPipeline extends StandardDrawingPipeline {
+@@ -89,7 +84,7 @@ export class MeshletDrawingPipeline extends StandardDrawingPipeline {
       * @readonly
       * @default true
       */
@@ -2427,7 +2433,7 @@ index 58a16b607..087c363d4 100644
      /**
       * The projected error in pixels below which a simpler level of detail is selected.
       *
-@@ -158,41 +155,6 @@ export class MeshletDrawingPipeline extends StandardDrawingPipeline {
+@@ -181,43 +176,6 @@ export class MeshletDrawingPipeline extends StandardDrawingPipeline {
       * @default false
       */
      depthPrepass: boolean;
@@ -2463,13 +2469,15 @@ index 58a16b607..087c363d4 100644
 -        scale: number;
 -        perspective: number;
 -        threshold: number;
+-        transition: number;
+-        transitionScreenRadius: number;
 -        minScreenRadius: number;
 -        coarseScreenRadius: number;
 -    };
      /**
       * The maximum number of objects drawn by the GPU-driven pipeline per render list. The instances of instanced
       * meshes count as objects, once per geometry group. Limited by the maximum size of a storage buffer binding:
-@@ -201,14 +163,7 @@ export class MeshletDrawingPipeline extends StandardDrawingPipeline {
+@@ -226,14 +184,7 @@ export class MeshletDrawingPipeline extends StandardDrawingPipeline {
       * @type {number}
       * @readonly
       */
@@ -2485,7 +2493,7 @@ index 58a16b607..087c363d4 100644
      /**
       * Prepares the meshlets and geometry LODs before `Renderer.compileAsync()` projects
       * the scene. Shared geometries are processed once, including meshes outside the frustum.
-@@ -219,848 +174,10 @@ export class MeshletDrawingPipeline extends StandardDrawingPipeline {
+@@ -244,864 +195,10 @@ export class MeshletDrawingPipeline extends StandardDrawingPipeline {
       * @param {Camera} camera - The camera.
       * @return {Promise} Resolves when the meshlets are ready.
       */
@@ -2822,7 +2830,8 @@ index 58a16b607..087c363d4 100644
 -     * @param {MeshletCulling} culling - The culling of the render list.
 -     * @param {Object} [parameters] - The configuration parameter.
 -     * @param {boolean} [parameters.debug=false] - Whether the clusters are shown instead of the material.
--     * @param {number} [parameters.lodCount=clusters.lodCount] - The number of levels of detail used.
+-     * @param {boolean} [parameters.dither=false] - Whether adjacent levels of detail crossfade in a second draw queue.
+-     * @param {number} [parameters.lodCount=MAX_LODS] - The number of levels of detail used.
 -     * @param {?Object} [parameters.view=null] - The view of the render list, if the draw needs one.
 -     * @param {boolean} [parameters.depthPrepass=false] - Whether the depth of the clusters is drawn before the material.
 -     * @param {boolean} [parameters.instanced=false] - Whether the objects are instanced meshes, whose instances are drawn as objects.
@@ -2833,9 +2842,13 @@ index 58a16b607..087c363d4 100644
 -     * another group of the objects. The transforms, bounds and instance data of the objects are read from this batch, which
 -     * uploads them, instead of being stored again.
 -     * @param {number} [parameters.queueBudget=0] - The minimum number of work items of a queue of the batch, see getQueueCapacity().
+-     * @param {number} [parameters.maxChunks=clusters.maxChunks] - The maximum clusters of a single level of detail.
+-     * @param {number} [parameters.maxPairChunks=maxChunks] - The maximum clusters of an adjacent crossfaded pair of levels.
+-     * @param {?Object} [parameters.pool=null] - The geometry pool.
 -     */
--    constructor(clusters: Object, material: Material, receiveShadow: boolean, capacity: number, renderer: Renderer, culling: MeshletCulling, { debug, lodCount, view, depthPrepass, instanced, instanceColor, farMaterial, source, queueBudget, maxChunks, pool }?: {
+-    constructor(clusters: Object, material: Material, receiveShadow: boolean, capacity: number, renderer: Renderer, culling: MeshletCulling, { debug, dither, lodCount, view, depthPrepass, instanced, instanceColor, farMaterial, source, queueBudget, maxChunks, maxPairChunks, pool }?: {
 -        debug?: boolean | undefined;
+-        dither?: boolean | undefined;
 -        lodCount?: number | undefined;
 -        view?: Object | null | undefined;
 -        depthPrepass?: boolean | undefined;
@@ -2844,6 +2857,9 @@ index 58a16b607..087c363d4 100644
 -        farMaterial?: Material | null;
 -        source?: MeshletBatch | null | undefined;
 -        queueBudget?: number | undefined;
+-        maxChunks?: number | undefined;
+-        maxPairChunks?: number | undefined;
+-        pool?: Object | null | undefined;
 -    });
 -    source: any;
 -    clusters: Object;
@@ -2851,6 +2867,7 @@ index 58a16b607..087c363d4 100644
 -    materialVersion: any;
 -    farMaterial: any;
 -    farMaterialVersion: any;
+-    ditherQueue: boolean;
 -    debug: boolean;
 -    shadow: boolean;
 -    culling: MeshletCulling;
@@ -2863,8 +2880,9 @@ index 58a16b607..087c363d4 100644
 -    capacity: number;
 -    lodCount: number;
 -    queueBudget: number;
--    maxChunks: any;
--    pool: any;
+-    maxChunks: number;
+-    maxPairChunks: number;
+-    pool: Object | null;
 -    count: number;
 -    view: Object | null;
 -    cone: boolean;
@@ -2872,6 +2890,7 @@ index 58a16b607..087c363d4 100644
 -    ownedGeometries: any[];
 -    indirectGeometries: any[];
 -    meshes: any[];
+-    clusterMesh: Mesh | null;
 -    prepassMeshes: Mesh[];
 -    computeNodes: any[];
 -    computeNodesBefore: any[];
@@ -2929,7 +2948,6 @@ index 58a16b607..087c363d4 100644
 -     * @param {Object} shared - The nodes and resources of the batch.
 -     */
 -    setupDraw(shared: Object): void;
--    clusterMesh: Mesh | undefined;
 -    /**
 -     * Creates the geometry of a mesh drawing pulled vertices with the given indirect draw arguments.
 -     *
@@ -2946,12 +2964,14 @@ index 58a16b607..087c363d4 100644
 -     *
 -     * @param {Object} source - The object, triangle and corner nodes of the current vertex.
 -     * @param {Object} shared - The nodes and resources of the batch.
--     * @return {{context: ContextNode, positionNode: ?Node<vec3>, colorNode: ?Node<vec3>}} The context node, the position node and the instance color of the materials.
+-     * @param {?Node<uint>} [lodTransition=null] - The packed level transition of the cluster, if crossfaded.
+-     * @return {{context: ContextNode, positionNode: ?Node<vec3>, colorNode: ?Node<vec3>, maskNode: ?Node<bool>}} The context node, the position node, the instance color and the dither mask of the materials.
 -     */
--    createPulledContext(source: Object, shared: Object): {
+-    createPulledContext(source: Object, shared: Object, lodTransition?: Node<any> | null): {
 -        context: ContextNode;
 -        positionNode: Node<any> | null;
 -        colorNode: Node<any> | null;
+-        maskNode: Node<any> | null;
 -    };
 -    /**
 -     * Creates a mesh which only draws the depth of pulled triangles, for shadow passes and the occlusion view.
@@ -2962,9 +2982,10 @@ index 58a16b607..087c363d4 100644
 -     * @param {Object} shared - The nodes and resources of the batch.
 -     * @param {number} side - The side of the triangles to draw.
 -     * @param {number} [drawOffset=0] - The offset in bytes of the indirect draw arguments.
+-     * @param {?Node<uint>} [lodTransition=null] - The packed level transition of the cluster, if crossfaded.
 -     * @return {Mesh} The mesh.
 -     */
--    createDepthMesh(drawAttribute: IndirectStorageBufferAttribute, source: Object, shared: Object, side: number, drawOffset?: number): Mesh;
+-    createDepthMesh(drawAttribute: IndirectStorageBufferAttribute, source: Object, shared: Object, side: number, drawOffset?: number, lodTransition?: Node<any> | null): Mesh;
 -    /**
 -     * Creates a mesh which draws triangles through the hardware rasterizer by vertex pulling. The source
 -     * provides the object, the triangle and the corner of the current vertex.
@@ -2973,9 +2994,10 @@ index 58a16b607..087c363d4 100644
 -     * @param {Object} source - The object, triangle and corner nodes of the current vertex.
 -     * @param {Object} shared - The nodes and resources of the batch.
 -     * @param {number} [drawOffset=0] - The offset in bytes of the indirect draw arguments.
+-     * @param {?Node<uint>} [lodTransition=null] - The packed level transition of the cluster, if crossfaded.
 -     * @return {Mesh} The mesh.
 -     */
--    createPulledMesh(drawAttribute: IndirectStorageBufferAttribute, source: Object, shared: Object, drawOffset?: number): Mesh;
+-    createPulledMesh(drawAttribute: IndirectStorageBufferAttribute, source: Object, shared: Object, drawOffset?: number, lodTransition?: Node<any> | null): Mesh;
 -    /**
 -     * Writes the transforms of the objects into the range of the batch in the buffers of the culling. The values
 -     * are compared with the values of the last upload, only the slots which changed are uploaded. Batches sharing
@@ -3220,8 +3242,10 @@ index 58a16b607..087c363d4 100644
 -    lodScale: import("three/tsl").UniformNode;
 -    lodPerspective: import("three/tsl").UniformNode;
 -    lodThreshold: import("three/tsl").UniformNode;
+-    lodTransition: import("three/tsl").UniformNode;
 -    minScreenRadius: import("three/tsl").UniformNode;
 -    coarseScreenRadius: import("three/tsl").UniformNode;
+-    transitionScreenRadius: import("three/tsl").UniformNode;
 -    computeReset: any;
 -    objectEndNode: import("three/tsl").UniformNode;
 -    cullNodes: any[];
@@ -3338,14 +3362,16 @@ index 58a16b607..087c363d4 100644
 -import { Matrix4 } from 'three/webgpu';
 -export {};
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/pipelines/VisibilityBufferDrawingPipeline.d.ts b/jsdoc-testing/jsdoc/examples/jsm/pipelines/VisibilityBufferDrawingPipeline.d.ts
-index 6d5782345..c12d0c74f 100644
+index 61c656e13..55ae819e3 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/pipelines/VisibilityBufferDrawingPipeline.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/pipelines/VisibilityBufferDrawingPipeline.d.ts
-@@ -1,3 +1,13 @@
+@@ -1,3 +1,15 @@
 +import { MeshletDrawingPipeline } from "./MeshletDrawingPipeline.js";
 +
 +export interface VisibilityBufferDrawingPipelineParameters {
 +    lodThreshold?: number | undefined;
++    lodTransition?: number | undefined;
++    transitionScreenRadius?: number | undefined;
 +    shadowLodThreshold?: number | undefined;
 +    maxRasterSize?: number | undefined;
 +    debug?: boolean | undefined;
@@ -3355,18 +3381,23 @@ index 6d5782345..c12d0c74f 100644
  /**
   * A meshlet drawing pipeline with a hybrid rasterizer. Like {@link MeshletDrawingPipeline}, compute shaders select the
   * level of detail and cull objects and clusters, but the visible clusters are rasterized into a visibility
-@@ -26,20 +36,8 @@ export class VisibilityBufferDrawingPipeline extends MeshletDrawingPipeline {
+@@ -26,25 +38,8 @@ export class VisibilityBufferDrawingPipeline extends MeshletDrawingPipeline {
       * Constructs a new visibility buffer drawing pipeline.
       *
       * @param {Object} [parameters] - The configuration parameter.
 -     * @param {number} [parameters.lodThreshold=1] - The projected error in pixels below which a simpler level of detail is selected.
+-     * @param {number} [parameters.lodTransition=0] - The fraction of `lodThreshold` over which adjacent levels of detail crossfade with a screen-door dither mask.
+-     * Only the clusters drawn by the hardware rasterizer crossfade, the levels of the software rasterizer switch at once.
+-     * @param {number} [parameters.transitionScreenRadius=0] - The radius in pixels below which the levels of detail of objects switch without a transition, `0` crossfades all objects.
 -     * @param {number} [parameters.shadowLodThreshold=1] - The projected error in shadow map texels below which a simpler level of detail is selected for shadow casters.
 -     * @param {number} [parameters.maxRasterSize=8] - The maximum screen-space size in pixels of triangles rasterized in software.
 -     * @param {boolean} [parameters.debug=false] - Whether the clusters should be shown with a flat color each instead of the material.
 -     * @param {boolean} [parameters.occlusionCulling=true] - Whether the clusters hidden by other clusters should be culled.
       */
--    constructor({ lodThreshold, shadowLodThreshold, maxRasterSize, debug, occlusionCulling }?: {
+-    constructor({ lodThreshold, lodTransition, transitionScreenRadius, shadowLodThreshold, maxRasterSize, debug, occlusionCulling }?: {
 -        lodThreshold?: number | undefined;
+-        lodTransition?: number | undefined;
+-        transitionScreenRadius?: number | undefined;
 -        shadowLodThreshold?: number | undefined;
 -        maxRasterSize?: number | undefined;
 -        debug?: boolean | undefined;
@@ -3377,7 +3408,7 @@ index 6d5782345..c12d0c74f 100644
      /**
       * The maximum screen-space size in pixels of triangles rasterized in software.
       * Larger triangles are drawn by the hardware rasterizer. The software rasterizer
-@@ -50,38 +48,4 @@ export class VisibilityBufferDrawingPipeline extends MeshletDrawingPipeline {
+@@ -55,38 +50,4 @@ export class VisibilityBufferDrawingPipeline extends MeshletDrawingPipeline {
       * @default 8
       */
      maxRasterSize: number;

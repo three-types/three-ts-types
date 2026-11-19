@@ -20406,10 +20406,10 @@ index 055518c21..c30a22903 100644
      if (options.Grid === 'XZ') {
          for (let x = 0; x < 125; x++) {
 diff --git a/examples-testing/examples/webgpu_meshlets_instanced.ts b/examples-testing/examples/webgpu_meshlets_instanced.ts
-index 7cc1568a2..a5103d997 100644
+index bc93e9948..41f4ffcc7 100644
 --- a/examples-testing/examples/webgpu_meshlets_instanced.ts
 +++ b/examples-testing/examples/webgpu_meshlets_instanced.ts
-@@ -22,14 +22,19 @@ const parameters = {
+@@ -25,14 +25,23 @@ const parameters = {
      rotate: true,
  };
  
@@ -20427,7 +20427,11 @@ index 7cc1568a2..a5103d997 100644
 +    scene: THREE.Scene,
 +    camera: THREE.PerspectiveCamera,
 +    controls: OrbitControls,
-+    pipelines: { Meshlet: MeshletDrawingPipeline; [key: string]: THREE.StandardDrawingPipeline },
++    pipelines: {
++        Meshlet: MeshletDrawingPipeline;
++        'Visibility Buffer': VisibilityBufferDrawingPipeline;
++        [key: string]: THREE.StandardDrawingPipeline;
++    },
 +    sunLight: THREE.DirectionalLight;
 +let geometry: THREE.BufferGeometry,
 +    material: THREE.MeshStandardNodeMaterial,
@@ -20435,7 +20439,7 @@ index 7cc1568a2..a5103d997 100644
  
  init().catch(error => {
      status.textContent = error.message;
-@@ -101,7 +106,7 @@ async function init() {
+@@ -113,7 +122,7 @@ async function init() {
      // stand the statue on the ground with a height of 4 units
  
      geometry.computeBoundingBox();
@@ -20444,7 +20448,7 @@ index 7cc1568a2..a5103d997 100644
      const size = box.getSize(new THREE.Vector3());
      geometry.translate(-(box.min.x + box.max.x) / 2, -box.min.y, -(box.min.z + box.max.z) / 2);
      geometry.scale(4 / size.y, 4 / size.y, 4 / size.y);
-@@ -178,7 +183,7 @@ async function prepare() {
+@@ -190,7 +199,7 @@ async function prepare() {
          await renderer.compileAsync(scene, camera);
          status.textContent = '';
      } catch (error) {
@@ -20453,48 +20457,16 @@ index 7cc1568a2..a5103d997 100644
          console.error(error);
      } finally {
          renderer.setAnimationLoop(animate);
-@@ -188,7 +193,7 @@ async function prepare() {
- function createGUI() {
-     const pipeline = pipelines['Meshlet'];
+@@ -202,7 +211,7 @@ function createGUI() {
+ 
+     const meshletPipelines = [pipelines['Meshlet'], pipelines['Visibility Buffer']];
  
 -    const gui = renderer.inspector.createParameters('Settings');
 +    const gui = (renderer.inspector as Inspector).createParameters('Settings');
-     gui.add(parameters, 'pipeline', Object.keys(pipelines)).name('Pipeline').onChange(prepare);
-     gui.add(parameters, 'statues', { '1,000': 1000, '4,000': 4000, '10,000': 10000 })
-         .name('Statues')
-@@ -198,27 +203,27 @@ function createGUI() {
-         });
-     gui.add(parameters, 'lod', 1, 8, 0.5)
-         .name('LOD error (px)')
--        .onChange(value => {
-+        .onChange((value: number) => {
-             pipeline.lodThreshold = value;
-             pipeline.shadowLodThreshold = value;
-             sunLight.shadow.needsUpdate = true;
-         });
-     gui.add(parameters, 'occlusion')
-         .name('Occlusion culling')
--        .onChange(value => {
-+        .onChange((value: boolean) => {
-             pipeline.occlusionCulling = value;
-             prepare();
-         });
-     gui.add(parameters, 'meshlets')
-         .name('Show meshlets')
--        .onChange(value => {
-+        .onChange((value: boolean) => {
-             pipeline.debug = value;
-             renderer.toneMapping = value ? THREE.NoToneMapping : THREE.ACESFilmicToneMapping;
-             prepare();
-         });
-     gui.add(parameters, 'rotate')
-         .name('Auto rotate')
--        .onChange(value => (controls.autoRotate = value));
-+        .onChange((value: boolean) => (controls.autoRotate = value));
- }
- 
- function onWindowResize() {
-@@ -227,19 +232,19 @@ function onWindowResize() {
+     gui.add(parameters, 'pipeline', Object.keys(pipelines))
+         .name('Pipeline')
+         .onChange(() => {
+@@ -276,22 +285,22 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
  
@@ -20515,8 +20487,12 @@ index 7cc1568a2..a5103d997 100644
 -    let text = `${formatCount((parameters.statues * geometry.index.count) / 3)} triangles in the scene`;
 +    let text = `${formatCount((parameters.statues * geometry.index!.count) / 3)} triangles in the scene`;
  
-     if (renderer.drawingPipeline === pipelines['Meshlet']) {
-         const info = pipelines['Meshlet'].info;
+     if (renderer.drawingPipeline !== pipelines['Default (slow)']) {
+-        const info = renderer.drawingPipeline.info;
++        const info = (renderer.drawingPipeline as MeshletDrawingPipeline).info;
+         text += ` | ${formatCount(info.triangles)} drawn in ${formatCount(info.clusters)} clusters`;
+         if (info.transitionClusters > 0) text += ` (${formatCount(info.transitionClusters)} in transitions)`;
+     }
 diff --git a/examples-testing/examples/webgpu_meshlets_materials.ts b/examples-testing/examples/webgpu_meshlets_materials.ts
 index 2b0425ca1..86c60652f 100644
 --- a/examples-testing/examples/webgpu_meshlets_materials.ts

@@ -2,6 +2,8 @@ import { Camera, Object3D, StandardDrawingPipeline } from "three/webgpu";
 
 export interface MeshletDrawingPipelineParameters {
     lodThreshold?: number | undefined;
+    lodTransition?: number | undefined;
+    transitionScreenRadius?: number | undefined;
     shadowLodThreshold?: number | undefined;
     minScreenRadius?: number | undefined;
     coarseScreenRadius?: number | undefined;
@@ -91,6 +93,23 @@ export class MeshletDrawingPipeline extends StandardDrawingPipeline {
      */
     lodThreshold: number;
     /**
+     * The fraction of `lodThreshold` over which adjacent levels of detail crossfade with a complementary
+     * screen-door dither mask (`0` disables transitions).
+     *
+     * @type {number}
+     * @default 0
+     */
+    lodTransition: number;
+    /**
+     * The radius of the bounding sphere of objects on the screen in pixels below which their levels of detail
+     * switch without a transition. The popping of small objects is hardly visible, while their transitions
+     * draw two levels of detail. `0` crossfades all objects, see {@link MeshletDrawingPipeline#lodTransition}.
+     *
+     * @type {number}
+     * @default 0
+     */
+    transitionScreenRadius: number;
+    /**
      * The projected error in shadow map texels below which a simpler level of detail is selected for the
      * shadow casters. The level of detail of shadow passes doesn't depend on the camera, so shadow maps
      * which are not updated every frame stay valid when the camera moves.
@@ -120,13 +139,15 @@ export class MeshletDrawingPipeline extends StandardDrawingPipeline {
     /**
      * The clusters and triangles drawn by the GPU-driven pipeline in the main view, read from the counters of the
      * culling without waiting for the GPU. The values are updated every interval of frames, the triangles include the degenerate triangles which pad the clusters.
+     * `transitionClusters` are the clusters of the dithered crossfades between levels of detail, included in `clusters`.
      *
-     * @type {{clusters: number, triangles: number}}
+     * @type {{clusters: number, triangles: number, transitionClusters: number}}
      * @readonly
      */
     readonly info: {
         clusters: number;
         triangles: number;
+        transitionClusters: number;
     };
     /**
      * Whether the clusters (meshlets) of the objects drawn by the GPU-driven pipeline should be shown
