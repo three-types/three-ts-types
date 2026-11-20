@@ -325,12 +325,6 @@ declare class NodeClass<TEventMap extends NodeClassEventMap = NodeClassEventMap>
      */
     customCacheKey(): number;
     /**
-     * Returns the references to this node which is by default `this`.
-     *
-     * @return {Node} A reference to this node.
-     */
-    getScope(): this;
-    /**
      * Returns the hash of the node which is used to identify the node. By default it's
      * the {@link Node#uuid} however derived node classes might have to overwrite this method
      * depending on their implementation.

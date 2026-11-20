@@ -26708,7 +26708,7 @@ index ca4dd3dff..a65e1ccc8 100644
 -export const computeSkinning: () => void;
 +export const computeSkinning: (skinnedMesh: SkinnedMesh, toPosition?: Node<'vec3'> | Vector3 | null) => void;
 diff --git a/jsdoc-testing/jsdoc/src/nodes/core/Node.d.ts b/jsdoc-testing/jsdoc/src/nodes/core/Node.d.ts
-index 089da8555..572a047d8 100644
+index 9b7757276..6a4332498 100644
 --- a/jsdoc-testing/jsdoc/src/nodes/core/Node.d.ts
 +++ b/jsdoc-testing/jsdoc/src/nodes/core/Node.d.ts
 @@ -1,10 +1,85 @@
@@ -27070,16 +27070,7 @@ index 089da8555..572a047d8 100644
      /**
       * Returns the cache key for this node.
       *
-@@ -374,7 +329,7 @@ declare class Node extends EventDispatcher {
-      *
-      * @return {Node} A reference to this node.
-      */
--    getScope(): Node;
-+    getScope(): this;
-     /**
-      * Returns the hash of the node which is used to identify the node. By default it's
-      * the {@link Node#uuid} however derived node classes might have to overwrite this method
-@@ -383,43 +338,28 @@ declare class Node extends EventDispatcher {
+@@ -377,43 +332,28 @@ declare class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {string} The hash.
       */
@@ -27127,7 +27118,7 @@ index 089da8555..572a047d8 100644
      /**
       * Certain types are composed of multiple elements. For example a `vec3`
       * is composed of three `float` values. This method returns the type of
-@@ -436,7 +376,7 @@ declare class Node extends EventDispatcher {
+@@ -430,7 +370,7 @@ declare class Node extends EventDispatcher {
       * @param {string} name - The name of the member.
       * @return {string} The type of the node.
       */
@@ -27136,7 +27127,7 @@ index 089da8555..572a047d8 100644
      /**
       * Returns the node's type.
       *
-@@ -470,7 +410,7 @@ declare class Node extends EventDispatcher {
+@@ -464,7 +404,7 @@ declare class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {?number} The number of elements in the node array.
       */
@@ -27145,7 +27136,7 @@ index 089da8555..572a047d8 100644
      /**
       * Represents the setup stage which is the first step of the build process, see {@link Node#build} method.
       * This method is often overwritten in derived modules to prepare the node which is used as a node's output/result.
-@@ -479,7 +419,7 @@ declare class Node extends EventDispatcher {
+@@ -473,7 +413,7 @@ declare class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {?Node} The output node.
       */
@@ -27154,7 +27145,7 @@ index 089da8555..572a047d8 100644
      /**
       * Represents the analyze stage which is the second step of the build process, see {@link Node#build} method.
       * This stage analyzes the node hierarchy and ensures descendent nodes are built.
-@@ -496,7 +436,7 @@ declare class Node extends EventDispatcher {
+@@ -490,7 +430,7 @@ declare class Node extends EventDispatcher {
       * @param {?string} [output] - Can be used to define the output type.
       * @return {?string} The generated shader string.
       */
@@ -27163,7 +27154,7 @@ index 089da8555..572a047d8 100644
      /**
       * The method can be implemented to update the node's internal state before it is used to render an object.
       * The {@link Node#updateBeforeType} property defines how often the update is executed.
-@@ -505,7 +445,7 @@ declare class Node extends EventDispatcher {
+@@ -499,7 +439,7 @@ declare class Node extends EventDispatcher {
       * @param {NodeFrame} frame - A reference to the current node frame.
       * @return {?boolean} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
       */
@@ -27172,7 +27163,7 @@ index 089da8555..572a047d8 100644
      /**
       * The method can be implemented to update the node's internal state after it was used to render an object.
       * The {@link Node#updateAfterType} property defines how often the update is executed.
-@@ -514,15 +454,7 @@ declare class Node extends EventDispatcher {
+@@ -508,15 +448,7 @@ declare class Node extends EventDispatcher {
       * @param {NodeFrame} frame - A reference to the current node frame.
       * @return {?boolean} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
       */
@@ -27189,7 +27180,7 @@ index 089da8555..572a047d8 100644
      /**
       * This method performs the build of a node. The behavior and return value depend on the current build stage:
       * - **setup**: Prepares the node and its children for the build process. This process can also create new nodes. Returns the node itself or a variant.
-@@ -539,28 +471,188 @@ declare class Node extends EventDispatcher {
+@@ -533,28 +465,188 @@ declare class Node extends EventDispatcher {
       *
       * @return {Generator<Object>} An iterable list of serialized child objects as JSON.
       */
