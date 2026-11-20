@@ -3,13 +3,14 @@ import { MapColorPropertiesToColorRepresentations } from "./Material.js";
 
 export interface LineDashedMaterialProperties extends LineBasicMaterialProperties {
     /**
-     * The scale of the dashed part of a line.
+     * Scales the line distances before dashing. Values greater than `1`
+     * make dashes and gaps shorter.
      *
      * @default 1
      */
     scale: number;
     /**
-     * The size of the dash. This is both the gap with the stroke.
+     * The length of each dash.
      *
      * @default 3
      */
@@ -28,9 +29,12 @@ export interface LineDashedMaterialParameters
 {}
 
 /**
- * A material for rendering line primitives.
+ * A material for rendering dashed line primitives.
  *
  * Materials define the appearance of renderable 3D objects.
+ *
+ * The material requires the `lineDistance` attribute, so call
+ * {@link Line#computeLineDistances} on the line. Otherwise, it renders solid.
  *
  * ```js
  * const material = new THREE.LineDashedMaterial( {
@@ -39,6 +43,9 @@ export interface LineDashedMaterialParameters
  * 	dashSize: 3,
  * 	gapSize: 1,
  * } );
+ *
+ * const line = new THREE.Line( geometry, material );
+ * line.computeLineDistances();
  * ```
  */
 export class LineDashedMaterial extends LineBasicMaterial {

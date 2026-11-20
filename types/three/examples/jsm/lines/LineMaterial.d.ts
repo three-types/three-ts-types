@@ -50,7 +50,8 @@ export class LineMaterial extends ShaderMaterial {
     set dashed(value: boolean);
 
     /**
-     * The scale of the dashes and gaps. Default is `1`.
+     * Scales the line distances before dashing. Values greater than `1` make dashes
+     * and gaps shorter. Default is `1`.
      */
     get dashScale(): number;
     set dashScale(value: number);

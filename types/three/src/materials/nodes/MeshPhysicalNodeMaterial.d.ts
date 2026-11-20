@@ -41,7 +41,8 @@ export interface MeshPhysicalNodeMaterialNodeProperties extends MeshStandardNode
     /**
      * The clearcoat normal of physical materials is by default inferred from the `clearcoatNormalMap`
      * property. This node property allows to overwrite the default
-     * and define the clearcoat normal with a node instead.
+     * and define the clearcoat normal with a node instead. The node must return a normal
+     * in view space.
      *
      * If you don't want to overwrite the clearcoat normal but modify the existing
      * value instead, use {@link materialClearcoatNormal}.
@@ -205,8 +206,10 @@ export interface MeshPhysicalNodeMaterialNodeProperties extends MeshStandardNode
     retroreflectivityNode: Node | null;
     /**
      * The anisotropy of physical materials is by default inferred from the
-     * `anisotropy` property. This node property allows to overwrite the default
-     * and define the anisotropy with a node instead.
+     * `anisotropy`, `anisotropyRotation` and `anisotropyMap` properties. This node
+     * property allows to overwrite the default and define the anisotropy with a
+     * tangent-space vector instead. Its direction is the anisotropy direction and
+     * its length is the anisotropy strength in the range `[0,1]`.
      *
      * If you don't want to overwrite the anisotropy but modify the existing
      * value instead, use {@link materialAnisotropy}.
@@ -238,7 +241,7 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
     /**
      * Whether the lighting model should use clearcoat or not.
      *
-     * @default true
+     * @default false
      */
     get useClearcoat(): boolean;
     /**
@@ -250,37 +253,37 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
     /**
      * Whether the lighting model should use iridescence or not.
      *
-     * @default true
+     * @default false
      */
     get useIridescence(): boolean;
     /**
      * Whether the lighting model should use sheen or not.
      *
-     * @default true
+     * @default false
      */
     get useSheen(): boolean;
     /**
      * Whether the lighting model should use anisotropy or not.
      *
-     * @default true
+     * @default false
      */
     get useAnisotropy(): boolean;
     /**
      * Whether the lighting model should use transmission or not.
      *
-     * @default true
+     * @default false
      */
     get useTransmission(): boolean;
     /**
      * Whether the lighting model should use dispersion or not.
      *
-     * @default true
+     * @default false
      */
     get useDispersion(): boolean;
     /**
      * Whether the lighting model should use retroreflection or not.
      *
-     * @default true
+     * @default false
      */
     get useRetroreflection(): boolean;
     /**

@@ -171,7 +171,9 @@ export interface MeshLambertMaterialProperties extends MaterialProperties {
      */
     displacementBias: number;
     /**
-     * Specular map used by the material.
+     * The red channel of this texture is used as a scalar strength that affects
+     * how much of the environment map reflection blended in via
+     * {@link MeshLambertMaterial#combine} affects the surface.
      *
      * `specularMap` represents color data, and the texture must be assigned a
      * {@link Texture#colorSpace}. Most `specularMap` textures set
@@ -211,7 +213,9 @@ export interface MeshLambertMaterialProperties extends MaterialProperties {
      */
     envMap: Texture | null;
     /**
-     * The rotation of the environment map in radians.
+     * The rotation of the environment map in radians. Only applies to
+     * {@link MeshLambertMaterial#envMap}. When the material is lit by
+     * {@link Scene#environment}, {@link Scene#environmentRotation} is used instead.
      *
      * @default (0,0,0)
      */
@@ -219,7 +223,7 @@ export interface MeshLambertMaterialProperties extends MaterialProperties {
     /**
      * How to combine the result of the surface's color with the environment map, if any.
      *
-     * When set to `MixOperation`, the {@link MeshBasicMaterial#reflectivity} is used to
+     * When set to `MixOperation`, the {@link MeshLambertMaterial#reflectivity} is used to
      * blend between the two colors.
      *
      * @default MultiplyOperation
@@ -233,7 +237,10 @@ export interface MeshLambertMaterialProperties extends MaterialProperties {
      */
     reflectivity: number;
     /**
-     * Scales the effect of the environment map by multiplying its color.
+     * Scales the diffuse image-based lighting of the environment map. Only has an effect
+     * with `WebGLRenderer` when {@link MeshLambertMaterial#envMap} is a PMREM texture. It does not
+     * affect the reflection blended in via {@link MeshLambertMaterial#combine}. When the material is lit
+     * by {@link Scene#environment}, {@link Scene#environmentIntensity} is used instead.
      *
      * @default 1
      */

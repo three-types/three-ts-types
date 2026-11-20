@@ -9,8 +9,9 @@ export interface FogJSON {
 }
 
 /**
- * This class can be used to define a linear fog that grows linearly denser
- * with the distance.
+ * This class can be used to define a range fog that smoothly grows denser
+ * from no fog at `near` to full fog at `far`. The distance is measured as
+ * depth along the camera's view direction.
  *
  * ```js
  * const scene = new THREE.Scene();
@@ -23,7 +24,7 @@ export class Fog {
      *
      * @param {number|Color} color - The fog's color.
      * @param {number} [near=1] - The minimum distance to start applying fog.
-     * @param {number} [far=1000] - The maximum distance at which fog stops being calculated and applied.
+     * @param {number} [far=1000] - The distance at which fog reaches full density.
      */
     constructor(color: ColorRepresentation, near?: number, far?: number);
     /**
@@ -48,9 +49,9 @@ export class Fog {
      */
     near: number;
     /**
-     * The maximum distance at which fog stops being calculated and applied.
-     * Objects that are more than `far` units away from the active camera won't
-     * be affected by fog.
+     * The distance at which fog reaches full density. Objects that are more
+     * than `far` units away from the active camera are rendered entirely in
+     * the fog color.
      *
      * @default 1000
      */

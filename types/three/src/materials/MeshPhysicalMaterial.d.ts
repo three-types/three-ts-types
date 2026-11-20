@@ -146,7 +146,8 @@ export interface MeshPhysicalMaterialProperties extends MeshStandardMaterialProp
      */
     iridescenceThicknessMap: Texture | null;
     /**
-     * The sheen tint.
+     * The sheen tint. It is multiplied by {@link MeshPhysicalMaterial#sheen}, so
+     * it must be set to a non-black color for sheen to be visible.
      *
      * @default (0,0,0)
      */
@@ -315,7 +316,9 @@ export interface MeshPhysicalMaterialProperties extends MeshStandardMaterialProp
     get retroreflectivity(): number;
     set sheen(value: number);
     /**
-     * The intensity of the sheen layer, from `0.0` to `1.0`.
+     * The intensity of the sheen layer, from `0.0` to `1.0`. The sheen color is
+     * `sheenColor * sheen`, so {@link MeshPhysicalMaterial#sheenColor} (black by
+     * default) must also be set for sheen to be visible.
      *
      * @default 0
      */

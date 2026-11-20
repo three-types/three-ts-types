@@ -10,6 +10,10 @@ export default NodeMaterialInstance;
  * the shared node graph with `materialReference( name, type )`. Node properties such as
  * `colorNode` are read-only and always read from the node material.
  *
+ * Object values such as `color` are shared with the node material (and thus with other
+ * instances) on construction, so assign a new object instead of mutating the existing one,
+ * e.g. `material.color = new Color( 1, 0, 0 )` instead of `material.color.set( 1, 0, 0 )`.
+ *
  * ```js
  * const nodeMaterial = new MeshBasicNodeMaterial();
  * nodeMaterial.colorNode = materialReference( 'myColor', 'color' );

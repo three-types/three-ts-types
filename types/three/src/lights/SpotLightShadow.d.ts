@@ -7,7 +7,7 @@ export interface SpotLightShadowJSON extends LightShadowJSON {
 }
 
 /**
- * Represents the shadow configuration of directional lights.
+ * Represents the shadow configuration of spot lights.
  */
 export class SpotLightShadow extends LightShadow<PerspectiveCamera> {
     /**
