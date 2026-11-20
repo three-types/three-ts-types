@@ -51,10 +51,10 @@ export function flattenJSON(
 /**
  * Creates a new clip, containing only the segment of the original clip between the given frames.
  *
- * @param {AnimationClip} sourceClip - The values to sort.
+ * @param {AnimationClip} sourceClip - The source clip.
  * @param {string} name - The name of the clip.
  * @param {number} startFrame - The start frame.
- * @param {number} endFrame - The end frame.
+ * @param {number} endFrame - The end frame (exclusive).
  * @param {number} [fps=30] - The FPS.
  * @return {AnimationClip} The new sub clip.
  */
@@ -148,10 +148,10 @@ export class AnimationUtils {
      * Creates a new clip, containing only the segment of the original clip between the given frames.
      *
      * @static
-     * @param {AnimationClip} sourceClip - The values to sort.
+     * @param {AnimationClip} sourceClip - The source clip.
      * @param {string} name - The name of the clip.
      * @param {number} startFrame - The start frame.
-     * @param {number} endFrame - The end frame.
+     * @param {number} endFrame - The end frame (exclusive).
      * @param {number} [fps=30] - The FPS.
      * @return {AnimationClip} The new sub clip.
      */

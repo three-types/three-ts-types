@@ -41,8 +41,9 @@ export function euclideanModulo(n: number, m: number): number;
  */
 export function mapLinear(x: number, a1: number, a2: number, b1: number, b2: number): number;
 /**
- * Returns the percentage in the closed interval `[0, 1]` of the given value
- * between the start and end point.
+ * Returns the interpolation factor of the given value between the start and
+ * end point. The result is not clamped, so values outside of the range produce
+ * factors outside of the closed interval `[0, 1]`.
  *
  * @param {number} x - The start point
  * @param {number} y - The end point.
@@ -121,7 +122,7 @@ export function randInt(low: number, high: number): number;
  */
 export function randFloat(low: number, high: number): number;
 /**
- * Returns a random integer from `<-range/2, range/2>` interval.
+ * Returns a random float from `<-range/2, range/2>` interval.
  *
  * @param {number} range - Defines the value range.
  * @return {number} A random float.

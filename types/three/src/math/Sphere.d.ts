@@ -44,10 +44,12 @@ export class Sphere {
      */
     set(center: Vector3, radius: number): Sphere;
     /**
-     * Computes the minimum bounding sphere for list of points.
+     * Computes a bounding sphere for the given list of points.
      * If the optional center point is given, it is used as the sphere's
      * center. Otherwise, the center of the axis-aligned bounding box
-     * encompassing the points is calculated.
+     * encompassing the points is calculated. The radius is the distance
+     * to the farthest point, so the result is not necessarily the minimal
+     * bounding sphere.
      *
      * @param {Array<Vector3>} points - A list of points in 3D space.
      * @param {Vector3} [optionalCenter] - The center of the sphere.
@@ -119,7 +121,7 @@ export class Sphere {
      * will clamp it to the closest point on the edge of the sphere. Points
      * already inside the sphere will not be affected.
      *
-     * @param {Vector3} point - The plane to clamp.
+     * @param {Vector3} point - The point to clamp.
      * @param {Vector3} target - The target vector that is used to store the method's result.
      * @return {Vector3} The clamped point.
      */
@@ -179,7 +181,7 @@ export class Sphere {
      */
     toJSON(): SphereJSON;
     /**
-     * Returns a serialized structure of the bounding sphere.
+     * Sets this bounding sphere from the given serialized structure.
      *
      * @param {Object} json - The serialized json to set the sphere from.
      * @return {Sphere} A reference to this bounding sphere.

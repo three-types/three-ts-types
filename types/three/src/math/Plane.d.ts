@@ -15,7 +15,7 @@ export class Plane {
      * Constructs a new plane.
      *
      * @param {Vector3} [normal=(1,0,0)] - A unit length vector defining the normal of the plane.
-     * @param {number} [constant=0] - The signed distance from the origin to the plane.
+     * @param {number} [constant=0] - The signed distance from the plane to the origin.
      */
     constructor(normal?: Vector3, constant?: number);
     /**
@@ -33,7 +33,9 @@ export class Plane {
      */
     normal: Vector3;
     /**
-     * The signed distance from the origin to the plane.
+     * The signed distance from the plane to the origin. The plane is the set of
+     * points `p` for which `normal.dot( p ) + constant = 0`, so the point on the
+     * plane closest to the origin is `normal * - constant`.
      *
      * @type {number}
      * @default 0
@@ -98,7 +100,8 @@ export class Plane {
      */
     negate(): Plane;
     /**
-     * Returns the signed distance from the given point to this plane.
+     * Returns the signed distance from the given point to this plane. The distance is
+     * positive if the point lies on the side of the plane the normal points to.
      *
      * @param {Vector3} point - The point to compute the distance for.
      * @return {number} The signed distance.
@@ -168,7 +171,7 @@ export class Plane {
      * ```
      *
      * @param {Matrix4} matrix - The transformation matrix.
-     * @param {Matrix4} [optionalNormalMatrix] - A pre-computed normal matrix.
+     * @param {Matrix3} [optionalNormalMatrix] - A pre-computed normal matrix.
      * @return {Plane} A reference to this plane.
      */
     applyMatrix4(matrix: Matrix4, optionalNormalMatrix?: Matrix3): Plane;

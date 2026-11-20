@@ -176,8 +176,9 @@ export class BufferGeometry<
      *
      * Use `addGroup()` and `clearGroups()` to edit groups, rather than modifying this array directly.
      *
-     * Every vertex and index must belong to exactly one group — groups must not share vertices or
-     * indices, and must not leave vertices or indices unused.
+     * Groups are only used when the 3D object has an array of materials. Groups should not overlap,
+     * since overlapping ranges are rendered (and raycast) more than once. Vertices or indices that are
+     * not part of any group are not rendered.
      */
     groups: GeometryGroup[];
     /**
@@ -237,7 +238,7 @@ export class BufferGeometry<
      *
      * @param {string} name - The attribute name.
      * @return {BufferAttribute|InterleavedBufferAttribute|undefined} The buffer attribute.
-     * Returns `undefined` if not attribute has been found.
+     * Returns `undefined` if no attribute has been found.
      */
     getAttribute<K extends keyof Attributes>(name: K): Attributes[K];
     /**
@@ -266,7 +267,7 @@ export class BufferGeometry<
      * Adds a group to this geometry.
      *
      * @param {number} start - The first element in this draw call. That is the first
-     * vertex for non-indexed geometry, otherwise the first triangle index.
+     * vertex for non-indexed geometry, otherwise the offset (in indices) into the index buffer.
      * @param {number} count - Specifies how many vertices (or indices) are part of this group.
      * @param {number} [materialIndex=0] - The material array index to use.
      */
@@ -278,7 +279,7 @@ export class BufferGeometry<
     /**
      * Sets the draw range for this geometry.
      *
-     * @param {number} start - The first vertex for non-indexed geometry, otherwise the first triangle index.
+     * @param {number} start - The first vertex for non-indexed geometry, otherwise the offset (in indices) into the index buffer.
      * @param {number} count - For non-indexed BufferGeometry, `count` is the number of vertices to render.
      * For indexed BufferGeometry, `count` is the number of indices to render.
      */
@@ -327,7 +328,7 @@ export class BufferGeometry<
     /**
      * Translates the geometry. This is typically done as a one time
      * operation, and not during a loop. Use {@link Object3D#position} for typical
-     * real-time mesh rotation.
+     * real-time mesh translation.
      *
      * @param {number} x - The x offset.
      * @param {number} y - The y offset.
@@ -338,7 +339,7 @@ export class BufferGeometry<
     /**
      * Scales the geometry. This is typically done as a one time
      * operation, and not during a loop. Use {@link Object3D#scale} for typical
-     * real-time mesh rotation.
+     * real-time mesh scaling.
      *
      * @param {number} x - The x scale.
      * @param {number} y - The y scale.
@@ -390,7 +391,7 @@ export class BufferGeometry<
      *
      * The computation is only supported for indexed geometries and if position, normal, and uv attributes
      * are defined. When using a tangent space normal map, prefer the MikkTSpace algorithm provided by
-     * {@link BufferGeometryUtils#computeMikkTSpaceTangents} instead.
+     * {@link module:BufferGeometryUtils~computeMikkTSpaceTangents | BufferGeometryUtils.computeMikkTSpaceTangents()} instead.
      */
     computeTangents(): void;
     /**
@@ -407,7 +408,7 @@ export class BufferGeometry<
     normalizeNormals(): void;
     /**
      * Return a new non-index version of this indexed geometry. If the geometry
-     * is already non-indexed, the method is a NOOP.
+     * is already non-indexed, the method is a NOOP and returns this instance.
      *
      * @return {BufferGeometry} The non-indexed version of this indexed geometry.
      */

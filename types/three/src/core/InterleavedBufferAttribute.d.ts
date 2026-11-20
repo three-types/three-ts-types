@@ -42,6 +42,8 @@ export class InterleavedBufferAttribute {
     offset: number;
     /**
      * Whether the data are normalized or not, see {@link BufferAttribute#normalized}
+     *
+     * @default false
      */
     normalized: boolean;
     /**
@@ -203,7 +205,7 @@ export class InterleavedBufferAttribute {
     /**
      * Serializes the buffer attribute into JSON.
      *
-     * If no parameter is provided, cloning an interleaved buffer attribute will de-interleave buffer data.
+     * If no parameter is provided, serializing an interleaved buffer attribute will de-interleave buffer data.
      *
      * @param {Object} [data] - An optional value holding meta information about the serialization.
      * @return {Object} A JSON object representing the serialized buffer attribute.

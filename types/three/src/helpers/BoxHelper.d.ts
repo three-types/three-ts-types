@@ -15,7 +15,7 @@ import { LineSegments } from "../objects/LineSegments.js";
  *
  * ```js
  * const sphere = new THREE.SphereGeometry();
- * const object = new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( 0xff0000 ) );
+ * const object = new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: 0xff0000 } ) );
  * const box = new THREE.BoxHelper( object, 0xffff00 );
  * scene.add( box );
  * ```

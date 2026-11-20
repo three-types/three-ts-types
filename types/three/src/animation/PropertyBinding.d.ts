@@ -42,7 +42,7 @@ export class PropertyBinding {
      * - uuid.objectName[objectIndex].propertyName[propertyIndex]
      * - parentName/nodeName.property
      * - parentName/parentName/nodeName.property[index]
-     * - .bone[Armature.DEF_cog].position
+     * - .bones[Armature.DEF_cog].position
      * - scene:helium_balloon_model:helium_balloon_model.position
      *
      * @static

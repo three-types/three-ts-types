@@ -63,7 +63,7 @@ export class OrthographicCamera extends Camera {
     zoom: number;
     /**
      * Represents the frustum window specification. This property should not be edited
-     * directly but via {@link PerspectiveCamera#setViewOffset} and {@link PerspectiveCamera#clearViewOffset}.
+     * directly but via {@link OrthographicCamera#setViewOffset} and {@link OrthographicCamera#clearViewOffset}.
      *
      * @default null
      */
@@ -101,11 +101,11 @@ export class OrthographicCamera extends Camera {
      */
     bottom: number;
     /**
-     * The camera's near plane. The valid range is greater than `0`
-     * and less than the current value of {@link OrthographicCamera#far}.
+     * The camera's near plane. The value must be less than the current value of
+     * {@link OrthographicCamera#far}.
      *
-     * Note that, unlike for the {@link PerspectiveCamera}, `0` is a
-     * valid value for an orthographic camera's near plane.
+     * Note that, unlike for the {@link PerspectiveCamera}, `0` and negative values
+     * are valid for an orthographic camera's near plane.
      *
      * @default 0.1
      */

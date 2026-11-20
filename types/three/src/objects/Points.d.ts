@@ -37,7 +37,7 @@ export class Points<
      */
     geometry: TGeometry;
     /**
-     * The line material.
+     * The points material.
      *
      * @type {Material|Array<Material>}
      * @default PointsMaterial

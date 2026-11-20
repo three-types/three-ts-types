@@ -117,7 +117,7 @@ export class SkinnedMesh<
      */
     bind(skeleton: Skeleton, bindMatrix?: Matrix4): void;
     /**
-     * This method sets the skinned mesh in the rest pose).
+     * This method sets the skinned mesh in the rest pose.
      */
     pose(): void;
     /**

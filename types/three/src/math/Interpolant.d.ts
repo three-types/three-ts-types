@@ -23,7 +23,7 @@ export abstract class Interpolant<TSettings = {}> {
     /**
      * Constructs a new interpolant.
      *
-     * @param {TypedArray} parameterPositions - The parameter positions hold the interpolation factors.
+     * @param {TypedArray} parameterPositions - The ascending parameter positions of the samples, e.g. keyframe times.
      * @param {TypedArray} sampleValues - The sample values.
      * @param {number} sampleSize - The sample size
      * @param {TypedArray} [resultBuffer] - The result buffer.
@@ -55,7 +55,7 @@ export abstract class Interpolant<TSettings = {}> {
     /**
      * The value size.
      *
-     * @type {TypedArray}
+     * @type {number}
      */
     valueSize: number;
     /**
@@ -74,7 +74,7 @@ export abstract class Interpolant<TSettings = {}> {
     /**
      * Evaluate the interpolant at position `t`.
      *
-     * @param {number} t - The interpolation factor.
+     * @param {number} t - The parameter position (e.g. time) at which to evaluate.
      * @return {TypedArray} The result buffer.
      */
     evaluate(t: number): TypedArray;
@@ -92,13 +92,14 @@ export abstract class Interpolant<TSettings = {}> {
      */
     copySampleValue_(index: number): TypedArray;
     /**
-     * Copies a sample value to the result buffer.
+     * Interpolates between the samples at `i1 - 1` and `i1` and writes the result
+     * to the result buffer.
      *
      * @abstract
      * @param {number} i1 - An index into the sample value buffer.
-     * @param {number} t0 - The previous interpolation factor.
-     * @param {number} t - The current interpolation factor.
-     * @param {number} t1 - The next interpolation factor.
+     * @param {number} t0 - The previous parameter position.
+     * @param {number} t - The current parameter position.
+     * @param {number} t1 - The next parameter position.
      * @return {TypedArray} The result buffer.
      */
     abstract interpolate_(i1: number, t0: number, t: number, t1: number): TypedArray;
@@ -106,8 +107,8 @@ export abstract class Interpolant<TSettings = {}> {
      * Optional method that is executed when the interval has changed.
      *
      * @param {number} i1 - An index into the sample value buffer.
-     * @param {number} t0 - The previous interpolation factor.
-     * @param {number} t1 - The next interpolation factor.
+     * @param {number} t0 - The previous parameter position.
+     * @param {number} t1 - The next parameter position.
      */
     intervalChanged_(i1: number, t0: number, t1: number): void;
 }

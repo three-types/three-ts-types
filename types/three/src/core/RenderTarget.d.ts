@@ -250,7 +250,7 @@ export class RenderTarget<
      */
     samples: number;
     /**
-     * Whether to this target is used in multiview rendering.
+     * Whether this target is used in multiview rendering.
      *
      * @default false
      */

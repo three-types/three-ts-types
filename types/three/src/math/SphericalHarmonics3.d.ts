@@ -117,7 +117,7 @@ export class SphericalHarmonics3 {
      *
      * @param {Array<number>} array - An array holding the SH coefficients.
      * @param {number} [offset=0] - The array offset where to start copying.
-     * @return {SphericalHarmonics3} A clone of this instance.
+     * @return {SphericalHarmonics3} A reference to this spherical harmonics.
      */
     fromArray(array: number[] | ArrayLike<number>, offset?: number): this;
     /**

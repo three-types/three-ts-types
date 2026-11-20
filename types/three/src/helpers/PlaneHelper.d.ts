@@ -6,7 +6,7 @@ import { Line } from "../objects/Line.js";
  * A helper object to visualize an instance of {@link Plane}.
  *
  * ```js
- * const plane = new THREE.Plane( new THREE.Vector3( 1, 1, 0.2 ), 3 );
+ * const plane = new THREE.Plane( new THREE.Vector3( 1, 1, 0.2 ).normalize(), 3 );
  * const helper = new THREE.PlaneHelper( plane, 1, 0xffff00 );
  * scene.add( helper );
  * ```

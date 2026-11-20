@@ -52,11 +52,11 @@ export class Triangle {
      * @param {Vector3} p1 - The first corner of the triangle.
      * @param {Vector3} p2 - The second corner of the triangle.
      * @param {Vector3} p3 - The third corner of the triangle.
-     * @param {Vector3} v1 - Value to interpolate of first vertex.
-     * @param {Vector3} v2 - Value to interpolate of second vertex.
-     * @param {Vector3} v3 - Value to interpolate of third vertex.
-     * @param {Vector3} target - The target vector that is used to store the method's result.
-     * @return {?Vector3} The interpolated value.
+     * @param {(Vector2|Vector3|Vector4)} v1 - Value to interpolate of first vertex.
+     * @param {(Vector2|Vector3|Vector4)} v2 - Value to interpolate of second vertex.
+     * @param {(Vector2|Vector3|Vector4)} v3 - Value to interpolate of third vertex.
+     * @param {(Vector2|Vector3|Vector4)} target - The target vector that is used to store the method's result.
+     * @return {?(Vector2|Vector3|Vector4)} The interpolated value.
      */
     static getInterpolation(
         point: Vector3,
@@ -162,8 +162,8 @@ export class Triangle {
      * @param {number} i2 - Index of second vertex.
      * @param {number} i3 - Index of third vertex.
      * @param {Vector3} barycoord - The barycoordinate value to use to interpolate.
-     * @param {Vector3} target - The target vector that is used to store the method's result.
-     * @return {Vector3} The interpolated attribute value.
+     * @param {(Vector2|Vector3|Vector4)} target - The target vector that is used to store the method's result.
+     * @return {(Vector2|Vector3|Vector4)} The interpolated attribute value.
      */
     static getInterpolatedAttribute(
         attr: BufferAttribute | InterleavedBufferAttribute,
@@ -174,13 +174,14 @@ export class Triangle {
         target: Vector4,
     ): Vector4;
     /**
-     * Returns `true` if the triangle is oriented towards the given direction.
+     * Returns `true` if the triangle is front facing when viewed along the given
+     * direction, that is, its normal points against `direction`.
      *
      * @param {Vector3} a - The first corner of the triangle.
      * @param {Vector3} b - The second corner of the triangle.
      * @param {Vector3} c - The third corner of the triangle.
      * @param {Vector3} direction - The (normalized) direction vector.
-     * @return {boolean} Whether the triangle is oriented towards the given direction or not.
+     * @return {boolean} Whether the triangle is front facing when viewed along the given direction or not.
      */
     static isFrontFacing(a: Vector3, b: Vector3, c: Vector3, direction: Vector3): boolean;
     /**
@@ -297,11 +298,11 @@ export class Triangle {
      * triangle. Returns `null` if the triangle is degenerate.
      *
      * @param {Vector3} point - Position of interpolated point.
-     * @param {Vector3} v1 - Value to interpolate of first vertex.
-     * @param {Vector3} v2 - Value to interpolate of second vertex.
-     * @param {Vector3} v3 - Value to interpolate of third vertex.
-     * @param {Vector3} target - The target vector that is used to store the method's result.
-     * @return {?Vector3} The interpolated value.
+     * @param {(Vector2|Vector3|Vector4)} v1 - Value to interpolate of first vertex.
+     * @param {(Vector2|Vector3|Vector4)} v2 - Value to interpolate of second vertex.
+     * @param {(Vector2|Vector3|Vector4)} v3 - Value to interpolate of third vertex.
+     * @param {(Vector2|Vector3|Vector4)} target - The target vector that is used to store the method's result.
+     * @return {?(Vector2|Vector3|Vector4)} The interpolated value.
      */
     getInterpolation(point: Vector3, v1: Vector2, v2: Vector2, v3: Vector2, target: Vector2): Vector2 | null;
     /**
@@ -338,10 +339,11 @@ export class Triangle {
      */
     containsPoint(point: Vector3): boolean;
     /**
-     * Returns `true` if the triangle is oriented towards the given direction.
+     * Returns `true` if the triangle is front facing when viewed along the given
+     * direction, that is, its normal points against `direction`.
      *
      * @param {Vector3} direction - The (normalized) direction vector.
-     * @return {boolean} Whether the triangle is oriented towards the given direction or not.
+     * @return {boolean} Whether the triangle is front facing when viewed along the given direction or not.
      */
     isFrontFacing(direction: Vector3): boolean;
     /**
