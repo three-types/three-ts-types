@@ -1,7 +1,7 @@
 /**
  * ~TexData
  */
-export type CompressedTextureLoader = {
+export interface CompressedTextureLoaderTexData {
     /**
      * - The width of the base mip.
      */
@@ -22,16 +22,12 @@ export type CompressedTextureLoader = {
      * - An array holding the mipmaps.
      * Each entry holds the data and the dimensions for each level.
      */
-    mipmaps: Array<{
-        data: TypedArray;
-        width: number;
-        height: number;
-    }>;
+    mipmaps: Array<CompressedTextureMipmap>;
     /**
      * - The texture format.
      */
-    format: number;
-};
+    format: PixelFormat | CompressedPixelFormat;
+}
 /**
  * Abstract base class for loading compressed texture formats S3TC, ASTC or ETC.
  * Textures are internally loaded via {@link FileLoader}.
@@ -42,7 +38,7 @@ export type CompressedTextureLoader = {
  * @abstract
  * @augments Loader
  */
-export class CompressedTextureLoader extends Loader {
+export class CompressedTextureLoader extends Loader<CompressedTexture> {
     /**
      * Starts loading from the given URL and passes the loaded compressed texture
      * to the `onLoad()` callback. The method also returns a new texture object which can
@@ -57,10 +53,11 @@ export class CompressedTextureLoader extends Loader {
      */
     load(
         url: string,
-        onLoad: (arg0: CompressedTexture) => any,
-        onProgress: onProgressCallback,
-        onError: onErrorCallback,
+        onLoad?: (data: CompressedTexture) => void,
+        onProgress?: OnProgressCallback,
+        onError?: OnErrorCallback,
     ): CompressedTexture;
 }
-import { CompressedTexture } from "../textures/CompressedTexture.js";
-import { Loader } from "./Loader.js";
+import { CompressedPixelFormat, PixelFormat } from "../constants.js";
+import { CompressedTexture, CompressedTextureMipmap } from "../textures/CompressedTexture.js";
+import { Loader, OnErrorCallback, OnProgressCallback } from "./Loader.js";

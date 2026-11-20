@@ -1,3 +1,11 @@
+import { Vector2 } from "../../math/Vector2.js";
+import { Path, PathJSON } from "./Path.js";
+
+export interface ShapeJSON extends PathJSON {
+    uuid: string;
+    holes: PathJSON[];
+}
+
 /**
  * Defines an arbitrary 2d shape plane using paths with optional holes. It
  * can be used with {@link ExtrudeGeometry}, {@link ShapeGeometry}, to get
@@ -38,17 +46,11 @@ export class Shape extends Path {
     constructor(points?: Array<Vector2>);
     /**
      * The UUID of the shape.
-     *
-     * @type {string}
-     * @readonly
      */
     readonly uuid: string;
     /**
      * Defines the holes in the shape. Hole definitions must use the
      * opposite winding order (CW/CCW) than the outer shape.
-     *
-     * @type {Array<Path>}
-     * @readonly
      */
     readonly holes: Array<Path>;
     /**
@@ -70,7 +72,7 @@ export class Shape extends Path {
         shape: Array<Vector2>;
         holes: Array<Array<Vector2>>;
     };
-    copy(source: any): this;
-    fromJSON(json: any): this;
+    copy(source: Shape): this;
+    toJSON(): ShapeJSON;
+    fromJSON(json: ShapeJSON): this;
 }
-import { Path } from "./Path.js";

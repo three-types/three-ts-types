@@ -1,3 +1,12 @@
+import { CoordinateSystem } from "../constants.js";
+import { Object3D } from "../core/Object3D.js";
+import { Sprite } from "../objects/Sprite.js";
+import { Box3 } from "./Box3.js";
+import { Matrix4 } from "./Matrix4.js";
+import { Plane } from "./Plane.js";
+import { Sphere } from "./Sphere.js";
+import { Vector3 } from "./Vector3.js";
+
 /**
  * Frustums are used to determine what is inside the camera's field of view.
  * They help speed up the rendering process - objects which lie outside a camera's
@@ -34,14 +43,14 @@ export class Frustum {
      * @param {Plane} [p5] - The sixth plane that encloses the frustum.
      * @return {Frustum} A reference to this frustum.
      */
-    set(p0?: Plane, p1?: Plane, p2?: Plane, p3?: Plane, p4?: Plane, p5?: Plane): Frustum;
+    set(p0: Plane, p1: Plane, p2: Plane, p3: Plane, p4: Plane, p5: Plane): Frustum;
     /**
      * Copies the values of the given frustum to this instance.
      *
      * @param {Frustum} frustum - The frustum to copy.
      * @return {Frustum} A reference to this frustum.
      */
-    copy(frustum: Frustum): Frustum;
+    copy(frustum: Frustum): this;
     /**
      * Sets the frustum planes from the given projection matrix.
      *
@@ -50,7 +59,7 @@ export class Frustum {
      * @param {boolean} [reversedDepth=false] - Whether to use a reversed depth.
      * @return {Frustum} A reference to this frustum.
      */
-    setFromProjectionMatrix(m: Matrix4, coordinateSystem?: number | number, reversedDepth?: boolean): Frustum;
+    setFromProjectionMatrix(m: Matrix4, coordinateSystem?: CoordinateSystem, reversedDepth?: boolean): this;
     /**
      * Returns `true` if the 3D object's bounding sphere is intersecting this frustum.
      *
@@ -102,8 +111,5 @@ export class Frustum {
      *
      * @return {Frustum} A clone of this instance.
      */
-    clone(): Frustum;
+    clone(): this;
 }
-import { Plane } from "./Plane.js";
-import { Sphere } from "./Sphere.js";
-import { Vector3 } from "./Vector3.js";

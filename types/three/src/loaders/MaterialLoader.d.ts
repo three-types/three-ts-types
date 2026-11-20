@@ -10,7 +10,7 @@
  *
  * @augments Loader
  */
-export class MaterialLoader extends Loader {
+export class MaterialLoader extends Loader<Material> {
     /**
      * Creates a material for the given type.
      *
@@ -27,7 +27,7 @@ export class MaterialLoader extends Loader {
      * @param {string} type - The material type.
      * @param {Material.constructor} materialClass - The material class.
      */
-    static registerMaterial(type: string, materialClass: Material.constructor): void;
+    static registerMaterial(type: string, materialClass: new() => Material): void;
     /**
      * A dictionary holding textures used by the material.
      *
@@ -44,14 +44,19 @@ export class MaterialLoader extends Loader {
      * @param {onProgressCallback} onProgress - Executed while the loading is in progress.
      * @param {onErrorCallback} onError - Executed when errors occur.
      */
-    load(url: string, onLoad: (arg0: Material) => any, onProgress: onProgressCallback, onError: onErrorCallback): void;
+    load(
+        url: string,
+        onLoad: (data: Material) => void,
+        onProgress?: OnProgressCallback,
+        onError?: OnErrorCallback,
+    ): void;
     /**
      * Parses the given JSON object and returns a material.
      *
      * @param {Object} json - The serialized material.
      * @return {Material} The parsed material.
      */
-    parse(json: Object): Material;
+    parse(json: unknown): Material;
     /**
      * Textures are not embedded in the material JSON so they have
      * to be injected before the loading process starts.
@@ -59,7 +64,9 @@ export class MaterialLoader extends Loader {
      * @param {Object} value - A dictionary holding textures for material properties.
      * @return {MaterialLoader} A reference to this material loader.
      */
-    setTextures(value: Object): MaterialLoader;
+    setTextures(value: {
+        [x: string]: Texture;
+    }): this;
     /**
      * Creates a material for the given type.
      *
@@ -69,4 +76,5 @@ export class MaterialLoader extends Loader {
     createMaterialFromType(type: string): Material;
 }
 import { Material } from "../materials/Materials.js";
-import { Loader } from "./Loader.js";
+import { Texture } from "../textures/Texture.js";
+import { Loader, OnErrorCallback, OnProgressCallback } from "./Loader.js";

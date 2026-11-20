@@ -1,5 +1,5 @@
-export default OITPassNode;
-export function oitPass(scene: Scene, camera: Camera, options?: Object): OITPassNode;
+import { Camera, Node, PassNode, PassNodeOptions, Scene } from "three/webgpu";
+
 /**
  * A render pass node that renders the scene with Order-Independent Transparency
  * based on the Weighted Blended OIT technique by McGuire and Bavoil.
@@ -39,7 +39,7 @@ declare class OITPassNode extends PassNode {
      * @param {Camera} camera - The camera to render the scene with.
      * @param {Object} [options={}] - Options for the internal render target.
      */
-    constructor(scene: Scene, camera: Camera, options?: Object);
+    constructor(scene: Scene, camera: Camera, options?: PassNodeOptions);
     /**
      * This flag can be used for type testing.
      *
@@ -56,50 +56,9 @@ declare class OITPassNode extends PassNode {
      * @type {?Node<float>}
      * @default null
      */
-    weightNode: Node<any> | null;
-    /**
-     * The render target holding the OIT accumulation textures.
-     *
-     * @private
-     * @type {RenderTarget}
-     */
-    private _oitRenderTarget;
-    /**
-     * The MRT configuration for the OIT pass.
-     *
-     * @private
-     * @type {?MRTNode}
-     */
-    private _oitMRTNode;
-    /**
-     * The renderer of the current frame.
-     *
-     * @private
-     * @type {?Renderer}
-     */
-    private _renderer;
-    /**
-     * Renders opaque objects and transparent objects that do not qualify for OIT.
-     *
-     * @private
-     * @type {Function}
-     */
-    private _defaultRenderObjectFunction;
-    /**
-     * Renders OIT-qualified objects into the accumulation targets.
-     *
-     * @private
-     * @type {Function}
-     */
-    private _oitRenderObjectFunction;
-    /**
-     * Returns the MRT configuration for the OIT pass.
-     *
-     * @private
-     * @return {MRTNode} The MRT node.
-     */
-    private _getMRTNode;
-    setSize(width: any, height: any): void;
-    setup(builder: any): any;
+    weightNode: Node<"float"> | null;
 }
-import { PassNode } from "three/webgpu";
+
+export default OITPassNode;
+
+export function oitPass(scene: Scene, camera: Camera, options?: PassNodeOptions): OITPassNode;

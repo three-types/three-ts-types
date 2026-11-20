@@ -1,3 +1,13 @@
+import {
+    CubeTextureMapping,
+    MagnificationTextureFilter,
+    MinificationTextureFilter,
+    PixelFormat,
+    TextureDataType,
+    Wrapping,
+} from "../constants.js";
+import { Texture } from "./Texture.js";
+
 /**
  * Creates a cube texture made up of six images.
  *
@@ -14,7 +24,7 @@
  *
  * @augments Texture
  */
-export class CubeTexture extends Texture {
+export class CubeTexture<TImage = unknown> extends Texture<TImage[]> {
     /**
      * Constructs a new cube texture.
      *
@@ -30,14 +40,14 @@ export class CubeTexture extends Texture {
      * @param {string} [colorSpace=NoColorSpace] - The color space value.
      */
     constructor(
-        images?: Array<new(width?: number, height?: number) => HTMLImageElement>,
-        mapping?: number,
-        wrapS?: number,
-        wrapT?: number,
-        magFilter?: number,
-        minFilter?: number,
-        format?: number,
-        type?: number,
+        images?: TImage[],
+        mapping?: CubeTextureMapping,
+        wrapS?: Wrapping,
+        wrapT?: Wrapping,
+        magFilter?: MagnificationTextureFilter,
+        minFilter?: MinificationTextureFilter,
+        format?: PixelFormat,
+        type?: TextureDataType,
         anisotropy?: number,
         colorSpace?: string,
     );
@@ -48,13 +58,13 @@ export class CubeTexture extends Texture {
      * @readonly
      * @default true
      */
-    readonly isCubeTexture: boolean;
-    set images(value: Array<new(width?: number, height?: number) => HTMLImageElement>);
+    readonly isCubeTexture: true;
+    mapping: CubeTextureMapping;
+    set images(value: TImage[]);
     /**
      * Alias for {@link CubeTexture#image}.
      *
      * @type {Array<Image>}
      */
-    get images(): Array<new(width?: number, height?: number) => HTMLImageElement>;
+    get images(): TImage[];
 }
-import { Texture } from "./Texture.js";

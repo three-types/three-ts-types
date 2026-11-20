@@ -1,3 +1,14 @@
+import { Object3D } from "../core/Object3D.js";
+import { Skeleton } from "../objects/Skeleton.js";
+
+export interface ParseTrackNameResults {
+    nodeName: string;
+    objectName: string;
+    objectIndex: string;
+    propertyName: string;
+    propertyIndex: string;
+}
+
 /**
  * This holds a reference to a real property in the scene graph; used internally.
  */
@@ -11,7 +22,7 @@ export class PropertyBinding {
      * @param {?Object} [parsedPath] - The parsed path.
      * @return {PropertyBinding|Composite} The created property binding or composite.
      */
-    static create(root: Object, path: string, parsedPath?: Object | null): PropertyBinding | Composite;
+    static create(root: object, path: string, parsedPath?: object | null): PropertyBinding | Composite;
     /**
      * Replaces spaces with underscores and removes unsupported characters from
      * node names, to ensure compatibility with parseTrackName().
@@ -38,7 +49,7 @@ export class PropertyBinding {
      * @param {string} trackName - The track name to parse.
      * @return {Object} The parsed track name as an object.
      */
-    static parseTrackName(trackName: string): Object;
+    static parseTrackName(trackName: string): ParseTrackNameResults;
     /**
      * Searches for a node in the hierarchy of the given root object by the given
      * node name.
@@ -48,7 +59,7 @@ export class PropertyBinding {
      * @param {string|number} nodeName - The name of the node.
      * @return {?Object} The found node. Returns `null` if no object was found.
      */
-    static findNode(root: Object, nodeName: string | number): Object | null;
+    static findNode(root: object, nodeName: string | number): object | null;
     /**
      * Constructs a new property binding.
      *
@@ -56,89 +67,35 @@ export class PropertyBinding {
      * @param {string} path - The path.
      * @param {?Object} [parsedPath] - The parsed path.
      */
-    constructor(rootNode: Object, path: string, parsedPath?: Object | null);
+    constructor(rootNode: Object3D | Skeleton, path: string, parsedPath?: object | null);
     /**
      * The object path to the animated property.
-     *
-     * @type {string}
      */
     path: string;
     /**
      * An object holding information about the path.
-     *
-     * @type {Object}
      */
-    parsedPath: Object;
+    parsedPath: object;
     /**
      * The object owns the animated property.
-     *
-     * @type {?Object}
      */
-    node: Object | null;
+    node: object | null;
     /**
      * The root node.
-     *
-     * @type {Object3D|Skeleton}
      */
     rootNode: Object3D | Skeleton;
-    getValue: (targetArray: any, offset: any) => void;
-    setValue: (sourceArray: any, offset: any) => void;
-    _getValue_unavailable(): void;
-    _setValue_unavailable(): void;
-    _getValue_direct(buffer: any, offset: any): void;
-    _getValue_array(buffer: any, offset: any): void;
-    _getValue_arrayElement(buffer: any, offset: any): void;
-    _getValue_toArray(buffer: any, offset: any): void;
-    _setValue_direct(buffer: any, offset: any): void;
-    _setValue_direct_setNeedsUpdate(buffer: any, offset: any): void;
-    _setValue_direct_setMatrixWorldNeedsUpdate(buffer: any, offset: any): void;
-    _setValue_array(buffer: any, offset: any): void;
-    _setValue_array_setNeedsUpdate(buffer: any, offset: any): void;
-    _setValue_array_setMatrixWorldNeedsUpdate(buffer: any, offset: any): void;
-    _setValue_arrayElement(buffer: any, offset: any): void;
-    _setValue_arrayElement_setNeedsUpdate(buffer: any, offset: any): void;
-    _setValue_arrayElement_setMatrixWorldNeedsUpdate(buffer: any, offset: any): void;
-    _setValue_fromArray(buffer: any, offset: any): void;
-    _setValue_fromArray_setNeedsUpdate(buffer: any, offset: any): void;
-    _setValue_fromArray_setMatrixWorldNeedsUpdate(buffer: any, offset: any): void;
-    _getValue_unbound(targetArray: any, offset: any): void;
-    _setValue_unbound(sourceArray: any, offset: any): void;
     /**
      * Creates a getter / setter pair for the property tracked by this binding.
      */
     bind(): void;
-    targetObject: Object | null | undefined;
-    resolvedProperty: any;
-    propertyIndex: any;
-    propertyName: any;
     /**
      * Unbinds the property.
      */
     unbind(): void;
-    BindingType: {
-        Direct: number;
-        EntireArray: number;
-        ArrayElement: number;
-        HasFromToArray: number;
-    };
-    Versioning: {
-        None: number;
-        NeedsUpdate: number;
-        MatrixWorldNeedsUpdate: number;
-    };
-    GetterByBindingType: ((buffer: any, offset: any) => void)[];
-    SetterByBindingTypeAndVersioning: ((buffer: any, offset: any) => void)[][];
 }
 export namespace PropertyBinding {
     export { Composite };
 }
 declare class Composite {
-    constructor(targetGroup: any, path: any, optionalParsedPath: any);
-    _targetGroup: any;
-    _bindings: any;
-    getValue(array: any, offset: any): void;
-    setValue(array: any, offset: any): void;
-    bind(): void;
-    unbind(): void;
 }
 export {};

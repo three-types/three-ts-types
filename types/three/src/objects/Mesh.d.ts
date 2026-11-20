@@ -1,3 +1,19 @@
+import { BufferGeometry } from "../core/BufferGeometry.js";
+import { JSONMeta, Object3D, Object3DEventMap, Object3DJSON, Object3DJSONObject } from "../core/Object3D.js";
+import { Intersection, Raycaster } from "../core/Raycaster.js";
+import { Material } from "../materials/Material.js";
+import { Frustum } from "../math/Frustum.js";
+import { FrustumArray } from "../math/FrustumArray.js";
+import { Vector3 } from "../math/Vector3.js";
+
+export interface MeshJSONObject extends Object3DJSONObject {
+    geometry: string;
+}
+
+export interface MeshJSON extends Object3DJSON {
+    object: MeshJSONObject;
+}
+
 /**
  * Class representing triangular polygon mesh based objects.
  *
@@ -10,14 +26,18 @@
  *
  * @augments Object3D
  */
-export class Mesh extends Object3D {
+export class Mesh<
+    TGeometry extends BufferGeometry = BufferGeometry,
+    TMaterial extends Material | Material[] = Material | Material[],
+    TEventMap extends Object3DEventMap = Object3DEventMap,
+> extends Object3D<TEventMap> {
     /**
      * Constructs a new mesh.
      *
      * @param {BufferGeometry} [geometry] - The mesh geometry.
      * @param {Material|Array<Material>} [material] - The mesh material.
      */
-    constructor(geometry?: BufferGeometry, material?: Material | Array<Material>);
+    constructor(geometry?: TGeometry, material?: TMaterial);
     /**
      * This flag can be used for type testing.
      *
@@ -25,21 +45,20 @@ export class Mesh extends Object3D {
      * @readonly
      * @default true
      */
-    readonly isMesh: boolean;
-    type: string;
+    readonly isMesh: true;
     /**
      * The mesh geometry.
      *
      * @type {BufferGeometry}
      */
-    geometry: BufferGeometry;
+    geometry: TGeometry;
     /**
      * The mesh material.
      *
      * @type {Material|Array<Material>}
      * @default MeshBasicMaterial
      */
-    material: Material | Array<Material>;
+    material: TMaterial;
     /**
      * A dictionary representing the morph targets in the geometry. The key is the
      * morph targets name, the value its attribute index. This member is `undefined`
@@ -68,7 +87,7 @@ export class Mesh extends Object3D {
      * @default 1
      */
     count: number;
-    copy(source: any, recursive: any): this;
+    copy(source: Mesh, recursive?: boolean): this;
     /**
      * Sets the values of {@link Mesh#morphTargetDictionary} and {@link Mesh#morphTargetInfluences}
      * to make sure existing morph targets can influence this 3D object.
@@ -96,9 +115,6 @@ export class Mesh extends Object3D {
      * @param {Raycaster} raycaster - The raycaster.
      * @param {Array<Object>} intersects - The target array that holds the intersection points.
      */
-    raycast(raycaster: Raycaster, intersects: Array<Object>): void;
-    _computeIntersections(raycaster: any, intersects: any, rayLocalSpace: any): void;
+    raycast(raycaster: Raycaster, intersects: Intersection[]): void;
+    toJSON(meta?: JSONMeta): MeshJSON;
 }
-import { BufferGeometry } from "../core/BufferGeometry.js";
-import { Object3D } from "../core/Object3D.js";
-import { Vector3 } from "../math/Vector3.js";

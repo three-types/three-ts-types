@@ -18,13 +18,13 @@
  *
  * @augments BufferGeometry
  */
-export class WireframeGeometry extends BufferGeometry {
+export class WireframeGeometry<TBufferGeometry extends BufferGeometry = BufferGeometry> extends BufferGeometry {
     /**
      * Constructs a new wireframe geometry.
      *
      * @param {?BufferGeometry} [geometry=null] - The geometry.
      */
-    constructor(geometry?: BufferGeometry | null);
+    constructor(geometry?: TBufferGeometry | null);
     /**
      * Holds the constructor parameters that have been
      * used to generate the geometry. Any modification
@@ -32,7 +32,9 @@ export class WireframeGeometry extends BufferGeometry {
      *
      * @type {Object}
      */
-    parameters: Object;
-    copy(source: any): this;
+    readonly parameters: {
+        readonly geometry: TBufferGeometry | null;
+    };
+    copy(source: WireframeGeometry<TBufferGeometry>): this;
 }
 import { BufferGeometry } from "../core/BufferGeometry.js";

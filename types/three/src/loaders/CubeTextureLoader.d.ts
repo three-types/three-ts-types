@@ -24,7 +24,7 @@
  *
  * @augments Loader
  */
-export class CubeTextureLoader extends Loader {
+export class CubeTextureLoader extends Loader<CubeTexture, readonly string[]> {
     /**
      * Starts loading from the given URL and pass the fully loaded cube texture
      * to the `onLoad()` callback. The method also returns a new cube texture object which can
@@ -40,11 +40,11 @@ export class CubeTextureLoader extends Loader {
      * @return {CubeTexture} The cube texture.
      */
     load(
-        urls: Array<string>,
-        onLoad: (arg0: CubeTexture) => any,
-        onProgress: onProgressCallback,
-        onError: onErrorCallback,
+        urls: readonly string[],
+        onLoad?: (data: CubeTexture) => void,
+        onProgress?: OnProgressCallback,
+        onError?: OnErrorCallback,
     ): CubeTexture;
 }
 import { CubeTexture } from "../textures/CubeTexture.js";
-import { Loader } from "./Loader.js";
+import { Loader, OnErrorCallback, OnProgressCallback } from "./Loader.js";

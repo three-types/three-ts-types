@@ -1,3 +1,8 @@
+import { Box3 } from "./Box3.js";
+import { Matrix4 } from "./Matrix4.js";
+import { Plane } from "./Plane.js";
+import { Vector3 } from "./Vector3.js";
+
 /**
  * An analytical 3D sphere defined by a center and radius. This class is mainly
  * used as a Bounding Sphere for 3D objects.
@@ -17,7 +22,7 @@ export class Sphere {
      * @readonly
      * @default true
      */
-    readonly isSphere: boolean;
+    readonly isSphere: true;
     /**
      * The center of the sphere
      *
@@ -55,7 +60,7 @@ export class Sphere {
      * @param {Sphere} sphere - The sphere to copy.
      * @return {Sphere} A reference to this sphere.
      */
-    copy(sphere: Sphere): Sphere;
+    copy(sphere: Sphere): this;
     /**
      * Returns `true` if the sphere is empty (the radius set to a negative number).
      *
@@ -70,7 +75,7 @@ export class Sphere {
      *
      * @return {Sphere} A reference to this sphere.
      */
-    makeEmpty(): Sphere;
+    makeEmpty(): this;
     /**
      * Returns `true` if this sphere contains the given point inclusive of
      * the surface of the sphere.
@@ -146,14 +151,14 @@ export class Sphere {
      * @param {Vector3} point - The point to include.
      * @return {Sphere} A reference to this sphere.
      */
-    expandByPoint(point: Vector3): Sphere;
+    expandByPoint(point: Vector3): this;
     /**
      * Expands this sphere to enclose both the original sphere and the given sphere.
      *
      * @param {Sphere} sphere - The sphere to include.
      * @return {Sphere} A reference to this sphere.
      */
-    union(sphere: Sphere): Sphere;
+    union(sphere: Sphere): this;
     /**
      * Returns `true` if this sphere is equal with the given one.
      *
@@ -166,20 +171,23 @@ export class Sphere {
      *
      * @return {Sphere} A clone of this instance.
      */
-    clone(): Sphere;
+    clone(): this;
     /**
      * Returns a serialized structure of the bounding sphere.
      *
      * @return {Object} Serialized structure with fields representing the object state.
      */
-    toJSON(): Object;
+    toJSON(): SphereJSON;
     /**
      * Returns a serialized structure of the bounding sphere.
      *
      * @param {Object} json - The serialized json to set the sphere from.
      * @return {Sphere} A reference to this bounding sphere.
      */
-    fromJSON(json: Object): Sphere;
+    fromJSON(json: SphereJSON): this;
 }
-import { Box3 } from "./Box3.js";
-import { Vector3 } from "./Vector3.js";
+
+export interface SphereJSON {
+    radius: number;
+    center: number[];
+}

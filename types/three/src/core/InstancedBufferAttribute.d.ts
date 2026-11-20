@@ -1,7 +1,7 @@
+import { BufferAttribute, TypedArray } from "./BufferAttribute.js";
+
 /**
  * An instanced version of a buffer attribute.
- *
- * @augments BufferAttribute
  */
 export class InstancedBufferAttribute extends BufferAttribute {
     /**
@@ -16,21 +16,16 @@ export class InstancedBufferAttribute extends BufferAttribute {
     /**
      * This flag can be used for type testing.
      *
-     * @type {boolean}
-     * @readonly
      * @default true
      */
-    readonly isInstancedBufferAttribute: boolean;
+    readonly isInstancedBufferAttribute: true;
     /**
      * Defines how often a value of this buffer attribute should be repeated. A
      * value of one means that each value of the instanced attribute is used for
      * a single instance. A value of two means that each value is used for two
      * consecutive instances (and so on).
      *
-     * @type {number}
      * @default 1
      */
     meshPerAttribute: number;
-    copy(source: any): this;
 }
-import { BufferAttribute } from "./BufferAttribute.js";

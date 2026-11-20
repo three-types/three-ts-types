@@ -15,7 +15,7 @@
  *
  * @augments Loader
  */
-export class AudioLoader extends Loader {
+export class AudioLoader extends Loader<AudioBuffer> {
     /**
      * Starts loading from the given URL and passes the loaded audio buffer
      * to the `onLoad()` callback.
@@ -27,9 +27,9 @@ export class AudioLoader extends Loader {
      */
     load(
         url: string,
-        onLoad: (arg0: AudioBuffer) => any,
-        onProgress: onProgressCallback,
-        onError: onErrorCallback,
+        onLoad: (data: AudioBuffer) => void,
+        onProgress?: OnProgressCallback,
+        onError?: OnErrorCallback,
     ): void;
 }
-import { Loader } from "./Loader.js";
+import { Loader, OnErrorCallback, OnProgressCallback } from "./Loader.js";

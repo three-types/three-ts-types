@@ -1,3 +1,25 @@
+import { Camera } from "../cameras/Camera.js";
+import { BufferGeometry } from "../core/BufferGeometry.js";
+import { Intersection, Raycaster } from "../core/Raycaster.js";
+import { Material } from "../materials/Material.js";
+import { Box3 } from "../math/Box3.js";
+import { Color } from "../math/Color.js";
+import { Matrix4 } from "../math/Matrix4.js";
+import { Sphere } from "../math/Sphere.js";
+import { Vector4 } from "../math/Vector4.js";
+import { Mesh } from "./Mesh.js";
+
+export interface BatchedMeshGeometryRange {
+    vertexStart: number;
+    vertexCount: number;
+    reservedVertexCount: number;
+    indexStart: number;
+    indexCount: number;
+    reservedIndexCount: number;
+    start: number;
+    count: number;
+}
+
 /**
  * A special version of a mesh with multi draw batch rendering support. Use
  * this class if you have to render a large number of objects with the same
@@ -38,7 +60,7 @@
  *
  * @augments Mesh
  */
-export class BatchedMesh extends Mesh {
+export class BatchedMesh extends Mesh<BufferGeometry, Material> {
     /**
      * Constructs a new batched mesh.
      *
@@ -47,12 +69,7 @@ export class BatchedMesh extends Mesh {
      * @param {number} [maxIndexCount=maxVertexCount*2] - The maximum number of indices to be used by all unique geometries
      * @param {Material|Array<Material>} [material] - The mesh material.
      */
-    constructor(
-        maxInstanceCount: number,
-        maxVertexCount: number,
-        maxIndexCount?: number,
-        material?: Material | Array<Material>,
-    );
+    constructor(maxInstanceCount: number, maxVertexCount: number, maxIndexCount?: number, material?: Material);
     /**
      * This flag can be used for type testing.
      *
@@ -60,7 +77,7 @@ export class BatchedMesh extends Mesh {
      * @readonly
      * @default true
      */
-    readonly isBatchedMesh: boolean;
+    readonly isBatchedMesh: true;
     /**
      * When set ot `true`, the individual objects of a batch are frustum culled.
      *
@@ -99,31 +116,7 @@ export class BatchedMesh extends Mesh {
      * @type {?Function}
      * @default null
      */
-    customSort: Function | null;
-    _instanceInfo: any[];
-    _geometryInfo: any[];
-    _availableInstanceIds: any[];
-    _availableGeometryIds: any[];
-    _nextIndexStart: number;
-    _nextVertexStart: number;
-    _geometryCount: number;
-    _visibilityChanged: boolean;
-    _geometryInitialized: boolean;
-    _maxInstanceCount: number;
-    _maxVertexCount: number;
-    _maxIndexCount: number;
-    _multiDrawCounts: Int32Array<ArrayBuffer>;
-    _multiDrawStarts: Int32Array<ArrayBuffer>;
-    _multiDrawCount: number;
-    _multiDrawBytesPerElement: number;
-    _mergedDrawCounts: Int32Array<ArrayBuffer>;
-    _mergedDrawStarts: Int32Array<ArrayBuffer>;
-    _mergedDrawInstanceCounts: Int32Array<ArrayBuffer>;
-    _mergedDrawCount: number;
-    _matricesTexture: any;
-    _indirectTexture: any;
-    _colorsTexture: any;
-    _previousMatricesTexture: any;
+    customSort: ((this: this, list: Array<{ start: number; count: number; z: number }>, camera: Camera) => void) | null;
     /**
      * The maximum number of individual instances that can be stored in the batch.
      *
@@ -152,11 +145,6 @@ export class BatchedMesh extends Mesh {
      * @readonly
      */
     get unusedIndexCount(): number;
-    _initMatricesTexture(): void;
-    _initIndirectTexture(): void;
-    _initColorsTexture(): void;
-    _initializeGeometry(reference: any): void;
-    _validateGeometry(geometry: any): void;
     /**
      * Validates the instance defined by the given ID.
      *
@@ -176,7 +164,9 @@ export class BatchedMesh extends Mesh {
      * @param {Function} func - The custom sort function.
      * @return {BatchedMesh} A reference to this batched mesh.
      */
-    setCustomSort(func: Function): BatchedMesh;
+    setCustomSort(
+        func: ((this: this, list: Array<{ start: number; count: number; z: number }>, camera: Camera) => void) | null,
+    ): this;
     /**
      * Computes the bounding box, updating {@link BatchedMesh#boundingBox}.
      * Bounding boxes aren't computed by default. They need to be explicitly computed,
@@ -230,21 +220,21 @@ export class BatchedMesh extends Mesh {
      * @param {number} geometryId - The ID of the geometry to remove from the batch.
      * @return {BatchedMesh} A reference to this batched mesh.
      */
-    deleteGeometry(geometryId: number): BatchedMesh;
+    deleteGeometry(geometryId: number): this;
     /**
      * Deletes an existing instance from the batch using the given ID.
      *
      * @param {number} instanceId - The ID of the instance to remove from the batch.
      * @return {BatchedMesh} A reference to this batched mesh.
      */
-    deleteInstance(instanceId: number): BatchedMesh;
+    deleteInstance(instanceId: number): this;
     /**
      * Repacks the sub geometries in BatchedMesh to remove any unused space remaining from
      * previously deleted geometry, freeing up space to add new geometry.
      *
      * @return {BatchedMesh} A reference to this batched mesh.
      */
-    optimize(): BatchedMesh;
+    optimize(): this;
     /**
      * Returns the bounding box for the given geometry.
      *
@@ -269,7 +259,7 @@ export class BatchedMesh extends Mesh {
      * @param {Matrix4} matrix - A 4x4 matrix representing the local transformation of a single instance.
      * @return {BatchedMesh} A reference to this batched mesh.
      */
-    setMatrixAt(instanceId: number, matrix: Matrix4): BatchedMesh;
+    setMatrixAt(instanceId: number, matrix: Matrix4): this;
     /**
      * Returns the local transformation matrix of the defined instance.
      *
@@ -285,7 +275,7 @@ export class BatchedMesh extends Mesh {
      * @param {Color|Vector4} color - The color to set the instance to. Use a `Vector4` to also define alpha.
      * @return {BatchedMesh} A reference to this batched mesh.
      */
-    setColorAt(instanceId: number, color: Color | Vector4): BatchedMesh;
+    setColorAt(instanceId: number, color: Color | Vector4): this;
     /**
      * Returns the color of the defined instance.
      *
@@ -293,6 +283,8 @@ export class BatchedMesh extends Mesh {
      * @param {Color|Vector4} color - The target object that is used to store the method's result.
      * @return {Color|Vector4} The instance's color.  Use a `Vector4` to also retrieve alpha.
      */
+    getColorAt(instanceId: number, color: Color): Color;
+    getColorAt(instanceId: number, color: Vector4): Vector4;
     getColorAt(instanceId: number, color: Color | Vector4): Color | Vector4;
     /**
      * Sets the visibility of the instance.
@@ -301,7 +293,7 @@ export class BatchedMesh extends Mesh {
      * @param {boolean} visible - Whether the instance is visible or not.
      * @return {BatchedMesh} A reference to this batched mesh.
      */
-    setVisibleAt(instanceId: number, visible: boolean): BatchedMesh;
+    setVisibleAt(instanceId: number, visible: boolean): this;
     /**
      * Returns the visibility state of the defined instance.
      *
@@ -316,7 +308,7 @@ export class BatchedMesh extends Mesh {
      * @param {number} geometryId - The geometry ID to be use by the instance.
      * @return {BatchedMesh} A reference to this batched mesh.
      */
-    setGeometryIdAt(instanceId: number, geometryId: number): BatchedMesh;
+    setGeometryIdAt(instanceId: number, geometryId: number): this;
     /**
      * Returns the geometry ID of the defined instance.
      *
@@ -336,16 +328,7 @@ export class BatchedMesh extends Mesh {
      * 	start:number,count:number
      * }} The result object with range data.
      */
-    getGeometryRangeAt(geometryId: number, target?: Object): {
-        vertexStart: number;
-        vertexCount: number;
-        reservedVertexCount: number;
-        indexStart: number;
-        indexCount: number;
-        reservedIndexCount: number;
-        start: number;
-        count: number;
-    };
+    getGeometryRangeAt(geometryId: number, target?: BatchedMeshGeometryRange): BatchedMeshGeometryRange;
     /**
      * Resizes the necessary buffers to support the provided number of instances.
      * If the provided arguments shrink the number of instances but there are not enough
@@ -363,25 +346,11 @@ export class BatchedMesh extends Mesh {
      * @param {number} maxIndexCount - The maximum number of indices to be used by all unique geometries to resize to.
      */
     setGeometrySize(maxVertexCount: number, maxIndexCount: number): void;
-    raycast(raycaster: any, intersects: any): void;
-    copy(source: any, recursive: any): this;
+    raycast(raycaster: Raycaster, intersects: Intersection[]): void;
+    copy(source: BatchedMesh, recursive?: boolean): this;
     /**
-     * Updates the draw parameters for the next draw. Depending on {@link BatchedMesh#perObjectFrustumCulled}
-     * and {@link BatchedMesh#sortObjects}, this includes per-object frustum culling and sorting.
-     *
-     * @private
-     * @param {Camera} camera - The camera of the next draw.
-     * @param {BufferGeometry} geometry - The batch's geometry.
-     * @param {Material} material - The material of the next draw.
-     * @param {('multiDraw'|'merged')} [drawFormat='multiDraw'] - The format of the draw parameters.
+     * Frees the GPU-related resources allocated by this instance. Call this
+     * method whenever this instance is no longer used in your app.
      */
-    private _updateDrawParameters;
-    onBeforeRender(renderer: any, scene: any, camera: any, geometry: any, material: any): void;
-    onBeforeShadow(renderer: any, object: any, camera: any, shadowCamera: any, geometry: any, depthMaterial: any): void;
+    dispose(): void;
 }
-import { BufferGeometry } from "../core/BufferGeometry.js";
-import { Box3 } from "../math/Box3.js";
-import { Color } from "../math/Color.js";
-import { Matrix4 } from "../math/Matrix4.js";
-import { Sphere } from "../math/Sphere.js";
-import { Mesh } from "./Mesh.js";

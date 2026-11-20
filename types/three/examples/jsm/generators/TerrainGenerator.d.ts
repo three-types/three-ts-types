@@ -1,3 +1,22 @@
+import { BufferGeometry, Group, MeshStandardNodeMaterial, UniformNode } from "three/webgpu";
+
+export interface TerrainGeneratorParameters {
+    seed: number;
+    size: number;
+    segments: number;
+    heightScale: number;
+    frequency: number;
+    octaves: number;
+    lacunarity: number;
+    gain: number;
+    erosion: number;
+    warp: number;
+    valleyBias: number;
+    seaLevel: number;
+    talus: number;
+    talusPasses: number;
+}
+
 /**
  * Bakes a procedural mountain range into a single mesh, returned in a `THREE.Group`.
  * Domain-warped, derivative-damped noise shapes the ridges; thermal erosion relaxes
@@ -12,55 +31,27 @@
  * ```
  */
 export class TerrainGenerator {
-    constructor(parameters?: {});
-    parameters: {
-        seed: number;
-        size: number;
-        segments: number;
-        heightScale: number;
-        frequency: number;
-        octaves: number;
-        lacunarity: number;
-        gain: number;
-        erosion: number;
-        warp: number;
-        valleyBias: number;
-        seaLevel: number;
-        talus: number;
-        talusPasses: number;
-    };
-    minHeight: import("three/tsl").UniformNode;
-    maxHeight: import("three/tsl").UniformNode;
+    constructor(parameters?: Partial<TerrainGeneratorParameters>);
+
+    parameters: TerrainGeneratorParameters;
+
+    minHeight: UniformNode<"float">;
+    maxHeight: UniformNode<"float">;
+
     material: MeshStandardNodeMaterial;
     geometry: BufferGeometry | null;
     group: Group | null;
+
+    heights?: Float32Array;
+    gridSize?: number;
+    minY?: number;
+    maxY?: number;
+
     build(): Group;
-    heights: Float32Array<ArrayBuffer> | undefined;
-    gridSize: number | undefined;
-    minY: number | undefined;
-    maxY: number | undefined;
-    sampleHeight(x: any, z: any): number;
-    sampleSlope(x: any, z: any): number;
+
+    sampleHeight(x: number, z: number): number;
+    sampleSlope(x: number, z: number): number;
     dispose(): void;
+
+    static defaults: TerrainGeneratorParameters;
 }
-export namespace TerrainGenerator {
-    namespace defaults {
-        let seed: number;
-        let size: number;
-        let segments: number;
-        let heightScale: number;
-        let frequency: number;
-        let octaves: number;
-        let lacunarity: number;
-        let gain: number;
-        let erosion: number;
-        let warp: number;
-        let valleyBias: number;
-        let seaLevel: number;
-        let talus: number;
-        let talusPasses: number;
-    }
-}
-import { BufferGeometry } from "three";
-import { Group } from "three";
-import { MeshStandardNodeMaterial } from "three/webgpu";

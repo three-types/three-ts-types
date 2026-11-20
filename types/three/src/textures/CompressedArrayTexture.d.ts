@@ -1,3 +1,10 @@
+import { CompressedPixelFormat, TextureDataType, Wrapping } from "../constants.js";
+import { CompressedTexture, CompressedTextureImageData, CompressedTextureMipmap } from "./CompressedTexture.js";
+
+export interface CompressedArrayTextureImageData extends CompressedTextureImageData {
+    depth: number;
+}
+
 /**
  * Creates a texture 2D array based on data in compressed form.
  *
@@ -5,7 +12,7 @@
  *
  * @augments CompressedTexture
  */
-export class CompressedArrayTexture extends CompressedTexture {
+export class CompressedArrayTexture extends CompressedTexture<CompressedArrayTextureImageData> {
     /**
      * Constructs a new compressed array texture.
      *
@@ -17,7 +24,14 @@ export class CompressedArrayTexture extends CompressedTexture {
      * @param {number} [format=RGBAFormat] - The min filter value.
      * @param {number} [type=UnsignedByteType] - The min filter value.
      */
-    constructor(mipmaps: Array<Object>, width: number, height: number, depth: number, format?: number, type?: number);
+    constructor(
+        mipmaps: CompressedTextureMipmap[],
+        width: number,
+        height: number,
+        depth: number,
+        format?: CompressedPixelFormat,
+        type?: TextureDataType,
+    );
     /**
      * This flag can be used for type testing.
      *
@@ -25,7 +39,7 @@ export class CompressedArrayTexture extends CompressedTexture {
      * @readonly
      * @default true
      */
-    readonly isCompressedArrayTexture: boolean;
+    readonly isCompressedArrayTexture: true;
     /**
      * This defines how the texture is wrapped in the depth and corresponds to
      * *W* in UVW mapping.
@@ -33,7 +47,7 @@ export class CompressedArrayTexture extends CompressedTexture {
      * @type {(RepeatWrapping|ClampToEdgeWrapping|MirroredRepeatWrapping)}
      * @default ClampToEdgeWrapping
      */
-    wrapR: RepeatWrapping | number | MirroredRepeatWrapping;
+    wrapR: Wrapping;
     /**
      * A set of all layers which need to be updated in the texture.
      *
@@ -46,7 +60,7 @@ export class CompressedArrayTexture extends CompressedTexture {
      * @param {CompressedArrayTexture} source - The texture to copy.
      * @return {CompressedArrayTexture} A reference to this instance.
      */
-    copy(source: CompressedArrayTexture): CompressedArrayTexture;
+    copy(source: CompressedArrayTexture): this;
     /**
      * Describes that a specific layer of the texture needs to be updated.
      * Normally when {@link Texture#needsUpdate} is set to `true`, the
@@ -62,4 +76,3 @@ export class CompressedArrayTexture extends CompressedTexture {
      */
     clearLayerUpdates(): void;
 }
-import { CompressedTexture } from "./CompressedTexture.js";

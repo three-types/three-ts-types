@@ -1,3 +1,13 @@
+import {
+    MagnificationTextureFilter,
+    Mapping,
+    MinificationTextureFilter,
+    PixelFormat,
+    TextureDataType,
+    Wrapping,
+} from "../constants.js";
+import { Texture } from "./Texture.js";
+
 /**
  * A texture for use with a video.
  *
@@ -15,7 +25,7 @@
  *
  * @augments Texture
  */
-export class VideoTexture extends Texture {
+export class VideoTexture<TVideo = HTMLVideoElement> extends Texture<TVideo> {
     /**
      * Constructs a new video texture.
      *
@@ -30,14 +40,14 @@ export class VideoTexture extends Texture {
      * @param {number} [anisotropy=Texture.DEFAULT_ANISOTROPY] - The anisotropy value.
      */
     constructor(
-        video: HTMLVideoElement,
-        mapping?: number,
-        wrapS?: number,
-        wrapT?: number,
-        magFilter?: number,
-        minFilter?: number,
-        format?: number,
-        type?: number,
+        video: TVideo,
+        mapping?: Mapping,
+        wrapS?: Wrapping,
+        wrapT?: Wrapping,
+        magFilter?: MagnificationTextureFilter,
+        minFilter?: MinificationTextureFilter,
+        format?: PixelFormat,
+        type?: TextureDataType,
         anisotropy?: number,
     );
     /**
@@ -47,17 +57,8 @@ export class VideoTexture extends Texture {
      * @readonly
      * @default true
      */
-    readonly isVideoTexture: boolean;
-    /**
-     * The video frame request callback identifier, which is a positive integer.
-     *
-     * Value of 0 represents no scheduled rVFC.
-     *
-     * @private
-     * @type {number}
-     */
-    private _requestVideoFrameCallbackId;
-    clone(): any;
+    readonly isVideoTexture: true;
+    clone(): this;
     /**
      * This method is called automatically by the renderer and sets {@link Texture#needsUpdate}
      * to `true` every time a new frame is available.
@@ -66,4 +67,3 @@ export class VideoTexture extends Texture {
      */
     update(): void;
 }
-import { Texture } from "./Texture.js";

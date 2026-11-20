@@ -13,7 +13,7 @@
  *
  * @augments Loader
  */
-export class FileLoader extends Loader {
+export class FileLoader<TData = string | ArrayBuffer> extends Loader<TData> {
     /**
      * The expected mime type. Valid values can be found
      * [here](https://developer.mozilla.org/en-US/docs/Web/API/DOMParser/parseFromString#mimetype)
@@ -27,14 +27,7 @@ export class FileLoader extends Loader {
      * @type {('arraybuffer'|'blob'|'document'|'json'|'')}
      * @default ''
      */
-    responseType: "arraybuffer" | "blob" | "document" | "json" | "";
-    /**
-     * Used for aborting requests.
-     *
-     * @private
-     * @type {AbortController}
-     */
-    private _abortController;
+    responseType: string;
     /**
      * Starts loading from the given URL and pass the loaded response to the `onLoad()` callback.
      *
@@ -43,26 +36,26 @@ export class FileLoader extends Loader {
      * @param {onProgressCallback} [onProgress] - Executed while the loading is in progress.
      * @param {onErrorCallback} [onError] - Executed when errors occur.
      */
-    load(url: string, onLoad: (arg0: any) => any, onProgress?: onProgressCallback, onError?: onErrorCallback): void;
+    load(url: string, onLoad?: (data: TData) => void, onProgress?: OnProgressCallback, onError?: OnErrorCallback): void;
     /**
      * Sets the expected response type.
      *
      * @param {('arraybuffer'|'blob'|'document'|'json'|'')} value - The response type.
      * @return {FileLoader} A reference to this file loader.
      */
-    setResponseType(value: "arraybuffer" | "blob" | "document" | "json" | ""): FileLoader;
+    setResponseType(value: string): this;
     /**
      * Sets the expected mime type of the loaded file.
      *
      * @param {string} value - The mime type.
      * @return {FileLoader} A reference to this file loader.
      */
-    setMimeType(value: string): FileLoader;
+    setMimeType(value: string): this;
     /**
      * Aborts ongoing fetch requests.
      *
      * @return {FileLoader} A reference to this instance.
      */
-    abort(): FileLoader;
+    abort(): this;
 }
-import { Loader } from "./Loader.js";
+import { Loader, OnErrorCallback, OnProgressCallback } from "./Loader.js";

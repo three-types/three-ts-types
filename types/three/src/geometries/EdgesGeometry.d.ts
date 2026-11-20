@@ -12,7 +12,7 @@
  *
  * @augments BufferGeometry
  */
-export class EdgesGeometry extends BufferGeometry {
+export class EdgesGeometry<TBufferGeometry extends BufferGeometry = BufferGeometry> extends BufferGeometry {
     /**
      * Constructs a new edges geometry.
      *
@@ -20,7 +20,7 @@ export class EdgesGeometry extends BufferGeometry {
      * @param {number} [thresholdAngle=1] - An edge is only rendered if the angle (in degrees)
      * between the face normals of the adjoining faces exceeds this value.
      */
-    constructor(geometry?: BufferGeometry | null, thresholdAngle?: number);
+    constructor(geometry?: TBufferGeometry | null, thresholdAngle?: number);
     /**
      * Holds the constructor parameters that have been
      * used to generate the geometry. Any modification
@@ -28,7 +28,10 @@ export class EdgesGeometry extends BufferGeometry {
      *
      * @type {Object}
      */
-    parameters: Object;
-    copy(source: any): this;
+    readonly parameters: {
+        readonly geometry: TBufferGeometry | null;
+        readonly thresholdAngle: number;
+    };
+    copy(source: EdgesGeometry<TBufferGeometry>): this;
 }
 import { BufferGeometry } from "../core/BufferGeometry.js";

@@ -13,7 +13,7 @@ export class PolyhedronGeometry extends BufferGeometry {
      * @param {Object} data - A JSON object representing the serialized geometry.
      * @return {PolyhedronGeometry} A new instance.
      */
-    static fromJSON(data: Object): PolyhedronGeometry;
+    static fromJSON(data: {}): PolyhedronGeometry;
     /**
      * Constructs a new polyhedron geometry.
      *
@@ -30,7 +30,12 @@ export class PolyhedronGeometry extends BufferGeometry {
      *
      * @type {Object}
      */
-    parameters: Object;
-    copy(source: any): this;
+    readonly parameters: {
+        readonly vertices: number[];
+        readonly indices: number[];
+        readonly radius: number;
+        readonly detail: number;
+    };
+    copy(source: PolyhedronGeometry): this;
 }
 import { BufferGeometry } from "../core/BufferGeometry.js";

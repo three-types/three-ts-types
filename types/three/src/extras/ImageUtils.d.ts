@@ -11,12 +11,26 @@ export class ImageUtils {
      * @param {string} [type='image/png'] - Indicates the image format.
      * @return {string} The data URI.
      */
-    static getDataURL(image: HTMLImageElement | HTMLCanvasElement, type?: string): string;
+    static getDataURL(
+        image: HTMLImageElement | HTMLCanvasElement | CanvasImageSource | ImageBitmap | ImageData,
+        type?: string,
+    ): string;
     /**
      * Converts the given sRGB image data to linear color space.
      *
      * @param {(HTMLImageElement|HTMLCanvasElement|ImageBitmap|Object)} image - The image object.
      * @return {HTMLCanvasElement|Object} The converted image.
      */
-    static sRGBToLinear(image: HTMLImageElement | HTMLCanvasElement | ImageBitmap | Object): HTMLCanvasElement | Object;
+    static sRGBToLinear(image: HTMLImageElement | HTMLCanvasElement | ImageBitmap): HTMLCanvasElement;
+    /**
+     * Converts the given sRGB image data to linear color space.
+     *
+     * @param {(HTMLImageElement|HTMLCanvasElement|ImageBitmap|Object)} image - The image object.
+     * @return {HTMLCanvasElement|Object} The converted image.
+     */
+    static sRGBToLinear(image: ImageData): {
+        data: ImageData["data"];
+        width: ImageData["width"];
+        height: ImageData["height"];
+    };
 }

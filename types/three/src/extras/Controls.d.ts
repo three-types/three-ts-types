@@ -1,70 +1,68 @@
+import { MOUSE, TOUCH } from "../constants.js";
+import { EventDispatcher } from "../core/EventDispatcher.js";
+import { Object3D } from "../core/Object3D.js";
+
+export interface ControlsEventMap {}
+
 /**
  * Abstract base class for controls.
  *
  * @abstract
  * @augments EventDispatcher
  */
-export class Controls extends EventDispatcher {
+export abstract class Controls<
+    TEventMap extends ControlsEventMap = ControlsEventMap,
+    TObject extends Object3D = Object3D,
+> extends EventDispatcher<TEventMap> {
     /**
      * Constructs a new controls instance.
      *
      * @param {Object3D} object - The object that is managed by the controls.
      * @param {?HTMLElement} domElement - The HTML element used for event listeners.
      */
-    constructor(object: Object3D, domElement?: HTMLElement | null);
+    constructor(object: TObject, domElement?: HTMLElement | SVGElement | null);
     /**
      * The object that is managed by the controls.
-     *
-     * @type {Object3D}
      */
-    object: Object3D;
+    object: TObject;
     /**
      * The HTML element used for event listeners.
      *
-     * @type {?HTMLElement}
      * @default null
      */
-    domElement: HTMLElement | null;
+    domElement: HTMLElement | SVGElement | null;
     /**
      * Whether the controls responds to user input or not.
      *
-     * @type {boolean}
      * @default true
      */
     enabled: boolean;
     /**
      * The internal state of the controls.
      *
-     * @type {number}
      * @default -1
      */
     state: number;
     /**
      * This object defines the keyboard input of the controls.
-     *
-     * @type {Object}
      */
-    keys: Object;
+    keys: object;
     /**
      * This object defines what type of actions are assigned to the available mouse buttons.
      * It depends on the control implementation what kind of mouse buttons and actions are supported.
-     *
-     * @type {{LEFT: ?number, MIDDLE: ?number, RIGHT: ?number}}
      */
     mouseButtons: {
-        LEFT: number | null;
-        MIDDLE: number | null;
-        RIGHT: number | null;
+        LEFT?: MOUSE | null | undefined;
+        MIDDLE?: MOUSE | null | undefined;
+        RIGHT?: MOUSE | null | undefined;
     };
     /**
      * This object defines what type of actions are assigned to what kind of touch interaction.
      * It depends on the control implementation what kind of touch interaction and actions are supported.
-     *
-     * @type {{ONE: ?number, TWO: ?number}}
      */
     touches: {
-        ONE: number | null;
-        TWO: number | null;
+        ONE?: TOUCH | null | undefined;
+        TWO?: TOUCH | null | undefined;
     };
     /**
      * Connects the controls to the DOM. This method has so called "side effects" since
@@ -72,7 +70,7 @@ export class Controls extends EventDispatcher {
      *
      * @param {HTMLElement} element - The DOM element to connect to.
      */
-    connect(element: HTMLElement): void;
+    connect(element: HTMLElement | SVGElement): void;
     /**
      * Disconnects the controls from the DOM.
      */
@@ -88,6 +86,5 @@ export class Controls extends EventDispatcher {
      *
      * @param {number} [delta] - The time delta in seconds.
      */
-    update(): void;
+    update(delta?: number): void;
 }
-import { EventDispatcher } from "../core/EventDispatcher.js";

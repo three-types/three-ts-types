@@ -1,3 +1,8 @@
+import { Vector3 } from "../../math/Vector3.js";
+import { Curve } from "../core/Curve.js";
+
+export type CatmullRomCurve3CurveType = "centripetal" | "chordal" | "catmullrom";
+
 /**
  * A curve representing a Catmull-Rom spline.
  *
@@ -22,7 +27,7 @@
  *
  * @augments Curve
  */
-export class CatmullRomCurve3 extends Curve {
+export class CatmullRomCurve3 extends Curve<Vector3> {
     /**
      * Constructs a new Catmull-Rom curve.
      *
@@ -31,45 +36,32 @@ export class CatmullRomCurve3 extends Curve {
      * @param {('centripetal'|'chordal'|'catmullrom')} [curveType='centripetal'] - The curve type.
      * @param {number} [tension=0.5] - Tension of the curve.
      */
-    constructor(
-        points?: Array<Vector3>,
-        closed?: boolean,
-        curveType?: "centripetal" | "chordal" | "catmullrom",
-        tension?: number,
-    );
+    constructor(points?: Array<Vector3>, closed?: boolean, curveType?: CatmullRomCurve3CurveType, tension?: number);
     /**
      * This flag can be used for type testing.
      *
-     * @type {boolean}
-     * @readonly
      * @default true
      */
-    readonly isCatmullRomCurve3: boolean;
-    type: string;
+    readonly isCatmullRomCurve3: true;
     /**
      * An array of 3D points defining the curve.
-     *
-     * @type {Array<Vector3>}
      */
     points: Array<Vector3>;
     /**
      * Whether the curve is closed or not.
      *
-     * @type {boolean}
      * @default false
      */
     closed: boolean;
     /**
      * The curve type.
      *
-     * @type {('centripetal'|'chordal'|'catmullrom')}
      * @default 'centripetal'
      */
-    curveType: "centripetal" | "chordal" | "catmullrom";
+    curveType: CatmullRomCurve3CurveType;
     /**
      * Tension of the curve.
      *
-     * @type {number}
      * @default 0.5
      */
     tension: number;
@@ -81,8 +73,5 @@ export class CatmullRomCurve3 extends Curve {
      * @return {Vector3} The position on the curve.
      */
     getPoint(t: number, optionalTarget?: Vector3): Vector3;
-    copy(source: any): this;
-    fromJSON(json: any): this;
+    copy(source: CatmullRomCurve3): this;
 }
-import { Vector3 } from "../../math/Vector3.js";
-import { Curve } from "../core/Curve.js";

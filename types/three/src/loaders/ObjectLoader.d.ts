@@ -14,7 +14,7 @@
  *
  * @augments Loader
  */
-export class ObjectLoader extends Loader {
+export class ObjectLoader extends Loader<Object3D> {
     /**
      * Registers the given geometry at the internal
      * geometry library.
@@ -23,7 +23,11 @@ export class ObjectLoader extends Loader {
      * @param {string} type - The geometry type.
      * @param {BufferGeometry.constructor} geometryClass - The geometry class.
      */
-    static registerGeometry(type: string, geometryClass: BufferGeometry.constructor): void;
+    static registerGeometry(type: string, geometryClass: {
+        fromJSON(data: unknown, shapes: {
+            [x: string]: Shape;
+        }): BufferGeometry;
+    }): void;
     /**
      * Constructs a new object loader.
      *
@@ -38,7 +42,12 @@ export class ObjectLoader extends Loader {
      * @param {onProgressCallback} onProgress - Executed while the loading is in progress.
      * @param {onErrorCallback} onError - Executed when errors occur.
      */
-    load(url: string, onLoad: (arg0: Object3D) => any, onProgress: onProgressCallback, onError: onErrorCallback): void;
+    load(
+        url: string,
+        onLoad?: (data: Object3D) => void,
+        onProgress?: OnProgressCallback,
+        onError?: OnErrorCallback,
+    ): void;
     /**
      * Async version of {@link ObjectLoader#load}.
      *
@@ -47,7 +56,7 @@ export class ObjectLoader extends Loader {
      * @param {onProgressCallback} onProgress - Executed while the loading is in progress.
      * @return {Promise<Object3D>} A Promise that resolves with the loaded 3D object.
      */
-    loadAsync(url: string, onProgress: onProgressCallback): Promise<Object3D>;
+    loadAsync(url: string, onProgress?: OnProgressCallback): Promise<Object3D>;
     /**
      * Parses the given JSON. This is used internally by {@link ObjectLoader#load}
      * but can also be used directly to parse a previously loaded JSON structure.
@@ -56,53 +65,66 @@ export class ObjectLoader extends Loader {
      * @param {onLoad} onLoad - Executed when all resources (e.g. textures) have been fully loaded.
      * @return {Object3D} The parsed 3D object.
      */
-    parse(json: Object, onLoad: any): Object3D;
+    parse(json: unknown, onLoad?: (object: Object3D) => void): Object3D;
     /**
      * Async version of {@link ObjectLoader#parse}.
      *
      * @param {Object} json - The serialized 3D object.
      * @return {Promise<Object3D>} A Promise that resolves with the parsed 3D object.
      */
-    parseAsync(json: Object): Promise<Object3D>;
-    parseShapes(json: any): {};
-    parseSkeletons(json: any, object: any): {};
-    parseGeometries(json: any, shapes: any): {};
-    parseMaterials(json: any, textures: any): {};
-    parseAnimations(json: any): {};
-    parseImages(json: any, onLoad: any): {};
-    parseImagesAsync(json: any): Promise<{}>;
-    parseTextures(json: any, images: any): {};
-    parseObject(
-        data: any,
-        geometries: any,
-        materials: any,
-        textures: any,
-        animations: any,
-    ):
-        | Object3D
-        | Sprite
-        | LOD
-        | Mesh
-        | SkinnedMesh
-        | InstancedMesh
-        | BatchedMesh
-        | Line
-        | Points
-        | PerspectiveCamera
-        | OrthographicCamera;
-    bindSkeletons(object: any, skeletons: any): void;
-    bindLightTargets(object: any): void;
+    parseAsync(json: unknown): Promise<Object3D>;
+    parseShapes(json: unknown): {
+        [key: string]: Shape;
+    };
+    parseSkeletons(json: unknown, object: Object3D): {
+        [key: string]: Skeleton;
+    };
+    parseGeometries(json: unknown, shapes: {
+        [key: string]: Shape;
+    }): {
+        [key: string]: InstancedBufferGeometry | BufferGeometry;
+    };
+    parseMaterials(json: unknown, textures: {
+        [key: string]: Texture;
+    }): {
+        [key: string]: Material;
+    };
+    parseAnimations(json: unknown): {
+        [key: string]: AnimationClip;
+    };
+    parseImages(json: unknown, onLoad?: () => void): {
+        [key: string]: TextureSource<unknown>;
+    };
+    parseImagesAsync(json: unknown): Promise<{
+        [key: string]: TextureSource<unknown>;
+    }>;
+    parseTextures(json: unknown, images: {
+        [key: string]: TextureSource<unknown>;
+    }): {
+        [key: string]: Texture;
+    };
+    parseObject(data: unknown, geometries: {
+        [key: string]: InstancedBufferGeometry | BufferGeometry;
+    }, materials: {
+        [key: string]: Material;
+    }, textures: {
+        [key: string]: Texture;
+    }, animations: {
+        [key: string]: AnimationClip;
+    }): Object3D;
+    bindSkeletons(object: Object3D, skeletons: {
+        [key: string]: Skeleton;
+    }): void;
+    bindLightTargets(object: Object3D): void;
 }
-import { OrthographicCamera } from "../cameras/OrthographicCamera.js";
-import { PerspectiveCamera } from "../cameras/PerspectiveCamera.js";
+import { AnimationClip } from "../animation/AnimationClip.js";
+import { BufferGeometry } from "../core/BufferGeometry.js";
+import { InstancedBufferGeometry } from "../core/InstancedBufferGeometry.js";
 import { Object3D } from "../core/Object3D.js";
-import { BatchedMesh } from "../objects/BatchedMesh.js";
-import { InstancedMesh } from "../objects/InstancedMesh.js";
-import { Line } from "../objects/Line.js";
-import { LOD } from "../objects/LOD.js";
-import { Mesh } from "../objects/Mesh.js";
-import { Points } from "../objects/Points.js";
-import { SkinnedMesh } from "../objects/SkinnedMesh.js";
-import { Sprite } from "../objects/Sprite.js";
-import { Loader } from "./Loader.js";
+import { Shape } from "../extras/core/Shape.js";
+import { Material } from "../materials/Material.js";
+import { Skeleton } from "../objects/Skeleton.js";
+import { Texture } from "../textures/Texture.js";
+import { TextureSource } from "../textures/TextureSource.js";
+import { Loader, OnErrorCallback, OnProgressCallback } from "./Loader.js";
 import { LoadingManager } from "./LoadingManager.js";

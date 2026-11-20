@@ -11,24 +11,22 @@
  * Since this class can only be used in context of {@link ShaderMaterial}, it is only supported
  * in {@link WebGLRenderer}.
  */
-export class Uniform {
+export class Uniform<T = any> {
     /**
      * Constructs a new uniform.
      *
      * @param {any} value - The uniform value.
      */
-    constructor(value: any);
+    constructor(value: T);
     /**
      * The uniform value.
-     *
-     * @type {any}
      */
-    value: any;
+    value: T;
     /**
      * Returns a new uniform with copied values from this instance.
      * If the value has a `clone()` method, the value is cloned as well.
      *
      * @return {Uniform} A clone of this instance.
      */
-    clone(): Uniform;
+    clone(): Uniform<T>;
 }

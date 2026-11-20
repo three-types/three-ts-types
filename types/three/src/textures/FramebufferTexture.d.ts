@@ -1,3 +1,10 @@
+import { Texture } from "./Texture.js";
+
+export interface FramebufferTextureImageData {
+    width: number;
+    height: number;
+}
+
 /**
  * This class can only be used in combination with `copyFramebufferToTexture()` methods
  * of renderers. It extracts the contents of the current bound framebuffer and provides it
@@ -22,7 +29,7 @@
  *
  * @augments Texture
  */
-export class FramebufferTexture extends Texture {
+export class FramebufferTexture extends Texture<FramebufferTextureImageData> {
     /**
      * Constructs a new framebuffer texture.
      *
@@ -37,7 +44,6 @@ export class FramebufferTexture extends Texture {
      * @readonly
      * @default true
      */
-    readonly isFramebufferTexture: boolean;
-    copy(source: any): this;
+    readonly isFramebufferTexture: true;
+    copy(source: FramebufferTexture): this;
 }
-import { Texture } from "./Texture.js";

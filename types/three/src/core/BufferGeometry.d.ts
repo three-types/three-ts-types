@@ -1,3 +1,66 @@
+import { Box3 } from "../math/Box3.js";
+import { Matrix4 } from "../math/Matrix4.js";
+import { Quaternion } from "../math/Quaternion.js";
+import { Sphere } from "../math/Sphere.js";
+import { Vector2 } from "../math/Vector2.js";
+import { Vector3, Vector3Tuple } from "../math/Vector3.js";
+import IndirectStorageBufferAttribute from "../renderers/common/IndirectStorageBufferAttribute.js";
+import { BufferAttribute, BufferAttributeJSON } from "./BufferAttribute.js";
+import { EventDispatcher } from "./EventDispatcher.js";
+import { GLBufferAttribute } from "./GLBufferAttribute.js";
+import { InterleavedBufferAttribute } from "./InterleavedBufferAttribute.js";
+
+export type NormalBufferAttributes = Record<string, BufferAttribute | InterleavedBufferAttribute>;
+export type NormalOrGLBufferAttributes = Record<
+    string,
+    BufferAttribute | InterleavedBufferAttribute | GLBufferAttribute
+>;
+
+export interface BufferGeometryJSON {
+    metadata?: { version: number; type: string; generator: string };
+
+    uuid: string;
+    type: string;
+
+    name?: string;
+    userData?: Record<string, unknown>;
+
+    data?: {
+        attributes: Record<string, BufferAttributeJSON>;
+
+        index?: { type: string; array: number[] };
+
+        morphAttributes?: Record<string, BufferAttributeJSON[]>;
+        morphTargetsRelative?: boolean;
+
+        groups?: GeometryGroup[];
+
+        boundingSphere?: { center: Vector3Tuple; radius: number };
+    };
+}
+
+export interface GeometryGroup {
+    /**
+     * Specifies the first element in this draw call – the first vertex for non-indexed geometry, otherwise the first triangle index.
+     * @remarks Expects a `Integer`
+     */
+    start: number;
+    /**
+     * Specifies how many vertices (or indices) are included.
+     * @remarks Expects a `Integer`
+     */
+    count: number;
+    /**
+     * Specifies the material array index to use.
+     * @remarks Expects a `Integer`
+     */
+    materialIndex?: number | undefined;
+}
+
+export interface BufferGeometryEventMap {
+    dispose: {};
+}
+
 /**
  * A representation of mesh, line, or point geometry. Includes vertex
  * positions, face indices, normals, colors, UVs, and custom attributes
@@ -21,32 +84,40 @@
  * const material = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
  * const mesh = new THREE.Mesh( geometry, material );
  * ```
- *
- * @augments EventDispatcher
  */
-export class BufferGeometry extends EventDispatcher {
+export class BufferGeometry<
+    Attributes extends NormalOrGLBufferAttributes = NormalBufferAttributes,
+    TEventMap extends BufferGeometryEventMap = BufferGeometryEventMap,
+> extends EventDispatcher<TEventMap> {
+    /**
+     * This creates a new {@link THREE.BufferGeometry | BufferGeometry} object.
+     */
+    constructor();
     /**
      * This flag can be used for type testing.
      *
-     * @type {boolean}
-     * @readonly
      * @default true
      */
-    readonly isBufferGeometry: boolean;
+    readonly isBufferGeometry: true;
+    /**
+     * Unique number for this {@link THREE.BufferGeometry | BufferGeometry} instance.
+     * @remarks Expects a `Integer`
+     */
+    id: number;
     /**
      * The UUID of the geometry.
-     *
-     * @type {string}
-     * @readonly
      */
     readonly uuid: string;
     /**
      * The name of the geometry.
-     *
-     * @type {string}
      */
     name: string;
-    type: string;
+    /**
+     * A Read-only _string_ to check if `this` object type.
+     * @remarks Sub-classes will update this value.
+     * @defaultValue `BufferGeometry`
+     */
+    readonly type: string | "BufferGeometry";
     /**
      * Allows for vertices to be re-used across multiple triangles; this is
      * called using "indexed triangles". Each triangle is associated with the
@@ -54,7 +125,6 @@ export class BufferGeometry extends EventDispatcher {
      * each vertex for each triangular face. If this attribute is not set, the
      * renderer assumes that each three contiguous positions represent a single triangle.
      *
-     * @type {?BufferAttribute}
      * @default null
      */
     index: BufferAttribute | null;
@@ -64,44 +134,39 @@ export class BufferGeometry extends EventDispatcher {
      *
      * Can only be used with {@link WebGPURenderer} and a WebGPU backend.
      *
-     * @type {?BufferAttribute}
      * @default null
      */
-    indirect: BufferAttribute | null;
+    indirect: IndirectStorageBufferAttribute | null;
     /**
      * The offset, in bytes, into the indirect drawing buffer where the value data begins. If an array is provided, multiple indirect draw calls will be made for each offset.
      *
      * Can only be used with {@link WebGPURenderer} and a WebGPU backend.
      *
-     * @type {number|Array<number>}
      * @default 0
      */
-    indirectOffset: number | Array<number>;
+    indirectOffset: number | number[];
     /**
      * This dictionary has as id the name of the attribute to be set and as value
      * the buffer attribute to set it to. Rather than accessing this property directly,
      * use `setAttribute()` and `getAttribute()` to access attributes of this geometry.
-     *
-     * @type {Object<string,(BufferAttribute|InterleavedBufferAttribute)>}
      */
-    attributes: {
-        [x: string]: any;
-    };
+    attributes: Attributes;
     /**
      * This dictionary holds the morph targets of the geometry.
      *
      * Note: Once the geometry has been rendered, the morph attribute data cannot
      * be changed. You will have to call `dispose()`, and create a new geometry instance.
-     *
-     * @type {Object}
      */
-    morphAttributes: Object;
+    morphAttributes: {
+        position?: Array<BufferAttribute | InterleavedBufferAttribute> | undefined;
+        normal?: Array<BufferAttribute | InterleavedBufferAttribute> | undefined;
+        color?: Array<BufferAttribute | InterleavedBufferAttribute> | undefined;
+    };
     /**
      * Used to control the morph target behavior; when set to `true`, the morph
      * target data is treated as relative offsets, rather than as absolute
      * positions/normals.
      *
-     * @type {boolean}
      * @default false
      */
     morphTargetsRelative: boolean;
@@ -113,29 +178,23 @@ export class BufferGeometry extends EventDispatcher {
      *
      * Every vertex and index must belong to exactly one group — groups must not share vertices or
      * indices, and must not leave vertices or indices unused.
-     *
-     * @type {Array<Object>}
      */
-    groups: Array<Object>;
+    groups: GeometryGroup[];
     /**
      * Bounding box for the geometry which can be calculated with `computeBoundingBox()`.
      *
-     * @type {?Box3}
      * @default null
      */
     boundingBox: Box3 | null;
     /**
      * Bounding sphere for the geometry which can be calculated with `computeBoundingSphere()`.
      *
-     * @type {?Sphere}
      * @default null
      */
     boundingSphere: Sphere | null;
     /**
      * Determines the part of the geometry to render. This should not be set directly,
      * instead use `setDrawRange()`.
-     *
-     * @type {{start:number,count:number}}
      */
     drawRange: {
         start: number;
@@ -144,22 +203,8 @@ export class BufferGeometry extends EventDispatcher {
     /**
      * An object that can be used to store custom data about the geometry.
      * It should not hold references to functions as these will not be cloned.
-     *
-     * @type {Object}
      */
-    userData: Object;
-    /**
-     * `true` when the geometry has been transformed since construction
-     * (e.g. via {@link BufferGeometry#applyMatrix4}). Only relevant for
-     * geometry generators (subclasses that populate `parameters`): when set,
-     * {@link BufferGeometry#toJSON} omits `parameters` since they no longer
-     * describe the geometry.
-     *
-     * @private
-     * @type {boolean}
-     * @default false
-     */
-    private _transformed;
+    userData: Record<string, any>;
     /**
      * Returns the index of this geometry.
      *
@@ -172,7 +217,7 @@ export class BufferGeometry extends EventDispatcher {
      * @param {Array<number>|BufferAttribute} index - The index to set.
      * @return {BufferGeometry} A reference to this instance.
      */
-    setIndex(index: Array<number> | BufferAttribute): BufferGeometry;
+    setIndex(index: BufferAttribute | number[] | null): this;
     /**
      * Sets the given indirect attribute to this geometry.
      *
@@ -180,13 +225,13 @@ export class BufferGeometry extends EventDispatcher {
      * @param {number|Array<number>} [indirectOffset=0] - The offset, in bytes, into the indirect drawing buffer where the value data begins. If an array is provided, multiple indirect draw calls will be made for each offset.
      * @return {BufferGeometry} A reference to this instance.
      */
-    setIndirect(indirect: BufferAttribute, indirectOffset?: number | Array<number>): BufferGeometry;
+    setIndirect(indirect: IndirectStorageBufferAttribute | null, indirectOffset?: number | number[]): this;
     /**
      * Returns the indirect attribute of this geometry.
      *
      * @return {?BufferAttribute} The indirect attribute. Returns `null` if no indirect attribute is defined.
      */
-    getIndirect(): BufferAttribute | null;
+    getIndirect(): IndirectStorageBufferAttribute | null;
     /**
      * Returns the buffer attribute for the given name.
      *
@@ -194,7 +239,7 @@ export class BufferGeometry extends EventDispatcher {
      * @return {BufferAttribute|InterleavedBufferAttribute|undefined} The buffer attribute.
      * Returns `undefined` if not attribute has been found.
      */
-    getAttribute(name: string): BufferAttribute | InterleavedBufferAttribute | undefined;
+    getAttribute<K extends keyof Attributes>(name: K): Attributes[K];
     /**
      * Sets the given attribute for the given name.
      *
@@ -202,21 +247,21 @@ export class BufferGeometry extends EventDispatcher {
      * @param {BufferAttribute|InterleavedBufferAttribute} attribute - The attribute to set.
      * @return {BufferGeometry} A reference to this instance.
      */
-    setAttribute(name: string, attribute: BufferAttribute | InterleavedBufferAttribute): BufferGeometry;
+    setAttribute<K extends keyof Attributes>(name: K, attribute: Attributes[K]): this;
     /**
      * Deletes the attribute for the given name.
      *
      * @param {string} name - The attribute name to delete.
      * @return {BufferGeometry} A reference to this instance.
      */
-    deleteAttribute(name: string): BufferGeometry;
+    deleteAttribute(name: keyof Attributes): this;
     /**
      * Returns `true` if this geometry has an attribute for the given name.
      *
      * @param {string} name - The attribute name.
      * @return {boolean} Whether this geometry has an attribute for the given name or not.
      */
-    hasAttribute(name: string): boolean;
+    hasAttribute(name: keyof Attributes): boolean;
     /**
      * Adds a group to this geometry.
      *
@@ -244,14 +289,14 @@ export class BufferGeometry extends EventDispatcher {
      * @param {Matrix4} matrix - The matrix to apply.
      * @return {BufferGeometry} A reference to this instance.
      */
-    applyMatrix4(matrix: Matrix4): BufferGeometry;
+    applyMatrix4(matrix: Matrix4): this;
     /**
      * Applies the rotation represented by the Quaternion to the geometry.
      *
      * @param {Quaternion} q - The Quaternion to apply.
      * @return {BufferGeometry} A reference to this instance.
      */
-    applyQuaternion(q: Quaternion): BufferGeometry;
+    applyQuaternion(q: Quaternion): this;
     /**
      * Rotates the geometry about the X axis. This is typically done as a one time
      * operation, and not during a loop. Use {@link Object3D#rotation} for typical
@@ -260,7 +305,7 @@ export class BufferGeometry extends EventDispatcher {
      * @param {number} angle - The angle in radians.
      * @return {BufferGeometry} A reference to this instance.
      */
-    rotateX(angle: number): BufferGeometry;
+    rotateX(angle: number): this;
     /**
      * Rotates the geometry about the Y axis. This is typically done as a one time
      * operation, and not during a loop. Use {@link Object3D#rotation} for typical
@@ -269,7 +314,7 @@ export class BufferGeometry extends EventDispatcher {
      * @param {number} angle - The angle in radians.
      * @return {BufferGeometry} A reference to this instance.
      */
-    rotateY(angle: number): BufferGeometry;
+    rotateY(angle: number): this;
     /**
      * Rotates the geometry about the Z axis. This is typically done as a one time
      * operation, and not during a loop. Use {@link Object3D#rotation} for typical
@@ -278,7 +323,7 @@ export class BufferGeometry extends EventDispatcher {
      * @param {number} angle - The angle in radians.
      * @return {BufferGeometry} A reference to this instance.
      */
-    rotateZ(angle: number): BufferGeometry;
+    rotateZ(angle: number): this;
     /**
      * Translates the geometry. This is typically done as a one time
      * operation, and not during a loop. Use {@link Object3D#position} for typical
@@ -289,7 +334,7 @@ export class BufferGeometry extends EventDispatcher {
      * @param {number} z - The z offset.
      * @return {BufferGeometry} A reference to this instance.
      */
-    translate(x: number, y: number, z: number): BufferGeometry;
+    translate(x: number, y: number, z: number): this;
     /**
      * Scales the geometry. This is typically done as a one time
      * operation, and not during a loop. Use {@link Object3D#scale} for typical
@@ -300,7 +345,7 @@ export class BufferGeometry extends EventDispatcher {
      * @param {number} z - The z scale.
      * @return {BufferGeometry} A reference to this instance.
      */
-    scale(x: number, y: number, z: number): BufferGeometry;
+    scale(x: number, y: number, z: number): this;
     /**
      * Rotates the geometry to face a point in 3D space. This is typically done as a one time
      * operation, and not during a loop. Use {@link Object3D#lookAt} for typical
@@ -309,13 +354,13 @@ export class BufferGeometry extends EventDispatcher {
      * @param {Vector3} vector - The target point.
      * @return {BufferGeometry} A reference to this instance.
      */
-    lookAt(vector: Vector3): BufferGeometry;
+    lookAt(vector: Vector3): this;
     /**
      * Center the geometry based on its bounding box.
      *
      * @return {BufferGeometry} A reference to this instance.
      */
-    center(): BufferGeometry;
+    center(): this;
     /**
      * Defines a geometry by creating a `position` attribute based on the given array of points. The array
      * can hold 2D or 3D vectors. When using two-dimensional data, the `z` coordinate for all vertices is
@@ -327,7 +372,7 @@ export class BufferGeometry extends EventDispatcher {
      * @param {Array<Vector2>|Array<Vector3>} points - The points.
      * @return {BufferGeometry} A reference to this instance.
      */
-    setFromPoints(points: Array<Vector2> | Array<Vector3>): BufferGeometry;
+    setFromPoints(points: Vector3[] | Vector2[]): this;
     /**
      * Computes the bounding box of the geometry, and updates the `boundingBox` member.
      * The bounding box is not computed by the engine; it must be computed by your app.
@@ -372,20 +417,20 @@ export class BufferGeometry extends EventDispatcher {
      *
      * @return {Object} A JSON object representing the serialized geometry.
      */
-    toJSON(): Object;
+    toJSON(): BufferGeometryJSON;
     /**
      * Returns a new geometry with copied values from this instance.
      *
      * @return {BufferGeometry} A clone of this instance.
      */
-    clone(): BufferGeometry;
+    clone(): this;
     /**
      * Copies the values of the given geometry to this instance.
      *
      * @param {BufferGeometry} source - The geometry to copy.
      * @return {BufferGeometry} A reference to this instance.
      */
-    copy(source: BufferGeometry): BufferGeometry;
+    copy(source: BufferGeometry): this;
     /**
      * Frees the GPU-related resources allocated by this instance. Call this
      * method whenever this instance is no longer used in your app.
@@ -394,10 +439,3 @@ export class BufferGeometry extends EventDispatcher {
      */
     dispose(): void;
 }
-import { Box3 } from "../math/Box3.js";
-import { Matrix4 } from "../math/Matrix4.js";
-import { Sphere } from "../math/Sphere.js";
-import { Vector2 } from "../math/Vector2.js";
-import { Vector3 } from "../math/Vector3.js";
-import { BufferAttribute } from "./BufferAttribute.js";
-import { EventDispatcher } from "./EventDispatcher.js";

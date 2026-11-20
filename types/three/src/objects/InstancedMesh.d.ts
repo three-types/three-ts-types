@@ -1,3 +1,26 @@
+import { BufferAttributeJSON } from "../core/BufferAttribute.js";
+import { BufferGeometry } from "../core/BufferGeometry.js";
+import { InstancedBufferAttribute } from "../core/InstancedBufferAttribute.js";
+import { JSONMeta, Object3DEventMap } from "../core/Object3D.js";
+import { Intersection, Raycaster } from "../core/Raycaster.js";
+import { Material } from "../materials/Material.js";
+import { Box3 } from "../math/Box3.js";
+import { Color } from "../math/Color.js";
+import { Matrix4 } from "../math/Matrix4.js";
+import { Sphere } from "../math/Sphere.js";
+import { DataTexture } from "../textures/DataTexture.js";
+import { Mesh, MeshJSON, MeshJSONObject } from "./Mesh.js";
+
+export interface InstancedMeshJSONObject extends MeshJSONObject {
+    count: number;
+    instanceMatrix: BufferAttributeJSON;
+    instanceColor?: BufferAttributeJSON;
+}
+
+export interface InstancedMeshJSON extends MeshJSON {
+    object: InstancedMeshJSONObject;
+}
+
 /**
  * A special version of a mesh with instanced rendering support. Use
  * this class if you have to render a large number of objects with the same
@@ -7,7 +30,11 @@
  *
  * @augments Mesh
  */
-export class InstancedMesh extends Mesh {
+export class InstancedMesh<
+    TGeometry extends BufferGeometry = BufferGeometry,
+    TMaterial extends Material | Material[] = Material | Material[],
+    TEventMap extends Object3DEventMap = Object3DEventMap,
+> extends Mesh<TGeometry, TMaterial, TEventMap> {
     /**
      * Constructs a new instanced mesh.
      *
@@ -15,7 +42,7 @@ export class InstancedMesh extends Mesh {
      * @param {Material|Array<Material>} [material] - The mesh material.
      * @param {number} count - The number of instances.
      */
-    constructor(geometry?: BufferGeometry, material?: Material | Array<Material>, count: number);
+    constructor(geometry: TGeometry | undefined, material: TMaterial | undefined, count: number);
     /**
      * This flag can be used for type testing.
      *
@@ -23,7 +50,7 @@ export class InstancedMesh extends Mesh {
      * @readonly
      * @default true
      */
-    readonly isInstancedMesh: boolean;
+    readonly isInstancedMesh: true;
     /**
      * Represents the local transformation of all instances. You have to set its
      * {@link BufferAttribute#needsUpdate} flag to true if you modify instanced data
@@ -76,7 +103,7 @@ export class InstancedMesh extends Mesh {
      * You may need to recompute the bounding sphere if an instance is transformed via {@link InstancedMesh#setMatrixAt}.
      */
     computeBoundingSphere(): void;
-    copy(source: any, recursive: any): this;
+    copy(source: InstancedMesh, recursive?: boolean): this;
     /**
      * Gets the color of the defined instance.
      *
@@ -100,7 +127,7 @@ export class InstancedMesh extends Mesh {
      * @param {Mesh} object - The target object that is used to store the method's result.
      */
     getMorphAt(index: number, object: Mesh): void;
-    raycast(raycaster: any, intersects: any): void;
+    raycast(raycaster: Raycaster, intersects: Intersection[]): void;
     /**
      * Sets the given color to the defined instance. Make sure you set the `needsUpdate` flag of
      * {@link InstancedMesh#instanceColor} to `true` after updating all the colors.
@@ -109,7 +136,7 @@ export class InstancedMesh extends Mesh {
      * @param {Color} color - The instance color.
      * @return {InstancedMesh} A reference to this instanced mesh.
      */
-    setColorAt(index: number, color: Color): InstancedMesh;
+    setColorAt(index: number, color: Color): this;
     /**
      * Sets the given local transformation matrix to the defined instance. Make sure you set the `needsUpdate` flag of
      * {@link InstancedMesh#instanceMatrix} to `true` after updating all the matrices.
@@ -118,7 +145,7 @@ export class InstancedMesh extends Mesh {
      * @param {Matrix4} matrix - The local transformation.
      * @return {InstancedMesh} A reference to this instanced mesh.
      */
-    setMatrixAt(index: number, matrix: Matrix4): InstancedMesh;
+    setMatrixAt(index: number, matrix: Matrix4): this;
     /**
      * Sets the morph target weights to the defined instance. Make sure you set the `needsUpdate` flag of
      * {@link InstancedMesh#morphTexture} to `true` after updating all the influences.
@@ -128,11 +155,11 @@ export class InstancedMesh extends Mesh {
      * of a single instance.
      * @return {InstancedMesh} A reference to this instanced mesh.
      */
-    setMorphAt(index: number, object: Mesh): InstancedMesh;
+    setMorphAt(index: number, object: Mesh): this;
+    /**
+     * Frees the GPU-related resources allocated by this instance. Call this
+     * method whenever this instance is no longer used in your app.
+     */
+    dispose(): void;
+    toJSON(meta?: JSONMeta): InstancedMeshJSON;
 }
-import { InstancedBufferAttribute } from "../core/InstancedBufferAttribute.js";
-import { Box3 } from "../math/Box3.js";
-import { Matrix4 } from "../math/Matrix4.js";
-import { Sphere } from "../math/Sphere.js";
-import { DataTexture } from "../textures/DataTexture.js";
-import { Mesh } from "./Mesh.js";

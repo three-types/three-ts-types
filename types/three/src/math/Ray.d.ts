@@ -1,3 +1,9 @@
+import { Box3 } from "./Box3.js";
+import { Matrix4 } from "./Matrix4.js";
+import { Plane } from "./Plane.js";
+import { Sphere } from "./Sphere.js";
+import { Vector3 } from "./Vector3.js";
+
 /**
  * A ray that emits from an origin in a certain direction. The class is used by
  * {@link Raycaster} to assist with raycasting. Raycasting is used for
@@ -38,7 +44,7 @@ export class Ray {
      * @param {Ray} ray - The ray to copy.
      * @return {Ray} A reference to this ray.
      */
-    copy(ray: Ray): Ray;
+    copy(ray: Ray): this;
     /**
      * Returns a vector that is located at a given distance along this ray.
      *
@@ -185,6 +191,5 @@ export class Ray {
      *
      * @return {Ray} A clone of this instance.
      */
-    clone(): Ray;
+    clone(): this;
 }
-import { Vector3 } from "./Vector3.js";

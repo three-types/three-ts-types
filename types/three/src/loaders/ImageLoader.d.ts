@@ -11,7 +11,7 @@
  *
  * @augments Loader
  */
-export class ImageLoader extends Loader {
+export class ImageLoader extends Loader<HTMLImageElement> {
     /**
      * Starts loading from the given URL and passes the loaded image
      * to the `onLoad()` callback. The method also returns a new `Image` object which can
@@ -26,9 +26,9 @@ export class ImageLoader extends Loader {
      */
     load(
         url: string,
-        onLoad: (arg0: new(width?: number, height?: number) => HTMLImageElement) => any,
-        onProgress: onProgressCallback,
-        onError: onErrorCallback,
-    ): new(width?: number, height?: number) => HTMLImageElement;
+        onLoad?: (data: HTMLImageElement) => void,
+        onProgress?: OnProgressCallback,
+        onError?: OnErrorCallback,
+    ): HTMLImageElement;
 }
-import { Loader } from "./Loader.js";
+import { Loader, OnErrorCallback, OnProgressCallback } from "./Loader.js";

@@ -1,3 +1,6 @@
+import { Plane } from "../math/Plane.js";
+import { Group } from "./Group.js";
+
 /**
  * In earlier three.js versions, clipping was defined globally
  * on the renderer or on material level. This special version of
@@ -18,7 +21,7 @@ export class ClippingGroup extends Group {
      * @readonly
      * @default true
      */
-    readonly isClippingGroup: boolean;
+    readonly isClippingGroup: true;
     /**
      * An array with clipping planes.
      *
@@ -47,4 +50,3 @@ export class ClippingGroup extends Group {
      */
     clipShadows: boolean;
 }
-import { Group } from "./Group.js";

@@ -1,3 +1,25 @@
+import {
+    CompressedPixelFormat,
+    MagnificationTextureFilter,
+    Mapping,
+    MinificationTextureFilter,
+    TextureDataType,
+    Wrapping,
+} from "../constants.js";
+import { TypedArray } from "../core/BufferAttribute.js";
+import { Texture } from "./Texture.js";
+
+export interface CompressedTextureMipmap {
+    data: TypedArray;
+    width: number;
+    height: number;
+}
+
+export interface CompressedTextureImageData {
+    width: number;
+    height: number;
+}
+
 /**
  * Creates a texture based on data in compressed form.
  *
@@ -5,7 +27,7 @@
  *
  * @augments Texture
  */
-export class CompressedTexture extends Texture {
+export class CompressedTexture<TImageData = CompressedTextureImageData> extends Texture<TImageData> {
     /**
      * Constructs a new compressed texture.
      *
@@ -24,16 +46,16 @@ export class CompressedTexture extends Texture {
      * @param {string} [colorSpace=NoColorSpace] - The color space.
      */
     constructor(
-        mipmaps?: Array<Object>,
+        mipmaps: CompressedTextureMipmap[] | undefined,
         width: number,
         height: number,
-        format?: number,
-        type?: number,
-        mapping?: number,
-        wrapS?: number,
-        wrapT?: number,
-        magFilter?: number,
-        minFilter?: number,
+        format?: CompressedPixelFormat,
+        type?: TextureDataType,
+        mapping?: Mapping,
+        wrapS?: Wrapping,
+        wrapT?: Wrapping,
+        magFilter?: MagnificationTextureFilter,
+        minFilter?: MinificationTextureFilter,
         anisotropy?: number,
         colorSpace?: string,
     );
@@ -44,6 +66,12 @@ export class CompressedTexture extends Texture {
      * @readonly
      * @default true
      */
-    readonly isCompressedTexture: boolean;
+    readonly isCompressedTexture: true;
+    /**
+     * This array holds for all mipmaps (including the bases mip) the data and dimensions.
+     *
+     * @type {Array<Object>}
+     */
+    mipmaps: CompressedTextureMipmap[];
+    format: CompressedPixelFormat;
 }
-import { Texture } from "./Texture.js";

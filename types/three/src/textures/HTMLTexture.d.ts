@@ -1,3 +1,13 @@
+import {
+    MagnificationTextureFilter,
+    Mapping,
+    MinificationTextureFilter,
+    PixelFormat,
+    TextureDataType,
+    Wrapping,
+} from "../constants.js";
+import { Texture } from "./Texture.js";
+
 /**
  * Creates a texture from an HTML element.
  *
@@ -6,7 +16,7 @@
  *
  * @augments Texture
  */
-export class HTMLTexture extends Texture {
+export class HTMLTexture extends Texture<HTMLElement> {
     /**
      * Constructs a new texture.
      *
@@ -22,13 +32,13 @@ export class HTMLTexture extends Texture {
      */
     constructor(
         element?: HTMLElement,
-        mapping?: number,
-        wrapS?: number,
-        wrapT?: number,
-        magFilter?: number,
-        minFilter?: number,
-        format?: number,
-        type?: number,
+        mapping?: Mapping,
+        wrapS?: Wrapping,
+        wrapT?: Wrapping,
+        magFilter?: MagnificationTextureFilter,
+        minFilter?: MinificationTextureFilter,
+        format?: PixelFormat,
+        type?: TextureDataType,
         anisotropy?: number,
     );
     /**
@@ -38,6 +48,5 @@ export class HTMLTexture extends Texture {
      * @readonly
      * @default true
      */
-    readonly isHTMLTexture: boolean;
+    readonly isHTMLTexture: true;
 }
-import { Texture } from "./Texture.js";

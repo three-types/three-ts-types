@@ -1,72 +1,182 @@
+import { AnimationClip, AnimationClipJSON } from "../animation/AnimationClip.js";
+import { Camera } from "../cameras/Camera.js";
+import { ShapeJSON } from "../extras/core/Shape.js";
+import { Material, MaterialJSON } from "../materials/Material.js";
+import { Euler } from "../math/Euler.js";
+import { Frustum } from "../math/Frustum.js";
+import { FrustumArray } from "../math/FrustumArray.js";
+import { Matrix3 } from "../math/Matrix3.js";
+import { Matrix4, Matrix4Tuple } from "../math/Matrix4.js";
+import { Quaternion } from "../math/Quaternion.js";
+import { Vector3, Vector3Tuple } from "../math/Vector3.js";
+import { Group } from "../objects/Group.js";
+import { SkeletonJSON } from "../objects/Skeleton.js";
+import { WebGLRenderer } from "../renderers/WebGLRenderer.js";
+import { Scene } from "../scenes/Scene.js";
+import { TextureJSON } from "../textures/Texture.js";
+import { TextureSourceJSON } from "../textures/TextureSource.js";
+import { BufferGeometry, BufferGeometryJSON } from "./BufferGeometry.js";
+import { EventDispatcher } from "./EventDispatcher.js";
+import { Layers } from "./Layers.js";
+import { Intersection, Raycaster } from "./Raycaster.js";
+
+export interface Object3DJSONObject {
+    uuid: string;
+    type: string;
+
+    name?: string;
+    castShadow?: boolean;
+    receiveShadow?: boolean;
+    visible?: boolean;
+    frustumCulled?: boolean;
+    renderOrder?: number;
+    static?: boolean;
+    userData?: Record<string, unknown>;
+
+    layers: number;
+    matrix: Matrix4Tuple;
+    up: Vector3Tuple;
+
+    pivot?: Vector3Tuple;
+
+    matrixAutoUpdate?: boolean;
+
+    material?: string | string[];
+
+    children?: string[];
+
+    animations?: string[];
+}
+
+export interface Object3DJSON {
+    metadata?: { version: number; type: string; generator: string };
+    object: Object3DJSONObject;
+}
+
+export interface JSONMeta {
+    geometries: Record<string, BufferGeometryJSON>;
+    materials: Record<string, MaterialJSON>;
+    textures: Record<string, TextureJSON>;
+    images: Record<string, TextureSourceJSON>;
+    shapes: Record<string, ShapeJSON>;
+    skeletons: Record<string, SkeletonJSON>;
+    animations: Record<string, AnimationClipJSON>;
+    nodes: Record<string, unknown>;
+}
+
+export interface Object3DEventMap {
+    /**
+     * Fires when the object has been added to its parent object.
+     */
+    added: {};
+
+    /**
+     * Fires when the object has been removed from its parent object.
+     */
+    removed: {};
+
+    /**
+     * Fires when a new child object has been added.
+     */
+    childadded: { child: Object3D };
+
+    /**
+     * Fires when a new child object has been removed.
+     */
+    childremoved: { child: Object3D };
+
+    /**
+     * Fires when the 3D object has been disposed of.
+     */
+    dispose: {};
+}
+
 /**
  * This is the base class for most objects in three.js and provides a set of
  * properties and methods for manipulating objects in 3D space.
- *
- * @augments EventDispatcher
  */
-export class Object3D extends EventDispatcher {
+export class Object3D<TEventMap extends Object3DEventMap = Object3DEventMap> extends EventDispatcher<TEventMap> {
+    /**
+     * Constructs a new 3D object.
+     */
+    constructor();
     /**
      * This flag can be used for type testing.
      *
-     * @type {boolean}
-     * @readonly
      * @default true
      */
-    readonly isObject3D: boolean;
+    readonly isObject3D: true;
+    /**
+     * The ID of the 3D object.
+     */
+    readonly id: number;
     /**
      * The UUID of the 3D object.
-     *
-     * @type {string}
-     * @readonly
      */
     readonly uuid: string;
     /**
      * The name of the 3D object.
-     *
-     * @type {string}
      */
     name: string;
     /**
      * The type property is used for detecting the object type
      * in context of serialization/deserialization.
-     *
-     * @type {string}
-     * @readonly
      */
     readonly type: string;
     /**
      * A reference to the parent object.
      *
-     * @type {?Object3D}
      * @default null
      */
     parent: Object3D | null;
     /**
      * An array holding the child 3D objects of this instance.
-     *
-     * @type {Array<Object3D>}
      */
-    children: Array<Object3D>;
+    children: Object3D[];
     /**
      * Defines the `up` direction of the 3D object which influences
      * the orientation via methods like {@link Object3D#lookAt}.
      *
      * The default values for all 3D objects is defined by `Object3D.DEFAULT_UP`.
-     *
-     * @type {Vector3}
      */
     up: Vector3;
     /**
-     * Represents the object's transformation matrix in local space.
+     * Represents the object's local position.
      *
-     * @type {Matrix4}
+     * @default (0,0,0)
+     */
+    readonly position: Vector3;
+    /**
+     * Represents the object's local rotation as Euler angles, in radians.
+     *
+     * @default (0,0,0)
+     */
+    readonly rotation: Euler;
+    /**
+     * Represents the object's local rotation as Quaternions.
+     */
+    readonly quaternion: Quaternion;
+    /**
+     * Represents the object's local scale.
+     *
+     * @default (1,1,1)
+     */
+    readonly scale: Vector3;
+    /**
+     * Represents the object's model-view matrix.
+     */
+    readonly modelViewMatrix: Matrix4;
+    /**
+     * Represents the object's normal matrix.
+     */
+    readonly normalMatrix: Matrix3;
+    /**
+     * Represents the object's transformation matrix in local space.
      */
     matrix: Matrix4;
     /**
      * Represents the object's transformation matrix in world space.
      * If the 3D object has no parent, then it's identical to the local transformation matrix
-     *
-     * @type {Matrix4}
      */
     matrixWorld: Matrix4;
     /**
@@ -76,7 +186,6 @@ export class Object3D extends EventDispatcher {
      *
      * The default values for all 3D objects is defined by `Object3D.DEFAULT_MATRIX_AUTO_UPDATE`.
      *
-     * @type {boolean}
      * @default true
      */
     matrixAutoUpdate: boolean;
@@ -87,7 +196,6 @@ export class Object3D extends EventDispatcher {
      *
      * The default values for all 3D objects is defined by `Object3D.DEFAULT_MATRIX_WORLD_AUTO_UPDATE`.
      *
-     * @type {boolean}
      * @default true
      */
     matrixWorldAutoUpdate: boolean;
@@ -95,7 +203,6 @@ export class Object3D extends EventDispatcher {
      * When set to `true`, it calculates the world matrix in that frame and resets this property
      * to `false`.
      *
-     * @type {boolean}
      * @default false
      */
     matrixWorldNeedsUpdate: boolean;
@@ -103,35 +210,29 @@ export class Object3D extends EventDispatcher {
      * The layer membership of the 3D object. The 3D object is only visible if it has
      * at least one layer in common with the camera in use. This property can also be
      * used to filter out unwanted objects in ray-intersection tests when using {@link Raycaster}.
-     *
-     * @type {Layers}
      */
     layers: Layers;
     /**
      * When set to `true`, the 3D object gets rendered.
      *
-     * @type {boolean}
      * @default true
      */
     visible: boolean;
     /**
      * When set to `true`, the 3D object gets rendered into shadow maps.
      *
-     * @type {boolean}
      * @default false
      */
     castShadow: boolean;
     /**
      * When set to `true`, the 3D object is affected by shadows in the scene.
      *
-     * @type {boolean}
      * @default false
      */
     receiveShadow: boolean;
     /**
      * When set to `true`, the 3D object is honored by view frustum culling.
      *
-     * @type {boolean}
      * @default true
      */
     frustumCulled: boolean;
@@ -142,16 +243,13 @@ export class Object3D extends EventDispatcher {
      * objects will be sorted and rendered together. Sorting is from lowest to highest
      * render order.
      *
-     * @type {number}
      * @default 0
      */
     renderOrder: number;
     /**
      * An array holding the animation clips of the 3D object.
-     *
-     * @type {Array<AnimationClip>}
      */
-    animations: Array<AnimationClip>;
+    animations: AnimationClip[];
     /**
      * Custom depth material to be used when rendering to the depth map. Can only be used
      * in context of meshes. When shadow-casting with a {@link DirectionalLight} or {@link SpotLight},
@@ -160,19 +258,17 @@ export class Object3D extends EventDispatcher {
      *
      * Only relevant in context of {@link WebGLRenderer}.
      *
-     * @type {(Material|undefined)}
      * @default undefined
      */
-    customDepthMaterial: Material | undefined;
+    customDepthMaterial?: Material | undefined;
     /**
      * Same as {@link Object3D#customDepthMaterial}, but used with {@link PointLight}.
      *
      * Only relevant in context of {@link WebGLRenderer}.
      *
-     * @type {(Material|undefined)}
      * @default undefined
      */
-    customDistanceMaterial: Material | undefined;
+    customDistanceMaterial?: Material | undefined;
     /**
      * Whether the 3D object is supposed to be static or not. If set to `true`, it means
      * the 3D object is not going to be changed after the first render. This includes
@@ -181,23 +277,19 @@ export class Object3D extends EventDispatcher {
      *
      * Only relevant in context of {@link WebGPURenderer}.
      *
-     * @type {boolean}
      * @default false
      */
     static: boolean;
     /**
      * An object that can be used to store custom data about the 3D object. It
      * should not hold references to functions as these will not be cloned.
-     *
-     * @type {Object}
      */
-    userData: Object;
+    userData: Record<string, any>;
     /**
      * The pivot point for rotation and scale transformations.
      * When set, rotation and scale are applied around this point
      * instead of the object's origin.
      *
-     * @type {?Vector3}
      * @default null
      */
     pivot: Vector3 | null;
@@ -212,7 +304,15 @@ export class Object3D extends EventDispatcher {
      * @param {Material} depthMaterial - The depth material.
      * @param {Object} group - The geometry group data.
      */
-    onBeforeShadow(): void;
+    onBeforeShadow(
+        renderer: WebGLRenderer,
+        scene: Scene,
+        camera: Camera,
+        shadowCamera: Camera,
+        geometry: BufferGeometry,
+        depthMaterial: Material,
+        group: Group,
+    ): void;
     /**
      * A callback that is executed immediately after a 3D object is rendered to a shadow map.
      *
@@ -224,7 +324,15 @@ export class Object3D extends EventDispatcher {
      * @param {Material} depthMaterial - The depth material.
      * @param {Object} group - The geometry group data.
      */
-    onAfterShadow(): void;
+    onAfterShadow(
+        renderer: WebGLRenderer,
+        scene: Scene,
+        camera: Camera,
+        shadowCamera: Camera,
+        geometry: BufferGeometry,
+        depthMaterial: Material,
+        group: Group,
+    ): void;
     /**
      * A callback that is executed immediately before a 3D object is rendered.
      *
@@ -235,7 +343,14 @@ export class Object3D extends EventDispatcher {
      * @param {Material} material - The 3D object's material.
      * @param {Object} group - The geometry group data.
      */
-    onBeforeRender(): void;
+    onBeforeRender(
+        renderer: WebGLRenderer,
+        scene: Scene,
+        camera: Camera,
+        geometry: BufferGeometry,
+        material: Material,
+        group: Group,
+    ): void;
     /**
      * A callback that is executed immediately after a 3D object is rendered.
      *
@@ -246,7 +361,35 @@ export class Object3D extends EventDispatcher {
      * @param {Material} material - The 3D object's material.
      * @param {Object} group - The geometry group data.
      */
-    onAfterRender(): void;
+    onAfterRender(
+        renderer: WebGLRenderer,
+        scene: Scene,
+        camera: Camera,
+        geometry: BufferGeometry,
+        material: Material,
+        group: Group,
+    ): void;
+    /**
+     * The default up direction for objects, also used as the default
+     * position for {@link DirectionalLight} and {@link HemisphereLight}.
+     *
+     * @default (0,1,0)
+     */
+    static DEFAULT_UP: Vector3;
+    /**
+     * The default setting for {@link Object3D#matrixAutoUpdate} for
+     * newly created 3D objects.
+     *
+     * @default true
+     */
+    static DEFAULT_MATRIX_AUTO_UPDATE: boolean;
+    /**
+     * The default setting for {@link Object3D#matrixWorldAutoUpdate} for
+     * newly created 3D objects.
+     *
+     * @default true
+     */
+    static DEFAULT_MATRIX_WORLD_AUTO_UPDATE: boolean;
     /**
      * Applies the given transformation matrix to the object and updates the object's position,
      * rotation and scale.
@@ -260,7 +403,7 @@ export class Object3D extends EventDispatcher {
      * @param {Quaternion} q - The quaternion.
      * @return {Object3D} A reference to this instance.
      */
-    applyQuaternion(q: Quaternion): Object3D;
+    applyQuaternion(q: Quaternion): this;
     /**
      * Sets the given rotation represented as an axis/angle couple to the 3D object.
      *
@@ -294,7 +437,7 @@ export class Object3D extends EventDispatcher {
      * @param {number} angle - The angle in radians.
      * @return {Object3D} A reference to this instance.
      */
-    rotateOnAxis(axis: Vector3, angle: number): Object3D;
+    rotateOnAxis(axis: Vector3, angle: number): this;
     /**
      * Rotates the 3D object along an axis in world space.
      *
@@ -302,28 +445,28 @@ export class Object3D extends EventDispatcher {
      * @param {number} angle - The angle in radians.
      * @return {Object3D} A reference to this instance.
      */
-    rotateOnWorldAxis(axis: Vector3, angle: number): Object3D;
+    rotateOnWorldAxis(axis: Vector3, angle: number): this;
     /**
      * Rotates the 3D object around its X axis in local space.
      *
      * @param {number} angle - The angle in radians.
      * @return {Object3D} A reference to this instance.
      */
-    rotateX(angle: number): Object3D;
+    rotateX(angle: number): this;
     /**
      * Rotates the 3D object around its Y axis in local space.
      *
      * @param {number} angle - The angle in radians.
      * @return {Object3D} A reference to this instance.
      */
-    rotateY(angle: number): Object3D;
+    rotateY(angle: number): this;
     /**
      * Rotates the 3D object around its Z axis in local space.
      *
      * @param {number} angle - The angle in radians.
      * @return {Object3D} A reference to this instance.
      */
-    rotateZ(angle: number): Object3D;
+    rotateZ(angle: number): this;
     /**
      * Translate the 3D object by a distance along the given axis in local space.
      *
@@ -331,28 +474,28 @@ export class Object3D extends EventDispatcher {
      * @param {number} distance - The distance in world units.
      * @return {Object3D} A reference to this instance.
      */
-    translateOnAxis(axis: Vector3, distance: number): Object3D;
+    translateOnAxis(axis: Vector3, distance: number): this;
     /**
      * Translate the 3D object by a distance along its X-axis in local space.
      *
      * @param {number} distance - The distance in world units.
      * @return {Object3D} A reference to this instance.
      */
-    translateX(distance: number): Object3D;
+    translateX(distance: number): this;
     /**
      * Translate the 3D object by a distance along its Y-axis in local space.
      *
      * @param {number} distance - The distance in world units.
      * @return {Object3D} A reference to this instance.
      */
-    translateY(distance: number): Object3D;
+    translateY(distance: number): this;
     /**
      * Translate the 3D object by a distance along its Z-axis in local space.
      *
      * @param {number} distance - The distance in world units.
      * @return {Object3D} A reference to this instance.
      */
-    translateZ(distance: number): Object3D;
+    translateZ(distance: number): this;
     /**
      * Converts the given vector from this 3D object's local space to world space.
      *
@@ -376,7 +519,8 @@ export class Object3D extends EventDispatcher {
      * @param {number} [y] - The y coordinate in world space.
      * @param {number} [z] - The z coordinate in world space.
      */
-    lookAt(x: number | Vector3, y?: number, z?: number): void;
+    lookAt(vector: Vector3): void;
+    lookAt(x: number, y: number, z: number): void;
     /**
      * Adds the given 3D object as a child to this 3D object. An arbitrary number of
      * objects may be added. Any current parent on an object passed in here will be
@@ -387,7 +531,7 @@ export class Object3D extends EventDispatcher {
      * @param {Object3D} object - The 3D object to add.
      * @return {Object3D} A reference to this instance.
      */
-    add(object: Object3D, ...args: any[]): Object3D;
+    add(...object: Object3D[]): this;
     /**
      * Removes the given 3D object as child from this 3D object.
      * An arbitrary number of objects may be removed.
@@ -397,7 +541,7 @@ export class Object3D extends EventDispatcher {
      * @param {Object3D} object - The 3D object to remove.
      * @return {Object3D} A reference to this instance.
      */
-    remove(object: Object3D, ...args: any[]): Object3D;
+    remove(...object: Object3D[]): this;
     /**
      * Removes this 3D object from its current parent.
      *
@@ -405,7 +549,7 @@ export class Object3D extends EventDispatcher {
      * @fires Object3D#childremoved
      * @return {Object3D} A reference to this instance.
      */
-    removeFromParent(): Object3D;
+    removeFromParent(): this;
     /**
      * Removes all child objects.
      *
@@ -413,7 +557,7 @@ export class Object3D extends EventDispatcher {
      * @fires Object3D#childremoved
      * @return {Object3D} A reference to this instance.
      */
-    clear(): Object3D;
+    clear(): this;
     /**
      * Adds the given 3D object as a child of this 3D object, while maintaining the object's world
      * transform. This method does not support scene graphs having non-uniformly-scaled nodes(s).
@@ -423,7 +567,7 @@ export class Object3D extends EventDispatcher {
      * @param {Object3D} object - The 3D object to attach.
      * @return {Object3D} A reference to this instance.
      */
-    attach(object: Object3D): Object3D;
+    attach(object: Object3D): this;
     /**
      * Searches through the 3D object and its children, starting with the 3D object
      * itself, and returns the first with a matching ID.
@@ -458,7 +602,7 @@ export class Object3D extends EventDispatcher {
      * @param {Array<Object3D>} result - The method stores the result in this array.
      * @return {Array<Object3D>} The found 3D objects.
      */
-    getObjectsByProperty(name: string, value: any, result?: Array<Object3D>): Array<Object3D>;
+    getObjectsByProperty(name: string, value: any, result?: Object3D[]): Object3D[];
     /**
      * Returns a vector representing the position of the 3D object in world space.
      *
@@ -492,11 +636,10 @@ export class Object3D extends EventDispatcher {
      * 3D object. Renderable 3D objects such as {@link Mesh}, {@link Line} or {@link Points}
      * implement this method in order to use raycasting.
      *
-     * @abstract
      * @param {Raycaster} raycaster - The raycaster.
      * @param {Array<Object>} intersects - An array holding the result of the method.
      */
-    raycast(): void;
+    raycast(raycaster: Raycaster, intersects: Intersection[]): void;
     /**
      * Returns `true` if this 3D object intersects the given frustum. Renderable 3D objects
      * such as {@link Mesh}, {@link Line} or {@link Points} override this method in order
@@ -505,7 +648,7 @@ export class Object3D extends EventDispatcher {
      * @param {Frustum|FrustumArray} frustum - The frustum to test.
      * @return {boolean} Whether this 3D object intersects the given frustum or not.
      */
-    intersectsFrustum(): boolean;
+    intersectsFrustum(frustum: Frustum | FrustumArray): boolean;
     /**
      * Executes the callback on this 3D object and all descendants.
      *
@@ -513,7 +656,7 @@ export class Object3D extends EventDispatcher {
      *
      * @param {Function} callback - A callback function that allows to process the current 3D object.
      */
-    traverse(callback: Function): void;
+    traverse(callback: (object: Object3D) => any): void;
     /**
      * Like {@link Object3D#traverse}, but the callback will only be executed for visible 3D objects.
      * Descendants of invisible 3D objects are not traversed.
@@ -522,7 +665,7 @@ export class Object3D extends EventDispatcher {
      *
      * @param {Function} callback - A callback function that allows to process the current 3D object.
      */
-    traverseVisible(callback: Function): void;
+    traverseVisible(callback: (object: Object3D) => any): void;
     /**
      * Like {@link Object3D#traverse}, but the callback will only be executed for all ancestors.
      *
@@ -530,7 +673,7 @@ export class Object3D extends EventDispatcher {
      *
      * @param {Function} callback - A callback function that allows to process the current 3D object.
      */
-    traverseAncestors(callback: Function): void;
+    traverseAncestors(callback: (object: Object3D) => any): void;
     /**
      * Updates the transformation matrix in local space by computing it from the current
      * position, rotation and scale values.
@@ -566,14 +709,14 @@ export class Object3D extends EventDispatcher {
      * @return {Object} A JSON object representing the serialized 3D object.
      * @see {@link ObjectLoader#parse}
      */
-    toJSON(meta: (Object | string) | null): Object;
+    toJSON(meta?: JSONMeta): Object3DJSON;
     /**
      * Returns a new 3D object with copied values from this instance.
      *
      * @param {boolean} [recursive=true] - When set to `true`, descendants of the 3D object are also cloned.
      * @return {Object3D} A clone of this instance.
      */
-    clone(recursive?: boolean): Object3D;
+    clone(recursive?: boolean): this;
     /**
      * Copies the values of the given 3D object to this instance.
      *
@@ -581,7 +724,7 @@ export class Object3D extends EventDispatcher {
      * @param {boolean} [recursive=true] - When set to `true`, descendants of the 3D object are cloned.
      * @return {Object3D} A reference to this instance.
      */
-    copy(source: Object3D, recursive?: boolean): Object3D;
+    copy(source: Object3D, recursive?: boolean): this;
     /**
      * Frees the GPU-related resources allocated by this instance. Call this
      * method whenever this instance is no longer used in your app.
@@ -593,14 +736,3 @@ export class Object3D extends EventDispatcher {
      */
     dispose(): void;
 }
-export namespace Object3D {
-    let DEFAULT_UP: Vector3;
-    let DEFAULT_MATRIX_AUTO_UPDATE: boolean;
-    let DEFAULT_MATRIX_WORLD_AUTO_UPDATE: boolean;
-}
-import { Euler } from "../math/Euler.js";
-import { Matrix4 } from "../math/Matrix4.js";
-import { Quaternion } from "../math/Quaternion.js";
-import { Vector3 } from "../math/Vector3.js";
-import { EventDispatcher } from "./EventDispatcher.js";
-import { Layers } from "./Layers.js";

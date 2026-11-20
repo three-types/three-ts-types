@@ -1,3 +1,12 @@
+import { Color, ColorRepresentation } from "../math/Color.js";
+
+export interface FogExp2JSON {
+    type: string;
+    name: string;
+    color: number;
+    density: number;
+}
+
 /**
  * This class can be used to define an exponential squared fog,
  * which gives a clear view near the camera and a faster than exponentially
@@ -15,31 +24,24 @@ export class FogExp2 {
      * @param {number|Color} color - The fog's color.
      * @param {number} [density=0.00025] - Defines how fast the fog will grow dense.
      */
-    constructor(color: number | Color, density?: number);
+    constructor(color: ColorRepresentation, density?: number);
     /**
      * This flag can be used for type testing.
      *
-     * @type {boolean}
-     * @readonly
      * @default true
      */
     readonly isFogExp2: boolean;
     /**
      * The name of the fog.
-     *
-     * @type {string}
      */
     name: string;
     /**
      * The fog's color.
-     *
-     * @type {Color}
      */
     color: Color;
     /**
      *  Defines how fast the fog will grow dense.
      *
-     * @type {number}
      * @default 0.00025
      */
     density: number;
@@ -55,6 +57,5 @@ export class FogExp2 {
      * @param {?(Object|string)} meta - An optional value holding meta information about the serialization.
      * @return {Object} A JSON object representing the serialized fog
      */
-    toJSON(): Object;
+    toJSON(): FogExp2JSON;
 }
-import { Color } from "../math/Color.js";

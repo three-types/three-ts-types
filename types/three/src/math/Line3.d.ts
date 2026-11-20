@@ -1,3 +1,6 @@
+import { Matrix4 } from "./Matrix4.js";
+import { Vector3 } from "./Vector3.js";
+
 /**
  * An analytical line segment in 3D space represented by a start and end point.
  */
@@ -35,7 +38,7 @@ export class Line3 {
      * @param {Line3} line - The line segment to copy.
      * @return {Line3} A reference to this line segment.
      */
-    copy(line: Line3): Line3;
+    copy(line: Line3): this;
     /**
      * Returns the center of the line segment.
      *
@@ -77,7 +80,7 @@ export class Line3 {
      * @param {boolean} clampToLine - Whether to clamp the result to the range `[0,1]` or not.
      * @return {number} The point parameter.
      */
-    closestPointToPointParameter(point: Vector3, clampToLine: boolean): number;
+    closestPointToPointParameter(point: Vector3, clampToLine?: boolean): number;
     /**
      * Returns the closest point on the line for a given point.
      *
@@ -115,6 +118,5 @@ export class Line3 {
      *
      * @return {Line3} A clone of this instance.
      */
-    clone(): Line3;
+    clone(): this;
 }
-import { Vector3 } from "./Vector3.js";

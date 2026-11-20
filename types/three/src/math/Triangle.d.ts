@@ -1,3 +1,11 @@
+import { BufferAttribute } from "../core/BufferAttribute.js";
+import { InterleavedBufferAttribute } from "../core/InterleavedBufferAttribute.js";
+import { Box3 } from "./Box3.js";
+import { Plane } from "./Plane.js";
+import { Vector2 } from "./Vector2.js";
+import { Vector3 } from "./Vector3.js";
+import { Vector4 } from "./Vector4.js";
+
 /**
  * A geometric triangle as defined by three vectors representing its three corners.
  */
@@ -55,11 +63,59 @@ export class Triangle {
         p1: Vector3,
         p2: Vector3,
         p3: Vector3,
+        v1: Vector2,
+        v2: Vector2,
+        v3: Vector2,
+        target: Vector2,
+    ): Vector2 | null;
+    /**
+     * Computes the value barycentrically interpolated for the given point on the
+     * triangle. Returns `null` if the triangle is degenerate.
+     *
+     * @param {Vector3} point - Position of interpolated point.
+     * @param {Vector3} p1 - The first corner of the triangle.
+     * @param {Vector3} p2 - The second corner of the triangle.
+     * @param {Vector3} p3 - The third corner of the triangle.
+     * @param {Vector3} v1 - Value to interpolate of first vertex.
+     * @param {Vector3} v2 - Value to interpolate of second vertex.
+     * @param {Vector3} v3 - Value to interpolate of third vertex.
+     * @param {Vector3} target - The target vector that is used to store the method's result.
+     * @return {?Vector3} The interpolated value.
+     */
+    static getInterpolation(
+        point: Vector3,
+        p1: Vector3,
+        p2: Vector3,
+        p3: Vector3,
         v1: Vector3,
         v2: Vector3,
         v3: Vector3,
         target: Vector3,
     ): Vector3 | null;
+    /**
+     * Computes the value barycentrically interpolated for the given point on the
+     * triangle. Returns `null` if the triangle is degenerate.
+     *
+     * @param {Vector3} point - Position of interpolated point.
+     * @param {Vector3} p1 - The first corner of the triangle.
+     * @param {Vector3} p2 - The second corner of the triangle.
+     * @param {Vector3} p3 - The third corner of the triangle.
+     * @param {Vector3} v1 - Value to interpolate of first vertex.
+     * @param {Vector3} v2 - Value to interpolate of second vertex.
+     * @param {Vector3} v3 - Value to interpolate of third vertex.
+     * @param {Vector3} target - The target vector that is used to store the method's result.
+     * @return {?Vector3} The interpolated value.
+     */
+    static getInterpolation(
+        point: Vector3,
+        p1: Vector3,
+        p2: Vector3,
+        p3: Vector3,
+        v1: Vector4,
+        v2: Vector4,
+        v3: Vector4,
+        target: Vector4,
+    ): Vector4 | null;
     /**
      * Computes the value barycentrically interpolated for the given attribute and indices.
      *
@@ -72,13 +128,51 @@ export class Triangle {
      * @return {Vector3} The interpolated attribute value.
      */
     static getInterpolatedAttribute(
-        attr: BufferAttribute,
+        attr: BufferAttribute | InterleavedBufferAttribute,
+        i1: number,
+        i2: number,
+        i3: number,
+        barycoord: Vector3,
+        target: Vector2,
+    ): Vector2;
+    /**
+     * Computes the value barycentrically interpolated for the given attribute and indices.
+     *
+     * @param {BufferAttribute} attr - The attribute to interpolate.
+     * @param {number} i1 - Index of first vertex.
+     * @param {number} i2 - Index of second vertex.
+     * @param {number} i3 - Index of third vertex.
+     * @param {Vector3} barycoord - The barycoordinate value to use to interpolate.
+     * @param {Vector3} target - The target vector that is used to store the method's result.
+     * @return {Vector3} The interpolated attribute value.
+     */
+    static getInterpolatedAttribute(
+        attr: BufferAttribute | InterleavedBufferAttribute,
         i1: number,
         i2: number,
         i3: number,
         barycoord: Vector3,
         target: Vector3,
     ): Vector3;
+    /**
+     * Computes the value barycentrically interpolated for the given attribute and indices.
+     *
+     * @param {BufferAttribute} attr - The attribute to interpolate.
+     * @param {number} i1 - Index of first vertex.
+     * @param {number} i2 - Index of second vertex.
+     * @param {number} i3 - Index of third vertex.
+     * @param {Vector3} barycoord - The barycoordinate value to use to interpolate.
+     * @param {Vector3} target - The target vector that is used to store the method's result.
+     * @return {Vector3} The interpolated attribute value.
+     */
+    static getInterpolatedAttribute(
+        attr: BufferAttribute | InterleavedBufferAttribute,
+        i1: number,
+        i2: number,
+        i3: number,
+        barycoord: Vector3,
+        target: Vector4,
+    ): Vector4;
     /**
      * Returns `true` if the triangle is oriented towards the given direction.
      *
@@ -133,7 +227,7 @@ export class Triangle {
      * @param {number} i2 - The array index representing the third corner of the triangle.
      * @return {Triangle} A reference to this triangle.
      */
-    setFromPointsAndIndices(points: Array<Vector3>, i0: number, i1: number, i2: number): Triangle;
+    setFromPointsAndIndices(points: Vector3[], i0: number, i1: number, i2: number): this;
     /**
      * Sets the triangle's vertices by copying the given attribute values.
      *
@@ -143,20 +237,25 @@ export class Triangle {
      * @param {number} i2 - The attribute index representing the third corner of the triangle.
      * @return {Triangle} A reference to this triangle.
      */
-    setFromAttributeAndIndices(attribute: BufferAttribute, i0: number, i1: number, i2: number): Triangle;
+    setFromAttributeAndIndices(
+        attribute: BufferAttribute | InterleavedBufferAttribute,
+        i0: number,
+        i1: number,
+        i2: number,
+    ): this;
     /**
      * Returns a new triangle with copied values from this instance.
      *
      * @return {Triangle} A clone of this instance.
      */
-    clone(): Triangle;
+    clone(): this;
     /**
      * Copies the values of the given triangle to this instance.
      *
      * @param {Triangle} triangle - The triangle to copy.
      * @return {Triangle} A reference to this triangle.
      */
-    copy(triangle: Triangle): Triangle;
+    copy(triangle: Triangle): this;
     /**
      * Computes the area of the triangle.
      *
@@ -204,7 +303,31 @@ export class Triangle {
      * @param {Vector3} target - The target vector that is used to store the method's result.
      * @return {?Vector3} The interpolated value.
      */
+    getInterpolation(point: Vector3, v1: Vector2, v2: Vector2, v3: Vector2, target: Vector2): Vector2 | null;
+    /**
+     * Computes the value barycentrically interpolated for the given point on the
+     * triangle. Returns `null` if the triangle is degenerate.
+     *
+     * @param {Vector3} point - Position of interpolated point.
+     * @param {Vector3} v1 - Value to interpolate of first vertex.
+     * @param {Vector3} v2 - Value to interpolate of second vertex.
+     * @param {Vector3} v3 - Value to interpolate of third vertex.
+     * @param {Vector3} target - The target vector that is used to store the method's result.
+     * @return {?Vector3} The interpolated value.
+     */
     getInterpolation(point: Vector3, v1: Vector3, v2: Vector3, v3: Vector3, target: Vector3): Vector3 | null;
+    /**
+     * Computes the value barycentrically interpolated for the given point on the
+     * triangle. Returns `null` if the triangle is degenerate.
+     *
+     * @param {Vector3} point - Position of interpolated point.
+     * @param {Vector3} v1 - Value to interpolate of first vertex.
+     * @param {Vector3} v2 - Value to interpolate of second vertex.
+     * @param {Vector3} v3 - Value to interpolate of third vertex.
+     * @param {Vector3} target - The target vector that is used to store the method's result.
+     * @return {?Vector3} The interpolated value.
+     */
+    getInterpolation(point: Vector3, v1: Vector4, v2: Vector4, v3: Vector4, target: Vector4): Vector4 | null;
     /**
      * Returns `true` if the given point, when projected onto the plane of the
      * triangle, lies within the triangle.
@@ -244,4 +367,3 @@ export class Triangle {
      */
     equals(triangle: Triangle): boolean;
 }
-import { Vector3 } from "./Vector3.js";

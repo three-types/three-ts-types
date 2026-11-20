@@ -1,3 +1,13 @@
+import { BufferAttribute } from "../core/BufferAttribute.js";
+import { Matrix3 } from "./Matrix3.js";
+
+export type Vector2Tuple = [x: number, y: number];
+
+export interface Vector2Like {
+    readonly x: number;
+    readonly y: number;
+}
+
 /**
  * Class representing a 2D vector. A 2D vector is an ordered pair of numbers
  * (labeled x and y), which can be used to represent a number of things, such as:
@@ -24,6 +34,14 @@
  * ```
  */
 export class Vector2 {
+    /**
+     * This flag can be used for type testing.
+     *
+     * @type {boolean}
+     * @readonly
+     * @default true
+     */
+    readonly isVector2: true;
     /**
      * Constructs a new 2D vector.
      *
@@ -64,28 +82,28 @@ export class Vector2 {
      * @param {number} y - The value of the y component.
      * @return {Vector2} A reference to this vector.
      */
-    set(x: number, y: number): Vector2;
+    set(x: number, y: number): this;
     /**
      * Sets the vector components to the same value.
      *
      * @param {number} scalar - The value to set for all vector components.
      * @return {Vector2} A reference to this vector.
      */
-    setScalar(scalar: number): Vector2;
+    setScalar(scalar: number): this;
     /**
      * Sets the vector's x component to the given value
      *
      * @param {number} x - The value to set.
      * @return {Vector2} A reference to this vector.
      */
-    setX(x: number): Vector2;
+    setX(x: number): this;
     /**
      * Sets the vector's y component to the given value
      *
      * @param {number} y - The value to set.
      * @return {Vector2} A reference to this vector.
      */
-    setY(y: number): Vector2;
+    setY(y: number): this;
     /**
      * Allows to set a vector component with an index.
      *
@@ -93,7 +111,7 @@ export class Vector2 {
      * @param {number} value - The value to set.
      * @return {Vector2} A reference to this vector.
      */
-    setComponent(index: number, value: number): Vector2;
+    setComponent(index: number, value: number): this;
     /**
      * Returns the value of the vector component which matches the given index.
      *
@@ -106,28 +124,28 @@ export class Vector2 {
      *
      * @return {Vector2} A clone of this instance.
      */
-    clone(): Vector2;
+    clone(): this;
     /**
      * Copies the values of the given vector to this instance.
      *
      * @param {Vector2} v - The vector to copy.
      * @return {Vector2} A reference to this vector.
      */
-    copy(v: Vector2): Vector2;
+    copy(v: Vector2Like): this;
     /**
      * Adds the given vector to this instance.
      *
      * @param {Vector2} v - The vector to add.
      * @return {Vector2} A reference to this vector.
      */
-    add(v: Vector2): Vector2;
+    add(v: Vector2Like): this;
     /**
      * Adds the given scalar value to all components of this instance.
      *
      * @param {number} s - The scalar to add.
      * @return {Vector2} A reference to this vector.
      */
-    addScalar(s: number): Vector2;
+    addScalar(s: number): this;
     /**
      * Adds the given vectors and stores the result in this instance.
      *
@@ -135,7 +153,7 @@ export class Vector2 {
      * @param {Vector2} b - The second vector.
      * @return {Vector2} A reference to this vector.
      */
-    addVectors(a: Vector2, b: Vector2): Vector2;
+    addVectors(a: Vector2Like, b: Vector2Like): this;
     /**
      * Adds the given vector scaled by the given factor to this instance.
      *
@@ -143,21 +161,21 @@ export class Vector2 {
      * @param {number} s - The factor that scales `v`.
      * @return {Vector2} A reference to this vector.
      */
-    addScaledVector(v: Vector2, s: number): Vector2;
+    addScaledVector(v: Vector2Like, s: number): this;
     /**
      * Subtracts the given vector from this instance.
      *
      * @param {Vector2} v - The vector to subtract.
      * @return {Vector2} A reference to this vector.
      */
-    sub(v: Vector2): Vector2;
+    sub(v: Vector2Like): this;
     /**
      * Subtracts the given scalar value from all components of this instance.
      *
      * @param {number} s - The scalar to subtract.
      * @return {Vector2} A reference to this vector.
      */
-    subScalar(s: number): Vector2;
+    subScalar(s: number): this;
     /**
      * Subtracts the given vectors and stores the result in this instance.
      *
@@ -165,35 +183,35 @@ export class Vector2 {
      * @param {Vector2} b - The second vector.
      * @return {Vector2} A reference to this vector.
      */
-    subVectors(a: Vector2, b: Vector2): Vector2;
+    subVectors(a: Vector2Like, b: Vector2Like): this;
     /**
      * Multiplies the given vector with this instance.
      *
      * @param {Vector2} v - The vector to multiply.
      * @return {Vector2} A reference to this vector.
      */
-    multiply(v: Vector2): Vector2;
+    multiply(v: Vector2Like): this;
     /**
      * Multiplies the given scalar value with all components of this instance.
      *
      * @param {number} scalar - The scalar to multiply.
      * @return {Vector2} A reference to this vector.
      */
-    multiplyScalar(scalar: number): Vector2;
+    multiplyScalar(scalar: number): this;
     /**
      * Divides this instance by the given vector.
      *
      * @param {Vector2} v - The vector to divide.
      * @return {Vector2} A reference to this vector.
      */
-    divide(v: Vector2): Vector2;
+    divide(v: Vector2Like): this;
     /**
      * Divides this vector by the given scalar.
      *
      * @param {number} scalar - The scalar to divide.
      * @return {Vector2} A reference to this vector.
      */
-    divideScalar(scalar: number): Vector2;
+    divideScalar(scalar: number): this;
     /**
      * Multiplies this vector (with an implicit 1 as the 3rd component) by
      * the given 3x3 matrix.
@@ -201,7 +219,7 @@ export class Vector2 {
      * @param {Matrix3} m - The matrix to apply.
      * @return {Vector2} A reference to this vector.
      */
-    applyMatrix3(m: Matrix3): Vector2;
+    applyMatrix3(m: Matrix3): this;
     /**
      * If this vector's x or y value is greater than the given vector's x or y
      * value, replace that value with the corresponding min value.
@@ -209,7 +227,7 @@ export class Vector2 {
      * @param {Vector2} v - The vector.
      * @return {Vector2} A reference to this vector.
      */
-    min(v: Vector2): Vector2;
+    min(v: Vector2Like): this;
     /**
      * If this vector's x or y value is less than the given vector's x or y
      * value, replace that value with the corresponding max value.
@@ -217,7 +235,7 @@ export class Vector2 {
      * @param {Vector2} v - The vector.
      * @return {Vector2} A reference to this vector.
      */
-    max(v: Vector2): Vector2;
+    max(v: Vector2Like): this;
     /**
      * If this vector's x or y value is greater than the max vector's x or y
      * value, it is replaced by the corresponding value.
@@ -228,7 +246,7 @@ export class Vector2 {
      * @param {Vector2} max - The maximum x and y values in the desired range.
      * @return {Vector2} A reference to this vector.
      */
-    clamp(min: Vector2, max: Vector2): Vector2;
+    clamp(min: Vector2Like, max: Vector2Like): this;
     /**
      * If this vector's x or y values are greater than the max value, they are
      * replaced by the max value.
@@ -239,7 +257,7 @@ export class Vector2 {
      * @param {number} maxVal - The maximum value the components will be clamped to.
      * @return {Vector2} A reference to this vector.
      */
-    clampScalar(minVal: number, maxVal: number): Vector2;
+    clampScalar(minVal: number, maxVal: number): this;
     /**
      * If this vector's length is greater than the max value, it is replaced by
      * the max value.
@@ -250,52 +268,52 @@ export class Vector2 {
      * @param {number} max - The maximum value the vector length will be clamped to.
      * @return {Vector2} A reference to this vector.
      */
-    clampLength(min: number, max: number): Vector2;
+    clampLength(min: number, max: number): this;
     /**
      * The components of this vector are rounded down to the nearest integer value.
      *
      * @return {Vector2} A reference to this vector.
      */
-    floor(): Vector2;
+    floor(): this;
     /**
      * The components of this vector are rounded up to the nearest integer value.
      *
      * @return {Vector2} A reference to this vector.
      */
-    ceil(): Vector2;
+    ceil(): this;
     /**
      * The components of this vector are rounded to the nearest integer value
      *
      * @return {Vector2} A reference to this vector.
      */
-    round(): Vector2;
+    round(): this;
     /**
      * The components of this vector are rounded towards zero (up if negative,
      * down if positive) to an integer value.
      *
      * @return {Vector2} A reference to this vector.
      */
-    roundToZero(): Vector2;
+    roundToZero(): this;
     /**
      * Inverts this vector - i.e. sets x = -x and y = -y.
      *
      * @return {Vector2} A reference to this vector.
      */
-    negate(): Vector2;
+    negate(): this;
     /**
      * Calculates the dot product of the given vector with this instance.
      *
      * @param {Vector2} v - The vector to compute the dot product with.
      * @return {number} The result of the dot product.
      */
-    dot(v: Vector2): number;
+    dot(v: Vector2Like): number;
     /**
      * Calculates the cross product of the given vector with this instance.
      *
      * @param {Vector2} v - The vector to compute the cross product with.
      * @return {number} The result of the cross product.
      */
-    cross(v: Vector2): number;
+    cross(v: Vector2Like): number;
     /**
      * Computes the square of the Euclidean length (straight-line length) from
      * (0, 0) to (x, y). If you are comparing the lengths of vectors, you should
@@ -322,7 +340,7 @@ export class Vector2 {
      *
      * @return {Vector2} A reference to this vector.
      */
-    normalize(): Vector2;
+    normalize(): this;
     /**
      * Computes the angle in radians of this vector with respect to the positive x-axis.
      *
@@ -342,7 +360,7 @@ export class Vector2 {
      * @param {Vector2} v - The vector to compute the distance to.
      * @return {number} The distance.
      */
-    distanceTo(v: Vector2): number;
+    distanceTo(v: Vector2Like): number;
     /**
      * Computes the squared distance from the given vector to this instance.
      * If you are just comparing the distance with another distance, you should compare
@@ -351,14 +369,14 @@ export class Vector2 {
      * @param {Vector2} v - The vector to compute the squared distance to.
      * @return {number} The squared distance.
      */
-    distanceToSquared(v: Vector2): number;
+    distanceToSquared(v: Vector2Like): number;
     /**
      * Computes the Manhattan distance from the given vector to this instance.
      *
      * @param {Vector2} v - The vector to compute the Manhattan distance to.
      * @return {number} The Manhattan distance.
      */
-    manhattanDistanceTo(v: Vector2): number;
+    manhattanDistanceTo(v: Vector2Like): number;
     /**
      * Sets this vector to a vector with the same direction as this one, but
      * with the specified length.
@@ -366,7 +384,7 @@ export class Vector2 {
      * @param {number} length - The new length of this vector.
      * @return {Vector2} A reference to this vector.
      */
-    setLength(length: number): Vector2;
+    setLength(length: number): this;
     /**
      * Linearly interpolates between the given vector and this instance, where
      * alpha is the percent distance along the line - alpha = 0 will be this
@@ -376,7 +394,7 @@ export class Vector2 {
      * @param {number} alpha - The interpolation factor, typically in the closed interval `[0, 1]`.
      * @return {Vector2} A reference to this vector.
      */
-    lerp(v: Vector2, alpha: number): Vector2;
+    lerp(v: Vector2Like, alpha: number): this;
     /**
      * Linearly interpolates between the given vectors, where alpha is the percent
      * distance along the line - alpha = 0 will be first vector, and alpha = 1 will
@@ -387,14 +405,14 @@ export class Vector2 {
      * @param {number} alpha - The interpolation factor, typically in the closed interval `[0, 1]`.
      * @return {Vector2} A reference to this vector.
      */
-    lerpVectors(v1: Vector2, v2: Vector2, alpha: number): Vector2;
+    lerpVectors(v1: Vector2Like, v2: Vector2Like, alpha: number): this;
     /**
      * Returns `true` if this vector is equal with the given one.
      *
      * @param {Vector2} v - The vector to test for equality.
      * @return {boolean} Whether this vector is equal with the given one.
      */
-    equals(v: Vector2): boolean;
+    equals(v: Vector2Like): boolean;
     /**
      * Sets this vector's x value to be `array[ offset ]` and y
      * value to be `array[ offset + 1 ]`.
@@ -403,7 +421,7 @@ export class Vector2 {
      * @param {number} [offset=0] - The offset into the array.
      * @return {Vector2} A reference to this vector.
      */
-    fromArray(array: Array<number>, offset?: number): Vector2;
+    fromArray(array: number[] | ArrayLike<number>, offset?: number): this;
     /**
      * Writes the components of this vector to the given array. If no array is provided,
      * the method returns a new instance.
@@ -412,7 +430,25 @@ export class Vector2 {
      * @param {number} [offset=0] - Index of the first element in the array.
      * @return {Array<number>} The vector components.
      */
-    toArray(array?: Array<number>, offset?: number): Array<number>;
+    toArray(array?: number[], offset?: number): number[];
+    /**
+     * Writes the components of this vector to the given array. If no array is provided,
+     * the method returns a new instance.
+     *
+     * @param {Array<number>} [array=[]] - The target array holding the vector components.
+     * @param {number} [offset=0] - Index of the first element in the array.
+     * @return {Array<number>} The vector components.
+     */
+    toArray(array?: Vector2Tuple, offset?: 0): Vector2Tuple;
+    /**
+     * Writes the components of this vector to the given array. If no array is provided,
+     * the method returns a new instance.
+     *
+     * @param {Array<number>} [array=[]] - The target array holding the vector components.
+     * @param {number} [offset=0] - Index of the first element in the array.
+     * @return {Array<number>} The vector components.
+     */
+    toArray(array: ArrayLike<number>, offset?: number): ArrayLike<number>;
     /**
      * Sets the components of this vector from the given buffer attribute.
      *
@@ -420,7 +456,7 @@ export class Vector2 {
      * @param {number} index - The index into the attribute.
      * @return {Vector2} A reference to this vector.
      */
-    fromBufferAttribute(attribute: BufferAttribute, index: number): Vector2;
+    fromBufferAttribute(attribute: BufferAttribute, index: number): this;
     /**
      * Rotates this vector around the given center by the given angle.
      *
@@ -428,13 +464,13 @@ export class Vector2 {
      * @param {number} angle - The angle to rotate, in radians.
      * @return {Vector2} A reference to this vector.
      */
-    rotateAround(center: Vector2, angle: number): Vector2;
+    rotateAround(center: Vector2Like, angle: number): this;
     /**
      * Sets each component of this vector to a pseudo-random value between `0` and
      * `1`, excluding `1`.
      *
      * @return {Vector2} A reference to this vector.
      */
-    random(): Vector2;
+    random(): this;
     [Symbol.iterator](): Generator<number, void, unknown>;
 }

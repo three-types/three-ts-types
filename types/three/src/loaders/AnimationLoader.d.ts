@@ -9,7 +9,7 @@
  *
  * @augments Loader
  */
-export class AnimationLoader extends Loader {
+export class AnimationLoader extends Loader<AnimationClip[]> {
     /**
      * Starts loading from the given URL and pass the loaded animations as an array
      * holding instances of {@link AnimationClip} to the `onLoad()` callback.
@@ -21,9 +21,9 @@ export class AnimationLoader extends Loader {
      */
     load(
         url: string,
-        onLoad: (arg0: Array<AnimationClip>) => any,
-        onProgress: onProgressCallback,
-        onError: onErrorCallback,
+        onLoad: (data: Array<AnimationClip>) => void,
+        onProgress?: OnProgressCallback,
+        onError?: OnErrorCallback,
     ): void;
     /**
      * Parses the given JSON object and returns an array of animation clips.
@@ -31,7 +31,7 @@ export class AnimationLoader extends Loader {
      * @param {Object} json - The serialized animation clips.
      * @return {Array<AnimationClip>} The parsed animation clips.
      */
-    parse(json: Object): Array<AnimationClip>;
+    parse(json: readonly unknown[]): Array<AnimationClip>;
 }
 import { AnimationClip } from "../animation/AnimationClip.js";
-import { Loader } from "./Loader.js";
+import { Loader, OnErrorCallback, OnProgressCallback } from "./Loader.js";

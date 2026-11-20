@@ -1,3 +1,10 @@
+import { Box3 } from "./Box3.js";
+import { Line3 } from "./Line3.js";
+import { Matrix3 } from "./Matrix3.js";
+import { Matrix4 } from "./Matrix4.js";
+import { Sphere } from "./Sphere.js";
+import { Vector3 } from "./Vector3.js";
+
 /**
  * A two dimensional surface that extends infinitely in 3D space, represented
  * in [Hessian normal form](https://mathworld.wolfram.com/HessianNormalForm.html)
@@ -18,7 +25,7 @@ export class Plane {
      * @readonly
      * @default true
      */
-    readonly isPlane: boolean;
+    readonly isPlane: true;
     /**
      * A unit length vector defining the normal of the plane.
      *
@@ -77,7 +84,7 @@ export class Plane {
      * @param {Plane} plane - The plane to copy.
      * @return {Plane} A reference to this plane.
      */
-    copy(plane: Plane): Plane;
+    copy(plane: Plane): this;
     /**
      * Normalizes the plane normal and adjusts the constant accordingly.
      *
@@ -164,7 +171,7 @@ export class Plane {
      * @param {Matrix4} [optionalNormalMatrix] - A pre-computed normal matrix.
      * @return {Plane} A reference to this plane.
      */
-    applyMatrix4(matrix: Matrix4, optionalNormalMatrix?: Matrix4): Plane;
+    applyMatrix4(matrix: Matrix4, optionalNormalMatrix?: Matrix3): Plane;
     /**
      * Translates the plane by the distance defined by the given offset vector.
      * Note that this only affects the plane constant and will not affect the normal vector.
@@ -185,19 +192,23 @@ export class Plane {
      *
      * @return {Plane} A clone of this instance.
      */
-    clone(): Plane;
+    clone(): this;
     /**
      * Returns a serialized structure of the plane.
      *
      * @return {Object} Serialized structure with fields representing the object state.
      */
-    toJSON(): Object;
+    toJSON(): PlaneJSON;
     /**
      * Sets the plane properties from the given JSON.
      *
      * @param {Object} json - The serialized json to set the plane from.
      * @return {Plane} A reference to this plane.
      */
-    fromJSON(json: Object): Plane;
+    fromJSON(json: PlaneJSON): this;
 }
-import { Vector3 } from "./Vector3.js";
+
+export interface PlaneJSON {
+    normal: number[];
+    constant: number;
+}

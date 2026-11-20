@@ -1,42 +1,102 @@
+import { Vector4 } from "../math/Vector4.js";
+import { DepthTexture } from "../textures/DepthTexture.js";
+import { Texture, TextureParameters } from "../textures/Texture.js";
+import { EventDispatcher } from "./EventDispatcher.js";
+
+/**
+ * Render target options.
+ */
+export interface RenderTargetOptions extends TextureParameters {
+    /**
+     * Whether to allocate a depth buffer or not.
+     * @default true
+     */
+    depthBuffer?: boolean | undefined;
+    /**
+     * Whether to allocate a stencil buffer or not.
+     * @default false
+     */
+    stencilBuffer?: boolean | undefined;
+    /**
+     * Whether to resolve the color buffer or not. Only relevant for multisampled render targets.
+     * @default true
+     */
+    resolveColorBuffer?: boolean | undefined;
+    /**
+     * Whether to resolve the depth buffer or not. Only relevant for multisampled render targets.
+     * @default true
+     */
+    resolveDepthBuffer?: boolean | undefined;
+    /**
+     * Whether to resolve the stencil buffer or not. Only relevant for multisampled render targets.
+     * @default true
+     */
+    resolveStencilBuffer?: boolean | undefined;
+    /**
+     * Whether to store the multisampled color buffer or not. Setting to `false` saves memory bandwidth when the
+     * multisampled data are not needed after a render pass.
+     * @default true
+     */
+    storeMultisampledColorBuffer?: boolean | undefined;
+    /**
+     * Whether to store the multisampled depth buffer or not. Setting to `false` saves memory bandwidth when the
+     * multisampled data are not needed after a render pass.
+     * @default true
+     */
+    storeMultisampledDepthBuffer?: boolean | undefined;
+    /**
+     * Whether to store the multisampled stencil buffer or not. Setting to `false` saves memory bandwidth when the
+     * multisampled data are not needed after a render pass.
+     * @default true
+     */
+    storeMultisampledStencilBuffer?: boolean | undefined;
+    /**
+     * Reference to a depth texture.
+     * @default null
+     */
+    depthTexture?: DepthTexture | null | undefined;
+    /**
+     * The MSAA samples count.
+     * @default 0
+     */
+    samples?: number | undefined;
+    /**
+     * Defines the number of color attachments. Use `0` for a depth-only render target (WebGPURenderer).
+     * @default 1
+     */
+    count?: number | undefined;
+    /**
+     * The texture depth.
+     * @default 1
+     */
+    depth?: number | undefined;
+    /**
+     * Whether this target is used for multiview rendering (WebGL OVR_multiview2 extension).
+     * @default false
+     */
+    multiview?: boolean | undefined;
+    /**
+     * Whether to create the depth texture as an array texture for per-layer depth testing. This is separate from
+     * multiview so layered render targets can use array depth without the multiview extension.
+     * @default false
+     */
+    useArrayDepthTexture?: boolean | undefined;
+}
+
+export interface RenderTargetEventMap {
+    dispose: {};
+}
+
 /**
  * A render target is a buffer where the video card draws pixels for a scene
  * that is being rendered in the background. It is used in different effects,
  * such as applying postprocessing to a rendered image before displaying it
  * on the screen.
- *
- * @augments EventDispatcher
  */
-export class RenderTarget extends EventDispatcher {
-    /**
-     * Render target options.
-     *
-     * @typedef {Object} RenderTarget~Options
-     * @property {boolean} [generateMipmaps=false] - Whether to generate mipmaps or not.
-     * @property {boolean} [mipmapsAutoUpdate=true] - Whether to regenerate mipmaps automatically after rendering or not.
-     * @property {number} [magFilter=LinearFilter] - The mag filter.
-     * @property {number} [minFilter=LinearFilter] - The min filter.
-     * @property {number} [format=RGBAFormat] - The texture format.
-     * @property {number} [type=UnsignedByteType] - The texture type.
-     * @property {?string} [internalFormat=null] - The texture's internal format.
-     * @property {number} [wrapS=ClampToEdgeWrapping] - The texture's uv wrapping mode.
-     * @property {number} [wrapT=ClampToEdgeWrapping] - The texture's uv wrapping mode.
-     * @property {number} [anisotropy=1] - The texture's anisotropy value.
-     * @property {string} [colorSpace=NoColorSpace] - The texture's color space.
-     * @property {boolean} [depthBuffer=true] - Whether to allocate a depth buffer or not.
-     * @property {boolean} [stencilBuffer=false] - Whether to allocate a stencil buffer or not.
-     * @property {boolean} [resolveColorBuffer=true] - Whether to resolve the color buffer or not. Only relevant for multisampled render targets.
-     * @property {boolean} [resolveDepthBuffer=true] - Whether to resolve the depth buffer or not. Only relevant for multisampled render targets.
-     * @property {boolean} [resolveStencilBuffer=true] - Whether to resolve the stencil buffer or not. Only relevant for multisampled render targets.
-     * @property {boolean} [storeMultisampledColorBuffer=true] - Whether to store the multisampled color buffer or not. Setting to `false` saves memory bandwidth when the multisampled data are not needed after a render pass.
-     * @property {boolean} [storeMultisampledDepthBuffer=true] - Whether to store the multisampled depth buffer or not. Setting to `false` saves memory bandwidth when the multisampled data are not needed after a render pass.
-     * @property {boolean} [storeMultisampledStencilBuffer=true] - Whether to store the multisampled stencil buffer or not. Setting to `false` saves memory bandwidth when the multisampled data are not needed after a render pass.
-     * @property {?Texture} [depthTexture=null] - Reference to a depth texture.
-     * @property {number} [samples=0] - The MSAA samples count.
-     * @property {number} [count=1] - Defines the number of color attachments. Use `0` for a depth-only render target (WebGPURenderer).
-     * @property {number} [depth=1] - The texture depth.
-     * @property {boolean} [multiview=false] - Whether this target is used for multiview rendering (WebGL OVR_multiview2 extension).
-     * @property {boolean} [useArrayDepthTexture=false] - Whether to create the depth texture as an array texture for per-layer depth testing. This is separate from multiview so layered render targets can use array depth without the multiview extension.
-     */
+export class RenderTarget<
+    TTexture extends Texture | Texture[] = Texture,
+    TEventMap extends RenderTargetEventMap = RenderTargetEventMap,
+> extends EventDispatcher<TEventMap> {
     /**
      * Constructs a new render target.
      *
@@ -44,33 +104,28 @@ export class RenderTarget extends EventDispatcher {
      * @param {number} [height=1] - The height of the render target.
      * @param {RenderTarget~Options} [options] - The configuration object.
      */
-    constructor(width?: number, height?: number, options?: {});
+    constructor(width?: number, height?: number, options?: RenderTargetOptions);
     /**
      * This flag can be used for type testing.
      *
-     * @type {boolean}
-     * @readonly
      * @default true
      */
-    readonly isRenderTarget: boolean;
+    readonly isRenderTarget: true;
     /**
      * The width of the render target.
      *
-     * @type {number}
      * @default 1
      */
     width: number;
     /**
      * The height of the render target.
      *
-     * @type {number}
      * @default 1
      */
     height: number;
     /**
      * The depth of the render target.
      *
-     * @type {number}
      * @default 1
      */
     depth: number;
@@ -78,7 +133,6 @@ export class RenderTarget extends EventDispatcher {
      * A rectangular area inside the render target's viewport. Fragments that are
      * outside the area will be discarded.
      *
-     * @type {Vector4}
      * @default (0,0,width,height)
      */
     scissor: Vector4;
@@ -86,35 +140,29 @@ export class RenderTarget extends EventDispatcher {
      * Indicates whether the scissor test should be enabled when rendering into
      * this render target or not.
      *
-     * @type {boolean}
      * @default false
      */
     scissorTest: boolean;
     /**
      * A rectangular area representing the render target's viewport.
      *
-     * @type {Vector4}
      * @default (0,0,width,height)
      */
     viewport: Vector4;
     /**
      * An array of textures. Each color attachment is represented as a separate texture.
      * Has at least a single entry for the default color attachment.
-     *
-     * @type {Array<Texture>}
      */
-    textures: Array<Texture>;
+    textures: TTexture[];
     /**
      * Whether to allocate a depth buffer or not.
      *
-     * @type {boolean}
      * @default true
      */
     depthBuffer: boolean;
     /**
      * Whether to allocate a stencil buffer or not.
      *
-     * @type {boolean}
      * @default false
      */
     stencilBuffer: boolean;
@@ -126,7 +174,6 @@ export class RenderTarget extends EventDispatcher {
      *
      * Only relevant for multisampled render targets.
      *
-     * @type {boolean}
      * @default true
      */
     resolveColorBuffer: boolean;
@@ -141,7 +188,6 @@ export class RenderTarget extends EventDispatcher {
      * target accesses the multisampled data directly, see
      * {@link RenderTarget#storeMultisampledDepthBuffer}.
      *
-     * @type {boolean}
      * @default true
      */
     resolveDepthBuffer: boolean;
@@ -149,7 +195,6 @@ export class RenderTarget extends EventDispatcher {
      * Whether to resolve the stencil buffer or not. Analogous to
      * {@link RenderTarget#resolveDepthBuffer} but for the stencil aspect.
      *
-     * @type {boolean}
      * @default true
      */
     resolveStencilBuffer: boolean;
@@ -165,7 +210,6 @@ export class RenderTarget extends EventDispatcher {
      * pass ends, e.g. when rendering into the target without clearing or when the
      * scene contains transmissive objects which require a mid-pass framebuffer copy.
      *
-     * @type {boolean}
      * @default true
      */
     storeMultisampledColorBuffer: boolean;
@@ -178,7 +222,6 @@ export class RenderTarget extends EventDispatcher {
      * target is sampled (e.g. by depth-based post-processing effects) since depth
      * is read directly from the multisampled data.
      *
-     * @type {boolean}
      * @default true
      */
     storeMultisampledDepthBuffer: boolean;
@@ -186,18 +229,15 @@ export class RenderTarget extends EventDispatcher {
      * Whether to store the multisampled stencil buffer or not. Analogous to
      * {@link RenderTarget#storeMultisampledDepthBuffer} but for the stencil aspect.
      *
-     * @type {boolean}
      * @default true
      */
     storeMultisampledStencilBuffer: boolean;
-    _depthTexture: any;
     set depthTexture(current: DepthTexture | null);
     /**
      * Instead of saving the depth in a renderbuffer, a texture
      * can be used instead which is useful for further processing
      * e.g. in context of post-processing.
      *
-     * @type {?DepthTexture}
      * @default null
      */
     get depthTexture(): DepthTexture | null;
@@ -206,14 +246,12 @@ export class RenderTarget extends EventDispatcher {
      *
      * A value of `0` disables MSAA.
      *
-     * @type {number}
      * @default 0
      */
     samples: number;
     /**
      * Whether to this target is used in multiview rendering.
      *
-     * @type {boolean}
      * @default false
      */
     multiview: boolean;
@@ -222,18 +260,14 @@ export class RenderTarget extends EventDispatcher {
      * This is separate from multiview so layered render targets can use array depth without
      * the multiview extension.
      *
-     * @type {boolean}
      * @default false
      */
     useArrayDepthTexture: boolean;
-    _setTextureOptions(options?: {}): void;
-    set texture(value: Texture);
+    set texture(value: TTexture);
     /**
      * The texture representing the default color attachment.
-     *
-     * @type {Texture}
      */
-    get texture(): Texture;
+    get texture(): TTexture;
     /**
      * Sets the size of this render target.
      *
@@ -247,7 +281,7 @@ export class RenderTarget extends EventDispatcher {
      *
      * @return {RenderTarget} A clone of this instance.
      */
-    clone(): RenderTarget;
+    clone(): this;
     /**
      * Copies the settings of the given render target. This is a structural copy so
      * no resources are shared between render targets after the copy. That includes
@@ -256,7 +290,7 @@ export class RenderTarget extends EventDispatcher {
      * @param {RenderTarget} source - The render target to copy.
      * @return {RenderTarget} A reference to this instance.
      */
-    copy(source: RenderTarget): RenderTarget;
+    copy(source: RenderTarget): this;
     /**
      * Frees the GPU-related resources allocated by this instance. Call this
      * method whenever this instance is no longer used in your app.
@@ -268,6 +302,3 @@ export class RenderTarget extends EventDispatcher {
      */
     dispose(): void;
 }
-import { Vector4 } from "../math/Vector4.js";
-import { Texture } from "../textures/Texture.js";
-import { EventDispatcher } from "./EventDispatcher.js";

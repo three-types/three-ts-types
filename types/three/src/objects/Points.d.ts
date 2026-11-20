@@ -1,16 +1,27 @@
+import { BufferGeometry, NormalOrGLBufferAttributes } from "../core/BufferGeometry.js";
+import { Object3D, Object3DEventMap } from "../core/Object3D.js";
+import { Intersection, Raycaster } from "../core/Raycaster.js";
+import { Material } from "../materials/Material.js";
+import { Frustum } from "../math/Frustum.js";
+import { FrustumArray } from "../math/FrustumArray.js";
+
 /**
  * A class for displaying points or point clouds.
  *
  * @augments Object3D
  */
-export class Points extends Object3D {
+export class Points<
+    TGeometry extends BufferGeometry<NormalOrGLBufferAttributes> = BufferGeometry,
+    TMaterial extends Material | Material[] = Material | Material[],
+    TEventMap extends Object3DEventMap = Object3DEventMap,
+> extends Object3D<TEventMap> {
     /**
      * Constructs a new point cloud.
      *
      * @param {BufferGeometry} [geometry] - The points geometry.
      * @param {Material|Array<Material>} [material] - The points material.
      */
-    constructor(geometry?: BufferGeometry, material?: Material | Array<Material>);
+    constructor(geometry?: TGeometry, material?: TMaterial);
     /**
      * This flag can be used for type testing.
      *
@@ -18,21 +29,20 @@ export class Points extends Object3D {
      * @readonly
      * @default true
      */
-    readonly isPoints: boolean;
-    type: string;
+    readonly isPoints: true;
     /**
      * The points geometry.
      *
      * @type {BufferGeometry}
      */
-    geometry: BufferGeometry;
+    geometry: TGeometry;
     /**
      * The line material.
      *
      * @type {Material|Array<Material>}
      * @default PointsMaterial
      */
-    material: Material | Array<Material>;
+    material: TMaterial;
     /**
      * A dictionary representing the morph targets in the geometry. The key is the
      * morph targets name, the value its attribute index. This member is `undefined`
@@ -53,7 +63,7 @@ export class Points extends Object3D {
      * @default undefined
      */
     morphTargetInfluences: Array<number> | undefined;
-    copy(source: any, recursive: any): this;
+    copy(source: Points, recursive?: boolean): this;
     /**
      * Returns `true` if this point cloud intersects the given frustum.
      *
@@ -67,12 +77,10 @@ export class Points extends Object3D {
      * @param {Raycaster} raycaster - The raycaster.
      * @param {Array<Object>} intersects - The target array that holds the intersection points.
      */
-    raycast(raycaster: Raycaster, intersects: Array<Object>): void;
+    raycast(raycaster: Raycaster, intersects: Intersection[]): void;
     /**
      * Sets the values of {@link Points#morphTargetDictionary} and {@link Points#morphTargetInfluences}
      * to make sure existing morph targets can influence this 3D object.
      */
     updateMorphTargets(): void;
 }
-import { BufferGeometry } from "../core/BufferGeometry.js";
-import { Object3D } from "../core/Object3D.js";

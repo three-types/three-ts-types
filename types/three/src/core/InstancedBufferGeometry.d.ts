@@ -1,22 +1,24 @@
+import { BufferGeometry } from "./BufferGeometry.js";
+
 /**
  * An instanced version of a geometry.
  */
 export class InstancedBufferGeometry extends BufferGeometry {
     /**
+     * Create a new instance of {@link InstancedBufferGeometry}
+     */
+    constructor();
+    /**
      * This flag can be used for type testing.
      *
-     * @type {boolean}
-     * @readonly
      * @default true
      */
-    readonly isInstancedBufferGeometry: boolean;
+    readonly isInstancedBufferGeometry: true;
     /**
      * The instance count.
      *
-     * @type {number}
      * @default Infinity
      */
     instanceCount: number;
-    copy(source: any): this;
+    copy(source: InstancedBufferGeometry): this;
 }
-import { BufferGeometry } from "./BufferGeometry.js";

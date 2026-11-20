@@ -1,3 +1,6 @@
+import { CompressedPixelFormat, TextureDataType } from "../constants.js";
+import { CompressedTexture, CompressedTextureImageData } from "./CompressedTexture.js";
+
 /**
  * Creates a cube texture based on data in compressed form.
  *
@@ -5,7 +8,7 @@
  *
  * @augments CompressedTexture
  */
-export class CompressedCubeTexture extends CompressedTexture {
+export class CompressedCubeTexture extends CompressedTexture<CompressedTextureImageData[]> {
     /**
      * Constructs a new compressed texture.
      *
@@ -13,7 +16,7 @@ export class CompressedCubeTexture extends CompressedTexture {
      * @param {number} [format=RGBAFormat] - The texture format.
      * @param {number} [type=UnsignedByteType] - The texture type.
      */
-    constructor(images: Array<CompressedTexture>, format?: number, type?: number);
+    constructor(images: CompressedTextureImageData[], format?: CompressedPixelFormat, type?: TextureDataType);
     /**
      * This flag can be used for type testing.
      *
@@ -21,7 +24,7 @@ export class CompressedCubeTexture extends CompressedTexture {
      * @readonly
      * @default true
      */
-    readonly isCompressedCubeTexture: boolean;
+    readonly isCompressedCubeTexture: true;
     /**
      * This flag can be used for type testing.
      *
@@ -29,7 +32,5 @@ export class CompressedCubeTexture extends CompressedTexture {
      * @readonly
      * @default true
      */
-    readonly isCubeTexture: boolean;
-    image: CompressedTexture[];
+    readonly isCubeTexture: true;
 }
-import { CompressedTexture } from "./CompressedTexture.js";

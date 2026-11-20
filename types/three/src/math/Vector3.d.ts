@@ -1,3 +1,22 @@
+import { Camera } from "../cameras/Camera.js";
+import { BufferAttribute } from "../core/BufferAttribute.js";
+import { InterleavedBufferAttribute } from "../core/InterleavedBufferAttribute.js";
+import { RGB } from "./Color.js";
+import { Cylindrical } from "./Cylindrical.js";
+import { Euler } from "./Euler.js";
+import { Matrix3 } from "./Matrix3.js";
+import { Matrix4 } from "./Matrix4.js";
+import { QuaternionLike } from "./Quaternion.js";
+import { Spherical } from "./Spherical.js";
+
+export type Vector3Tuple = [number, number, number];
+
+export interface Vector3Like {
+    readonly x: number;
+    readonly y: number;
+    readonly z: number;
+}
+
 /**
  * Class representing a 3D vector. A 3D vector is an ordered triplet of numbers
  * (labeled x, y and z), which can be used to represent a number of things, such as:
@@ -24,6 +43,14 @@
  * ```
  */
 export class Vector3 {
+    /**
+     * This flag can be used for type testing.
+     *
+     * @type {boolean}
+     * @readonly
+     * @default true
+     */
+    readonly isVector3: true;
     /**
      * Constructs a new 3D vector.
      *
@@ -58,35 +85,35 @@ export class Vector3 {
      * @param {number} z - The value of the z component.
      * @return {Vector3} A reference to this vector.
      */
-    set(x: number, y: number, z: number): Vector3;
+    set(x: number, y: number, z?: number): this;
     /**
      * Sets the vector components to the same value.
      *
      * @param {number} scalar - The value to set for all vector components.
      * @return {Vector3} A reference to this vector.
      */
-    setScalar(scalar: number): Vector3;
+    setScalar(scalar: number): this;
     /**
      * Sets the vector's x component to the given value.
      *
      * @param {number} x - The value to set.
      * @return {Vector3} A reference to this vector.
      */
-    setX(x: number): Vector3;
+    setX(x: number): this;
     /**
      * Sets the vector's y component to the given value.
      *
      * @param {number} y - The value to set.
      * @return {Vector3} A reference to this vector.
      */
-    setY(y: number): Vector3;
+    setY(y: number): this;
     /**
      * Sets the vector's z component to the given value.
      *
      * @param {number} z - The value to set.
      * @return {Vector3} A reference to this vector.
      */
-    setZ(z: number): Vector3;
+    setZ(z: number): this;
     /**
      * Allows to set a vector component with an index.
      *
@@ -94,7 +121,7 @@ export class Vector3 {
      * @param {number} value - The value to set.
      * @return {Vector3} A reference to this vector.
      */
-    setComponent(index: number, value: number): Vector3;
+    setComponent(index: number, value: number): this;
     /**
      * Returns the value of the vector component which matches the given index.
      *
@@ -107,28 +134,28 @@ export class Vector3 {
      *
      * @return {Vector3} A clone of this instance.
      */
-    clone(): Vector3;
+    clone(): this;
     /**
      * Copies the values of the given vector to this instance.
      *
      * @param {Vector3} v - The vector to copy.
      * @return {Vector3} A reference to this vector.
      */
-    copy(v: Vector3): Vector3;
+    copy(v: Vector3Like): this;
     /**
      * Adds the given vector to this instance.
      *
      * @param {Vector3} v - The vector to add.
      * @return {Vector3} A reference to this vector.
      */
-    add(v: Vector3): Vector3;
+    add(v: Vector3Like): this;
     /**
      * Adds the given scalar value to all components of this instance.
      *
      * @param {number} s - The scalar to add.
      * @return {Vector3} A reference to this vector.
      */
-    addScalar(s: number): Vector3;
+    addScalar(s: number): this;
     /**
      * Adds the given vectors and stores the result in this instance.
      *
@@ -136,7 +163,7 @@ export class Vector3 {
      * @param {Vector3} b - The second vector.
      * @return {Vector3} A reference to this vector.
      */
-    addVectors(a: Vector3, b: Vector3): Vector3;
+    addVectors(a: Vector3Like, b: Vector3Like): this;
     /**
      * Adds the given vector scaled by the given factor to this instance.
      *
@@ -144,21 +171,21 @@ export class Vector3 {
      * @param {number} s - The factor that scales `v`.
      * @return {Vector3} A reference to this vector.
      */
-    addScaledVector(v: Vector3 | Vector4, s: number): Vector3;
+    addScaledVector(v: Vector3Like, s: number): this;
     /**
      * Subtracts the given vector from this instance.
      *
      * @param {Vector3} v - The vector to subtract.
      * @return {Vector3} A reference to this vector.
      */
-    sub(v: Vector3): Vector3;
+    sub(v: Vector3Like): this;
     /**
      * Subtracts the given scalar value from all components of this instance.
      *
      * @param {number} s - The scalar to subtract.
      * @return {Vector3} A reference to this vector.
      */
-    subScalar(s: number): Vector3;
+    subScalar(s: number): this;
     /**
      * Subtracts the given vectors and stores the result in this instance.
      *
@@ -166,21 +193,21 @@ export class Vector3 {
      * @param {Vector3} b - The second vector.
      * @return {Vector3} A reference to this vector.
      */
-    subVectors(a: Vector3, b: Vector3): Vector3;
+    subVectors(a: Vector3Like, b: Vector3Like): this;
     /**
      * Multiplies the given vector with this instance.
      *
      * @param {Vector3} v - The vector to multiply.
      * @return {Vector3} A reference to this vector.
      */
-    multiply(v: Vector3): Vector3;
+    multiply(v: Vector3Like): this;
     /**
      * Multiplies the given scalar value with all components of this instance.
      *
      * @param {number} scalar - The scalar to multiply.
      * @return {Vector3} A reference to this vector.
      */
-    multiplyScalar(scalar: number): Vector3;
+    multiplyScalar(scalar: number): this;
     /**
      * Multiplies the given vectors and stores the result in this instance.
      *
@@ -188,14 +215,14 @@ export class Vector3 {
      * @param {Vector3} b - The second vector.
      * @return {Vector3} A reference to this vector.
      */
-    multiplyVectors(a: Vector3, b: Vector3): Vector3;
+    multiplyVectors(a: Vector3Like, b: Vector3Like): this;
     /**
      * Applies the given Euler rotation to this vector.
      *
      * @param {Euler} euler - The Euler angles.
      * @return {Vector3} A reference to this vector.
      */
-    applyEuler(euler: Euler): Vector3;
+    applyEuler(euler: Euler): this;
     /**
      * Applies a rotation specified by an axis and an angle to this vector.
      *
@@ -203,14 +230,14 @@ export class Vector3 {
      * @param {number} angle - The angle in radians.
      * @return {Vector3} A reference to this vector.
      */
-    applyAxisAngle(axis: Vector3, angle: number): Vector3;
+    applyAxisAngle(axis: Vector3Like, angle: number): this;
     /**
      * Multiplies this vector with the given 3x3 matrix.
      *
      * @param {Matrix3} m - The 3x3 matrix.
      * @return {Vector3} A reference to this vector.
      */
-    applyMatrix3(m: Matrix3): Vector3;
+    applyMatrix3(m: Matrix3): this;
     /**
      * Multiplies this vector by the given normal matrix and normalizes
      * the result.
@@ -218,7 +245,7 @@ export class Vector3 {
      * @param {Matrix3} m - The normal matrix.
      * @return {Vector3} A reference to this vector.
      */
-    applyNormalMatrix(m: Matrix3): Vector3;
+    applyNormalMatrix(m: Matrix3): this;
     /**
      * Multiplies this vector (with an implicit 1 in the 4th dimension) by m, and
      * divides by perspective.
@@ -226,14 +253,14 @@ export class Vector3 {
      * @param {Matrix4} m - The matrix to apply.
      * @return {Vector3} A reference to this vector.
      */
-    applyMatrix4(m: Matrix4): Vector3;
+    applyMatrix4(m: Matrix4): this;
     /**
      * Applies the given Quaternion to this vector.
      *
      * @param {Quaternion} q - The Quaternion.
      * @return {Vector3} A reference to this vector.
      */
-    applyQuaternion(q: Quaternion): Vector3;
+    applyQuaternion(q: QuaternionLike): this;
     /**
      * Projects this vector from world space into the camera's normalized
      * device coordinate (NDC) space.
@@ -241,7 +268,7 @@ export class Vector3 {
      * @param {Camera} camera - The camera.
      * @return {Vector3} A reference to this vector.
      */
-    project(camera: Camera): Vector3;
+    project(camera: Camera): this;
     /**
      * Unprojects this vector from the camera's normalized device coordinate (NDC)
      * space into world space.
@@ -249,7 +276,7 @@ export class Vector3 {
      * @param {Camera} camera - The camera.
      * @return {Vector3} A reference to this vector.
      */
-    unproject(camera: Camera): Vector3;
+    unproject(camera: Camera): this;
     /**
      * Transforms this vector by the upper left 3x3 sub-matrix of the given 4x4 matrix,
      * and normalizes the result.
@@ -257,21 +284,21 @@ export class Vector3 {
      * @param {Matrix4} m - The matrix.
      * @return {Vector3} A reference to this vector.
      */
-    transformDirection(m: Matrix4): Vector3;
+    transformDirection(m: Matrix4): this;
     /**
      * Divides this instance by the given vector.
      *
      * @param {Vector3} v - The vector to divide.
      * @return {Vector3} A reference to this vector.
      */
-    divide(v: Vector3): Vector3;
+    divide(v: Vector3Like): this;
     /**
      * Divides this vector by the given scalar.
      *
      * @param {number} scalar - The scalar to divide.
      * @return {Vector3} A reference to this vector.
      */
-    divideScalar(scalar: number): Vector3;
+    divideScalar(scalar: number): this;
     /**
      * If this vector's x, y or z value is greater than the given vector's x, y or z
      * value, replace that value with the corresponding min value.
@@ -279,7 +306,7 @@ export class Vector3 {
      * @param {Vector3} v - The vector.
      * @return {Vector3} A reference to this vector.
      */
-    min(v: Vector3): Vector3;
+    min(v: Vector3Like): this;
     /**
      * If this vector's x, y or z value is less than the given vector's x, y or z
      * value, replace that value with the corresponding max value.
@@ -287,7 +314,7 @@ export class Vector3 {
      * @param {Vector3} v - The vector.
      * @return {Vector3} A reference to this vector.
      */
-    max(v: Vector3): Vector3;
+    max(v: Vector3Like): this;
     /**
      * If this vector's x, y or z value is greater than the max vector's x, y or z
      * value, it is replaced by the corresponding value.
@@ -298,7 +325,7 @@ export class Vector3 {
      * @param {Vector3} max - The maximum x, y and z values in the desired range.
      * @return {Vector3} A reference to this vector.
      */
-    clamp(min: Vector3, max: Vector3): Vector3;
+    clamp(min: Vector3Like, max: Vector3Like): this;
     /**
      * If this vector's x, y or z values are greater than the max value, they are
      * replaced by the max value.
@@ -309,7 +336,7 @@ export class Vector3 {
      * @param {number} maxVal - The maximum value the components will be clamped to.
      * @return {Vector3} A reference to this vector.
      */
-    clampScalar(minVal: number, maxVal: number): Vector3;
+    clampScalar(minVal: number, maxVal: number): this;
     /**
      * If this vector's length is greater than the max value, it is replaced by
      * the max value.
@@ -320,45 +347,45 @@ export class Vector3 {
      * @param {number} max - The maximum value the vector length will be clamped to.
      * @return {Vector3} A reference to this vector.
      */
-    clampLength(min: number, max: number): Vector3;
+    clampLength(min: number, max: number): this;
     /**
      * The components of this vector are rounded down to the nearest integer value.
      *
      * @return {Vector3} A reference to this vector.
      */
-    floor(): Vector3;
+    floor(): this;
     /**
      * The components of this vector are rounded up to the nearest integer value.
      *
      * @return {Vector3} A reference to this vector.
      */
-    ceil(): Vector3;
+    ceil(): this;
     /**
      * The components of this vector are rounded to the nearest integer value
      *
      * @return {Vector3} A reference to this vector.
      */
-    round(): Vector3;
+    round(): this;
     /**
      * The components of this vector are rounded towards zero (up if negative,
      * down if positive) to an integer value.
      *
      * @return {Vector3} A reference to this vector.
      */
-    roundToZero(): Vector3;
+    roundToZero(): this;
     /**
      * Inverts this vector - i.e. sets x = -x, y = -y and z = -z.
      *
      * @return {Vector3} A reference to this vector.
      */
-    negate(): Vector3;
+    negate(): this;
     /**
      * Calculates the dot product of the given vector with this instance.
      *
      * @param {Vector3} v - The vector to compute the dot product with.
      * @return {number} The result of the dot product.
      */
-    dot(v: Vector3): number;
+    dot(v: Vector3Like): number;
     /**
      * Computes the square of the Euclidean length (straight-line length) from
      * (0, 0, 0) to (x, y, z). If you are comparing the lengths of vectors, you should
@@ -385,7 +412,7 @@ export class Vector3 {
      *
      * @return {Vector3} A reference to this vector.
      */
-    normalize(): Vector3;
+    normalize(): this;
     /**
      * Sets this vector to a vector with the same direction as this one, but
      * with the specified length.
@@ -393,7 +420,7 @@ export class Vector3 {
      * @param {number} length - The new length of this vector.
      * @return {Vector3} A reference to this vector.
      */
-    setLength(length: number): Vector3;
+    setLength(length: number): this;
     /**
      * Linearly interpolates between the given vector and this instance, where
      * alpha is the percent distance along the line - alpha = 0 will be this
@@ -403,7 +430,7 @@ export class Vector3 {
      * @param {number} alpha - The interpolation factor, typically in the closed interval `[0, 1]`.
      * @return {Vector3} A reference to this vector.
      */
-    lerp(v: Vector3, alpha: number): Vector3;
+    lerp(v: Vector3Like, alpha: number): this;
     /**
      * Linearly interpolates between the given vectors, where alpha is the percent
      * distance along the line - alpha = 0 will be first vector, and alpha = 1 will
@@ -414,14 +441,14 @@ export class Vector3 {
      * @param {number} alpha - The interpolation factor, typically in the closed interval `[0, 1]`.
      * @return {Vector3} A reference to this vector.
      */
-    lerpVectors(v1: Vector3, v2: Vector3, alpha: number): Vector3;
+    lerpVectors(v1: Vector3Like, v2: Vector3Like, alpha: number): this;
     /**
      * Calculates the cross product of the given vector with this instance.
      *
      * @param {Vector3} v - The vector to compute the cross product with.
      * @return {Vector3} The result of the cross product.
      */
-    cross(v: Vector3): Vector3;
+    cross(v: Vector3Like): this;
     /**
      * Calculates the cross product of the given vectors and stores the result
      * in this instance.
@@ -430,14 +457,14 @@ export class Vector3 {
      * @param {Vector3} b - The second vector.
      * @return {Vector3} A reference to this vector.
      */
-    crossVectors(a: Vector3, b: Vector3): Vector3;
+    crossVectors(a: Vector3Like, b: Vector3Like): this;
     /**
      * Projects this vector onto the given one.
      *
      * @param {Vector3} v - The vector to project to.
      * @return {Vector3} A reference to this vector.
      */
-    projectOnVector(v: Vector3): Vector3;
+    projectOnVector(v: Vector3): this;
     /**
      * Projects this vector onto a plane by subtracting this
      * vector projected onto the plane's normal from this vector.
@@ -445,14 +472,14 @@ export class Vector3 {
      * @param {Vector3} planeNormal - The plane normal.
      * @return {Vector3} A reference to this vector.
      */
-    projectOnPlane(planeNormal: Vector3): Vector3;
+    projectOnPlane(planeNormal: Vector3): this;
     /**
      * Reflects this vector off a plane orthogonal to the given normal vector.
      *
      * @param {Vector3} normal - The (normalized) normal vector.
      * @return {Vector3} A reference to this vector.
      */
-    reflect(normal: Vector3): Vector3;
+    reflect(normal: Vector3Like): this;
     /**
      * Returns the angle between the given vector and this instance in radians.
      *
@@ -466,7 +493,7 @@ export class Vector3 {
      * @param {Vector3} v - The vector to compute the distance to.
      * @return {number} The distance.
      */
-    distanceTo(v: Vector3): number;
+    distanceTo(v: Vector3Like): number;
     /**
      * Computes the squared distance from the given vector to this instance.
      * If you are just comparing the distance with another distance, you should compare
@@ -475,21 +502,21 @@ export class Vector3 {
      * @param {Vector3} v - The vector to compute the squared distance to.
      * @return {number} The squared distance.
      */
-    distanceToSquared(v: Vector3): number;
+    distanceToSquared(v: Vector3Like): number;
     /**
      * Computes the Manhattan distance from the given vector to this instance.
      *
      * @param {Vector3} v - The vector to compute the Manhattan distance to.
      * @return {number} The Manhattan distance.
      */
-    manhattanDistanceTo(v: Vector3): number;
+    manhattanDistanceTo(v: Vector3Like): number;
     /**
      * Sets the vector components from the given spherical coordinates.
      *
      * @param {Spherical} s - The spherical coordinates.
      * @return {Vector3} A reference to this vector.
      */
-    setFromSpherical(s: Spherical): Vector3;
+    setFromSpherical(s: Spherical): this;
     /**
      * Sets the vector components from the given spherical coordinates.
      *
@@ -498,14 +525,14 @@ export class Vector3 {
      * @param {number} theta - The theta angle in radians.
      * @return {Vector3} A reference to this vector.
      */
-    setFromSphericalCoords(radius: number, phi: number, theta: number): Vector3;
+    setFromSphericalCoords(radius: number, phi: number, theta: number): this;
     /**
      * Sets the vector components from the given cylindrical coordinates.
      *
      * @param {Cylindrical} c - The cylindrical coordinates.
      * @return {Vector3} A reference to this vector.
      */
-    setFromCylindrical(c: Cylindrical): Vector3;
+    setFromCylindrical(c: Cylindrical): this;
     /**
      * Sets the vector components from the given cylindrical coordinates.
      *
@@ -514,7 +541,7 @@ export class Vector3 {
      * @param {number} y - The y value.
      * @return {Vector3} A reference to this vector.
      */
-    setFromCylindricalCoords(radius: number, theta: number, y: number): Vector3;
+    setFromCylindricalCoords(radius: number, theta: number, y: number): this;
     /**
      * Sets the vector components to the position elements of the
      * given transformation matrix.
@@ -522,7 +549,7 @@ export class Vector3 {
      * @param {Matrix4} m - The 4x4 matrix.
      * @return {Vector3} A reference to this vector.
      */
-    setFromMatrixPosition(m: Matrix4): Vector3;
+    setFromMatrixPosition(m: Matrix4): this;
     /**
      * Sets the vector components to the scale elements of the
      * given transformation matrix.
@@ -530,7 +557,7 @@ export class Vector3 {
      * @param {Matrix4} m - The 4x4 matrix.
      * @return {Vector3} A reference to this vector.
      */
-    setFromMatrixScale(m: Matrix4): Vector3;
+    setFromMatrixScale(m: Matrix4): this;
     /**
      * Sets the vector components from the specified matrix column.
      *
@@ -538,7 +565,7 @@ export class Vector3 {
      * @param {number} index - The column index.
      * @return {Vector3} A reference to this vector.
      */
-    setFromMatrixColumn(m: Matrix4, index: number): Vector3;
+    setFromMatrixColumn(m: Matrix4, index: number): this;
     /**
      * Sets the vector components from the specified matrix column.
      *
@@ -546,14 +573,14 @@ export class Vector3 {
      * @param {number} index - The column index.
      * @return {Vector3} A reference to this vector.
      */
-    setFromMatrix3Column(m: Matrix3, index: number): Vector3;
+    setFromMatrix3Column(m: Matrix3, index: number): this;
     /**
      * Sets the vector components from the given Euler angles.
      *
      * @param {Euler} e - The Euler angles to set.
      * @return {Vector3} A reference to this vector.
      */
-    setFromEuler(e: Euler): Vector3;
+    setFromEuler(e: Euler): this;
     /**
      * Sets the vector components from the RGB components of the
      * given color.
@@ -561,14 +588,14 @@ export class Vector3 {
      * @param {Color} c - The color to set.
      * @return {Vector3} A reference to this vector.
      */
-    setFromColor(c: Color): Vector3;
+    setFromColor(c: RGB): this;
     /**
      * Returns `true` if this vector is equal with the given one.
      *
      * @param {Vector3} v - The vector to test for equality.
      * @return {boolean} Whether this vector is equal with the given one.
      */
-    equals(v: Vector3): boolean;
+    equals(v: Vector3Like): boolean;
     /**
      * Sets this vector's x value to be `array[ offset ]`, y value to be `array[ offset + 1 ]`
      * and z value to be `array[ offset + 2 ]`.
@@ -577,7 +604,7 @@ export class Vector3 {
      * @param {number} [offset=0] - The offset into the array.
      * @return {Vector3} A reference to this vector.
      */
-    fromArray(array: Array<number>, offset?: number): Vector3;
+    fromArray(array: number[] | ArrayLike<number>, offset?: number): this;
     /**
      * Writes the components of this vector to the given array. If no array is provided,
      * the method returns a new instance.
@@ -586,7 +613,25 @@ export class Vector3 {
      * @param {number} [offset=0] - Index of the first element in the array.
      * @return {Array<number>} The vector components.
      */
-    toArray(array?: Array<number>, offset?: number): Array<number>;
+    toArray(array?: number[], offset?: number): number[];
+    /**
+     * Writes the components of this vector to the given array. If no array is provided,
+     * the method returns a new instance.
+     *
+     * @param {Array<number>} [array=[]] - The target array holding the vector components.
+     * @param {number} [offset=0] - Index of the first element in the array.
+     * @return {Array<number>} The vector components.
+     */
+    toArray(array?: Vector3Tuple, offset?: 0): Vector3Tuple;
+    /**
+     * Writes the components of this vector to the given array. If no array is provided,
+     * the method returns a new instance.
+     *
+     * @param {Array<number>} [array=[]] - The target array holding the vector components.
+     * @param {number} [offset=0] - Index of the first element in the array.
+     * @return {Array<number>} The vector components.
+     */
+    toArray(array: ArrayLike<number>, offset?: number): ArrayLike<number>;
     /**
      * Sets the components of this vector from the given buffer attribute.
      *
@@ -594,20 +639,19 @@ export class Vector3 {
      * @param {number} index - The index into the attribute.
      * @return {Vector3} A reference to this vector.
      */
-    fromBufferAttribute(attribute: BufferAttribute, index: number): Vector3;
+    fromBufferAttribute(attribute: BufferAttribute | InterleavedBufferAttribute, index: number): this;
     /**
      * Sets each component of this vector to a pseudo-random value between `0` and
      * `1`, excluding `1`.
      *
      * @return {Vector3} A reference to this vector.
      */
-    random(): Vector3;
+    random(): this;
     /**
      * Sets this vector to a uniformly random point on a unit sphere.
      *
      * @return {Vector3} A reference to this vector.
      */
-    randomDirection(): Vector3;
+    randomDirection(): this;
     [Symbol.iterator](): Generator<number, void, unknown>;
 }
-import { Quaternion } from "./Quaternion.js";

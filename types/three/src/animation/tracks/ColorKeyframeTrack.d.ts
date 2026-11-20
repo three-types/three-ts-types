@@ -1,7 +1,8 @@
+import { InterpolationModes } from "../../constants.js";
+import { KeyframeTrack } from "../KeyframeTrack.js";
+
 /**
  * A track for color keyframe values.
- *
- * @augments KeyframeTrack
  */
 export class ColorKeyframeTrack extends KeyframeTrack {
     /**
@@ -12,11 +13,5 @@ export class ColorKeyframeTrack extends KeyframeTrack {
      * @param {Array<number>} values - A list of keyframe values.
      * @param {(InterpolateLinear|InterpolateDiscrete|InterpolateSmooth)} [interpolation] - The interpolation type.
      */
-    constructor(
-        name: string,
-        times: Array<number>,
-        values: Array<number>,
-        interpolation?: InterpolateLinear | InterpolateDiscrete | InterpolateSmooth,
-    );
+    constructor(name: string, times: ArrayLike<number>, values: ArrayLike<number>, interpolation?: InterpolationModes);
 }
-import { KeyframeTrack } from "../KeyframeTrack.js";

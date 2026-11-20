@@ -1,3 +1,6 @@
+import { Vector2 } from "../../math/Vector2.js";
+import { Curve } from "../core/Curve.js";
+
 /**
  * A curve representing a 2D Cubic Bezier curve.
  *
@@ -20,7 +23,7 @@
  *
  * @augments Curve
  */
-export class CubicBezierCurve extends Curve {
+export class CubicBezierCurve extends Curve<Vector2> {
     /**
      * Constructs a new Cubic Bezier curve.
      *
@@ -33,34 +36,23 @@ export class CubicBezierCurve extends Curve {
     /**
      * This flag can be used for type testing.
      *
-     * @type {boolean}
-     * @readonly
      * @default true
      */
-    readonly isCubicBezierCurve: boolean;
-    type: string;
+    readonly isCubicBezierCurve: true;
     /**
      * The start point.
-     *
-     * @type {Vector2}
      */
     v0: Vector2;
     /**
      * The first control point.
-     *
-     * @type {Vector2}
      */
     v1: Vector2;
     /**
      * The second control point.
-     *
-     * @type {Vector2}
      */
     v2: Vector2;
     /**
      * The end point.
-     *
-     * @type {Vector2}
      */
     v3: Vector2;
     /**
@@ -71,8 +63,5 @@ export class CubicBezierCurve extends Curve {
      * @return {Vector2} The position on the curve.
      */
     getPoint(t: number, optionalTarget?: Vector2): Vector2;
-    copy(source: any): this;
-    fromJSON(json: any): this;
+    copy(source: CubicBezierCurve): this;
 }
-import { Vector2 } from "../../math/Vector2.js";
-import { Curve } from "../core/Curve.js";

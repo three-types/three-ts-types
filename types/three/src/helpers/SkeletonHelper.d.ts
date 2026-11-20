@@ -1,3 +1,8 @@
+import { Object3D } from "../core/Object3D.js";
+import { Color } from "../math/Color.js";
+import { Bone } from "../objects/Bone.js";
+import { LineSegments } from "../objects/LineSegments.js";
+
 /**
  * A helper object to assist with visualizing a {@link Skeleton}.
  *
@@ -5,8 +10,6 @@
  * const helper = new THREE.SkeletonHelper( skinnedMesh );
  * scene.add( helper );
  * ```
- *
- * @augments LineSegments
  */
 export class SkeletonHelper extends LineSegments {
     /**
@@ -19,25 +22,17 @@ export class SkeletonHelper extends LineSegments {
     /**
      * This flag can be used for type testing.
      *
-     * @type {boolean}
-     * @readonly
      * @default true
      */
     readonly isSkeletonHelper: boolean;
     /**
      * The object being visualized.
-     *
-     * @type {Object3D}
      */
     root: Object3D;
     /**
      * The list of bones that the helper visualizes.
-     *
-     * @type {Array<Bone>}
      */
-    bones: Array<Bone>;
-    matrix: any;
-    updateMatrixWorld(force: any): void;
+    bones: Bone[];
     /**
      * Defines the colors of the helper.
      *
@@ -47,5 +42,3 @@ export class SkeletonHelper extends LineSegments {
      */
     setColors(color1: Color, color2: Color): SkeletonHelper;
 }
-import { Color } from "../math/Color.js";
-import { LineSegments } from "../objects/LineSegments.js";

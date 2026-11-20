@@ -12,10 +12,13 @@
  */
 export class Layers {
     /**
+     * Constructs a new layers instance, with membership
+     * initially set to layer `0`.
+     */
+    constructor();
+    /**
      * A bit mask storing which of the 32 layers this layers object is currently
      * a member of.
-     *
-     * @type {number}
      */
     mask: number;
     /**

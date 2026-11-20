@@ -1,3 +1,25 @@
+import { Group, InstancedMesh, MeshStandardNodeMaterial, Node, UniformNode, Vector3 } from "three/webgpu";
+import { TerrainGenerator } from "./TerrainGenerator.js";
+
+export interface ForestGeneratorParameters {
+    seed: number;
+    count: number;
+    detail: number;
+    radius: number;
+    height: number;
+    distortion: number;
+    sink: number;
+    altitudeMin: number;
+    altitudeMax: number;
+    minSlope: number;
+    densityFrequency: number;
+    minScale: number;
+    maxScale: number;
+    from: number;
+    to: number;
+    castShadow: boolean;
+}
+
 /**
  * Carpets a {@link TerrainGenerator} with trees in a single instanced draw call.
  * Each tree is a distorted icosphere with a baked crown gradient. Altitude, slope
@@ -12,55 +34,24 @@
  * ```
  */
 export class ForestGenerator {
-    constructor(parameters?: {});
-    parameters: {
-        seed: number;
-        count: number;
-        detail: number;
-        radius: number;
-        height: number;
-        distortion: number;
-        sink: number;
-        altitudeMin: number;
-        altitudeMax: number;
-        minSlope: number;
-        densityFrequency: number;
-        minScale: number;
-        maxScale: number;
-        from: number;
-        to: number;
-        castShadow: boolean;
-    };
-    from: import("three/tsl").UniformNode;
-    to: import("three/tsl").UniformNode;
-    _cameraPosition: import("three/tsl").UniformNode;
+    constructor(parameters?: Partial<ForestGeneratorParameters>);
+
+    parameters: ForestGeneratorParameters;
+
+    from: UniformNode<"float">;
+    to: UniformNode<"float">;
+
     material: MeshStandardNodeMaterial;
     mesh: InstancedMesh | null;
     group: Group | null;
-    build(terrain: any): Group;
-    setCameraPosition(position: any): void;
+
+    build(terrain: TerrainGenerator): Group;
+    setCameraPosition(position: Vector3): void;
     dispose(): void;
+
+    static defaults: ForestGeneratorParameters;
 }
-export namespace ForestGenerator {
-    namespace defaults {
-        let seed: number;
-        let count: number;
-        let detail: number;
-        let radius: number;
-        let height: number;
-        let distortion: number;
-        let sink: number;
-        let altitudeMin: number;
-        let altitudeMax: number;
-        let minSlope: number;
-        let densityFrequency: number;
-        let minScale: number;
-        let maxScale: number;
-        let from: number;
-        let to: number;
-        let castShadow: boolean;
-    }
-}
+
 /**
  * The single material shared by every tree in a {@link ForestGenerator}. A plain
  * MeshStandardNodeMaterial lit by the scene — only the surface is authored: deep
@@ -75,7 +66,8 @@ export namespace ForestGenerator {
  * @param {Node} to - distance past which no tree is drawn.
  * @return {MeshStandardNodeMaterial}
  */
-export function createForestMaterial(from: Node, to: Node, camPos: any): MeshStandardNodeMaterial;
-import { InstancedMesh } from "three";
-import { Group } from "three";
-import { MeshStandardNodeMaterial } from "three/webgpu";
+export function createForestMaterial(
+    from: Node<"float">,
+    to: Node<"float">,
+    camPos: Node<"vec3">,
+): MeshStandardNodeMaterial;

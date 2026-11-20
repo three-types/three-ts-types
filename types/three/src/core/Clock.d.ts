@@ -16,14 +16,12 @@ export class Clock {
      * If set to `true`, the clock starts automatically when `getDelta()` is called
      * for the first time.
      *
-     * @type {boolean}
      * @default true
      */
     autoStart: boolean;
     /**
      * Holds the time at which the clock's `start()` method was last called.
      *
-     * @type {number}
      * @default 0
      */
     startTime: number;
@@ -31,21 +29,18 @@ export class Clock {
      * Holds the time at which the clock's `start()`, `getElapsedTime()` or
      * `getDelta()` methods were last called.
      *
-     * @type {number}
      * @default 0
      */
     oldTime: number;
     /**
      * Keeps track of the total time that the clock has been running.
      *
-     * @type {number}
      * @default 0
      */
     elapsedTime: number;
     /**
      * Whether the clock is running or not.
      *
-     * @type {boolean}
      * @default false
      */
     running: boolean;

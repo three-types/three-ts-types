@@ -1,4 +1,11 @@
-export default ClippingContext;
+import { Camera } from "../../cameras/Camera.js";
+import { Matrix3 } from "../../math/Matrix3.js";
+import { Matrix4 } from "../../math/Matrix4.js";
+import { Plane } from "../../math/Plane.js";
+import { Vector4 } from "../../math/Vector4.js";
+import { ClippingGroup } from "../../objects/ClippingGroup.js";
+import { Scene } from "../../scenes/Scene.js";
+
 /**
  * Represents the state that is used to perform clipping via clipping planes.
  * There is a default clipping context for each render context. When the
@@ -71,13 +78,13 @@ declare class ClippingContext {
      *
      * @type {Array<Vector4>}
      */
-    intersectionPlanes: Array<Vector4>;
+    intersectionPlanes: Vector4[];
     /**
      * The intersection planes.
      *
      * @type {Array<Vector4>}
      */
-    unionPlanes: Array<Vector4>;
+    unionPlanes: Vector4[];
     /**
      * The version of the clipping context's parent context.
      *
@@ -93,7 +100,7 @@ declare class ClippingContext {
      * @param {Array<Vector4>} destination - The destination.
      * @param {number} offset - The offset.
      */
-    projectPlanes(source: Array<Plane>, destination: Array<Vector4>, offset: number): void;
+    projectPlanes(source: Plane[], destination: Vector4[], offset: number): void;
     /**
      * Updates the root clipping context of a scene.
      *
@@ -123,7 +130,5 @@ declare class ClippingContext {
      */
     get unionClippingCount(): number;
 }
-import { Matrix3 } from "../../math/Matrix3.js";
-import { Matrix4 } from "../../math/Matrix4.js";
-import { Plane } from "../../math/Plane.js";
-import { Vector4 } from "../../math/Vector4.js";
+
+export default ClippingContext;

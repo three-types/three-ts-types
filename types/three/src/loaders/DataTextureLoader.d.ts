@@ -1,11 +1,11 @@
 /**
  * ~TexData
  */
-export type DataTextureLoader = {
+export interface DataTextureLoaderTexData {
     /**
      * - An object holding width, height and the texture data.
      */
-    image?: Object | undefined;
+    image?: DataTextureImageData | undefined;
     /**
      * - The width of the base mip.
      */
@@ -17,15 +17,15 @@ export type DataTextureLoader = {
     /**
      * - The texture data.
      */
-    data?: TypedArray;
+    data?: TypedArray | undefined;
     /**
      * - The texture format.
      */
-    format?: number | undefined;
+    format?: PixelFormat | undefined;
     /**
      * - The texture type.
      */
-    type?: number | undefined;
+    type?: TextureDataType | undefined;
     /**
      * - If set to `true`, the texture is flipped along the vertical axis when uploaded to the GPU.
      */
@@ -33,11 +33,11 @@ export type DataTextureLoader = {
     /**
      * - The wrapS value.
      */
-    wrapS?: number | undefined;
+    wrapS?: Wrapping | undefined;
     /**
      * - The wrapT value.
      */
-    wrapT?: number | undefined;
+    wrapT?: Wrapping | undefined;
     /**
      * - The anisotropy value.
      */
@@ -49,20 +49,21 @@ export type DataTextureLoader = {
     /**
      * - The color space.
      */
-    colorSpace?: string | undefined;
+    colorSpace?: ColorSpace | undefined;
     /**
      * - The mag filter.
      */
-    magFilter?: number | undefined;
+    magFilter?: MagnificationTextureFilter | undefined;
     /**
      * - The min filter.
      */
-    minFilter?: number | undefined;
+    minFilter?: MinificationTextureFilter | undefined;
     /**
      * - The mipmaps.
      */
-    mipmaps?: Object[] | undefined;
-};
+    mipmaps?: CompressedTextureMipmap[] | CubeTexture[] | HTMLCanvasElement[] | undefined;
+    mipmapCount?: number | undefined;
+}
 /**
  * Abstract base class for loading binary texture formats RGBE, EXR or TGA.
  * Textures are internally loaded via {@link FileLoader}.
@@ -73,7 +74,7 @@ export type DataTextureLoader = {
  * @abstract
  * @augments Loader
  */
-export class DataTextureLoader extends Loader {
+export abstract class DataTextureLoader extends Loader<DataTexture> {
     /**
      * Starts loading from the given URL and passes the loaded data texture
      * to the `onLoad()` callback. The method also returns a new texture object which can
@@ -88,10 +89,11 @@ export class DataTextureLoader extends Loader {
      */
     load(
         url: string,
-        onLoad: (arg0: DataTexture) => any,
-        onProgress: onProgressCallback,
-        onError: onErrorCallback,
+        onLoad?: (data: DataTexture, texData: DataTextureLoaderTexData) => void,
+        onProgress?: OnProgressCallback,
+        onError?: OnErrorCallback,
     ): DataTexture;
+    abstract parse(buffer: ArrayBuffer): DataTextureLoaderTexData;
     /**
      * Parses the given buffer and returns a configured data texture. Use this method
      * for parsing texture data that is already in memory (e.g. drag and drop or data
@@ -101,14 +103,17 @@ export class DataTextureLoader extends Loader {
      * @return {DataTexture} The data texture.
      */
     createDataTexture(buffer: ArrayBuffer): DataTexture;
-    /**
-     * Applies the given parsed texture data to the given data texture.
-     *
-     * @private
-     * @param {DataTexture} texture - The data texture.
-     * @param {DataTextureLoader~TexData} texData - The parsed texture data.
-     */
-    private _applyTexData;
 }
-import { DataTexture } from "../textures/DataTexture.js";
-import { Loader } from "./Loader.js";
+import {
+    ColorSpace,
+    MagnificationTextureFilter,
+    MinificationTextureFilter,
+    PixelFormat,
+    TextureDataType,
+    Wrapping,
+} from "../constants.js";
+import { TypedArray } from "../core/BufferAttribute.js";
+import { CompressedTextureMipmap } from "../textures/CompressedTexture.js";
+import { CubeTexture } from "../textures/CubeTexture.js";
+import { DataTexture, DataTextureImageData } from "../textures/DataTexture.js";
+import { Loader, OnErrorCallback, OnProgressCallback } from "./Loader.js";

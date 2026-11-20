@@ -1,4 +1,6 @@
-export default OcclusionAwareIrradianceNode;
+import Node from "../core/Node.js";
+import LightingNode from "./LightingNode.js";
+
 /**
  * A generic class that can be used by nodes which contribute irradiance
  * that already accounts for ambient occlusion, e.g. global illumination.
@@ -13,13 +15,13 @@ declare class OcclusionAwareIrradianceNode extends LightingNode {
      *
      * @param {Node<vec3>} node - A node contributing irradiance that accounts for ambient occlusion.
      */
-    constructor(node: Node<vec3>);
+    constructor(node: Node<"vec3">);
     /**
      * A node contributing irradiance that accounts for ambient occlusion.
      *
      * @type {Node<vec3>}
      */
-    node: Node<vec3>;
-    setup(builder: any): void;
+    node: Node<"vec3">;
 }
-import LightingNode from "./LightingNode.js";
+
+export default OcclusionAwareIrradianceNode;

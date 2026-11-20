@@ -1,3 +1,13 @@
+export interface TorusGeometryJSON {
+    radius: number;
+    tube: number;
+    radialSegments: number;
+    tubularSegments: number;
+    arc: number;
+    thetaStart: number;
+    thetaLength: number;
+}
+
 /**
  * A geometry class for representing an torus.
  *
@@ -19,7 +29,7 @@ export class TorusGeometry extends BufferGeometry {
      * @param {Object} data - A JSON object representing the serialized geometry.
      * @return {TorusGeometry} A new instance.
      */
-    static fromJSON(data: Object): TorusGeometry;
+    static fromJSON(data: TorusGeometryJSON): TorusGeometry;
     /**
      * Constructs a new torus geometry.
      *
@@ -47,7 +57,15 @@ export class TorusGeometry extends BufferGeometry {
      *
      * @type {Object}
      */
-    parameters: Object;
-    copy(source: any): this;
+    readonly parameters: {
+        readonly radius: number;
+        readonly tube: number;
+        readonly radialSegments: number;
+        readonly tubularSegments: number;
+        readonly arc: number;
+        readonly thetaStart: number;
+        readonly thetaLength: number;
+    };
+    copy(source: TorusGeometry): this;
 }
 import { BufferGeometry } from "../core/BufferGeometry.js";

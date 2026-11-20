@@ -1,3 +1,26 @@
+import { BindMode } from "../constants.js";
+import { BufferGeometry } from "../core/BufferGeometry.js";
+import { JSONMeta, Object3DEventMap } from "../core/Object3D.js";
+import { Intersection, Raycaster } from "../core/Raycaster.js";
+import { Material } from "../materials/Material.js";
+import { Box3 } from "../math/Box3.js";
+import { Matrix4, Matrix4Tuple } from "../math/Matrix4.js";
+import { Sphere } from "../math/Sphere.js";
+import { Vector3 } from "../math/Vector3.js";
+import { Vector4 } from "../math/Vector4.js";
+import { Mesh, MeshJSON, MeshJSONObject } from "./Mesh.js";
+import { Skeleton } from "./Skeleton.js";
+
+export interface SkinnedMeshJSONObject extends MeshJSONObject {
+    bindMode: BindMode;
+    bindMatrix: Matrix4Tuple;
+    skeleton?: string;
+}
+
+export interface SkinnedMeshJSON extends MeshJSON {
+    object: SkinnedMeshJSONObject;
+}
+
 /**
  * A mesh that has a {@link Skeleton} that can then be used to animate the
  * vertices of the geometry with skinning/skeleton animation.
@@ -12,14 +35,18 @@
  * @augments Mesh
  * @demo scenes/bones-browser.html
  */
-export class SkinnedMesh extends Mesh {
+export class SkinnedMesh<
+    TGeometry extends BufferGeometry = BufferGeometry,
+    TMaterial extends Material | Material[] = Material | Material[],
+    TEventMap extends Object3DEventMap = Object3DEventMap,
+> extends Mesh<TGeometry, TMaterial, TEventMap> {
     /**
      * Constructs a new skinned mesh.
      *
      * @param {BufferGeometry} [geometry] - The mesh geometry.
      * @param {Material|Array<Material>} [material] - The mesh material.
      */
-    constructor(geometry?: BufferGeometry, material?: Material | Array<Material>);
+    constructor(geometry?: TGeometry, material?: TMaterial);
     /**
      * This flag can be used for type testing.
      *
@@ -27,7 +54,7 @@ export class SkinnedMesh extends Mesh {
      * @readonly
      * @default true
      */
-    readonly isSkinnedMesh: boolean;
+    readonly isSkinnedMesh: true;
     /**
      * `AttachedBindMode` means the skinned mesh shares the same world space as the skeleton.
      * This is not true when using `DetachedBindMode` which is useful when sharing a skeleton
@@ -36,7 +63,7 @@ export class SkinnedMesh extends Mesh {
      * @type {(AttachedBindMode|DetachedBindMode)}
      * @default AttachedBindMode
      */
-    bindMode: string | string;
+    bindMode: BindMode;
     /**
      * The base matrix that is used for the bound bone transforms.
      *
@@ -77,10 +104,10 @@ export class SkinnedMesh extends Mesh {
      * per frame in order to reflect the current animation state.
      */
     computeBoundingSphere(): void;
-    copy(source: any, recursive: any): this;
-    skeleton: any;
-    raycast(raycaster: any, intersects: any): void;
-    getVertexPosition(index: any, target: any): any;
+    copy(source: SkinnedMesh, recursive?: boolean): this;
+    skeleton: Skeleton;
+    raycast(raycaster: Raycaster, intersects: Intersection[]): void;
+    getVertexPosition(index: number, target: Vector3): Vector3;
     /**
      * Binds the given skeleton to the skinned mesh.
      *
@@ -98,7 +125,7 @@ export class SkinnedMesh extends Mesh {
      * in the skinned mesh's geometry.
      */
     normalizeSkinWeights(): void;
-    updateMatrixWorld(force: any): void;
+    updateMatrixWorld(force?: boolean): void;
     /**
      * Applies the bone transform associated with the given index to the given
      * vector. Can be used to transform positions or direction vectors by providing
@@ -108,11 +135,8 @@ export class SkinnedMesh extends Mesh {
      * @param {Vector3|Vector4} target - The target object that is used to store the method's result.
      * @return {Vector3|Vector4} The updated vertex attribute data.
      */
+    applyBoneTransform(index: number, target: Vector3): Vector3;
+    applyBoneTransform(index: number, target: Vector4): Vector4;
     applyBoneTransform(index: number, target: Vector3 | Vector4): Vector3 | Vector4;
+    toJSON(meta?: JSONMeta): SkinnedMeshJSON;
 }
-import { Box3 } from "../math/Box3.js";
-import { Matrix4 } from "../math/Matrix4.js";
-import { Sphere } from "../math/Sphere.js";
-import { Vector3 } from "../math/Vector3.js";
-import { Vector4 } from "../math/Vector4.js";
-import { Mesh } from "./Mesh.js";

@@ -13,6 +13,14 @@
  */
 export class ConeGeometry extends CylinderGeometry {
     /**
+     * Factory method for creating an instance of this class from the given
+     * JSON object.
+     *
+     * @param {Object} data - A JSON object representing the serialized geometry.
+     * @return {ConeGeometry} A new instance.
+     */
+    static fromJSON(data: {}): ConeGeometry;
+    /**
      * Constructs a new cone geometry.
      *
      * @param {number} [radius=1] - Radius of the cone base.
@@ -33,5 +41,23 @@ export class ConeGeometry extends CylinderGeometry {
         thetaStart?: number,
         thetaLength?: number,
     );
+    /**
+     * Holds the constructor parameters that have been
+     * used to generate the geometry. Any modification
+     * after instantiation does not change the geometry.
+     *
+     * @type {Object}
+     */
+    override readonly parameters: {
+        readonly radius: number;
+        readonly radiusTop: number;
+        readonly radiusBottom: number;
+        readonly height: number;
+        readonly radialSegments: number;
+        readonly heightSegments: number;
+        readonly openEnded: boolean;
+        readonly thetaStart: number;
+        readonly thetaLength: number;
+    };
 }
 import { CylinderGeometry } from "./CylinderGeometry.js";

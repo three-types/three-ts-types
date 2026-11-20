@@ -1,3 +1,9 @@
+import { Object3D } from "../core/Object3D.js";
+import { DirectionalLight } from "../lights/DirectionalLight.js";
+import { ColorRepresentation } from "../math/Color.js";
+import { Matrix4 } from "../math/Matrix4.js";
+import { Line } from "../objects/Line.js";
+
 /**
  * Helper object to assist with visualizing a {@link DirectionalLight}'s
  * effect on the scene. This consists of a plane and a line representing the
@@ -13,8 +19,6 @@
  * const helper = new THREE.DirectionalLightHelper( light, 5 );
  * scene.add( helper );
  * ```
- *
- * @augments Object3D
  */
 export class DirectionalLightHelper extends Object3D {
     /**
@@ -25,32 +29,22 @@ export class DirectionalLightHelper extends Object3D {
      * @param {number|Color|string} [color] - The helper's color. If not set, the helper will take
      * the color of the light.
      */
-    constructor(light: DirectionalLight, size?: number, color?: number | Color | string);
+    constructor(light: DirectionalLight, size?: number, color?: ColorRepresentation);
     /**
      * The light being visualized.
-     *
-     * @type {DirectionalLight}
      */
     light: DirectionalLight;
-    matrix: any;
     /**
      * The color parameter passed in the constructor.
      * If not set, the helper will take the color of the light.
-     *
-     * @type {number|Color|string}
      */
-    color: number | Color | string;
-    type: string;
+    color: ColorRepresentation | undefined;
     /**
      * Contains the line showing the location of the directional light.
-     *
-     * @type {Line}
      */
     lightPlane: Line;
     /**
      * Represents the target line of the directional light.
-     *
-     * @type {Line}
      */
     targetLine: Line;
     /**
@@ -59,5 +53,3 @@ export class DirectionalLightHelper extends Object3D {
      */
     update(): void;
 }
-import { Object3D } from "../core/Object3D.js";
-import { Line } from "../objects/Line.js";

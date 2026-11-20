@@ -23,7 +23,7 @@ export class LatheGeometry extends BufferGeometry {
      * @param {Object} data - A JSON object representing the serialized geometry.
      * @return {LatheGeometry} A new instance.
      */
-    static fromJSON(data: Object): LatheGeometry;
+    static fromJSON(data: {}): LatheGeometry;
     /**
      * Constructs a new lathe geometry.
      *
@@ -34,7 +34,7 @@ export class LatheGeometry extends BufferGeometry {
      * @param {number} [phiLength=Math.PI*2] - The radian (0 to 2PI) range of the lathed section 2PI is a
      * closed lathe, less than 2PI is a portion.
      */
-    constructor(points?: Array<Vector2 | Vector3>, segments?: number, phiStart?: number, phiLength?: number);
+    constructor(points?: Vector2[], segments?: number, phiStart?: number, phiLength?: number);
     /**
      * Holds the constructor parameters that have been
      * used to generate the geometry. Any modification
@@ -42,9 +42,13 @@ export class LatheGeometry extends BufferGeometry {
      *
      * @type {Object}
      */
-    parameters: Object;
-    copy(source: any): this;
+    readonly parameters: {
+        readonly points: Vector2[];
+        readonly segments: number;
+        readonly phiStart: number;
+        readonly phiLength: number;
+    };
+    copy(source: LatheGeometry): this;
 }
 import { BufferGeometry } from "../core/BufferGeometry.js";
 import { Vector2 } from "../math/Vector2.js";
-import { Vector3 } from "../math/Vector3.js";

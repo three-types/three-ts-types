@@ -1,42 +1,13 @@
-/**
- * This material is defined by a MatCap (or Lit Sphere) texture, which encodes the
- * material color and shading.
- *
- * `MeshMatcapMaterial` does not respond to lights since the matcap image file encodes
- * baked lighting. It will cast a shadow onto an object that receives shadows
- * (and shadow clipping works), but it will not self-shadow or receive
- * shadows.
- *
- * @augments Material
- * @demo scenes/material-browser.html#MeshMatcapMaterial
- */
-export class MeshMatcapMaterial extends Material {
-    /**
-     * Constructs a new mesh matcap material.
-     *
-     * @param {Object} [parameters] - An object with one or more properties
-     * defining the material's appearance. Any property of the material
-     * (including any property from inherited materials) can be passed
-     * in here. Color values can be passed any type of value accepted
-     * by {@link Color#set}.
-     */
-    constructor(parameters?: Object);
-    /**
-     * This flag can be used for type testing.
-     *
-     * @type {boolean}
-     * @readonly
-     * @default true
-     */
-    readonly isMeshMatcapMaterial: boolean;
-    defines: {
-        MATCAP: string;
-    };
-    type: string;
+import { NormalMapTypes } from "../constants.js";
+import { Color } from "../math/Color.js";
+import { Vector2 } from "../math/Vector2.js";
+import { Texture } from "../textures/Texture.js";
+import { MapColorPropertiesToColorRepresentations, Material, MaterialProperties } from "./Material.js";
+
+export interface MeshMatcapMaterialProperties extends MaterialProperties {
     /**
      * Color of the material.
      *
-     * @type {Color}
      * @default (1,1,1)
      */
     color: Color;
@@ -82,7 +53,6 @@ export class MeshMatcapMaterial extends Material {
     /**
      * How much the bump map affects the material. Typical range is `[0,1]`.
      *
-     * @type {number}
      * @default 1
      */
     bumpScale: number;
@@ -104,15 +74,13 @@ export class MeshMatcapMaterial extends Material {
     /**
      * The type of normal map.
      *
-     * @type {(TangentSpaceNormalMap|ObjectSpaceNormalMap)}
      * @default TangentSpaceNormalMap
      */
-    normalMapType: number | ObjectSpaceNormalMap;
+    normalMapType: NormalMapTypes;
     /**
      * How much the normal map affects the material. Typical value range is `[0,1]`.
      * Only affects tangent space normal maps.
      *
-     * @type {Vector2}
      * @default (1,1)
      */
     normalScale: Vector2;
@@ -138,7 +106,6 @@ export class MeshMatcapMaterial extends Material {
      * displacement, and white is maximum displacement). Without a displacement
      * map set, this value is not applied.
      *
-     * @type {number}
      * @default 1
      */
     displacementScale: number;
@@ -147,7 +114,6 @@ export class MeshMatcapMaterial extends Material {
      * The bias is added to the scaled sample of the displacement map.
      * Without a displacement map set, this value is not applied.
      *
-     * @type {number}
      * @default 0
      */
     displacementBias: number;
@@ -171,7 +137,6 @@ export class MeshMatcapMaterial extends Material {
     /**
      * Renders the geometry as a wireframe.
      *
-     * @type {boolean}
      * @default false
      */
     wireframe: boolean;
@@ -180,26 +145,56 @@ export class MeshMatcapMaterial extends Material {
      *
      * Can only be used with {@link SVGRenderer}.
      *
-     * @type {number}
      * @default 1
      */
     wireframeLinewidth: number;
     /**
      * Whether the material is rendered with flat shading or not.
      *
-     * @type {boolean}
      * @default false
      */
     flatShading: boolean;
     /**
      * Whether the material is affected by fog or not.
      *
-     * @type {boolean}
      * @default true
      */
     fog: boolean;
-    copy(source: any): this;
 }
-import { Color } from "../math/Color.js";
-import { Vector2 } from "../math/Vector2.js";
-import { Material } from "./Material.js";
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface MeshMatcapMaterialParameters
+    extends Partial<MapColorPropertiesToColorRepresentations<MeshMatcapMaterialProperties>>
+{}
+
+/**
+ * This material is defined by a MatCap (or Lit Sphere) texture, which encodes the
+ * material color and shading.
+ *
+ * `MeshMatcapMaterial` does not respond to lights since the matcap image file encodes
+ * baked lighting. It will cast a shadow onto an object that receives shadows
+ * (and shadow clipping works), but it will not self-shadow or receive
+ * shadows.
+ */
+export class MeshMatcapMaterial extends Material {
+    /**
+     * Constructs a new mesh matcap material.
+     *
+     * @param {Object} [parameters] - An object with one or more properties
+     * defining the material's appearance. Any property of the material
+     * (including any property from inherited materials) can be passed
+     * in here. Color values can be passed any type of value accepted
+     * by {@link Color#set}.
+     */
+    constructor(parameters?: MeshMatcapMaterialParameters);
+    /**
+     * This flag can be used for type testing.
+     *
+     * @default true
+     */
+    readonly isMeshMatcapMaterial: boolean;
+    setValues(values?: MeshMatcapMaterialParameters): void;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface MeshMatcapMaterial extends MeshMatcapMaterialProperties {}

@@ -14,5 +14,5 @@ export class Earcut {
      * @return {Array<number>} An array representing the triangulated faces. Each face is defined by three consecutive numbers
      * representing vertex indices.
      */
-    static triangulate(data: Array<number>, holeIndices: Array<number>, dim?: number): Array<number>;
+    static triangulate(data: Array<number>, holeIndices?: Array<number>, dim?: number): Array<number>;
 }

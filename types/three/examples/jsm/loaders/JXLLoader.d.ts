@@ -11,7 +11,7 @@
  * @augments Loader
  * @three_import import { JXLLoader } from 'three/addons/loaders/JXLLoader.js';
  */
-export class JXLLoader extends Loader {
+export class JXLLoader extends Loader<DataTexture> {
     /**
      * Loads a native HDR image into a half-float data texture.
      * @param {string} url - Image URL.
@@ -20,30 +20,25 @@ export class JXLLoader extends Loader {
      * @param {Function} onError - Error callback.
      * @return {DataTexture} Placeholder texture, populated after decoding.
      */
-    load(url: string, onLoad: (arg0: DataTexture) => any, onProgress: Function, onError: Function): DataTexture;
+    load(
+        url: string,
+        onLoad?: (data: DataTexture) => void,
+        onProgress?: (event: ProgressEvent) => void,
+        onError?: (err: unknown) => void,
+    ): DataTexture;
     /**
      * Decodes image bytes using the browser, preserving maximum HDR headroom.
      * @param {ArrayBuffer} buffer - JPEG XL bytes.
      * @param {function(DataTexture)} onLoad - Completion callback.
      * @param {Function} onError - Error callback.
      */
-    parse(buffer: ArrayBuffer, onLoad: (arg0: DataTexture) => any, onError: Function): void;
+    parse(buffer: ArrayBuffer, onLoad: (data: DataTexture) => void, onError?: (err: unknown) => void): void;
     /**
      * Async version of {@link JXLLoader#parse}.
      * @param {ArrayBuffer} buffer - JPEG XL bytes.
      * @return {Promise<DataTexture>} Half-float texture in linear sRGB.
      */
     parseAsync(buffer: ArrayBuffer): Promise<DataTexture>;
-    _applyData(texture: any, { data, width, height }: {
-        data: any;
-        width: any;
-        height: any;
-    }): void;
-    _decode(buffer: any): Promise<{
-        data: Uint16Array<any>;
-        width: number;
-        height: number;
-    }>;
 }
 import { Loader } from "three";
 import { DataTexture } from "three";

@@ -1,3 +1,6 @@
+import { ColorRepresentation } from "../math/Color.js";
+import { LineSegments } from "../objects/LineSegments.js";
+
 /**
  * An axis object to visualize the 3 axes in a simple way.
  * The X axis is red. The Y axis is green. The Z axis is blue.
@@ -6,8 +9,6 @@
  * const axesHelper = new THREE.AxesHelper( 5 );
  * scene.add( axesHelper );
  * ```
- *
- * @augments LineSegments
  */
 export class AxesHelper extends LineSegments {
     /**
@@ -25,10 +26,8 @@ export class AxesHelper extends LineSegments {
      * @return {AxesHelper} A reference to this axes helper.
      */
     setColors(
-        xAxisColor: number | Color | string,
-        yAxisColor: number | Color | string,
-        zAxisColor: number | Color | string,
+        xAxisColor: ColorRepresentation,
+        yAxisColor: ColorRepresentation,
+        zAxisColor: ColorRepresentation,
     ): AxesHelper;
 }
-import { Color } from "../math/Color.js";
-import { LineSegments } from "../objects/LineSegments.js";

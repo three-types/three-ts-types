@@ -1,44 +1,14 @@
-/**
- * A material for non-shiny surfaces, without specular highlights.
- *
- * The material uses a non-physically based [Lambertian](https://en.wikipedia.org/wiki/Lambertian_reflectance)
- * model for calculating reflectance. This can simulate some surfaces (such
- * as untreated wood or stone) well, but cannot simulate shiny surfaces with
- * specular highlights (such as varnished wood). `MeshLambertMaterial` uses per-fragment
- * shading.
- *
- * Due to the simplicity of the reflectance and illumination models,
- * performance will be greater when using this material over the
- * {@link MeshPhongMaterial}, {@link MeshStandardMaterial} or
- * {@link MeshPhysicalMaterial}, at the cost of some graphical accuracy.
- *
- * @augments Material
- * @demo scenes/material-browser.html#MeshLambertMaterial
- */
-export class MeshLambertMaterial extends Material {
-    /**
-     * Constructs a new mesh lambert material.
-     *
-     * @param {Object} [parameters] - An object with one or more properties
-     * defining the material's appearance. Any property of the material
-     * (including any property from inherited materials) can be passed
-     * in here. Color values can be passed any type of value accepted
-     * by {@link Color#set}.
-     */
-    constructor(parameters?: Object);
-    /**
-     * This flag can be used for type testing.
-     *
-     * @type {boolean}
-     * @readonly
-     * @default true
-     */
-    readonly isMeshLambertMaterial: boolean;
-    type: string;
+import { Combine, NormalMapTypes } from "../constants.js";
+import { Color } from "../math/Color.js";
+import { Euler } from "../math/Euler.js";
+import { Vector2 } from "../math/Vector2.js";
+import { Texture } from "../textures/Texture.js";
+import { MapColorPropertiesToColorRepresentations, Material, MaterialProperties } from "./Material.js";
+
+export interface MeshLambertMaterialProperties extends MaterialProperties {
     /**
      * Color of the material.
      *
-     * @type {Color}
      * @default (1,1,1)
      */
     color: Color;
@@ -71,7 +41,6 @@ export class MeshLambertMaterial extends Material {
     /**
      * Intensity of the baked light.
      *
-     * @type {number}
      * @default 1
      */
     lightMapIntensity: number;
@@ -92,7 +61,6 @@ export class MeshLambertMaterial extends Material {
      * Intensity of the ambient occlusion effect. Range is `[0,1]`, where `0`
      * disables ambient occlusion and `1` applies the AO map at full strength.
      *
-     * @type {number}
      * @default 1
      */
     aoMapIntensity: number;
@@ -100,14 +68,12 @@ export class MeshLambertMaterial extends Material {
      * Emissive (light) color of the material, essentially a solid color
      * unaffected by other lighting.
      *
-     * @type {Color}
      * @default (0,0,0)
      */
     emissive: Color;
     /**
      * Intensity of the emissive light. Modulates the emissive color.
      *
-     * @type {number}
      * @default 1
      */
     emissiveIntensity: number;
@@ -140,7 +106,6 @@ export class MeshLambertMaterial extends Material {
     /**
      * How much the bump map affects the material. Typical range is `[0,1]`.
      *
-     * @type {number}
      * @default 1
      */
     bumpScale: number;
@@ -162,15 +127,13 @@ export class MeshLambertMaterial extends Material {
     /**
      * The type of normal map.
      *
-     * @type {(TangentSpaceNormalMap|ObjectSpaceNormalMap)}
      * @default TangentSpaceNormalMap
      */
-    normalMapType: number | ObjectSpaceNormalMap;
+    normalMapType: NormalMapTypes;
     /**
      * How much the normal map affects the material. Typical value range is `[0,1]`.
      * Only affects tangent space normal maps.
      *
-     * @type {Vector2}
      * @default (1,1)
      */
     normalScale: Vector2;
@@ -196,7 +159,6 @@ export class MeshLambertMaterial extends Material {
      * displacement, and white is maximum displacement). Without a displacement
      * map set, this value is not applied.
      *
-     * @type {number}
      * @default 1
      */
     displacementScale: number;
@@ -205,7 +167,6 @@ export class MeshLambertMaterial extends Material {
      * The bias is added to the scaled sample of the displacement map.
      * Without a displacement map set, this value is not applied.
      *
-     * @type {number}
      * @default 0
      */
     displacementBias: number;
@@ -252,7 +213,6 @@ export class MeshLambertMaterial extends Material {
     /**
      * The rotation of the environment map in radians.
      *
-     * @type {Euler}
      * @default (0,0,0)
      */
     envMapRotation: Euler;
@@ -262,22 +222,19 @@ export class MeshLambertMaterial extends Material {
      * When set to `MixOperation`, the {@link MeshBasicMaterial#reflectivity} is used to
      * blend between the two colors.
      *
-     * @type {(MultiplyOperation|MixOperation|AddOperation)}
      * @default MultiplyOperation
      */
-    combine: number | MixOperation | AddOperation;
+    combine: Combine;
     /**
      * How much the environment map affects the surface.
      * The valid range is between `0` (no reflections) and `1` (full reflections).
      *
-     * @type {number}
      * @default 1
      */
     reflectivity: number;
     /**
      * Scales the effect of the environment map by multiplying its color.
      *
-     * @type {number}
      * @default 1
      */
     envMapIntensity: number;
@@ -287,14 +244,12 @@ export class MeshLambertMaterial extends Material {
      * modes {@link CubeRefractionMapping} and {@link EquirectangularRefractionMapping}.
      * The refraction ratio should not exceed `1`.
      *
-     * @type {number}
      * @default 0.98
      */
     refractionRatio: number;
     /**
      * Renders the geometry as a wireframe.
      *
-     * @type {boolean}
      * @default false
      */
     wireframe: boolean;
@@ -303,7 +258,6 @@ export class MeshLambertMaterial extends Material {
      *
      * Can only be used with {@link SVGRenderer}.
      *
-     * @type {number}
      * @default 1
      */
     wireframeLinewidth: number;
@@ -312,7 +266,6 @@ export class MeshLambertMaterial extends Material {
      *
      * Can only be used with {@link SVGRenderer}.
      *
-     * @type {('round'|'bevel'|'miter')}
      * @default 'round'
      */
     wireframeLinecap: "round" | "bevel" | "miter";
@@ -321,27 +274,61 @@ export class MeshLambertMaterial extends Material {
      *
      * Can only be used with {@link SVGRenderer}.
      *
-     * @type {('round'|'bevel'|'miter')}
      * @default 'round'
      */
     wireframeLinejoin: "round" | "bevel" | "miter";
     /**
      * Whether the material is rendered with flat shading or not.
      *
-     * @type {boolean}
      * @default false
      */
     flatShading: boolean;
     /**
      * Whether the material is affected by fog or not.
      *
-     * @type {boolean}
      * @default true
      */
     fog: boolean;
-    copy(source: any): this;
 }
-import { Color } from "../math/Color.js";
-import { Euler } from "../math/Euler.js";
-import { Vector2 } from "../math/Vector2.js";
-import { Material } from "./Material.js";
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface MeshLambertMaterialParameters
+    extends Partial<MapColorPropertiesToColorRepresentations<MeshLambertMaterialProperties>>
+{}
+
+/**
+ * A material for non-shiny surfaces, without specular highlights.
+ *
+ * The material uses a non-physically based [Lambertian](https://en.wikipedia.org/wiki/Lambertian_reflectance)
+ * model for calculating reflectance. This can simulate some surfaces (such
+ * as untreated wood or stone) well, but cannot simulate shiny surfaces with
+ * specular highlights (such as varnished wood). `MeshLambertMaterial` uses per-fragment
+ * shading.
+ *
+ * Due to the simplicity of the reflectance and illumination models,
+ * performance will be greater when using this material over the
+ * {@link MeshPhongMaterial}, {@link MeshStandardMaterial} or
+ * {@link MeshPhysicalMaterial}, at the cost of some graphical accuracy.
+ */
+export class MeshLambertMaterial extends Material {
+    /**
+     * Constructs a new mesh lambert material.
+     *
+     * @param {Object} [parameters] - An object with one or more properties
+     * defining the material's appearance. Any property of the material
+     * (including any property from inherited materials) can be passed
+     * in here. Color values can be passed any type of value accepted
+     * by {@link Color#set}.
+     */
+    constructor(parameters?: MeshLambertMaterialParameters);
+    /**
+     * This flag can be used for type testing.
+     *
+     * @default true
+     */
+    readonly isMeshLambertMaterial: boolean;
+    setValues(values?: MeshLambertMaterialParameters): void;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface MeshLambertMaterial extends MeshLambertMaterialProperties {}

@@ -1,88 +1,71 @@
+import { Usage } from "../constants.js";
+import { EventDispatcher } from "./EventDispatcher.js";
+import { Uniform } from "./Uniform.js";
+
+export interface UniformsGroupEventMap {
+    dispose: {};
+}
+
 /**
  * A class for managing multiple uniforms in a single group. The renderer will process
  * such a definition as a single UBO.
  *
  * Since this class can only be used in context of {@link ShaderMaterial}, it is only supported
  * in {@link WebGLRenderer}.
- *
- * @augments EventDispatcher
  */
-export class UniformsGroup extends EventDispatcher {
+export class UniformsGroup<TEventMap extends UniformsGroupEventMap = UniformsGroupEventMap>
+    extends EventDispatcher<TEventMap>
+{
+    constructor();
     /**
      * This flag can be used for type testing.
      *
-     * @type {boolean}
-     * @readonly
      * @default true
      */
-    readonly isUniformsGroup: boolean;
+    readonly isUniformsGroup: true;
+    id: number;
     /**
      * The name of the uniforms group.
-     *
-     * @type {string}
      */
     name: string;
     /**
      * The buffer usage.
      *
-     * @type {(StaticDrawUsage|DynamicDrawUsage|StreamDrawUsage|StaticReadUsage|DynamicReadUsage|StreamReadUsage|StaticCopyUsage|DynamicCopyUsage|StreamCopyUsage)}
      * @default StaticDrawUsage
      */
-    usage:
-        | number
-        | DynamicDrawUsage
-        | StreamDrawUsage
-        | StaticReadUsage
-        | DynamicReadUsage
-        | StreamReadUsage
-        | StaticCopyUsage
-        | DynamicCopyUsage
-        | StreamCopyUsage;
+    usage: Usage;
     /**
      * An array holding the uniforms.
-     *
-     * @type {Array<Uniform>}
      */
-    uniforms: Array<Uniform>;
+    uniforms: Array<Uniform | Uniform[]>;
     /**
      * Adds the given uniform to this uniforms group.
      *
      * @param {Uniform} uniform - The uniform to add.
      * @return {UniformsGroup} A reference to this uniforms group.
      */
-    add(uniform: Uniform): UniformsGroup;
+    add(uniform: Uniform | Uniform[]): this;
     /**
      * Removes the given uniform from this uniforms group.
      *
      * @param {Uniform} uniform - The uniform to remove.
      * @return {UniformsGroup} A reference to this uniforms group.
      */
-    remove(uniform: Uniform): UniformsGroup;
+    remove(uniform: Uniform | Uniform[]): this;
     /**
      * Sets the name of this uniforms group.
      *
      * @param {string} name - The name to set.
      * @return {UniformsGroup} A reference to this uniforms group.
      */
-    setName(name: string): UniformsGroup;
+    setName(name: string): this;
     /**
      * Sets the usage of this uniforms group.
      *
      * @param {(StaticDrawUsage|DynamicDrawUsage|StreamDrawUsage|StaticReadUsage|DynamicReadUsage|StreamReadUsage|StaticCopyUsage|DynamicCopyUsage|StreamCopyUsage)} value - The usage to set.
      * @return {UniformsGroup} A reference to this uniforms group.
      */
-    setUsage(
-        value:
-            | number
-            | DynamicDrawUsage
-            | StreamDrawUsage
-            | StaticReadUsage
-            | DynamicReadUsage
-            | StreamReadUsage
-            | StaticCopyUsage
-            | DynamicCopyUsage
-            | StreamCopyUsage,
-    ): UniformsGroup;
+    setUsage(value: Usage): this;
     /**
      * Frees the GPU-related resources allocated by this instance. Call this
      * method whenever this instance is no longer used in your app.
@@ -96,7 +79,7 @@ export class UniformsGroup extends EventDispatcher {
      * @param {UniformsGroup} source - The uniforms group to copy.
      * @return {UniformsGroup} A reference to this uniforms group.
      */
-    copy(source: UniformsGroup): UniformsGroup;
+    copy(source: UniformsGroup): this;
     /**
      * Returns a new uniforms group with copied values from this instance.
      *
@@ -104,4 +87,3 @@ export class UniformsGroup extends EventDispatcher {
      */
     clone(): UniformsGroup;
 }
-import { EventDispatcher } from "./EventDispatcher.js";

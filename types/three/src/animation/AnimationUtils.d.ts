@@ -1,3 +1,8 @@
+import { TypedArray, TypedArrayConstructor } from "../core/BufferAttribute.js";
+import { isTypedArray } from "../utils.js";
+import { AnimationClip } from "./AnimationClip.js";
+import { KeyframeTrackSettings } from "./KeyframeTrack.js";
+
 /**
  * Converts an array to a specific type.
  *
@@ -5,15 +10,14 @@
  * @param {TypedArray.constructor} type - The constructor of a typed array that defines the new type.
  * @return {TypedArray} The converted array.
  */
-export function convertArray(array: TypedArray | any[], type: TypedArray.constructor): TypedArray;
-import { isTypedArray } from "../utils.js";
+export function convertArray(array: TypedArray | number[], type: TypedArrayConstructor): TypedArray;
 /**
  * Returns `true` if the given keyframe track settings hold Bezier tangent data.
  *
  * @param {?Object} settings - The settings of a keyframe track.
  * @return {boolean} Whether both tangent arrays are defined or not.
  */
-export function hasTangents(settings: Object | null): boolean;
+export function hasTangents(settings?: Partial<KeyframeTrackSettings> | null): boolean;
 /**
  * Returns an array by which times and values can be sorted.
  *
@@ -90,7 +94,7 @@ export class AnimationUtils {
      * @param {TypedArray.constructor} type - The constructor of a type array.
      * @return {TypedArray} The converted array
      */
-    static convertArray(array: TypedArray | any[], type: TypedArray.constructor): TypedArray;
+    static convertArray(array: TypedArray | number[], type: TypedArrayConstructor): TypedArray | number[];
     /**
      * Returns `true` if the given object is a typed array.
      *
@@ -98,7 +102,7 @@ export class AnimationUtils {
      * @param {any} object - The object to check.
      * @return {boolean} Whether the given object is a typed array.
      */
-    static isTypedArray(object: any): boolean;
+    static isTypedArray(object: unknown): boolean;
     /**
      * Returns `true` if the given keyframe track settings hold Bezier tangent data.
      *
@@ -106,7 +110,7 @@ export class AnimationUtils {
      * @param {?Object} settings - The settings of a keyframe track.
      * @return {boolean} Whether both tangent arrays are defined or not.
      */
-    static hasTangents(settings: Object | null): boolean;
+    static hasTangents(settings?: Partial<KeyframeTrackSettings> | null): boolean;
     /**
      * Returns an array by which times and values can be sorted.
      *

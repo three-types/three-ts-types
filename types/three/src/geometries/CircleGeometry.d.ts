@@ -24,7 +24,7 @@ export class CircleGeometry extends BufferGeometry {
      * @param {Object} data - A JSON object representing the serialized geometry.
      * @return {CircleGeometry} A new instance.
      */
-    static fromJSON(data: Object): CircleGeometry;
+    static fromJSON(data: {}): CircleGeometry;
     /**
      * Constructs a new circle geometry.
      *
@@ -42,7 +42,12 @@ export class CircleGeometry extends BufferGeometry {
      *
      * @type {Object}
      */
-    parameters: Object;
-    copy(source: any): this;
+    readonly parameters: {
+        readonly radius: number;
+        readonly segments: number;
+        readonly thetaStart: number;
+        readonly thetaLength: number;
+    };
+    copy(source: CircleGeometry): this;
 }
 import { BufferGeometry } from "../core/BufferGeometry.js";

@@ -13,6 +13,14 @@
  */
 export class DodecahedronGeometry extends PolyhedronGeometry {
     /**
+     * Factory method for creating an instance of this class from the given
+     * JSON object.
+     *
+     * @param {Object} data - A JSON object representing the serialized geometry.
+     * @return {DodecahedronGeometry} A new instance.
+     */
+    static fromJSON(data: {}): DodecahedronGeometry;
+    /**
      * Constructs a new dodecahedron geometry.
      *
      * @param {number} [radius=1] - Radius of the dodecahedron.

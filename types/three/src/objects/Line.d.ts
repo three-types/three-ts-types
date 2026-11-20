@@ -1,3 +1,10 @@
+import { BufferGeometry } from "../core/BufferGeometry.js";
+import { Object3D, Object3DEventMap } from "../core/Object3D.js";
+import { Intersection, Raycaster } from "../core/Raycaster.js";
+import { Material } from "../materials/Material.js";
+import { Frustum } from "../math/Frustum.js";
+import { FrustumArray } from "../math/FrustumArray.js";
+
 /**
  * A continuous line. The line are rendered by connecting consecutive
  * vertices with straight lines.
@@ -18,14 +25,18 @@
  *
  * @augments Object3D
  */
-export class Line extends Object3D {
+export class Line<
+    TGeometry extends BufferGeometry = BufferGeometry,
+    TMaterial extends Material | Material[] = Material | Material[],
+    TEventMap extends Object3DEventMap = Object3DEventMap,
+> extends Object3D<TEventMap> {
     /**
      * Constructs a new line.
      *
      * @param {BufferGeometry} [geometry] - The line geometry.
      * @param {Material|Array<Material>} [material] - The line material.
      */
-    constructor(geometry?: BufferGeometry, material?: Material | Array<Material>);
+    constructor(geometry?: TGeometry, material?: TMaterial);
     /**
      * This flag can be used for type testing.
      *
@@ -33,21 +44,20 @@ export class Line extends Object3D {
      * @readonly
      * @default true
      */
-    readonly isLine: boolean;
-    type: string;
+    readonly isLine: true;
     /**
      * The line geometry.
      *
      * @type {BufferGeometry}
      */
-    geometry: BufferGeometry;
+    geometry: TGeometry;
     /**
      * The line material.
      *
      * @type {Material|Array<Material>}
      * @default LineBasicMaterial
      */
-    material: Material | Array<Material>;
+    material: TMaterial;
     /**
      * A dictionary representing the morph targets in the geometry. The key is the
      * morph targets name, the value its attribute index. This member is `undefined`
@@ -68,7 +78,7 @@ export class Line extends Object3D {
      * @default undefined
      */
     morphTargetInfluences: Array<number> | undefined;
-    copy(source: any, recursive: any): this;
+    copy(source: Line, recursive?: boolean): this;
     /**
      * Computes an array of distance values which are necessary for rendering dashed lines.
      * For each vertex in the geometry, the method calculates the cumulative length from the
@@ -76,7 +86,7 @@ export class Line extends Object3D {
      *
      * @return {Line} A reference to this line.
      */
-    computeLineDistances(): Line;
+    computeLineDistances(): this;
     /**
      * Returns `true` if this line intersects the given frustum.
      *
@@ -90,12 +100,10 @@ export class Line extends Object3D {
      * @param {Raycaster} raycaster - The raycaster.
      * @param {Array<Object>} intersects - The target array that holds the intersection points.
      */
-    raycast(raycaster: Raycaster, intersects: Array<Object>): void;
+    raycast(raycaster: Raycaster, intersects: Intersection[]): void;
     /**
      * Sets the values of {@link Line#morphTargetDictionary} and {@link Line#morphTargetInfluences}
      * to make sure existing morph targets can influence this 3D object.
      */
     updateMorphTargets(): void;
 }
-import { BufferGeometry } from "../core/BufferGeometry.js";
-import { Object3D } from "../core/Object3D.js";

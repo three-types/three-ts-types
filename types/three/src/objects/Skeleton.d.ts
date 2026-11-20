@@ -1,3 +1,14 @@
+import { Matrix4, Matrix4Tuple } from "../math/Matrix4.js";
+import { DataTexture } from "../textures/DataTexture.js";
+import { Bone } from "./Bone.js";
+
+export interface SkeletonJSON {
+    metadata: { version: number; type: string; generator: string };
+    bones: string[];
+    boneInverses: Matrix4Tuple[];
+    uuid: string;
+}
+
 /**
  * Class for representing the armatures in `three.js`. The skeleton
  * is defined by a hierarchy of bones.
@@ -105,7 +116,7 @@ export class Skeleton {
      *
      * @return {Skeleton} A reference of this instance.
      */
-    computeBoneTexture(): Skeleton;
+    computeBoneTexture(): this;
     /**
      * Searches through the skeleton's bone array and returns the first with a
      * matching name.
@@ -126,17 +137,14 @@ export class Skeleton {
      * @param {Object<string, Bone>} bones - An array of bones.
      * @return {Skeleton} A reference of this instance.
      */
-    fromJSON(json: Object, bones: {
+    fromJSON(json: SkeletonJSON, bones: {
         [x: string]: Bone;
-    }): Skeleton;
+    }): this;
     /**
      * Serializes the skeleton into JSON.
      *
      * @return {Object} A JSON object representing the serialized skeleton.
      * @see {@link ObjectLoader#parse}
      */
-    toJSON(): Object;
+    toJSON(): SkeletonJSON;
 }
-import { Matrix4 } from "../math/Matrix4.js";
-import { DataTexture } from "../textures/DataTexture.js";
-import { Bone } from "./Bone.js";

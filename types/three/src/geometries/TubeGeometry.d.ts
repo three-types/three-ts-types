@@ -33,7 +33,7 @@ export class TubeGeometry extends BufferGeometry {
      * @param {Object} data - A JSON object representing the serialized geometry.
      * @return {TubeGeometry} A new instance.
      */
-    static fromJSON(data: Object): TubeGeometry;
+    static fromJSON(data: {}): TubeGeometry;
     /**
      * Constructs a new tube geometry.
      *
@@ -43,7 +43,13 @@ export class TubeGeometry extends BufferGeometry {
      * @param {number} [radialSegments=8] - The number of segments that make up the cross-section.
      * @param {boolean} [closed=false] - Whether the tube is closed or not.
      */
-    constructor(path?: Curve, tubularSegments?: number, radius?: number, radialSegments?: number, closed?: boolean);
+    constructor(
+        path?: Curve<Vector3>,
+        tubularSegments?: number,
+        radius?: number,
+        radialSegments?: number,
+        closed?: boolean,
+    );
     /**
      * Holds the constructor parameters that have been
      * used to generate the geometry. Any modification
@@ -51,10 +57,18 @@ export class TubeGeometry extends BufferGeometry {
      *
      * @type {Object}
      */
-    parameters: Object;
-    tangents: any;
-    normals: any;
-    binormals: any;
-    copy(source: any): this;
+    readonly parameters: {
+        readonly path: Curve<Vector3>;
+        readonly tubularSegments: number;
+        readonly radius: number;
+        readonly radialSegments: number;
+        readonly closed: boolean;
+    };
+    tangents: Vector3[];
+    normals: Vector3[];
+    binormals: Vector3[];
+    copy(source: TubeGeometry): this;
 }
 import { BufferGeometry } from "../core/BufferGeometry.js";
+import { Curve } from "../extras/core/Curve.js";
+import { Vector3 } from "../math/Vector3.js";

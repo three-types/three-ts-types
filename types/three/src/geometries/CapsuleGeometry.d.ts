@@ -19,7 +19,7 @@ export class CapsuleGeometry extends BufferGeometry {
      * @param {Object} data - A JSON object representing the serialized geometry.
      * @return {CapsuleGeometry} A new instance.
      */
-    static fromJSON(data: Object): CapsuleGeometry;
+    static fromJSON(data: {}): CapsuleGeometry;
     /**
      * Constructs a new capsule geometry.
      *
@@ -43,7 +43,13 @@ export class CapsuleGeometry extends BufferGeometry {
      *
      * @type {Object}
      */
-    parameters: Object;
-    copy(source: any): this;
+    readonly parameters: {
+        readonly radius: number;
+        readonly height: number;
+        readonly capSegments: number;
+        readonly radialSegments: number;
+        readonly heightSegments: number;
+    };
+    copy(source: CapsuleGeometry): this;
 }
 import { BufferGeometry } from "../core/BufferGeometry.js";

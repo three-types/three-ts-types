@@ -1,3 +1,20 @@
+import { BufferGeometry } from "../core/BufferGeometry.js";
+import { JSONMeta, Object3D, Object3DEventMap, Object3DJSON, Object3DJSONObject } from "../core/Object3D.js";
+import { Intersection, Raycaster } from "../core/Raycaster.js";
+import SpriteNodeMaterial from "../materials/nodes/SpriteNodeMaterial.js";
+import { SpriteMaterial } from "../materials/SpriteMaterial.js";
+import { Frustum } from "../math/Frustum.js";
+import { FrustumArray } from "../math/FrustumArray.js";
+import { Vector2, Vector2Tuple } from "../math/Vector2.js";
+
+export interface SpriteJSONObject extends Object3DJSONObject {
+    center: Vector2Tuple;
+}
+
+export interface SpriteJSON extends Object3DJSON {
+    object: SpriteJSONObject;
+}
+
 /**
  * A sprite is a plane that always faces towards the camera, generally with a
  * partially transparent texture applied.
@@ -15,7 +32,7 @@
  *
  * @augments Object3D
  */
-export class Sprite extends Object3D {
+export class Sprite<TEventMap extends Object3DEventMap = Object3DEventMap> extends Object3D<TEventMap> {
     /**
      * Constructs a new sprite.
      *
@@ -29,8 +46,7 @@ export class Sprite extends Object3D {
      * @readonly
      * @default true
      */
-    readonly isSprite: boolean;
-    type: string;
+    readonly isSprite: true;
     /**
      * The sprite geometry.
      *
@@ -73,11 +89,7 @@ export class Sprite extends Object3D {
      * @param {Raycaster} raycaster - The raycaster.
      * @param {Array<Object>} intersects - The target array that holds the intersection points.
      */
-    raycast(raycaster: Raycaster, intersects: Array<Object>): void;
-    copy(source: any, recursive: any): this;
-    toJSON(meta: any): Object;
+    raycast(raycaster: Raycaster, intersects: Intersection[]): void;
+    copy(source: Sprite, recursive?: boolean): this;
+    toJSON(meta?: JSONMeta): SpriteJSON;
 }
-import { BufferGeometry } from "../core/BufferGeometry.js";
-import { Object3D } from "../core/Object3D.js";
-import { SpriteMaterial } from "../materials/SpriteMaterial.js";
-import { Vector2 } from "../math/Vector2.js";

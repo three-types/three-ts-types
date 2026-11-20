@@ -1,3 +1,5 @@
+import { Mesh, Object3D, RenderTarget, Texture, WebGPURenderer } from "three/webgpu";
+
 /**
  * Stitches the seams of a baked map, e.g. of a light map or an ambient occlusion map. Where a smooth surface is
  * cut into two charts of the UV atlas, bilinear filtering on both sides of the cut reads different texels, so the
@@ -59,19 +61,6 @@ export class SeamStitchGenerator {
      * @default 64
      */
     iterations: number;
-    _root: any;
-    _seams: Float32Array<ArrayBufferLike> | null;
-    _seamChannel: number;
-    _solver: {
-        width: number;
-        height: number;
-        copy: QuadMesh;
-        scene: Scene;
-        compute: null;
-        buffers: never[];
-    } | null;
-    _source: import("three/tsl").TextureNode;
-    _camera: OrthographicCamera;
     /**
      * Finds the seams of the meshes that share the atlas. Call it again when the meshes or their UVs change.
      *
@@ -91,23 +80,4 @@ export class SeamStitchGenerator {
      * Frees all internal resources.
      */
     dispose(): void;
-    /**
-     * Sets up the solver of a map size: the texels around the seams, the constraints between them, and the passes
-     * that solve them and write the stitched map.
-     *
-     * @private
-     * @param {number} width - The width of the map.
-     * @param {number} height - The height of the map.
-     */
-    private _setSize;
-    /**
-     * Frees the solver.
-     *
-     * @private
-     */
-    private _disposeSolver;
 }
-import { QuadMesh } from "three/webgpu";
-import { Scene } from "three/webgpu";
-import { OrthographicCamera } from "three/webgpu";
-import { RenderTarget } from "three/webgpu";

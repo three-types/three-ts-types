@@ -4,7 +4,7 @@ export default NodeLoader;
  *
  * @augments Loader
  */
-declare class NodeLoader extends Loader {
+declare class NodeLoader extends Loader<Node> {
     /**
      * Represents a dictionary of textures.
      *
@@ -19,7 +19,7 @@ declare class NodeLoader extends Loader {
      * @type {Object<string,Node.constructor>}
      */
     nodes: {
-        [x: string]: Node.constructor;
+        [x: string]: new(...args: any[]) => Node;
     };
     /**
      * Loads the node definitions from the given URL.
@@ -29,7 +29,7 @@ declare class NodeLoader extends Loader {
      * @param {Function} onProgress - Will be called while load progresses.
      * @param {Function} onError - Will be called when errors are thrown during the loading process.
      */
-    load(url: string, onLoad: Function, onProgress: Function, onError: Function): void;
+    load(url: string, onLoad: (data: Node) => void, onProgress?: OnProgressCallback, onError?: OnErrorCallback): void;
     /**
      * Parse the node dependencies for the loaded node.
      *
@@ -63,7 +63,7 @@ declare class NodeLoader extends Loader {
      */
     setTextures(value: {
         [x: string]: Texture;
-    }): NodeLoader;
+    }): this;
     /**
      * Defines the dictionary of node types.
      *
@@ -71,8 +71,8 @@ declare class NodeLoader extends Loader {
      * @return {NodeLoader} A reference to this loader.
      */
     setNodes(value: {
-        [x: string]: Node.constructor;
-    }): NodeLoader;
+        [x: string]: new(...args: any[]) => Node;
+    }): this;
     /**
      * Creates a node object from the given type.
      *
@@ -81,4 +81,6 @@ declare class NodeLoader extends Loader {
      */
     createNodeFromType(type: string): Node;
 }
-import { Loader } from "../Loader.js";
+import { Node } from "../../nodes/Nodes.js";
+import { Texture } from "../../textures/Texture.js";
+import { Loader, OnErrorCallback, OnProgressCallback } from "../Loader.js";

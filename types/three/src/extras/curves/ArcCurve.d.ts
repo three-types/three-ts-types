@@ -1,3 +1,5 @@
+import { EllipseCurve } from "./EllipseCurve.js";
+
 /**
  * A curve representing an arc.
  *
@@ -25,10 +27,7 @@ export class ArcCurve extends EllipseCurve {
     /**
      * This flag can be used for type testing.
      *
-     * @type {boolean}
-     * @readonly
      * @default true
      */
-    readonly isArcCurve: boolean;
+    readonly isArcCurve: true;
 }
-import { EllipseCurve } from "./EllipseCurve.js";
