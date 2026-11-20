@@ -93,7 +93,6 @@ declare class InspectorBase<TEventMap extends InspectorBaseEventMap = InspectorB
      * Called when a compute operation ends.
      *
      * @param {string} uid - A unique identifier for the render context.
-     * @param {ComputeNode} computeNode - The compute node being executed.
      */
     finishCompute(uid: string): void;
     /**
