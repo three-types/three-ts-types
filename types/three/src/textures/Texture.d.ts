@@ -95,6 +95,8 @@ export interface TextureEventMap {
  *
  * Note: After the initial use of a texture, its dimensions, format, and type
  * cannot be changed. Instead, call {@link Texture#dispose} on the texture and instantiate a new one.
+ * Changing sampling or upload parameters like wrap modes, filters, anisotropy or `flipY`
+ * after the initial use requires setting {@link Texture#needsUpdate} to `true`.
  *
  * @augments EventDispatcher
  */
@@ -195,7 +197,7 @@ export class Texture<TImage = unknown, TEventMap extends TextureEventMap = Textu
      */
     wrapS: Wrapping;
     /**
-     * This defines how the texture is wrapped horizontally and corresponds to
+     * This defines how the texture is wrapped vertically and corresponds to
      * *V* in UV mapping.
      *
      * @type {(RepeatWrapping|ClampToEdgeWrapping|MirroredRepeatWrapping)}
@@ -324,8 +326,9 @@ export class Texture<TImage = unknown, TEventMap extends TextureEventMap = Textu
      * If set to `true`, the alpha channel, if present, is multiplied into the
      * color channels when the texture is uploaded to the GPU.
      *
-     * Note that this property has no effect when using `ImageBitmap`. You need to
-     * configure premultiply alpha on bitmap creation instead.
+     * Note that with `WebGLRenderer` and the WebGL backend of `WebGPURenderer` this property
+     * has no effect when using `ImageBitmap`. You need to configure premultiply alpha on bitmap
+     * creation instead. The WebGPU backend applies this property to `ImageBitmap` as well.
      *
      * @type {boolean}
      * @default false
@@ -335,8 +338,9 @@ export class Texture<TImage = unknown, TEventMap extends TextureEventMap = Textu
      * If set to `true`, the texture is flipped along the vertical axis when
      * uploaded to the GPU.
      *
-     * Note that this property has no effect when using `ImageBitmap`. You need to
-     * configure the flip on bitmap creation instead.
+     * Note that with `WebGLRenderer` and the WebGL backend of `WebGPURenderer` this property
+     * has no effect when using `ImageBitmap`. You need to configure the flip on bitmap
+     * creation instead. The WebGPU backend applies this property to `ImageBitmap` as well.
      *
      * @type {boolean}
      * @default true
@@ -412,8 +416,8 @@ export class Texture<TImage = unknown, TEventMap extends TextureEventMap = Textu
      */
     readonly isArrayTexture: boolean;
     /**
-     * Indicates whether this texture should be processed by `PMREMGenerator` or not
-     * (only relevant for render target textures).
+     * Counts how many times {@link Texture#needsPMREMUpdate} was set to `true`. Used
+     * by the renderer to detect when the PMREM of this texture must be regenerated.
      *
      * @type {number}
      * @readonly
@@ -438,15 +442,18 @@ export class Texture<TImage = unknown, TEventMap extends TextureEventMap = Textu
      */
     normalized: boolean;
     /**
-     * The width of the texture in pixels.
+     * The width of the texture in pixels. Returns `0` for cube textures (whose
+     * `image` is an array) and when no image is set.
      */
     get width(): number;
     /**
-     * The height of the texture in pixels.
+     * The height of the texture in pixels. Returns `0` for cube textures (whose
+     * `image` is an array) and when no image is set.
      */
     get height(): number;
     /**
-     * The depth of the texture in pixels.
+     * The depth of the texture in pixels, read from `image.depth`. Returns `0` if the
+     * image has no depth, e.g. for cube textures and image, canvas or video sources.
      */
     get depth(): number;
     set image(value: TImage);
@@ -532,7 +539,8 @@ export class Texture<TImage = unknown, TEventMap extends TextureEventMap = Textu
     transformUv(uv: Vector2): Vector2;
     /**
      * Setting this property to `true` indicates the engine the PMREM
-     * must be regenerated.
+     * must be regenerated. Note that `WebGLRenderer` only honors this
+     * property for render target textures.
      *
      * @type {boolean}
      * @default false

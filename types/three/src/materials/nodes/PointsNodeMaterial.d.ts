@@ -5,11 +5,12 @@ import SpriteNodeMaterial, { SpriteNodeMaterialNodeProperties } from "./SpriteNo
 
 export interface PointsNodeMaterialNodeProperties extends SpriteNodeMaterialNodeProperties {
     /**
-     * This node property provides an additional way to set the point size.
+     * This node property allows to overwrite the point size defined by `size`. The size
+     * is in pixels, additionally scaled by distance when `sizeAttenuation` is `true`.
      *
-     * Note that WebGPU only supports point primitives with 1 pixel size. Consequently,
-     * this node has no effect when the material is used with {@link Points} and a WebGPU
-     * backend. If an application wants to render points with a size larger than 1 pixel,
+     * Note that `WebGPURenderer` always renders point primitives with a size of 1 pixel (with
+     * both backends). Consequently, this node has no effect when the material is used with
+     * {@link Points}. If an application wants to render points with a size larger than 1 pixel,
      * the material should be used with {@link Sprite} and instancing.
      *
      * @default null
@@ -36,11 +37,12 @@ export interface PointsNodeMaterialParameters
  * const pointCloud = new THREE.Points( geometry, new THREE.PointsNodeMaterial() );
  * ```
  *
- * - By rendering point primitives with {@link Sprites}. In this case, size is honored,
- * see {@link PointsNodeMaterial#sizeNode}.
+ * - By rendering instanced quads with {@link Sprite}. In this case, size is honored,
+ * see {@link PointsNodeMaterial#sizeNode}. Set {@link Sprite#count} to the number of points.
  *
  * ```js
  * const instancedPoints = new THREE.Sprite( new THREE.PointsNodeMaterial( { positionNode: instancedBufferAttribute( positionAttribute ) } ) );
+ * instancedPoints.count = positionAttribute.count;
  * ```
  */
 declare class PointsNodeMaterial extends SpriteNodeMaterial {

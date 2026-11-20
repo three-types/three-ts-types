@@ -53,7 +53,8 @@ declare class SSSLightingModel extends PhysicalLightingModel {
 
 export interface MeshSSSNodeMaterialNodeProperties extends MeshPhysicalNodeMaterialNodeProperties {
     /**
-     * Represents the thickness color.
+     * Represents the thickness color. Subsurface scattering is only enabled
+     * when this node is set.
      *
      * @default null
      */
@@ -97,7 +98,7 @@ declare class MeshSSSNodeMaterial extends MeshPhysicalNodeMaterial {
     /**
      * Whether the lighting model should use SSS or not.
      *
-     * @default true
+     * @default false
      */
     get useSSS(): boolean;
     /**

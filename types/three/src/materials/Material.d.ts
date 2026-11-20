@@ -38,6 +38,9 @@ export interface MaterialProperties {
      * {@link Material#blendSrc}, {@link Material#blendDst} or {@link Material#blendEquation}
      * should have any effect.
      *
+     * `SubtractiveBlending` and `MultiplyBlending` require {@link Material#premultipliedAlpha}
+     * to be `true`.
+     *
      * @default NormalBlending
      */
     blending: Blending;
@@ -146,7 +149,9 @@ export interface MaterialProperties {
     depthFunc: DepthModes;
     /**
      * Whether to have depth test enabled when rendering this material.
-     * When the depth test is disabled, the depth write will also be implicitly disabled.
+     * With `WebGLRenderer`, disabling the depth test also implicitly disables the depth write.
+     * With the WebGPU backend of `WebGPURenderer`, depth is still written unless
+     * {@link Material#depthWrite} is set to `false`.
      *
      * @default true
      */
@@ -219,19 +224,21 @@ export interface MaterialProperties {
      * (not rendered). This requires {@link WebGLRenderer#localClippingEnabled} to
      * be `true`.
      *
+     * Only supported with `WebGLRenderer`. With `WebGPURenderer`, use {@link ClippingGroup}.
+     *
      * @default null
      */
     clippingPlanes: Array<Plane> | null;
     /**
      * Changes the behavior of clipping planes so that only their intersection is
-     * clipped, rather than their union.
+     * clipped, rather than their union. Only supported with `WebGLRenderer`.
      *
      * @default false
      */
     clipIntersection: boolean;
     /**
      * Defines whether to clip shadows according to the clipping planes specified
-     * on this material.
+     * on this material. Only supported with `WebGLRenderer`.
      *
      * @default false
      */
@@ -244,13 +251,15 @@ export interface MaterialProperties {
      * - When {@link Material#side} is set to `BackSide`, the front side cast shadows.
      * - When {@link Material#side} is set to `DoubleSide`, both sides cast shadows.
      *
+     * With `VSMShadowMap`, the side casting shadows matches {@link Material#side} instead.
+     *
      * @default null
      */
     shadowSide: Side | null;
     /**
      * Whether to render the material's color.
      *
-     * This can be used in conjunction with {@link Object3D#renderOder} to create invisible
+     * This can be used in conjunction with {@link Object3D#renderOrder} to create invisible
      * objects that occlude other objects.
      *
      * @default true

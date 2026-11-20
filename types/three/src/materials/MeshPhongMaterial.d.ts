@@ -183,9 +183,10 @@ export interface MeshPhongMaterialProperties extends MaterialProperties {
      */
     displacementBias: number;
     /**
-     * The specular map value affects both how much the specular surface
-     * highlight contributes and how much of the environment map affects the
-     * surface.
+     * The red channel of this texture is used as a scalar strength that affects
+     * both how much the specular surface highlight contributes and how much of
+     * the environment map reflection blended in via {@link MeshPhongMaterial#combine}
+     * affects the surface.
      *
      * `specularMap` represents color data, and the texture must be assigned a
      * {@link Texture#colorSpace}. Most `specularMap` textures set
@@ -225,7 +226,9 @@ export interface MeshPhongMaterialProperties extends MaterialProperties {
      */
     envMap: Texture | null;
     /**
-     * The rotation of the environment map in radians.
+     * The rotation of the environment map in radians. Only applies to
+     * {@link MeshPhongMaterial#envMap}. When the material is lit by
+     * {@link Scene#environment}, {@link Scene#environmentRotation} is used instead.
      *
      * @default (0,0,0)
      */
@@ -233,7 +236,7 @@ export interface MeshPhongMaterialProperties extends MaterialProperties {
     /**
      * How to combine the result of the surface's color with the environment map, if any.
      *
-     * When set to `MixOperation`, the {@link MeshBasicMaterial#reflectivity} is used to
+     * When set to `MixOperation`, the {@link MeshPhongMaterial#reflectivity} is used to
      * blend between the two colors.
      *
      * @default MultiplyOperation
@@ -247,7 +250,10 @@ export interface MeshPhongMaterialProperties extends MaterialProperties {
      */
     reflectivity: number;
     /**
-     * Scales the effect of the environment map by multiplying its color.
+     * Scales the diffuse image-based lighting of the environment map. Only has an effect
+     * with `WebGLRenderer` when {@link MeshPhongMaterial#envMap} is a PMREM texture. It does not
+     * affect the reflection blended in via {@link MeshPhongMaterial#combine}. When the material is lit
+     * by {@link Scene#environment}, {@link Scene#environmentIntensity} is used instead.
      *
      * @default 1
      */

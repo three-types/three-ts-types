@@ -17,7 +17,7 @@ export interface Data3DTextureImageData {
  */
 export class Data3DTexture extends Texture<Data3DTextureImageData> {
     /**
-     * Constructs a new data array texture.
+     * Constructs a new 3D data texture.
      *
      * @param {?TypedArray} [data=null] - The buffer data.
      * @param {number} [width=1] - The width of the texture.
