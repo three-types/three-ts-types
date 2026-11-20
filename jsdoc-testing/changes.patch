@@ -13899,7 +13899,7 @@ index ff44d1e48..06de93aed 100644
 -import { Object3D } from '../core/Object3D.js';
 -import { Color } from '../math/Color.js';
 diff --git a/jsdoc-testing/jsdoc/src/lights/LightProbe.d.ts b/jsdoc-testing/jsdoc/src/lights/LightProbe.d.ts
-index 065d7ef2b..211e479c4 100644
+index 29da0bee0..d2f5f1e1c 100644
 --- a/jsdoc-testing/jsdoc/src/lights/LightProbe.d.ts
 +++ b/jsdoc-testing/jsdoc/src/lights/LightProbe.d.ts
 @@ -1,3 +1,11 @@
@@ -13914,15 +13914,15 @@ index 065d7ef2b..211e479c4 100644
  /**
   * Light probes are an alternative way of adding light to a 3D scene. Unlike
   * classical light sources (e.g. directional, point or spot lights), light
-@@ -16,7 +24,6 @@
-  * irradiance environment map.
+@@ -9,7 +17,6 @@
+  * {@link Scene#environment} instead.
   *
   * @deprecated since r188.
 - * @augments Light
   */
  export class LightProbe extends Light {
      /**
-@@ -30,18 +37,13 @@ export class LightProbe extends Light {
+@@ -23,18 +30,13 @@ export class LightProbe extends Light {
      /**
       * This flag can be used for type testing.
       *
@@ -13944,7 +13944,7 @@ index 065d7ef2b..211e479c4 100644
 -import { Light } from './Light.js';
 -import { SphericalHarmonics3 } from '../math/SphericalHarmonics3.js';
 diff --git a/jsdoc-testing/jsdoc/src/lights/LightShadow.d.ts b/jsdoc-testing/jsdoc/src/lights/LightShadow.d.ts
-index 68174f6f0..68d28a011 100644
+index 449a5dda7..a58b48381 100644
 --- a/jsdoc-testing/jsdoc/src/lights/LightShadow.d.ts
 +++ b/jsdoc-testing/jsdoc/src/lights/LightShadow.d.ts
 @@ -1,27 +1,46 @@
@@ -14068,16 +14068,17 @@ index 68174f6f0..68d28a011 100644
       * @default 8
       */
      blurSamples: number;
-@@ -98,22 +115,19 @@ export class LightShadow {
+@@ -98,7 +115,6 @@ export class LightShadow {
       * Defines the width and height of the shadow map. Higher values give better quality
-      * shadows at the cost of computation time. Values must be powers of two.
+      * shadows at the cost of computation time. Point light shadows only use the width.
       *
 -     * @type {Vector2}
       * @default (512,512)
       */
      mapSize: Vector2;
-     /**
-      * The type of shadow texture. The default is `UnsignedByteType`.
+@@ -106,15 +122,13 @@ export class LightShadow {
+      * The type of the shadow map's color texture. The default is `UnsignedByteType`.
+      * Only supported with `WebGPURenderer`, and not for point light shadows.
       *
 -     * @type {number}
       * @default UnsignedByteType
@@ -14092,7 +14093,7 @@ index 68174f6f0..68d28a011 100644
       * @default null
       */
      map: RenderTarget | null;
-@@ -122,22 +136,18 @@ export class LightShadow {
+@@ -123,22 +137,18 @@ export class LightShadow {
       * calculated based on the distribution of depths. Computed internally during
       * rendering.
       *
@@ -14115,7 +14116,7 @@ index 68174f6f0..68d28a011 100644
       * @default true
       */
      autoUpdate: boolean;
-@@ -146,14 +156,9 @@ export class LightShadow {
+@@ -147,14 +157,9 @@ export class LightShadow {
       * If you have set {@link LightShadow#autoUpdate} to `false`, you will need to
       * set this property to `true` and then make a render call to update the light's shadow.
       *
@@ -14130,7 +14131,7 @@ index 68174f6f0..68d28a011 100644
      /**
       * Used internally by the renderer to get the number of viewports that need
       * to be rendered for this shadow.
-@@ -167,7 +172,7 @@ export class LightShadow {
+@@ -168,7 +173,7 @@ export class LightShadow {
       * @param {number} [viewportIndex=0] - The viewport index.
       * @return {Camera} The shadow camera.
       */
@@ -14139,7 +14140,7 @@ index 68174f6f0..68d28a011 100644
      /**
       * Gets the shadow cameras frustum. Used internally by the renderer to cull objects.
       *
-@@ -180,16 +185,6 @@ export class LightShadow {
+@@ -181,16 +186,6 @@ export class LightShadow {
       * @param {Light} light - The light for which the shadow is being rendered.
       */
      updateMatrices(light: Light): void;
@@ -14156,7 +14157,7 @@ index 68174f6f0..68d28a011 100644
      /**
       * Returns a viewport definition for the given viewport index.
       *
-@@ -214,22 +209,18 @@ export class LightShadow {
+@@ -215,22 +210,18 @@ export class LightShadow {
       * @param {LightShadow} source - The light shadow to copy.
       * @return {LightShadow} A reference to this light shadow instance.
       */
@@ -14183,7 +14184,7 @@ index 68174f6f0..68d28a011 100644
 -import { Frustum } from '../math/Frustum.js';
 -import { Vector4 } from '../math/Vector4.js';
 diff --git a/jsdoc-testing/jsdoc/src/lights/PointLight.d.ts b/jsdoc-testing/jsdoc/src/lights/PointLight.d.ts
-index f42ec0f7c..e6d11c1e0 100644
+index 4fd7294d7..10b55ec32 100644
 --- a/jsdoc-testing/jsdoc/src/lights/PointLight.d.ts
 +++ b/jsdoc-testing/jsdoc/src/lights/PointLight.d.ts
 @@ -1,3 +1,16 @@
@@ -14214,7 +14215,7 @@ index f42ec0f7c..e6d11c1e0 100644
      /**
 @@ -22,12 +33,10 @@ export class PointLight extends Light {
       * @param {number} [distance=0] - Maximum range of the light. `0` means no limit.
-      * @param {number} [decay=2] - The amount the light dims along the distance of the light.
+      * @param {number} [decay=2] - The exponent of the light's distance falloff.
       */
 -    constructor(color?: (number | Color | string), intensity?: number, distance?: number, decay?: number);
 +    constructor(color?: ColorRepresentation, intensity?: number, distance?: number, decay?: number);
@@ -14234,9 +14235,9 @@ index f42ec0f7c..e6d11c1e0 100644
       * @default 0
       */
      distance: number;
-@@ -46,25 +54,19 @@ export class PointLight extends Light {
-      * The amount the light dims along the distance of the light. In context of
-      * physically-correct rendering the default value should not be changed.
+@@ -47,25 +55,19 @@ export class PointLight extends Light {
+      * default `2` gives physically correct inverse-square falloff and should not
+      * be changed in context of physically-correct rendering.
       *
 -     * @type {number}
       * @default 2
@@ -14292,7 +14293,7 @@ index 9157a63b8..8d29ffab2 100644
  }
 -import { LightShadow } from './LightShadow.js';
 diff --git a/jsdoc-testing/jsdoc/src/lights/RectAreaLight.d.ts b/jsdoc-testing/jsdoc/src/lights/RectAreaLight.d.ts
-index 821ff7b58..aeceb8e75 100644
+index 891b1e052..b5fb57c61 100644
 --- a/jsdoc-testing/jsdoc/src/lights/RectAreaLight.d.ts
 +++ b/jsdoc-testing/jsdoc/src/lights/RectAreaLight.d.ts
 @@ -1,3 +1,6 @@
@@ -14352,7 +14353,7 @@ index 821ff7b58..aeceb8e75 100644
  }
 -import { Light } from './Light.js';
 diff --git a/jsdoc-testing/jsdoc/src/lights/SpotLight.d.ts b/jsdoc-testing/jsdoc/src/lights/SpotLight.d.ts
-index 1197fdf27..163a8d638 100644
+index 575cb6cc3..a0a4fb446 100644
 --- a/jsdoc-testing/jsdoc/src/lights/SpotLight.d.ts
 +++ b/jsdoc-testing/jsdoc/src/lights/SpotLight.d.ts
 @@ -1,3 +1,21 @@
@@ -14377,18 +14378,18 @@ index 1197fdf27..163a8d638 100644
  /**
   * This light gets emitted from a single point in one direction, along a cone
   * that increases in size the further from the light it gets.
-@@ -17,8 +35,6 @@
+@@ -16,8 +34,6 @@
+  * spotLight.shadow.camera.near = 500;
   * spotLight.shadow.camera.far = 4000;
-  * spotLight.shadow.camera.fov = 30;s
   * ```
 - *
 - * @augments Light
   */
  export class SpotLight extends Light {
      /**
-@@ -31,12 +47,10 @@ export class SpotLight extends Light {
+@@ -30,12 +46,10 @@ export class SpotLight extends Light {
       * @param {number} [penumbra=0] - Percent of the spotlight cone that is attenuated due to penumbra. Value range is `[0,1]`.
-      * @param {number} [decay=2] - The amount the light dims along the distance of the light.
+      * @param {number} [decay=2] - The exponent of the light's distance falloff.
       */
 -    constructor(color?: (number | Color | string), intensity?: number, distance?: number, angle?: number, penumbra?: number, decay?: number);
 +    constructor(color?: ColorRepresentation, intensity?: number, distance?: number, angle?: number, penumbra?: number, decay?: number);
@@ -14400,7 +14401,7 @@ index 1197fdf27..163a8d638 100644
       * @default true
       */
      readonly isSpotLight: boolean;
-@@ -49,21 +63,17 @@ export class SpotLight extends Light {
+@@ -48,21 +62,17 @@ export class SpotLight extends Light {
       *
       * It is also possible to set the target to be another 3D object
       * in the scene. The light will now track the target object.
@@ -14422,7 +14423,7 @@ index 1197fdf27..163a8d638 100644
       * @default Math.PI/3
       */
      angle: number;
-@@ -71,7 +81,6 @@ export class SpotLight extends Light {
+@@ -70,7 +80,6 @@ export class SpotLight extends Light {
       * Percent of the spotlight cone that is attenuated due to penumbra.
       * Value range is `[0,1]`.
       *
@@ -14431,16 +14432,16 @@ index 1197fdf27..163a8d638 100644
       */
      penumbra: number;
 @@ -79,7 +88,6 @@ export class SpotLight extends Light {
-      * The amount the light dims along the distance of the light. In context of
-      * physically-correct rendering the default value should not be changed.
+      * default `2` gives physically correct inverse-square falloff and should not
+      * be changed in context of physically-correct rendering.
       *
 -     * @type {number}
       * @default 2
       */
      decay: number;
-@@ -91,26 +99,19 @@ export class SpotLight extends Light {
-      *
-      * *Warning*: This property is disabled if {@link Object3D#castShadow} is set to `false`.
+@@ -89,26 +97,19 @@ export class SpotLight extends Light {
+      * frustum of the shadow camera (see {@link SpotLightShadow#focus}) and works
+      * whether or not {@link Object3D#castShadow} is enabled.
       *
 -     * @type {?Texture}
       * @default null
@@ -14468,7 +14469,7 @@ index 1197fdf27..163a8d638 100644
 -import { Object3D } from '../core/Object3D.js';
 -import { SpotLightShadow } from './SpotLightShadow.js';
 diff --git a/jsdoc-testing/jsdoc/src/lights/SpotLightShadow.d.ts b/jsdoc-testing/jsdoc/src/lights/SpotLightShadow.d.ts
-index 0de4c95b0..cfa857b6c 100644
+index 3c430913a..8e84a4543 100644
 --- a/jsdoc-testing/jsdoc/src/lights/SpotLightShadow.d.ts
 +++ b/jsdoc-testing/jsdoc/src/lights/SpotLightShadow.d.ts
 @@ -1,9 +1,15 @@
@@ -14481,7 +14482,7 @@ index 0de4c95b0..cfa857b6c 100644
 +}
 +
  /**
-  * Represents the shadow configuration of directional lights.
+  * Represents the shadow configuration of spot lights.
 - *
 - * @augments LightShadow
   */
@@ -15795,22 +15796,23 @@ index b7fb9b69a..04111f284 100644
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface LineBasicMaterial extends LineBasicMaterialProperties {}
 diff --git a/jsdoc-testing/jsdoc/src/materials/LineDashedMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/LineDashedMaterial.d.ts
-index 3cb1a34d8..63489ffa1 100644
+index 8098422a3..bf36743b8 100644
 --- a/jsdoc-testing/jsdoc/src/materials/LineDashedMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/LineDashedMaterial.d.ts
-@@ -1,3 +1,30 @@
+@@ -1,3 +1,31 @@
 +import { LineBasicMaterial, LineBasicMaterialProperties } from './LineBasicMaterial.js';
 +import { MapColorPropertiesToColorRepresentations } from './Material.js';
 +
 +export interface LineDashedMaterialProperties extends LineBasicMaterialProperties {
 +    /**
-+     * The scale of the dashed part of a line.
++     * Scales the line distances before dashing. Values greater than `1`
++     * make dashes and gaps shorter.
 +     *
 +     * @default 1
 +     */
 +    scale: number;
 +    /**
-+     * The size of the dash. This is both the gap with the stroke.
++     * The length of each dash.
 +     *
 +     * @default 3
 +     */
@@ -15827,11 +15829,11 @@ index 3cb1a34d8..63489ffa1 100644
 +export interface LineDashedMaterialParameters extends Partial<MapColorPropertiesToColorRepresentations<LineDashedMaterialProperties>> {}
 +
  /**
-  * A material for rendering line primitives.
+  * A material for rendering dashed line primitives.
   *
-@@ -11,39 +38,17 @@
-  * 	gapSize: 1,
-  * } );
+@@ -17,40 +45,17 @@
+  * const line = new THREE.Line( geometry, material );
+  * line.computeLineDistances();
   * ```
 - *
 - * @augments LineBasicMaterial
@@ -15847,14 +15849,15 @@ index 3cb1a34d8..63489ffa1 100644
       */
      readonly isLineDashedMaterial: boolean;
 -    /**
--     * The scale of the dashed part of a line.
+-     * Scales the line distances before dashing. Values greater than `1`
+-     * make dashes and gaps shorter.
 -     *
 -     * @type {number}
 -     * @default 1
 -     */
 -    scale: number;
 -    /**
--     * The size of the dash. This is both the gap with the stroke.
+-     * The length of each dash.
 -     *
 -     * @type {number}
 -     * @default 3
@@ -15875,7 +15878,7 @@ index 3cb1a34d8..63489ffa1 100644
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface LineDashedMaterial extends LineDashedMaterialProperties {}
 diff --git a/jsdoc-testing/jsdoc/src/materials/Material.d.ts b/jsdoc-testing/jsdoc/src/materials/Material.d.ts
-index a559b6e84..3a3bdc0e0 100644
+index d404bc9c7..cb689cdf3 100644
 --- a/jsdoc-testing/jsdoc/src/materials/Material.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/Material.d.ts
 @@ -1,41 +1,36 @@
@@ -15949,9 +15952,9 @@ index a559b6e84..3a3bdc0e0 100644
      /**
       * Defines the blending type of the material.
       *
-@@ -43,24 +38,21 @@ export class Material extends EventDispatcher {
-      * {@link Material#blendSrc}, {@link Material#blendDst} or {@link Material#blendEquation}
-      * should have any effect.
+@@ -46,24 +41,21 @@ export class Material extends EventDispatcher {
+      * `SubtractiveBlending` and `MultiplyBlending` require {@link Material#premultipliedAlpha}
+      * to be `true`.
       *
 -     * @type {(NoBlending|NormalBlending|AdditiveBlending|SubtractiveBlending|MultiplyBlending|CustomBlending)}
       * @default NormalBlending
@@ -15976,7 +15979,7 @@ index a559b6e84..3a3bdc0e0 100644
       * @default false
       */
      vertexColors: boolean;
-@@ -71,7 +63,6 @@ export class Material extends EventDispatcher {
+@@ -74,7 +66,6 @@ export class Material extends EventDispatcher {
       * If the {@link Material#transparent} is not set to `true`,
       * the material will remain fully opaque and this value will only affect its color.
       *
@@ -15984,7 +15987,7 @@ index a559b6e84..3a3bdc0e0 100644
       * @default 1
       */
      opacity: number;
-@@ -83,7 +74,6 @@ export class Material extends EventDispatcher {
+@@ -86,7 +77,6 @@ export class Material extends EventDispatcher {
       * When set to true, the extent to which the material is transparent is
       * controlled by {@link Material#opacity}.
       *
@@ -15992,7 +15995,7 @@ index a559b6e84..3a3bdc0e0 100644
       * @default false
       */
      transparent: boolean;
-@@ -93,58 +83,50 @@ export class Material extends EventDispatcher {
+@@ -96,58 +86,50 @@ export class Material extends EventDispatcher {
       * a random threshold. Randomization introduces some grain or noise, but approximates alpha
       * blending without the associated problems of sorting. Using TAA can reduce the resulting noise.
       *
@@ -16057,7 +16060,7 @@ index a559b6e84..3a3bdc0e0 100644
       * @default (0,0,0)
       */
      blendColor: Color;
-@@ -153,22 +135,19 @@ export class Material extends EventDispatcher {
+@@ -156,24 +138,21 @@ export class Material extends EventDispatcher {
       *
       * This property has only an effect when using custom blending with `ConstantAlpha` or `OneMinusConstantAlpha`.
       *
@@ -16075,13 +16078,15 @@ index a559b6e84..3a3bdc0e0 100644
 +    depthFunc: DepthModes;
      /**
       * Whether to have depth test enabled when rendering this material.
-      * When the depth test is disabled, the depth write will also be implicitly disabled.
+      * With `WebGLRenderer`, disabling the depth test also implicitly disables the depth write.
+      * With the WebGPU backend of `WebGPURenderer`, depth is still written unless
+      * {@link Material#depthWrite} is set to `false`.
       *
 -     * @type {boolean}
       * @default true
       */
      depthTest: boolean;
-@@ -178,67 +157,58 @@ export class Material extends EventDispatcher {
+@@ -183,67 +162,58 @@ export class Material extends EventDispatcher {
       * When drawing 2D overlays it can be useful to disable the depth writing in
       * order to layer several things together without creating z-index artifacts.
       *
@@ -16153,33 +16158,33 @@ index a559b6e84..3a3bdc0e0 100644
       * @default false
       */
      stencilWrite: boolean;
-@@ -249,7 +219,6 @@ export class Material extends EventDispatcher {
-      * (not rendered). This requires {@link WebGLRenderer#localClippingEnabled} to
-      * be `true`.
+@@ -256,7 +226,6 @@ export class Material extends EventDispatcher {
+      *
+      * Only supported with `WebGLRenderer`. With `WebGPURenderer`, use {@link ClippingGroup}.
       *
 -     * @type {?Array<Plane>}
       * @default null
       */
      clippingPlanes: Array<Plane> | null;
-@@ -257,7 +226,6 @@ export class Material extends EventDispatcher {
+@@ -264,7 +233,6 @@ export class Material extends EventDispatcher {
       * Changes the behavior of clipping planes so that only their intersection is
-      * clipped, rather than their union.
+      * clipped, rather than their union. Only supported with `WebGLRenderer`.
       *
 -     * @type {boolean}
       * @default false
       */
      clipIntersection: boolean;
-@@ -265,7 +233,6 @@ export class Material extends EventDispatcher {
+@@ -272,7 +240,6 @@ export class Material extends EventDispatcher {
       * Defines whether to clip shadows according to the clipping planes specified
-      * on this material.
+      * on this material. Only supported with `WebGLRenderer`.
       *
 -     * @type {boolean}
       * @default false
       */
      clipShadows: boolean;
-@@ -277,24 +244,21 @@ export class Material extends EventDispatcher {
-      * - When {@link Material#side} is set to `BackSide`, the front side cast shadows.
-      * - When {@link Material#side} is set to `DoubleSide`, both sides cast shadows.
+@@ -286,24 +253,21 @@ export class Material extends EventDispatcher {
+      *
+      * With `VSMShadowMap`, the side casting shadows matches {@link Material#side} instead.
       *
 -     * @type {?(FrontSide|BackSide|DoubleSide)}
       * @default null
@@ -16189,7 +16194,7 @@ index a559b6e84..3a3bdc0e0 100644
      /**
       * Whether to render the material's color.
       *
-      * This can be used in conjunction with {@link Object3D#renderOder} to create invisible
+      * This can be used in conjunction with {@link Object3D#renderOrder} to create invisible
       * objects that occlude other objects.
       *
 -     * @type {boolean}
@@ -16203,7 +16208,7 @@ index a559b6e84..3a3bdc0e0 100644
       * @default null
       */
      precision: ("highp" | "mediump" | "lowp") | null;
-@@ -307,28 +271,24 @@ export class Material extends EventDispatcher {
+@@ -316,28 +280,24 @@ export class Material extends EventDispatcher {
       * Can be useful for rendering hidden-line images, for applying decals to surfaces, and for
       * rendering solids with highlighted edges.
       *
@@ -16232,7 +16237,7 @@ index a559b6e84..3a3bdc0e0 100644
       * @default false
       */
      dithering: boolean;
-@@ -337,14 +297,12 @@ export class Material extends EventDispatcher {
+@@ -346,14 +306,12 @@ export class Material extends EventDispatcher {
       * (meaning when the renderer was created with *antialias* parameter set to `true`). Enabling this
       * will smooth aliasing on clip plane edges and alphaTest-clipped edges.
       *
@@ -16247,7 +16252,7 @@ index a559b6e84..3a3bdc0e0 100644
       * @default false
       */
      premultipliedAlpha: boolean;
-@@ -357,21 +315,18 @@ export class Material extends EventDispatcher {
+@@ -366,21 +324,18 @@ export class Material extends EventDispatcher {
       * vegetation like grass sprites. In these cases, set the `forceSinglePass` flag to `true` to
       * disable the two pass rendering to avoid performance issues.
       *
@@ -16269,7 +16274,7 @@ index a559b6e84..3a3bdc0e0 100644
       * @default true
       */
      visible: boolean;
-@@ -381,36 +336,238 @@ export class Material extends EventDispatcher {
+@@ -390,35 +345,238 @@ export class Material extends EventDispatcher {
       * It is ignored when rendering to a render target or using post processing or when using
       * `WebGPURenderer`. In all these cases, all materials are honored by tone mapping.
       *
@@ -16282,23 +16287,27 @@ index a559b6e84..3a3bdc0e0 100644
       * should not hold references to functions as these will not be cloned.
 -     *
 -     * @type {Object}
-      */
+-     */
 -    userData: Object;
-+    userData: Record<string, any>;
-+    set alphaTest(value: number);
-     /**
+-    /**
 -     * This starts at `0` and counts how many times {@link Material#needsUpdate} is set to `true`.
-+     * Sets the alpha value to be used when running an alpha test. The material
-+     * will not be rendered if the opacity is lower than this value.
-      *
+-     *
 -     * @type {number}
 -     * @readonly
-      * @default 0
+-     * @default 0
       */
 -    readonly version: number;
 -    _alphaTest: number;
--    readonly set alphaTest(value: number);
-+    get alphaTest(): number;
++    userData: Record<string, any>;
+     set alphaTest(value: number);
+     /**
+      * Sets the alpha value to be used when running an alpha test. The material
+      * will not be rendered if the opacity is lower than this value.
+      *
+-     * @type {number}
+      * @default 0
+      */
+     get alphaTest(): number;
 +}
 +
 +export type MapColorPropertiesToColorRepresentations<T> = { [P in keyof T]: T[P] extends Color ? ColorRepresentation : T[P] };
@@ -16489,9 +16498,7 @@ index a559b6e84..3a3bdc0e0 100644
 + * @abstract
 + */
 +export class Material<TEventMap extends MaterialEventMap = MaterialEventMap> extends EventDispatcher<TEventMap> {
-     /**
--     * Sets the alpha value to be used when running an alpha test. The material
--     * will not be rendered if the opacity is lower than this value.
++    /**
 +     * This flag can be used for type testing.
 +     *
 +     * @default true
@@ -16512,18 +16519,15 @@ index a559b6e84..3a3bdc0e0 100644
 +    type: string;
 +    /**
 +     * This starts at `0` and counts how many times {@link Material#needsUpdate} is set to `true`.
-      *
--     * @type {number}
--     * @readonly
-      * @default 0
-      */
--    readonly get alphaTest(): number;
++     *
++     * @default 0
++     */
 +    readonly version: number;
 +    defines?: Record<string, unknown> | undefined;
      /**
       * An optional callback that is executed immediately before the material is used to render a 3D object.
       *
-@@ -423,7 +580,14 @@ export class Material extends EventDispatcher {
+@@ -431,7 +589,14 @@ export class Material extends EventDispatcher {
       * @param {Object3D} object - The 3D object.
       * @param {Object} group - The geometry group data.
       */
@@ -16539,7 +16543,7 @@ index a559b6e84..3a3bdc0e0 100644
      /**
       * An optional callback that is executed immediately before the shader
       * program is compiled. This function is called with the shader source code
-@@ -436,7 +600,7 @@ export class Material extends EventDispatcher {
+@@ -444,7 +609,7 @@ export class Material extends EventDispatcher {
       * @param {{vertexShader:string,fragmentShader:string,uniforms:Object}} shaderobject - The object holds the uniforms and the vertex and fragment shader source.
       * @param {WebGLRenderer} renderer - A reference to the renderer.
       */
@@ -16548,7 +16552,7 @@ index a559b6e84..3a3bdc0e0 100644
      /**
       * In case {@link Material#onBeforeCompile} is used, this callback can be used to identify
       * values of settings used in `onBeforeCompile()`, so three.js can reuse a cached
-@@ -454,7 +618,7 @@ export class Material extends EventDispatcher {
+@@ -462,7 +627,7 @@ export class Material extends EventDispatcher {
       *
       * @param {Object} [values] - The material values to set.
       */
@@ -16557,7 +16561,7 @@ index a559b6e84..3a3bdc0e0 100644
      /**
       * Serializes the material into JSON.
       *
-@@ -462,7 +626,7 @@ export class Material extends EventDispatcher {
+@@ -470,7 +635,7 @@ export class Material extends EventDispatcher {
       * @return {Object} A JSON object representing the serialized material.
       * @see {@link ObjectLoader#parse}
       */
@@ -16566,7 +16570,7 @@ index a559b6e84..3a3bdc0e0 100644
      /**
       * Deserializes the material from the given JSON.
       *
-@@ -470,22 +634,20 @@ export class Material extends EventDispatcher {
+@@ -478,22 +643,20 @@ export class Material extends EventDispatcher {
       * @param {Object<string,Texture>} textures - A dictionary holding textures referenced by the material.
       * @return {Material} A reference to this material.
       */
@@ -16592,7 +16596,7 @@ index a559b6e84..3a3bdc0e0 100644
      /**
       * Frees the GPU-related resources allocated by this instance. Call this
       * method whenever this instance is no longer used in your app.
-@@ -497,12 +659,11 @@ export class Material extends EventDispatcher {
+@@ -505,12 +668,11 @@ export class Material extends EventDispatcher {
       * Setting this property to `true` indicates the engine the material
       * needs to be recompiled.
       *
@@ -16651,7 +16655,7 @@ index 3f555b856..9e8afdfb9 100644
 +export * from './LineBasicMaterial.js';
 +export * from './Material.js';
 diff --git a/jsdoc-testing/jsdoc/src/materials/MeshBasicMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/MeshBasicMaterial.d.ts
-index 52eb4adc6..ef923a87f 100644
+index 6eb4cdbab..913e4b2e9 100644
 --- a/jsdoc-testing/jsdoc/src/materials/MeshBasicMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/MeshBasicMaterial.d.ts
 @@ -1,35 +1,13 @@
@@ -16713,7 +16717,7 @@ index 52eb4adc6..ef923a87f 100644
       * @default 1
       */
      aoMapIntensity: number;
-@@ -130,7 +106,6 @@ export class MeshBasicMaterial extends Material {
+@@ -131,7 +107,6 @@ export class MeshBasicMaterial extends Material {
      /**
       * The rotation of the environment map in radians.
       *
@@ -16721,7 +16725,7 @@ index 52eb4adc6..ef923a87f 100644
       * @default (0,0,0)
       */
      envMapRotation: Euler;
-@@ -140,15 +115,13 @@ export class MeshBasicMaterial extends Material {
+@@ -141,15 +116,13 @@ export class MeshBasicMaterial extends Material {
       * When set to `MixOperation`, the {@link MeshBasicMaterial#reflectivity} is used to
       * blend between the two colors.
       *
@@ -16738,7 +16742,7 @@ index 52eb4adc6..ef923a87f 100644
       * @default 1
       */
      reflectivity: number;
-@@ -158,14 +131,12 @@ export class MeshBasicMaterial extends Material {
+@@ -159,14 +132,12 @@ export class MeshBasicMaterial extends Material {
       * modes {@link CubeRefractionMapping} and {@link EquirectangularRefractionMapping}.
       * The refraction ratio should not exceed `1`.
       *
@@ -16753,7 +16757,7 @@ index 52eb4adc6..ef923a87f 100644
       * @default false
       */
      wireframe: boolean;
-@@ -174,7 +145,6 @@ export class MeshBasicMaterial extends Material {
+@@ -175,7 +146,6 @@ export class MeshBasicMaterial extends Material {
       *
       * Can only be used with {@link SVGRenderer}.
       *
@@ -16761,7 +16765,7 @@ index 52eb4adc6..ef923a87f 100644
       * @default 1
       */
      wireframeLinewidth: number;
-@@ -183,7 +153,6 @@ export class MeshBasicMaterial extends Material {
+@@ -184,7 +154,6 @@ export class MeshBasicMaterial extends Material {
       *
       * Can only be used with {@link SVGRenderer}.
       *
@@ -16769,7 +16773,7 @@ index 52eb4adc6..ef923a87f 100644
       * @default 'round'
       */
      wireframeLinecap: ("round" | "bevel" | "miter");
-@@ -192,19 +161,44 @@ export class MeshBasicMaterial extends Material {
+@@ -193,19 +162,44 @@ export class MeshBasicMaterial extends Material {
       *
       * Can only be used with {@link SVGRenderer}.
       *
@@ -16933,7 +16937,7 @@ index 7dd4292e2..ffa207c07 100644
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface MeshDepthMaterial extends MeshDepthMaterialProperties {}
 diff --git a/jsdoc-testing/jsdoc/src/materials/MeshDistanceMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/MeshDistanceMaterial.d.ts
-index 37d37472e..e744437ce 100644
+index 9056f6eb2..961966f34 100644
 --- a/jsdoc-testing/jsdoc/src/materials/MeshDistanceMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/MeshDistanceMaterial.d.ts
 @@ -1,34 +1,7 @@
@@ -16943,8 +16947,8 @@ index 37d37472e..e744437ce 100644
 - *
 - * Can also be used to customize the shadow casting of an object by assigning
 - * an instance of `MeshDistanceMaterial` to {@link Object3D#customDistanceMaterial}.
-- * The following examples demonstrates this approach in order to ensure
-- * transparent parts of objects do not cast shadows.
+- * This approach can be used to ensure transparent parts of objects do not
+- * cast shadows.
 - *
 - * @augments Material
 - */
@@ -17004,8 +17008,8 @@ index 37d37472e..e744437ce 100644
 + *
 + * Can also be used to customize the shadow casting of an object by assigning
 + * an instance of `MeshDistanceMaterial` to {@link Object3D#customDistanceMaterial}.
-+ * The following examples demonstrates this approach in order to ensure
-+ * transparent parts of objects do not cast shadows.
++ * This approach can be used to ensure transparent parts of objects do not
++ * cast shadows.
 + */
 +export class MeshDistanceMaterial extends Material {
 +    /**
@@ -17030,7 +17034,7 @@ index 37d37472e..e744437ce 100644
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface MeshDistanceMaterial extends MeshDistanceMaterialProperties {}
 diff --git a/jsdoc-testing/jsdoc/src/materials/MeshLambertMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/MeshLambertMaterial.d.ts
-index 38e1e81cb..44dffb850 100644
+index 423ceba85..95a60c4ec 100644
 --- a/jsdoc-testing/jsdoc/src/materials/MeshLambertMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/MeshLambertMaterial.d.ts
 @@ -1,44 +1,14 @@
@@ -17158,16 +17162,16 @@ index 38e1e81cb..44dffb850 100644
       * @default 0
       */
      displacementBias: number;
-@@ -252,7 +213,6 @@ export class MeshLambertMaterial extends Material {
-     /**
-      * The rotation of the environment map in radians.
+@@ -256,7 +217,6 @@ export class MeshLambertMaterial extends Material {
+      * {@link MeshLambertMaterial#envMap}. When the material is lit by
+      * {@link Scene#environment}, {@link Scene#environmentRotation} is used instead.
       *
 -     * @type {Euler}
       * @default (0,0,0)
       */
      envMapRotation: Euler;
-@@ -262,22 +222,19 @@ export class MeshLambertMaterial extends Material {
-      * When set to `MixOperation`, the {@link MeshBasicMaterial#reflectivity} is used to
+@@ -266,15 +226,13 @@ export class MeshLambertMaterial extends Material {
+      * When set to `MixOperation`, the {@link MeshLambertMaterial#reflectivity} is used to
       * blend between the two colors.
       *
 -     * @type {(MultiplyOperation|MixOperation|AddOperation)}
@@ -17183,14 +17187,15 @@ index 38e1e81cb..44dffb850 100644
       * @default 1
       */
      reflectivity: number;
-     /**
-      * Scales the effect of the environment map by multiplying its color.
+@@ -284,7 +242,6 @@ export class MeshLambertMaterial extends Material {
+      * affect the reflection blended in via {@link MeshLambertMaterial#combine}. When the material is lit
+      * by {@link Scene#environment}, {@link Scene#environmentIntensity} is used instead.
       *
 -     * @type {number}
       * @default 1
       */
      envMapIntensity: number;
-@@ -287,14 +244,12 @@ export class MeshLambertMaterial extends Material {
+@@ -294,14 +251,12 @@ export class MeshLambertMaterial extends Material {
       * modes {@link CubeRefractionMapping} and {@link EquirectangularRefractionMapping}.
       * The refraction ratio should not exceed `1`.
       *
@@ -17205,7 +17210,7 @@ index 38e1e81cb..44dffb850 100644
       * @default false
       */
      wireframe: boolean;
-@@ -303,7 +258,6 @@ export class MeshLambertMaterial extends Material {
+@@ -310,7 +265,6 @@ export class MeshLambertMaterial extends Material {
       *
       * Can only be used with {@link SVGRenderer}.
       *
@@ -17213,7 +17218,7 @@ index 38e1e81cb..44dffb850 100644
       * @default 1
       */
      wireframeLinewidth: number;
-@@ -312,7 +266,6 @@ export class MeshLambertMaterial extends Material {
+@@ -319,7 +273,6 @@ export class MeshLambertMaterial extends Material {
       *
       * Can only be used with {@link SVGRenderer}.
       *
@@ -17221,7 +17226,7 @@ index 38e1e81cb..44dffb850 100644
       * @default 'round'
       */
      wireframeLinecap: ("round" | "bevel" | "miter");
-@@ -321,27 +274,59 @@ export class MeshLambertMaterial extends Material {
+@@ -328,27 +281,59 @@ export class MeshLambertMaterial extends Material {
       *
       * Can only be used with {@link SVGRenderer}.
       *
@@ -17455,12 +17460,12 @@ index a64c117df..c73a44bef 100644
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface MeshMatcapMaterial extends MeshMatcapMaterialProperties {}
 diff --git a/jsdoc-testing/jsdoc/src/materials/MeshNormalMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/MeshNormalMaterial.d.ts
-index b9bc47097..95243ca94 100644
+index 08dc9e16f..4c4ae9b1b 100644
 --- a/jsdoc-testing/jsdoc/src/materials/MeshNormalMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/MeshNormalMaterial.d.ts
 @@ -1,29 +1,9 @@
 -/**
-- * A material that maps the normal vectors to RGB colors.
+- * A material that maps view-space normal vectors to RGB colors.
 - *
 - * @augments Material
 - * @demo scenes/material-browser.html#MeshNormalMaterial
@@ -17574,7 +17579,7 @@ index b9bc47097..95243ca94 100644
 +export interface MeshNormalMaterialParameters extends Partial<MapColorPropertiesToColorRepresentations<MeshNormalMaterialProperties>> {}
 +
 +/**
-+ * A material that maps the normal vectors to RGB colors.
++ * A material that maps view-space normal vectors to RGB colors.
 + */
 +export class MeshNormalMaterial extends Material {
 +    /**
@@ -17599,7 +17604,7 @@ index b9bc47097..95243ca94 100644
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface MeshNormalMaterial extends MeshNormalMaterialProperties {}
 diff --git a/jsdoc-testing/jsdoc/src/materials/MeshPhongMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/MeshPhongMaterial.d.ts
-index a85fad187..e877b08e4 100644
+index 0eac8c658..45447af48 100644
 --- a/jsdoc-testing/jsdoc/src/materials/MeshPhongMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/MeshPhongMaterial.d.ts
 @@ -1,42 +1,14 @@
@@ -17740,16 +17745,16 @@ index a85fad187..e877b08e4 100644
       * @default 0
       */
      displacementBias: number;
-@@ -267,7 +227,6 @@ export class MeshPhongMaterial extends Material {
-     /**
-      * The rotation of the environment map in radians.
+@@ -270,7 +230,6 @@ export class MeshPhongMaterial extends Material {
+      * {@link MeshPhongMaterial#envMap}. When the material is lit by
+      * {@link Scene#environment}, {@link Scene#environmentRotation} is used instead.
       *
 -     * @type {Euler}
       * @default (0,0,0)
       */
      envMapRotation: Euler;
-@@ -277,22 +236,19 @@ export class MeshPhongMaterial extends Material {
-      * When set to `MixOperation`, the {@link MeshBasicMaterial#reflectivity} is used to
+@@ -280,15 +239,13 @@ export class MeshPhongMaterial extends Material {
+      * When set to `MixOperation`, the {@link MeshPhongMaterial#reflectivity} is used to
       * blend between the two colors.
       *
 -     * @type {(MultiplyOperation|MixOperation|AddOperation)}
@@ -17765,14 +17770,15 @@ index a85fad187..e877b08e4 100644
       * @default 1
       */
      reflectivity: number;
-     /**
-      * Scales the effect of the environment map by multiplying its color.
+@@ -298,7 +255,6 @@ export class MeshPhongMaterial extends Material {
+      * affect the reflection blended in via {@link MeshPhongMaterial#combine}. When the material is lit
+      * by {@link Scene#environment}, {@link Scene#environmentIntensity} is used instead.
       *
 -     * @type {number}
       * @default 1
       */
      envMapIntensity: number;
-@@ -302,14 +258,12 @@ export class MeshPhongMaterial extends Material {
+@@ -308,14 +264,12 @@ export class MeshPhongMaterial extends Material {
       * modes {@link CubeRefractionMapping} and {@link EquirectangularRefractionMapping}.
       * The refraction ratio should not exceed `1`.
       *
@@ -17787,7 +17793,7 @@ index a85fad187..e877b08e4 100644
       * @default false
       */
      wireframe: boolean;
-@@ -318,7 +272,6 @@ export class MeshPhongMaterial extends Material {
+@@ -324,7 +278,6 @@ export class MeshPhongMaterial extends Material {
       *
       * Can only be used with {@link SVGRenderer}.
       *
@@ -17795,7 +17801,7 @@ index a85fad187..e877b08e4 100644
       * @default 1
       */
      wireframeLinewidth: number;
-@@ -327,7 +280,6 @@ export class MeshPhongMaterial extends Material {
+@@ -333,7 +286,6 @@ export class MeshPhongMaterial extends Material {
       *
       * Can only be used with {@link SVGRenderer}.
       *
@@ -17803,7 +17809,7 @@ index a85fad187..e877b08e4 100644
       * @default 'round'
       */
      wireframeLinecap: ("round" | "bevel" | "miter");
-@@ -336,27 +288,57 @@ export class MeshPhongMaterial extends Material {
+@@ -342,27 +294,57 @@ export class MeshPhongMaterial extends Material {
       *
       * Can only be used with {@link SVGRenderer}.
       *
@@ -17870,7 +17876,7 @@ index a85fad187..e877b08e4 100644
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface MeshPhongMaterial extends MeshPhongMaterialProperties {}
 diff --git a/jsdoc-testing/jsdoc/src/materials/MeshPhysicalMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/MeshPhysicalMaterial.d.ts
-index 9985fd741..f9b03e1af 100644
+index 23a83f32c..3e5bb1065 100644
 --- a/jsdoc-testing/jsdoc/src/materials/MeshPhysicalMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/MeshPhysicalMaterial.d.ts
 @@ -1,52 +1,15 @@
@@ -17995,15 +18001,15 @@ index 9985fd741..f9b03e1af 100644
       * @default 400
       */
      iridescenceThicknessMaximum: number;
-@@ -179,7 +148,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
-     /**
-      * The sheen tint.
+@@ -180,7 +149,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+      * The sheen tint. It is multiplied by {@link MeshPhysicalMaterial#sheen}, so
+      * it must be set to a non-black color for sheen to be visible.
       *
 -     * @type {Color}
       * @default (0,0,0)
       */
      sheenColor: Color;
-@@ -198,7 +166,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -199,7 +167,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
      /**
       * Roughness of the sheen layer, from `0.0` to `1.0`.
       *
@@ -18011,7 +18017,7 @@ index 9985fd741..f9b03e1af 100644
       * @default 1
       */
      sheenRoughness: number;
-@@ -229,7 +196,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -230,7 +197,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * coordinate space of the mesh. If the value is `0` the material is
       * thin-walled. Otherwise the material is a volume boundary.
       *
@@ -18019,7 +18025,7 @@ index 9985fd741..f9b03e1af 100644
       * @default 0
       */
      thickness: number;
-@@ -249,7 +215,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -250,7 +216,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * the medium before interacting with a particle. The value is given in world
       * space units, and must be greater than zero.
       *
@@ -18027,7 +18033,7 @@ index 9985fd741..f9b03e1af 100644
       * @default Infinity
       */
      attenuationDistance: number;
-@@ -257,7 +222,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -258,7 +223,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * The color that white light turns into due to absorption when reaching the
       * attenuation distance.
       *
@@ -18035,7 +18041,7 @@ index 9985fd741..f9b03e1af 100644
       * @default (1,1,1)
       */
      attenuationColor: Color;
-@@ -265,7 +229,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -266,7 +230,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * A float that scales the amount of specular reflection for non-metals only.
       * When set to zero, the model is effectively Lambertian. From `0.0` to `1.0`.
       *
@@ -18043,7 +18049,7 @@ index 9985fd741..f9b03e1af 100644
       * @default 1
       */
      specularIntensity: number;
-@@ -283,7 +246,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -284,7 +247,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
      /**
       * Tints the specular reflection at normal incidence for non-metals only.
       *
@@ -18051,7 +18057,7 @@ index 9985fd741..f9b03e1af 100644
       * @default (1,1,1)
       */
      specularColor: Color;
-@@ -299,19 +261,10 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -300,19 +262,10 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * @default null
       */
      specularColorMap: Texture | null;
@@ -18071,7 +18077,7 @@ index 9985fd741..f9b03e1af 100644
       * @default 0
       */
      get anisotropy(): number;
-@@ -321,7 +274,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -322,7 +275,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * clear coat related properties to enable multilayer materials that have a
       * thin translucent layer over the base layer.
       *
@@ -18079,7 +18085,7 @@ index 9985fd741..f9b03e1af 100644
       * @default 0
       */
      get clearcoat(): number;
-@@ -331,7 +283,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -332,7 +284,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * uses Lambertian diffuse reflection. Values above `0.0` use the EON
       * energy-preserving rough diffuse model.
       *
@@ -18087,7 +18093,7 @@ index 9985fd741..f9b03e1af 100644
       * @default 0
       */
      get diffuseRoughness(): number;
-@@ -340,7 +291,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -341,7 +292,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * The intensity of the iridescence layer, simulating RGB color shift based on the angle between
       * the surface and the viewer, from `0.0` to `1.0`.
       *
@@ -18095,7 +18101,7 @@ index 9985fd741..f9b03e1af 100644
       * @default 0
       */
      get iridescence(): number;
-@@ -350,7 +300,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -351,7 +301,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * through a relatively clear volume. Any value zero or larger is valid, the typical range of
       * realistic values is `[0, 1]`. This property can be only be used with transmissive objects.
       *
@@ -18103,7 +18109,7 @@ index 9985fd741..f9b03e1af 100644
       * @default 0
       */
      get dispersion(): number;
-@@ -361,7 +310,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -362,7 +311,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * reflected about the surface normal, redirecting the specular lobe back
       * toward the light source.
       *
@@ -18111,15 +18117,15 @@ index 9985fd741..f9b03e1af 100644
       * @default 0
       */
      get retroreflectivity(): number;
-@@ -369,7 +317,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
-     /**
-      * The intensity of the sheen layer, from `0.0` to `1.0`.
+@@ -372,7 +320,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+      * `sheenColor * sheen`, so {@link MeshPhysicalMaterial#sheenColor} (black by
+      * default) must also be set for sheen to be visible.
       *
 -     * @type {number}
       * @default 0
       */
      get sheen(): number;
-@@ -383,21 +330,61 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -386,21 +333,61 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       *
       * When transmission is non-zero, `opacity` should be  set to `1`.
       *
@@ -18190,7 +18196,7 @@ index 9985fd741..f9b03e1af 100644
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface MeshPhysicalMaterial extends MeshPhysicalMaterialProperties {}
 diff --git a/jsdoc-testing/jsdoc/src/materials/MeshStandardMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/MeshStandardMaterial.d.ts
-index 8fa8bdf30..0c02edca5 100644
+index 94d45f9fd..c8e44cc49 100644
 --- a/jsdoc-testing/jsdoc/src/materials/MeshStandardMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/MeshStandardMaterial.d.ts
 @@ -1,64 +1,18 @@
@@ -18358,16 +18364,17 @@ index 8fa8bdf30..0c02edca5 100644
       * @default 0
       */
      displacementBias: number;
-@@ -303,21 +246,18 @@ export class MeshStandardMaterial extends Material {
-     /**
-      * The rotation of the environment map in radians.
+@@ -305,7 +248,6 @@ export class MeshStandardMaterial extends Material {
+      * {@link MeshStandardMaterial#envMap}. When the material is lit by
+      * {@link Scene#environment}, {@link Scene#environmentRotation} is used instead.
       *
 -     * @type {Euler}
       * @default (0,0,0)
       */
      envMapRotation: Euler;
-     /**
-      * Scales the effect of the environment map by multiplying its color.
+@@ -314,14 +256,12 @@ export class MeshStandardMaterial extends Material {
+      * {@link MeshStandardMaterial#envMap}. When the material is lit by
+      * {@link Scene#environment}, {@link Scene#environmentIntensity} is used instead.
       *
 -     * @type {number}
       * @default 1
@@ -18380,7 +18387,7 @@ index 8fa8bdf30..0c02edca5 100644
       * @default false
       */
      wireframe: boolean;
-@@ -326,7 +266,6 @@ export class MeshStandardMaterial extends Material {
+@@ -330,7 +270,6 @@ export class MeshStandardMaterial extends Material {
       *
       * Can only be used with {@link SVGRenderer}.
       *
@@ -18388,7 +18395,7 @@ index 8fa8bdf30..0c02edca5 100644
       * @default 1
       */
      wireframeLinewidth: number;
-@@ -335,7 +274,6 @@ export class MeshStandardMaterial extends Material {
+@@ -339,7 +278,6 @@ export class MeshStandardMaterial extends Material {
       *
       * Can only be used with {@link SVGRenderer}.
       *
@@ -18396,7 +18403,7 @@ index 8fa8bdf30..0c02edca5 100644
       * @default 'round'
       */
      wireframeLinecap: ("round" | "bevel" | "miter");
-@@ -344,27 +282,76 @@ export class MeshStandardMaterial extends Material {
+@@ -348,27 +286,76 @@ export class MeshStandardMaterial extends Material {
       *
       * Can only be used with {@link SVGRenderer}.
       *
@@ -18675,7 +18682,7 @@ index 4f491f140..bc7707a15 100644
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface MeshToonMaterial extends MeshToonMaterialProperties {}
 diff --git a/jsdoc-testing/jsdoc/src/materials/PointsMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/PointsMaterial.d.ts
-index 733901f6e..8547ba0b4 100644
+index 20beefcc2..b97c086fd 100644
 --- a/jsdoc-testing/jsdoc/src/materials/PointsMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/PointsMaterial.d.ts
 @@ -1,52 +1,11 @@
@@ -18736,7 +18743,7 @@ index 733901f6e..8547ba0b4 100644
       * @default (1,1,1)
       */
      color: Color;
-@@ -85,25 +44,68 @@ export class PointsMaterial extends Material {
+@@ -87,25 +46,68 @@ export class PointsMaterial extends Material {
       *
       * Might be capped if the value exceeds hardware dependent parameters like [gl.ALIASED_POINT_SIZE_RANGE](https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getParameter).
       *
@@ -18931,7 +18938,7 @@ index c9e548d48..9a703d74d 100644
  }
 -export {};
 diff --git a/jsdoc-testing/jsdoc/src/materials/ShaderMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/ShaderMaterial.d.ts
-index 24157d560..7372d61bf 100644
+index ce3e60f1b..7d28868cb 100644
 --- a/jsdoc-testing/jsdoc/src/materials/ShaderMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/ShaderMaterial.d.ts
 @@ -1,84 +1,16 @@
@@ -19911,7 +19918,7 @@ index c488617fe..ea6f2073a 100644
 +
 +export default MeshLambertNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/MeshMatcapNodeMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/MeshMatcapNodeMaterial.d.ts
-index 1a2d32c8c..2b8920f40 100644
+index 41f1d1d8e..39dcba9f7 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/MeshMatcapNodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/MeshMatcapNodeMaterial.d.ts
 @@ -1,8 +1,17 @@
@@ -20015,7 +20022,7 @@ index effc5951b..5ba479deb 100644
 +
 +export default MeshNormalNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/MeshPhongNodeMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/MeshPhongNodeMaterial.d.ts
-index 8ff50c872..92f311aa7 100644
+index 9a1ff1eb2..0d660ae96 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/MeshPhongNodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/MeshPhongNodeMaterial.d.ts
 @@ -1,24 +1,12 @@
@@ -20027,7 +20034,7 @@ index 8ff50c872..92f311aa7 100644
 - */
 -declare class MeshPhongNodeMaterial extends NodeMaterial {
 -    /**
--     * Constructs a new mesh lambert node material.
+-     * Constructs a new mesh phong node material.
 -     *
 -     * @param {Object} [parameters] - The configuration parameter.
 -     */
@@ -20095,7 +20102,7 @@ index 8ff50c872..92f311aa7 100644
 + */
 +declare class MeshPhongNodeMaterial extends NodeMaterial {
 +    /**
-+     * Constructs a new mesh lambert node material.
++     * Constructs a new mesh phong node material.
 +     *
 +     * @param {Object} [parameters] - The configuration parameter.
 +     */
@@ -20132,7 +20139,7 @@ index 8ff50c872..92f311aa7 100644
 +
 +export default MeshPhongNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/MeshPhysicalNodeMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/MeshPhysicalNodeMaterial.d.ts
-index 40d563d39..aec52848f 100644
+index f7643b075..04afff56f 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/MeshPhysicalNodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/MeshPhysicalNodeMaterial.d.ts
 @@ -1,18 +1,10 @@
@@ -20197,7 +20204,7 @@ index 40d563d39..aec52848f 100644
      /**
       * The clearcoat normal of physical materials is by default inferred from the `clearcoatNormalMap`
       * property. This node property allows to overwrite the default
-@@ -57,10 +46,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+@@ -58,10 +47,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
       * If you don't want to overwrite the clearcoat normal but modify the existing
       * value instead, use {@link materialClearcoatNormal}.
       *
@@ -20209,7 +20216,7 @@ index 40d563d39..aec52848f 100644
      /**
       * The sheen of physical materials is by default inferred from the `sheen`, `sheenColor`
       * and `sheenColorMap` properties. This node property allows to overwrite the default
-@@ -69,10 +57,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+@@ -70,10 +58,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
       * If you don't want to overwrite the sheen but modify the existing
       * value instead, use {@link materialSheen}.
       *
@@ -20221,7 +20228,7 @@ index 40d563d39..aec52848f 100644
      /**
       * The sheen roughness of physical materials is by default inferred from the `sheenRoughness` and
       * `sheenRoughnessMap` properties. This node property allows to overwrite the default
-@@ -81,10 +68,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+@@ -82,10 +69,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
       * If you don't want to overwrite the sheen roughness but modify the existing
       * value instead, use {@link materialSheenRoughness}.
       *
@@ -20233,7 +20240,7 @@ index 40d563d39..aec52848f 100644
      /**
       * The iridescence of physical materials is by default inferred from the `iridescence`
       * property. This node property allows to overwrite the default
-@@ -93,10 +79,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+@@ -94,10 +80,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
       * If you don't want to overwrite the iridescence but modify the existing
       * value instead, use {@link materialIridescence}.
       *
@@ -20245,7 +20252,7 @@ index 40d563d39..aec52848f 100644
      /**
       * The iridescence IOR of physical materials is by default inferred from the `iridescenceIOR`
       * property. This node property allows to overwrite the default
-@@ -105,10 +90,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+@@ -106,10 +91,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
       * If you don't want to overwrite the iridescence IOR but modify the existing
       * value instead, use {@link materialIridescenceIOR}.
       *
@@ -20257,7 +20264,7 @@ index 40d563d39..aec52848f 100644
      /**
       * The iridescence thickness of physical materials is by default inferred from the `iridescenceThicknessMinimum`,
       * `iridescenceThicknessMaximum` and `iridescenceThicknessMap` properties. This node property allows to overwrite the default
-@@ -117,10 +101,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+@@ -118,10 +102,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
       * If you don't want to overwrite the iridescence thickness but modify the existing
       * value instead, use {@link materialIridescenceThickness}.
       *
@@ -20269,7 +20276,7 @@ index 40d563d39..aec52848f 100644
      /**
       * The specular intensity of physical materials is by default inferred from the `specularIntensity`
       * and `specularIntensityMap` properties. This node property allows to overwrite the default
-@@ -129,10 +112,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+@@ -130,10 +113,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
       * If you don't want to overwrite the specular intensity but modify the existing
       * value instead, use {@link materialSpecularIntensity}.
       *
@@ -20281,7 +20288,7 @@ index 40d563d39..aec52848f 100644
      /**
       * The specular color of physical materials is by default inferred from the `specularColor`
       * and `specularColorMap` properties. This node property allows to overwrite the default
-@@ -141,10 +123,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+@@ -142,10 +124,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
       * If you don't want to overwrite the specular color but modify the existing
       * value instead, use {@link materialSpecularColor}.
       *
@@ -20293,7 +20300,7 @@ index 40d563d39..aec52848f 100644
      /**
       * The ior of physical materials is by default inferred from the `ior`
       * property. This node property allows to overwrite the default
-@@ -153,10 +134,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+@@ -154,10 +135,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
       * If you don't want to overwrite the ior but modify the existing
       * value instead, use {@link materialIOR}.
       *
@@ -20305,7 +20312,7 @@ index 40d563d39..aec52848f 100644
      /**
       * The transmission of physical materials is by default inferred from the `transmission` and
       * `transmissionMap` properties. This node property allows to overwrite the default
-@@ -165,10 +145,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+@@ -166,10 +146,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
       * If you don't want to overwrite the transmission but modify the existing
       * value instead, use {@link materialTransmission}.
       *
@@ -20317,7 +20324,7 @@ index 40d563d39..aec52848f 100644
      /**
       * The thickness of physical materials is by default inferred from the `thickness` and
       * `thicknessMap` properties. This node property allows to overwrite the default
-@@ -177,10 +156,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+@@ -178,10 +157,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
       * If you don't want to overwrite the thickness but modify the existing
       * value instead, use {@link materialThickness}.
       *
@@ -20329,7 +20336,7 @@ index 40d563d39..aec52848f 100644
      /**
       * The attenuation distance of physical materials is by default inferred from the
       * `attenuationDistance` property. This node property allows to overwrite the default
-@@ -189,10 +167,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+@@ -190,10 +168,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
       * If you don't want to overwrite the attenuation distance but modify the existing
       * value instead, use {@link materialAttenuationDistance}.
       *
@@ -20341,7 +20348,7 @@ index 40d563d39..aec52848f 100644
      /**
       * The attenuation color of physical materials is by default inferred from the
       * `attenuationColor` property. This node property allows to overwrite the default
-@@ -201,10 +178,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+@@ -202,10 +179,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
       * If you don't want to overwrite the attenuation color but modify the existing
       * value instead, use {@link materialAttenuationColor}.
       *
@@ -20353,7 +20360,7 @@ index 40d563d39..aec52848f 100644
      /**
       * The dispersion of physical materials is by default inferred from the
       * `dispersion` property. This node property allows to overwrite the default
-@@ -213,10 +189,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+@@ -214,10 +190,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
       * If you don't want to overwrite the dispersion but modify the existing
       * value instead, use {@link materialDispersion}.
       *
@@ -20365,7 +20372,7 @@ index 40d563d39..aec52848f 100644
      /**
       * The retroreflective strength of physical materials is by default inferred from the
       * `retroreflectivity` property. This node property allows to overwrite the default
-@@ -225,10 +200,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+@@ -226,10 +201,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
       * If you don't want to overwrite the retroreflective strength but modify the existing
       * value instead, use {@link materialRetroreflectivity}.
       *
@@ -20376,12 +20383,12 @@ index 40d563d39..aec52848f 100644
 +    retroreflectivityNode: Node | null;
      /**
       * The anisotropy of physical materials is by default inferred from the
-      * `anisotropy` property. This node property allows to overwrite the default
-@@ -237,63 +211,75 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+      * `anisotropy`, `anisotropyRotation` and `anisotropyMap` properties. This node
+@@ -240,74 +214,78 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
       * If you don't want to overwrite the anisotropy but modify the existing
       * value instead, use {@link materialAnisotropy}.
       *
--     * @type {?Node<float>}
+-     * @type {?Node<vec2>}
       * @default null
       */
 -    anisotropyNode: Node<any> | null;
@@ -20411,59 +20418,78 @@ index 40d563d39..aec52848f 100644
       * Whether the lighting model should use clearcoat or not.
       *
 -     * @type {boolean}
-      * @default true
+-     * @readonly
+      * @default false
       */
-     get useClearcoat(): boolean;
+-    readonly get useClearcoat(): boolean;
++    get useClearcoat(): boolean;
      /**
       * Whether the lighting model should use EON rough diffuse reflection or not.
       *
 -     * @type {boolean}
+-     * @readonly
       * @default false
       */
-     get useDiffuseRoughness(): boolean;
+-    readonly get useDiffuseRoughness(): boolean;
++    get useDiffuseRoughness(): boolean;
      /**
       * Whether the lighting model should use iridescence or not.
       *
 -     * @type {boolean}
-      * @default true
+-     * @readonly
+      * @default false
       */
-     get useIridescence(): boolean;
+-    readonly get useIridescence(): boolean;
++    get useIridescence(): boolean;
      /**
       * Whether the lighting model should use sheen or not.
       *
 -     * @type {boolean}
-      * @default true
+-     * @readonly
+      * @default false
       */
-     get useSheen(): boolean;
+-    readonly get useSheen(): boolean;
++    get useSheen(): boolean;
      /**
       * Whether the lighting model should use anisotropy or not.
       *
 -     * @type {boolean}
-      * @default true
+-     * @readonly
+      * @default false
       */
-     get useAnisotropy(): boolean;
+-    readonly get useAnisotropy(): boolean;
++    get useAnisotropy(): boolean;
      /**
       * Whether the lighting model should use transmission or not.
       *
 -     * @type {boolean}
-      * @default true
+-     * @readonly
+      * @default false
       */
-     get useTransmission(): boolean;
+-    readonly get useTransmission(): boolean;
++    get useTransmission(): boolean;
      /**
       * Whether the lighting model should use dispersion or not.
       *
 -     * @type {boolean}
-      * @default true
+-     * @readonly
+      * @default false
       */
-     get useDispersion(): boolean;
+-    readonly get useDispersion(): boolean;
++    get useDispersion(): boolean;
      /**
       * Whether the lighting model should use retroreflection or not.
       *
 -     * @type {boolean}
-      * @default true
+-     * @readonly
+      * @default false
       */
-     get useRetroreflection(): boolean;
-@@ -308,7 +294,10 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+-    readonly get useRetroreflection(): boolean;
++    get useRetroreflection(): boolean;
+     /**
+      * Setups the physical specific node variables.
+      *
+@@ -319,7 +297,10 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
       *
       * @return {Node<vec3>} The clearcoat normal.
       */
@@ -20478,10 +20504,10 @@ index 40d563d39..aec52848f 100644
 +
 +export default MeshPhysicalNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/MeshSSSNodeMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/MeshSSSNodeMaterial.d.ts
-index a4839b67e..1d209e949 100644
+index f1005742c..aef6ba41a 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/MeshSSSNodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/MeshSSSNodeMaterial.d.ts
-@@ -1,52 +1,102 @@
+@@ -1,100 +1,115 @@
 -export default MeshSSSNodeMaterial;
 +import { LightingModelDirectInput } from "../../nodes/core/LightingModel.js";
 +import Node from "../../nodes/core/Node.js";
@@ -20543,7 +20569,8 @@ index a4839b67e..1d209e949 100644
 +
 +export interface MeshSSSNodeMaterialNodeProperties extends MeshPhysicalNodeMaterialNodeProperties {
      /**
-      * Represents the thickness color.
+      * Represents the thickness color. Subsurface scattering is only enabled
+      * when this node is set.
       *
 -     * @type {?Node<vec3>}
       * @default null
@@ -20584,8 +20611,23 @@ index a4839b67e..1d209e949 100644
 -     * @type {?Node<float>}
       */
 -    thicknessScaleNode: Node<any> | null;
+-    /**
+-     * Whether the lighting model should use SSS or not.
+-     *
+-     * @type {boolean}
+-     * @readonly
+-     * @default false
+-     */
+-    readonly get useSSS(): boolean;
+-    /**
+-     * Setups the lighting model.
+-     *
+-     * @return {SSSLightingModel} The lighting model.
+-     */
+-    setupLightingModel(): SSSLightingModel;
 +    thicknessScaleNode: Node<"float">;
-+}
+ }
+-import MeshPhysicalNodeMaterial from './MeshPhysicalNodeMaterial.js';
 +
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface MeshSSSNodeMaterialParameters
@@ -20594,30 +20636,13 @@ index a4839b67e..1d209e949 100644
 +        MeshPhysicalMaterialParameters
 +{}
 +
-+/**
-+ * This node material is an experimental extension of {@link MeshPhysicalNodeMaterial}
-+ * that implements a Subsurface scattering (SSS) term.
-+ */
-+declare class MeshSSSNodeMaterial extends MeshPhysicalNodeMaterial {
-+    constructor(parameters?: MeshSSSNodeMaterialParameters);
-+    setValues(values?: MeshSSSNodeMaterialParameters): void;
-     /**
-      * Whether the lighting model should use SSS or not.
-      *
--     * @type {boolean}
-      * @default true
-      */
-     get useSSS(): boolean;
-@@ -57,42 +107,8 @@ declare class MeshSSSNodeMaterial extends MeshPhysicalNodeMaterial {
-      */
-     setupLightingModel(): SSSLightingModel;
- }
--import MeshPhysicalNodeMaterial from './MeshPhysicalNodeMaterial.js';
--/**
+ /**
 - * Represents the lighting model for {@link MeshSSSNodeMaterial}.
 - *
 - * @augments PhysicalLightingModel
-- */
++ * This node material is an experimental extension of {@link MeshPhysicalNodeMaterial}
++ * that implements a Subsurface scattering (SSS) term.
+  */
 -declare class SSSLightingModel extends PhysicalLightingModel {
 -    /**
 -     * Constructs a new physical lighting model.
@@ -20633,23 +20658,30 @@ index a4839b67e..1d209e949 100644
 -     * @param {boolean} [sss=false] - Whether SSS is supported or not.
 -     */
 -    constructor(clearcoat?: boolean, sheen?: boolean, iridescence?: boolean, anisotropy?: boolean, transmission?: boolean, dispersion?: boolean, retroreflection?: boolean, diffuseRoughness?: boolean, sss?: boolean);
--    /**
--     * Whether the lighting model should use SSS or not.
--     *
++declare class MeshSSSNodeMaterial extends MeshPhysicalNodeMaterial {
++    constructor(parameters?: MeshSSSNodeMaterialParameters);
++    setValues(values?: MeshSSSNodeMaterialParameters): void;
+     /**
+      * Whether the lighting model should use SSS or not.
+      *
 -     * @type {boolean}
--     * @default false
--     */
+      * @default false
+      */
 -    useSSS: boolean;
--    /**
++    get useSSS(): boolean;
+     /**
 -     * Extends the default implementation with a SSS term.
 -     *
 -     * Reference: [Approximating Translucency for a Fast, Cheap and Convincing Subsurface Scattering Look](https://colinbarrebrisebois.com/2011/03/07/gdc-2011-approximating-translucency-for-a-fast-cheap-and-convincing-subsurface-scattering-look/)
--     *
++     * Setups the lighting model.
+      *
 -     * @param {Object} input - The input data.
 -     * @param {NodeBuilder} builder - The current node builder.
--     */
++     * @return {SSSLightingModel} The lighting model.
+      */
 -    direct({ lightDirection, lightColor, reflectedLight }: Object, builder: NodeBuilder): void;
--}
++    setupLightingModel(): SSSLightingModel;
+ }
 -import PhysicalLightingModel from '../../nodes/functions/PhysicalLightingModel.js';
 +
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -20851,7 +20883,7 @@ index fda2a3a25..9d352222f 100644
 +
 +export default MeshToonNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/NodeMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/NodeMaterial.d.ts
-index dc7518cb2..c3c4b0b6c 100644
+index e686382b0..0aae88206 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/NodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/NodeMaterial.d.ts
 @@ -1,37 +1,24 @@
@@ -20924,9 +20956,9 @@ index dc7518cb2..c3c4b0b6c 100644
      /**
       * The lighting of node materials might be influenced by ambient occlusion.
       * The default AO is inferred from an ambient occlusion map assigned to `aoMap`
-@@ -75,20 +60,18 @@ declare class NodeMaterial extends Material {
-      * If you don't want to overwrite the diffuse color but modify the existing
-      * values instead, use {@link materialAO}.
+@@ -76,20 +61,18 @@ declare class NodeMaterial extends Material {
+      * If you don't want to overwrite the ambient occlusion but modify the existing
+      * value instead, use {@link materialAO}.
       *
 -     * @type {?Node<float>}
       * @default null
@@ -20947,7 +20979,7 @@ index dc7518cb2..c3c4b0b6c 100644
      /**
       * The diffuse color of node materials is by default inferred from the
       * `color` and `map` properties. This node property allows to overwrite the default
-@@ -105,10 +88,9 @@ declare class NodeMaterial extends Material {
+@@ -106,10 +89,9 @@ declare class NodeMaterial extends Material {
       * material.colorNode = materialColor.mul( color( 0xff0000 ) ); // give diffuse colors a red tint
       * ```
       *
@@ -20959,7 +20991,7 @@ index dc7518cb2..c3c4b0b6c 100644
      /**
       * The normals of node materials are by default inferred from the `normalMap`/`normalScale`
       * or `bumpMap`/`bumpScale` properties. This node property allows to overwrite the default
-@@ -117,10 +99,9 @@ declare class NodeMaterial extends Material {
+@@ -119,10 +101,9 @@ declare class NodeMaterial extends Material {
       * If you don't want to overwrite the normals but modify the existing values instead,
       * use {@link materialNormal}.
       *
@@ -20971,7 +21003,7 @@ index dc7518cb2..c3c4b0b6c 100644
      /**
       * The opacity of node materials is by default inferred from the `opacity`
       * and `alphaMap` properties. This node property allows to overwrite the default
-@@ -129,10 +110,9 @@ declare class NodeMaterial extends Material {
+@@ -131,10 +112,9 @@ declare class NodeMaterial extends Material {
       * If you don't want to overwrite the opacity but modify the existing
       * value instead, use {@link materialOpacity}.
       *
@@ -20983,9 +21015,9 @@ index dc7518cb2..c3c4b0b6c 100644
      /**
       * This node can be used to implement a variety of filter-like effects. The idea is
       * to store the current rendering into a texture e.g. via `viewportSharedTexture()`, use it
-@@ -149,17 +129,15 @@ declare class NodeMaterial extends Material {
-      *
-      * Backdrop computations are part of the lighting so only lit materials can use this property.
+@@ -152,17 +132,15 @@ declare class NodeMaterial extends Material {
+      * If the material is lit, the backdrop is composed inside the lighting. Otherwise, it
+      * replaces the outgoing light (mixed by `backdropAlphaNode` if set).
       *
 -     * @type {?Node<vec3>}
       * @default null
@@ -21003,7 +21035,7 @@ index dc7518cb2..c3c4b0b6c 100644
      /**
       * The alpha test of node materials is by default inferred from the `alphaTest`
       * property. This node property allows to overwrite the default and define the
-@@ -168,24 +146,21 @@ declare class NodeMaterial extends Material {
+@@ -171,24 +149,21 @@ declare class NodeMaterial extends Material {
       * If you don't want to overwrite the alpha test but modify the existing
       * value instead, use {@link materialAlphaTest}.
       *
@@ -21031,7 +21063,7 @@ index dc7518cb2..c3c4b0b6c 100644
      /**
       * The local vertex positions are computed based on multiple factors like the
       * attribute data, morphing, skinning, instancing or batching. This node property
-@@ -198,10 +173,9 @@ declare class NodeMaterial extends Material {
+@@ -201,10 +176,9 @@ declare class NodeMaterial extends Material {
       * material.positionNode = positionLocal.add( displace );
       * ```
       *
@@ -21043,7 +21075,7 @@ index dc7518cb2..c3c4b0b6c 100644
      /**
       * This node property is intended for logic which modifies geometry data once or per animation step.
       * Apps usually place such logic randomly in initialization routines or in the animation loop.
-@@ -213,34 +187,30 @@ declare class NodeMaterial extends Material {
+@@ -216,35 +190,31 @@ declare class NodeMaterial extends Material {
       * simulation would be implemented as compute shaders and managed inside a `Fn` function. This function is
       * eventually assigned to `geometryNode`.
       *
@@ -21061,20 +21093,21 @@ index dc7518cb2..c3c4b0b6c 100644
 -    depthNode: Node<any> | null;
 +    depthNode: Node | null;
      /**
-      * Allows to overwrite the position used for shadow map rendering which
-      * is by default {@link positionWorld}, the vertex position
+      * Allows to overwrite the position used to look up shadow maps when this material
+      * receives shadows. The default is {@link positionWorld}, the vertex position
       * in world space.
       *
--     * @type {?Node<float>}
+-     * @type {?Node<vec3>}
       * @default null
       */
 -    receivedShadowPositionNode: Node<any> | null;
 +    receivedShadowPositionNode: Node | null;
      /**
-      * Allows to overwrite the geometry position used for shadow map projection which
-      * is by default {@link positionLocal}, the vertex position in local space.
+      * Allows to overwrite the local vertex position used when rendering this object
+      * into shadow maps. The default is {@link NodeMaterial#positionNode} if set,
+      * otherwise {@link positionLocal}, the vertex position in local space.
       *
--     * @type {?Node<float>}
+-     * @type {?Node<vec3>}
       * @default null
       */
 -    castShadowPositionNode: Node<any> | null;
@@ -21082,7 +21115,7 @@ index dc7518cb2..c3c4b0b6c 100644
      /**
       * This node can be used to influence how an object using this node material
       * receive shadows.
-@@ -253,10 +223,9 @@ declare class NodeMaterial extends Material {
+@@ -257,10 +227,9 @@ declare class NodeMaterial extends Material {
       * 	return shadow.mix( color( 0xff0000 ), 1 ); // modify shadow color
       * } );
       *
@@ -21093,8 +21126,8 @@ index dc7518cb2..c3c4b0b6c 100644
 +    receivedShadowNode: (() => Node) | null;
      /**
       * This node can be used to influence how an object using this node material
-      * casts shadows. To apply a color to shadows, you can simply do:
-@@ -276,10 +245,9 @@ declare class NodeMaterial extends Material {
+      * casts shadows. To apply a color to shadows, enable `renderer.shadowMap.transmitted`
+@@ -281,10 +250,9 @@ declare class NodeMaterial extends Material {
       * } )();
       *  ```
       *
@@ -21106,7 +21139,7 @@ index dc7518cb2..c3c4b0b6c 100644
      /**
       * This node can be used to overwrite the final output of the material.
       *
-@@ -287,17 +255,15 @@ declare class NodeMaterial extends Material {
+@@ -292,17 +260,15 @@ declare class NodeMaterial extends Material {
       * (diffuse color, lighting, etc.) is still evaluated; assigning a node
       * only replaces the resulting output color.
       *
@@ -21125,7 +21158,7 @@ index dc7518cb2..c3c4b0b6c 100644
       * @default null
       */
      mrtNode: MRTNode | null;
-@@ -306,33 +272,40 @@ declare class NodeMaterial extends Material {
+@@ -311,33 +277,40 @@ declare class NodeMaterial extends Material {
       * the fragment shader. Assigning a node will replace the built-in material
       * logic used in the fragment stage.
       *
@@ -21137,7 +21170,7 @@ index dc7518cb2..c3c4b0b6c 100644
      /**
       * This node property can be used if you need complete freedom in implementing
       * the vertex shader. Assigning a node will replace the built-in material logic
-      * used in the vertex stage.
+      * used in the vertex stage. The node must return the vertex position in clip space.
       *
 -     * @type {?Node<vec4>}
       * @default null
@@ -21176,7 +21209,7 @@ index dc7518cb2..c3c4b0b6c 100644
      /**
       * Builds this material with the given node builder.
       *
-@@ -378,28 +351,28 @@ declare class NodeMaterial extends Material {
+@@ -383,28 +356,28 @@ declare class NodeMaterial extends Material {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {Node<vec3>} The position in view space.
       */
@@ -21186,7 +21219,7 @@ index dc7518cb2..c3c4b0b6c 100644
       * Setups the position in clip space.
       *
       * @param {NodeBuilder} builder - The current node builder.
-      * @return {Node<vec4>} The position in view space.
+      * @return {Node<vec4>} The position in clip space.
       */
 -    setupModelViewProjection(): Node<any>;
 +    setupModelViewProjection(): Node;
@@ -21209,7 +21242,7 @@ index dc7518cb2..c3c4b0b6c 100644
      /**
       * Setups the computation of the material's diffuse color.
       *
-@@ -413,40 +386,40 @@ declare class NodeMaterial extends Material {
+@@ -418,33 +391,33 @@ declare class NodeMaterial extends Material {
       * @abstract
       * @param {NodeBuilder} builder - The current node builder.
       */
@@ -21248,15 +21281,7 @@ index dc7518cb2..c3c4b0b6c 100644
      /**
       * Setups the lights node based on the scene, environment and material.
       *
-      * @param {NodeBuilder} builder - The current node builder.
-      * @return {LightingNode<Array>} The lights node.
-      */
--    setupMaterialLightings(builder: NodeBuilder): LightingNode<any[]>;
-+    setupMaterialLightings(builder: NodeBuilder): LightingNode[];
-     /**
-      * Setups the ambient occlusion node from the material.
-      *
-@@ -469,7 +442,7 @@ declare class NodeMaterial extends Material {
+@@ -474,7 +447,7 @@ declare class NodeMaterial extends Material {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {Node<vec3>} The outgoing light node.
       */
@@ -21265,7 +21290,7 @@ index dc7518cb2..c3c4b0b6c 100644
      /**
       * Setup the fog.
       *
-@@ -477,7 +450,7 @@ declare class NodeMaterial extends Material {
+@@ -482,7 +455,7 @@ declare class NodeMaterial extends Material {
       * @param {Node<vec4>} outputNode - The existing output node.
       * @return {Node<vec4>} The output node.
       */
@@ -21274,7 +21299,7 @@ index dc7518cb2..c3c4b0b6c 100644
      /**
       * Setups premultiplied alpha.
       *
-@@ -485,7 +458,7 @@ declare class NodeMaterial extends Material {
+@@ -490,7 +463,7 @@ declare class NodeMaterial extends Material {
       * @param {Node<vec4>} outputNode - The existing output node.
       * @return {Node<vec4>} The output node.
       */
@@ -21283,7 +21308,7 @@ index dc7518cb2..c3c4b0b6c 100644
      /**
       * Setups the output node.
       *
-@@ -513,7 +486,7 @@ declare class NodeMaterial extends Material {
+@@ -518,7 +491,7 @@ declare class NodeMaterial extends Material {
       * @param {Node<vec4>} outputNode - The existing output node.
       * @return {Node<vec4>} The output node.
       */
@@ -21292,7 +21317,7 @@ index dc7518cb2..c3c4b0b6c 100644
      /**
       * Most classic material types have a node pendant e.g. for `MeshBasicMaterial`
       * there is `MeshBasicNodeMaterial`. This utility method is intended for
-@@ -528,7 +501,10 @@ declare class NodeMaterial extends Material {
+@@ -533,7 +506,10 @@ declare class NodeMaterial extends Material {
       * @param {Material} source - The material to copy.
       * @return {NodeMaterial} A reference to this node material.
       */
@@ -21307,7 +21332,7 @@ index dc7518cb2..c3c4b0b6c 100644
 +
 +export default NodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/NodeMaterialInstance.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/NodeMaterialInstance.d.ts
-index 69700b015..11cf05cf7 100644
+index 370cc81b6..77b089c2e 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/NodeMaterialInstance.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/NodeMaterialInstance.d.ts
 @@ -1,3 +1,7 @@
@@ -21318,7 +21343,7 @@ index 69700b015..11cf05cf7 100644
  export default NodeMaterialInstance;
  /**
   * A material instance that reuses the shader of a node material with its own properties.
-@@ -24,8 +28,6 @@ declare class NodeMaterialInstance extends Material {
+@@ -28,8 +32,6 @@ declare class NodeMaterialInstance extends Material {
       * @throws {TypeError} When the given material is not a node material.
       */
      constructor(nodeMaterial: NodeMaterial);
@@ -21327,7 +21352,7 @@ index 69700b015..11cf05cf7 100644
      /**
       * This flag can be used for type testing.
       *
-@@ -47,14 +49,6 @@ declare class NodeMaterialInstance extends Material {
+@@ -51,14 +53,6 @@ declare class NodeMaterialInstance extends Material {
       * @param {NodeBuilder} builder - The current node builder.
       */
      build(builder: NodeBuilder): void;
@@ -21342,7 +21367,7 @@ index 69700b015..11cf05cf7 100644
      /**
       * Copies the values of the given node material instance to this instance.
       * Object values such as colors are shared with the source, except in `userData`.
-@@ -65,12 +59,11 @@ declare class NodeMaterialInstance extends Material {
+@@ -69,12 +63,11 @@ declare class NodeMaterialInstance extends Material {
       * @param {NodeMaterialInstance} source - The material to copy.
       * @return {NodeMaterialInstance} A reference to this instance.
       */
@@ -21399,10 +21424,10 @@ index efcce9cf0..ae5eba9a2 100644
 +export { default as ShadowNodeMaterial, ShadowNodeMaterialParameters } from "./ShadowNodeMaterial.js";
 +export { default as VolumeNodeMaterial, VolumeNodeMaterialParameters } from "./VolumeNodeMaterial.js";
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/PointsNodeMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/PointsNodeMaterial.d.ts
-index 1a6e48eef..5bdf6b56f 100644
+index ffc34cc9b..2160a8d7a 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/PointsNodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/PointsNodeMaterial.d.ts
-@@ -1,4 +1,27 @@
+@@ -1,4 +1,28 @@
 -export default PointsNodeMaterial;
 +import SpriteNodeMaterial, {
 +    SpriteNodeMaterialNodeProperties,
@@ -21413,11 +21438,12 @@ index 1a6e48eef..5bdf6b56f 100644
 +
 +export interface PointsNodeMaterialNodeProperties extends SpriteNodeMaterialNodeProperties {
 +    /**
-+     * This node property provides an additional way to set the point size.
++     * This node property allows to overwrite the point size defined by `size`. The size
++     * is in pixels, additionally scaled by distance when `sizeAttenuation` is `true`.
 +     *
-+     * Note that WebGPU only supports point primitives with 1 pixel size. Consequently,
-+     * this node has no effect when the material is used with {@link Points} and a WebGPU
-+     * backend. If an application wants to render points with a size larger than 1 pixel,
++     * Note that `WebGPURenderer` always renders point primitives with a size of 1 pixel (with
++     * both backends). Consequently, this node has no effect when the material is used with
++     * {@link Points}. If an application wants to render points with a size larger than 1 pixel,
 +     * the material should be used with {@link Sprite} and instancing.
 +     *
 +     * @default null
@@ -21431,20 +21457,21 @@ index 1a6e48eef..5bdf6b56f 100644
  /**
   * Node material version of {@link PointsMaterial}.
   *
-@@ -17,33 +40,19 @@ export default PointsNodeMaterial;
-  * ```js
+@@ -18,34 +42,19 @@ export default PointsNodeMaterial;
   * const instancedPoints = new THREE.Sprite( new THREE.PointsNodeMaterial( { positionNode: instancedBufferAttribute( positionAttribute ) } ) );
+  * instancedPoints.count = positionAttribute.count;
   * ```
 - *
 - * @augments SpriteNodeMaterial
   */
  declare class PointsNodeMaterial extends SpriteNodeMaterial {
 -    /**
--     * This node property provides an additional way to set the point size.
+-     * This node property allows to overwrite the point size defined by `size`. The size
+-     * is in pixels, additionally scaled by distance when `sizeAttenuation` is `true`.
 -     *
--     * Note that WebGPU only supports point primitives with 1 pixel size. Consequently,
--     * this node has no effect when the material is used with {@link Points} and a WebGPU
--     * backend. If an application wants to render points with a size larger than 1 pixel,
+-     * Note that `WebGPURenderer` always renders point primitives with a size of 1 pixel (with
+-     * both backends). Consequently, this node has no effect when the material is used with
+-     * {@link Points}. If an application wants to render points with a size larger than 1 pixel,
 -     * the material should be used with {@link Sprite} and instancing.
 -     *
 -     * @type {?Node<vec2>}
@@ -21637,13 +21664,18 @@ index 491e32e08..b25508365 100644
 +
 +export default SpriteNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/VolumeNodeMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/VolumeNodeMaterial.d.ts
-index 8b5885c3c..6175b46ab 100644
+index eb73727df..7401de95e 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/VolumeNodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/VolumeNodeMaterial.d.ts
-@@ -1,28 +1,12 @@
+@@ -1,33 +1,12 @@
 -export default VolumeNodeMaterial;
 -/**
-- * Volume node material.
+- * Volume node material. Renders a raymarched volume that is only lit by
+- * point, spot and rect area lights; directional, ambient and environment
+- * lighting are ignored.
+- *
+- * If {@link NodeMaterial#depthNode} is set, it is interpreted as the scene
+- * depth used to occlude the rays.
 - *
 - * @augments NodeMaterial
 - */
@@ -21675,22 +21707,24 @@ index 8b5885c3c..6175b46ab 100644
       * @default 25
       */
      steps: number;
-@@ -30,19 +14,41 @@ declare class VolumeNodeMaterial extends NodeMaterial {
-      * Offsets the distance a ray has been traveled through a volume.
-      * Can be used to implement dithering to reduce banding.
+@@ -36,21 +15,48 @@ declare class VolumeNodeMaterial extends NodeMaterial {
+      * fraction of one raymarching step. Can be used to implement dithering
+      * (e.g. per-pixel noise in the range `[0,1)`) to reduce banding.
       *
--     * @type {Node<float>}
+-     * @type {?Node<float>}
       * @default null
       */
--    offsetNode: Node<float>;
-+    offsetNode: Node;
+-    offsetNode: Node<float> | null;
++    offsetNode: Node | null;
      /**
-      * Node used for scattering calculations.
+      * Function used for scattering calculations. It receives `{ positionRay }`,
+      * the current ray position in world space, and returns the scattering
+      * density for that raymarching step.
       *
--     * @type {Function|FunctionNode<vec4>}
+-     * @type {?(Function|FunctionNode)}
       * @default null
       */
--    scatteringNode: Function | FunctionNode<vec4>;
+-    scatteringNode: (Function | FunctionNode) | null;
 -    side: number;
 +    scatteringNode: (params: { positionRay: Node<"vec3"> }) => Node | null;
 +}
@@ -21699,7 +21733,12 @@ index 8b5885c3c..6175b46ab 100644
 +export interface VolumeNodeMaterialParameters extends Partial<MapColorPropertiesToColorRepresentations<VolumeNodeMaterialNodeProperties>>, MaterialParameters {}
 +
 +/**
-+ * Volume node material.
++ * Volume node material. Renders a raymarched volume that is only lit by
++ * point, spot and rect area lights; directional, ambient and environment
++ * lighting are ignored.
++ *
++ * If {@link NodeMaterial#depthNode} is set, it is interpreted as the scene
++ * depth used to occlude the rays.
 + */
 +declare class VolumeNodeMaterial extends NodeMaterial {
 +    /**
@@ -21725,7 +21764,7 @@ index 8b5885c3c..6175b46ab 100644
 +
 +export default VolumeNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/manager/NodeMaterialObserver.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/manager/NodeMaterialObserver.d.ts
-index 0d9f73fd3..983ee9647 100644
+index 6370f493b..983ee9647 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/manager/NodeMaterialObserver.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/manager/NodeMaterialObserver.d.ts
 @@ -1,4 +1,6 @@
@@ -21868,16 +21907,16 @@ index 0d9f73fd3..983ee9647 100644
 -     * Returns `true` if the given render object has not changed its state.
 -     *
 -     * @param {RenderObject} renderObject - The render object.
--     * @param {Array<Light>} lightsData - The current material lights.
+-     * @param {Array<Object>} lightsData - The lights data of the current material lights.
 -     * @param {number} renderId - The current render ID.
 -     * @return {boolean} Whether the given render object is equal to its cached state or not.
 -     */
--    equals(renderObject: RenderObject, lightsData: Array<Light>, renderId: number): boolean;
+-    equals(renderObject: RenderObject, lightsData: Array<Object>, renderId: number): boolean;
 -    /**
 -     * Returns the lights data for the given material lights.
 -     *
 -     * @param {Array<Light>} materialLights - The material lights.
--     * @param {Array<Object>} lights - The array that is cleared and then filled with the lights data.
+-     * @param {Array<Object>} lights - The target array that receives the lights data.
 -     * @return {Array<Object>} The lights data for the given material lights.
 -     */
 -    getLightsData(materialLights: Array<Light>, lights: Array<Object>): Array<Object>;
@@ -32681,7 +32720,7 @@ index ee01cd7e7..49f344bda 100644
 +
 +export default StandardNodeLibrary;
 diff --git a/jsdoc-testing/jsdoc/src/scenes/Fog.d.ts b/jsdoc-testing/jsdoc/src/scenes/Fog.d.ts
-index 3c17089bd..f043a61b4 100644
+index 47c7f3987..c6b6bdbc8 100644
 --- a/jsdoc-testing/jsdoc/src/scenes/Fog.d.ts
 +++ b/jsdoc-testing/jsdoc/src/scenes/Fog.d.ts
 @@ -1,3 +1,13 @@
@@ -32696,11 +32735,11 @@ index 3c17089bd..f043a61b4 100644
 +}
 +
  /**
-  * This class can be used to define a linear fog that grows linearly denser
-  * with the distance.
-@@ -15,32 +25,25 @@ export class Fog {
+  * This class can be used to define a range fog that smoothly grows denser
+  * from no fog at `near` to full fog at `far`. The distance is measured as
+@@ -16,32 +26,25 @@ export class Fog {
       * @param {number} [near=1] - The minimum distance to start applying fog.
-      * @param {number} [far=1000] - The maximum distance at which fog stops being calculated and applied.
+      * @param {number} [far=1000] - The distance at which fog reaches full density.
       */
 -    constructor(color: number | Color, near?: number, far?: number);
 +    constructor(color: ColorRepresentation, near?: number, far?: number);
@@ -32732,15 +32771,15 @@ index 3c17089bd..f043a61b4 100644
       * @default 1
       */
      near: number;
-@@ -49,7 +52,6 @@ export class Fog {
-      * Objects that are more than `far` units away from the active camera won't
-      * be affected by fog.
+@@ -50,7 +53,6 @@ export class Fog {
+      * than `far` units away from the active camera are rendered entirely in
+      * the fog color.
       *
 -     * @type {number}
       * @default 1000
       */
      far: number;
-@@ -65,6 +67,5 @@ export class Fog {
+@@ -66,6 +68,5 @@ export class Fog {
       * @param {?(Object|string)} meta - An optional value holding meta information about the serialization.
       * @return {Object} A JSON object representing the serialized fog
       */
@@ -32807,7 +32846,7 @@ index e11462391..90d41e90c 100644
  }
 -import { Color } from '../math/Color.js';
 diff --git a/jsdoc-testing/jsdoc/src/scenes/Scene.d.ts b/jsdoc-testing/jsdoc/src/scenes/Scene.d.ts
-index 91ed09ab6..83c0f4b25 100644
+index 50c87b949..fe7ab3ded 100644
 --- a/jsdoc-testing/jsdoc/src/scenes/Scene.d.ts
 +++ b/jsdoc-testing/jsdoc/src/scenes/Scene.d.ts
 @@ -1,19 +1,37 @@
@@ -32854,23 +32893,23 @@ index 91ed09ab6..83c0f4b25 100644
      /**
       * Defines the background of the scene. Valid inputs are:
       *
-@@ -21,7 +39,6 @@ export class Scene extends Object3D {
-      * - A texture for defining a (flat) textured background.
-      * - Cube textures or equirectangular textures for defining a skybox.
+@@ -22,7 +40,6 @@ export class Scene extends Object3D {
+      * - Cube textures, or equirectangular textures with `mapping` set to
+      * `EquirectangularReflectionMapping`, for defining a skybox.
       *
 -     * @type {?(Color|Texture)}
       * @default null
       */
      background: (Color | Texture) | null;
-@@ -30,7 +47,6 @@ export class Scene extends Object3D {
-      * it's not possible to overwrite an existing texture assigned to the `envMap`
-      * material property.
+@@ -32,7 +49,6 @@ export class Scene extends Object3D {
+      * and {@link MeshPhongMaterial}). However, it's not possible to overwrite an existing
+      * texture assigned to the `envMap` material property.
       *
 -     * @type {?Texture}
       * @default null
       */
      environment: Texture | null;
-@@ -38,7 +54,6 @@ export class Scene extends Object3D {
+@@ -40,7 +56,6 @@ export class Scene extends Object3D {
       * A fog instance defining the type of fog that affects everything
       * rendered in the scene.
       *
@@ -32878,7 +32917,7 @@ index 91ed09ab6..83c0f4b25 100644
       * @default null
       */
      fog: (Fog | FogExp2) | null;
-@@ -47,14 +62,12 @@ export class Scene extends Object3D {
+@@ -49,14 +64,12 @@ export class Scene extends Object3D {
       * assigned to {@link Scene#background}. Valid input is a float between `0`
       * and `1`.
       *
@@ -32893,7 +32932,7 @@ index 91ed09ab6..83c0f4b25 100644
       * @default 1
       */
      backgroundIntensity: number;
-@@ -62,7 +75,6 @@ export class Scene extends Object3D {
+@@ -64,7 +77,6 @@ export class Scene extends Object3D {
       * The rotation of the background in radians. Only influences environment maps
       * assigned to {@link Scene#background}.
       *
@@ -32901,23 +32940,23 @@ index 91ed09ab6..83c0f4b25 100644
       * @default (0,0,0)
       */
      backgroundRotation: Euler;
-@@ -70,7 +82,6 @@ export class Scene extends Object3D {
-      * Attenuates the color of the environment. Only influences environment maps
-      * assigned to {@link Scene#environment}.
+@@ -74,7 +86,6 @@ export class Scene extends Object3D {
+      * use this value instead of their own `envMapIntensity`, which only applies to
+      * a material's own `envMap`.
       *
 -     * @type {number}
       * @default 1
       */
      environmentIntensity: number;
-@@ -78,7 +89,6 @@ export class Scene extends Object3D {
-      * The rotation of the environment map in radians. Only influences physical materials
-      * in the scene when {@link Scene#environment} is used.
+@@ -83,7 +94,6 @@ export class Scene extends Object3D {
+      * lit by {@link Scene#environment}, which use this value instead of their own
+      * `envMapRotation`.
       *
 -     * @type {Euler}
       * @default (0,0,0)
       */
      environmentRotation: Euler;
-@@ -86,12 +96,9 @@ export class Scene extends Object3D {
+@@ -91,12 +101,9 @@ export class Scene extends Object3D {
       * Forces everything in the scene to be rendered with the defined material. It is possible
       * to exclude materials from override by setting {@link Material#allowOverride} to `false`.
       *
@@ -32987,7 +33026,7 @@ index ee88d4d2b..a3245b84d 100644
  }
 -import { Texture } from './Texture.js';
 diff --git a/jsdoc-testing/jsdoc/src/textures/CompressedArrayTexture.d.ts b/jsdoc-testing/jsdoc/src/textures/CompressedArrayTexture.d.ts
-index 96dee3662..eab46463e 100644
+index f5153d3c9..0dcf1043d 100644
 --- a/jsdoc-testing/jsdoc/src/textures/CompressedArrayTexture.d.ts
 +++ b/jsdoc-testing/jsdoc/src/textures/CompressedArrayTexture.d.ts
 @@ -1,3 +1,10 @@
@@ -33011,8 +33050,8 @@ index 96dee3662..eab46463e 100644
       * Constructs a new compressed array texture.
       *
 @@ -17,7 +24,14 @@ export class CompressedArrayTexture extends CompressedTexture {
-      * @param {number} [format=RGBAFormat] - The min filter value.
-      * @param {number} [type=UnsignedByteType] - The min filter value.
+      * @param {number} [format=RGBAFormat] - The texture format.
+      * @param {number} [type=UnsignedByteType] - The texture type.
       */
 -    constructor(mipmaps: Array<Object>, width: number, height: number, depth: number, format?: number, type?: number);
 +    constructor(
@@ -33332,7 +33371,7 @@ index 76c1ce43d..df15890d5 100644
  }
 -import { Texture } from './Texture.js';
 diff --git a/jsdoc-testing/jsdoc/src/textures/Data3DTexture.d.ts b/jsdoc-testing/jsdoc/src/textures/Data3DTexture.d.ts
-index abdcba564..f579e0695 100644
+index 523be5251..eb97019bc 100644
 --- a/jsdoc-testing/jsdoc/src/textures/Data3DTexture.d.ts
 +++ b/jsdoc-testing/jsdoc/src/textures/Data3DTexture.d.ts
 @@ -1,10 +1,21 @@
@@ -33356,7 +33395,7 @@ index abdcba564..f579e0695 100644
 -export class Data3DTexture extends Texture {
 +export class Data3DTexture extends Texture<Data3DTextureImageData> {
      /**
-      * Constructs a new data array texture.
+      * Constructs a new 3D data texture.
       *
 @@ -21,7 +32,7 @@ export class Data3DTexture extends Texture {
       * @readonly
@@ -33706,7 +33745,7 @@ index bdf594cf7..976e99758 100644
  }
 -import { Texture } from './Texture.js';
 diff --git a/jsdoc-testing/jsdoc/src/textures/Texture.d.ts b/jsdoc-testing/jsdoc/src/textures/Texture.d.ts
-index fd71f3aa8..f411686ae 100644
+index 6ac71ce56..2d7aa9d69 100644
 --- a/jsdoc-testing/jsdoc/src/textures/Texture.d.ts
 +++ b/jsdoc-testing/jsdoc/src/textures/Texture.d.ts
 @@ -1,3 +1,95 @@
@@ -33805,7 +33844,7 @@ index fd71f3aa8..f411686ae 100644
  /**
   * Base class for all textures.
   *
-@@ -6,7 +98,9 @@
+@@ -8,7 +100,9 @@
   *
   * @augments EventDispatcher
   */
@@ -33816,7 +33855,7 @@ index fd71f3aa8..f411686ae 100644
      /**
       * Constructs a new texture.
       *
-@@ -21,7 +115,18 @@ export class Texture extends EventDispatcher {
+@@ -23,7 +117,18 @@ export class Texture extends EventDispatcher {
       * @param {number} [anisotropy=Texture.DEFAULT_ANISOTROPY] - The anisotropy value.
       * @param {string} [colorSpace=NoColorSpace] - The color space.
       */
@@ -33836,7 +33875,7 @@ index fd71f3aa8..f411686ae 100644
      /**
       * This flag can be used for type testing.
       *
-@@ -29,7 +134,14 @@ export class Texture extends EventDispatcher {
+@@ -31,7 +136,14 @@ export class Texture extends EventDispatcher {
       * @readonly
       * @default true
       */
@@ -33852,7 +33891,7 @@ index fd71f3aa8..f411686ae 100644
      /**
       * The UUID of the texture.
       *
-@@ -51,13 +163,13 @@ export class Texture extends EventDispatcher {
+@@ -53,13 +165,13 @@ export class Texture extends EventDispatcher {
       *
       * @type {TextureSource}
       */
@@ -33868,7 +33907,7 @@ index fd71f3aa8..f411686ae 100644
      /**
       * How the texture is applied to the object. The value `UVMapping`
       * is the default, where texture or uv coordinates are used to apply the map.
-@@ -65,7 +177,7 @@ export class Texture extends EventDispatcher {
+@@ -67,7 +179,7 @@ export class Texture extends EventDispatcher {
       * @type {(UVMapping|CubeReflectionMapping|CubeRefractionMapping|EquirectangularReflectionMapping|EquirectangularRefractionMapping)}
       * @default UVMapping
      */
@@ -33877,16 +33916,16 @@ index fd71f3aa8..f411686ae 100644
      /**
       * Lets you select the uv attribute to map the texture to. `0` for `uv`,
       * `1` for `uv1`, `2` for `uv2` and `3` for `uv3`.
-@@ -81,7 +193,7 @@ export class Texture extends EventDispatcher {
+@@ -83,7 +195,7 @@ export class Texture extends EventDispatcher {
       * @type {(RepeatWrapping|ClampToEdgeWrapping|MirroredRepeatWrapping)}
       * @default ClampToEdgeWrapping
       */
 -    wrapS: (number | number | number);
 +    wrapS: Wrapping;
      /**
-      * This defines how the texture is wrapped horizontally and corresponds to
+      * This defines how the texture is wrapped vertically and corresponds to
       * *V* in UV mapping.
-@@ -89,21 +201,21 @@ export class Texture extends EventDispatcher {
+@@ -91,21 +203,21 @@ export class Texture extends EventDispatcher {
       * @type {(RepeatWrapping|ClampToEdgeWrapping|MirroredRepeatWrapping)}
       * @default ClampToEdgeWrapping
       */
@@ -33911,7 +33950,7 @@ index fd71f3aa8..f411686ae 100644
      /**
       * The number of samples taken along the axis through the pixel that has the
       * highest density of texels. By default, this value is `1`. A higher value
-@@ -120,7 +232,7 @@ export class Texture extends EventDispatcher {
+@@ -122,7 +234,7 @@ export class Texture extends EventDispatcher {
       * @type {number}
       * @default RGBAFormat
       */
@@ -33920,7 +33959,7 @@ index fd71f3aa8..f411686ae 100644
      /**
       * The default internal format is derived from {@link Texture#format} and {@link Texture#type} and
       * defines how the texture data is going to be stored on the GPU.
-@@ -130,14 +242,14 @@ export class Texture extends EventDispatcher {
+@@ -132,14 +244,14 @@ export class Texture extends EventDispatcher {
       * @type {?string}
       * @default null
       */
@@ -33937,7 +33976,7 @@ index fd71f3aa8..f411686ae 100644
      /**
       * How much a single repetition of the texture is offset from the beginning,
       * in each direction U and V. Typical range is `0.0` to `1.0`.
-@@ -252,14 +364,14 @@ export class Texture extends EventDispatcher {
+@@ -256,14 +368,14 @@ export class Texture extends EventDispatcher {
       *
       * @type {Object}
       */
@@ -33954,7 +33993,7 @@ index fd71f3aa8..f411686ae 100644
      /**
       * This starts at `0` and counts how many times {@link Texture#needsUpdate} is set to `true`.
       *
-@@ -275,14 +387,14 @@ export class Texture extends EventDispatcher {
+@@ -279,14 +391,14 @@ export class Texture extends EventDispatcher {
       * @type {?Function}
       * @default null
       */
@@ -33971,7 +34010,7 @@ index fd71f3aa8..f411686ae 100644
      /**
       * Indicates whether a texture belongs to a render target or not.
       *
-@@ -316,7 +428,7 @@ export class Texture extends EventDispatcher {
+@@ -320,7 +432,7 @@ export class Texture extends EventDispatcher {
       * @readonly
       * @default false
       */
@@ -33980,19 +34019,21 @@ index fd71f3aa8..f411686ae 100644
      /**
       * Whether the texture should use one of the 16 bit integer formats which are normalized
       * to [0, 1] or [-1, 1] (depending on signed/unsigned) when sampled.
-@@ -328,22 +440,22 @@ export class Texture extends EventDispatcher {
-     /**
-      * The width of the texture in pixels.
+@@ -333,24 +445,24 @@ export class Texture extends EventDispatcher {
+      * The width of the texture in pixels. Returns `0` for cube textures (whose
+      * `image` is an array) and when no image is set.
       */
 -    get width(): any;
 +    get width(): number;
      /**
-      * The height of the texture in pixels.
+      * The height of the texture in pixels. Returns `0` for cube textures (whose
+      * `image` is an array) and when no image is set.
       */
 -    get height(): any;
 +    get height(): number;
      /**
-      * The depth of the texture in pixels.
+      * The depth of the texture in pixels, read from `image.depth`. Returns `0` if the
+      * image has no depth, e.g. for cube textures and image, canvas or video sources.
       */
 -    get depth(): any;
 -    set image(value: Object | null);
@@ -34008,7 +34049,7 @@ index fd71f3aa8..f411686ae 100644
      /**
       * Updates the texture transformation matrix from the properties {@link Texture#offset},
       * {@link Texture#repeat}, {@link Texture#rotation}, and {@link Texture#center}.
-@@ -369,14 +481,14 @@ export class Texture extends EventDispatcher {
+@@ -376,14 +488,14 @@ export class Texture extends EventDispatcher {
       *
       * @return {Texture} A clone of this instance.
       */
@@ -34025,7 +34066,7 @@ index fd71f3aa8..f411686ae 100644
      /**
       * Setting this property to `true` indicates the engine the texture
       * must be updated in the next render. This triggers a texture upload
-@@ -391,7 +503,7 @@ export class Texture extends EventDispatcher {
+@@ -398,7 +510,7 @@ export class Texture extends EventDispatcher {
       * Sets this texture's properties based on `values`.
       * @param {Object} values - A container with texture parameters.
       */
@@ -34034,7 +34075,7 @@ index fd71f3aa8..f411686ae 100644
      /**
       * Serializes the texture into JSON.
       *
-@@ -399,7 +511,7 @@ export class Texture extends EventDispatcher {
+@@ -406,7 +518,7 @@ export class Texture extends EventDispatcher {
       * @return {Object} A JSON object representing the serialized texture.
       * @see {@link ObjectLoader#parse}
       */
@@ -34043,7 +34084,7 @@ index fd71f3aa8..f411686ae 100644
      /**
       * Frees the GPU-related resources allocated by this instance. Call this
       * method whenever this instance is no longer used in your app.
-@@ -427,14 +539,22 @@ export class Texture extends EventDispatcher {
+@@ -435,14 +547,22 @@ export class Texture extends EventDispatcher {
       * @param {boolean} value
       */
      set needsPMREMUpdate(value: boolean);
