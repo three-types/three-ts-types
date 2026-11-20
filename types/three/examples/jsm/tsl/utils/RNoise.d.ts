@@ -1,5 +1,3 @@
-import { Node, UniformNode } from "three/webgpu";
-
 /**
  * Returns a TSL function that samples texture-free analytic R² noise.
  * Index 0 uses continuous screen pixels; other indices tile-shift with an R²
@@ -9,7 +7,4 @@ import { Node, UniformNode } from "three/webgpu";
  * @param {UniformNode<Vector2>} resolution
  * @param {number} [seed=0] - Added to the coordinate hash so each pass gets an independent R² phase.
  */
-export function bindAnalyticNoise(
-    resolution: UniformNode<"vec2">,
-    seed?: number,
-): (uvCoord: Node<"vec2">, sampleIndex: Node | number) => Node<"vec4">;
+export function bindAnalyticNoise(resolution: UniformNode<Vector2>, seed?: number): () => void;

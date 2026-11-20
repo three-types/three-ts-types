@@ -1,5 +1,3 @@
-import Renderer from "./Renderer.js";
-
 export default GPUTimer;
 /**
  * Measures the GPU time of the render and compute passes issued between {@link GPUTimer#begin} and
@@ -30,6 +28,8 @@ declare class GPUTimer {
      * @type {Renderer}
      */
     renderer: Renderer;
+    _active: boolean;
+    _measurement: any;
     /**
      * Starts timing the passes the renderer issues.
      */

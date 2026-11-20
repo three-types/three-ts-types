@@ -1,18 +1,3 @@
-import { BufferGeometry, Vector3 } from "three";
-
-export interface LoftGeometryOptions {
-    closed?: boolean | undefined;
-    capStart?: boolean | undefined;
-    capEnd?: boolean | undefined;
-}
-
-export interface LoftGeometryParameters {
-    sections: Vector3[][];
-    closed: boolean;
-    capStart: boolean;
-    capEnd: boolean;
-}
-
 /**
  * This class can be used to generate a geometry by lofting (skinning) a surface
  * through a series of cross sections. Each section is an array of points in 3D
@@ -71,7 +56,11 @@ export class LoftGeometry extends BufferGeometry {
      * @param {boolean} [options.capEnd=false] - Whether the last section is closed
      * with a cap or not.
      */
-    constructor(sections?: Vector3[][], options?: LoftGeometryOptions);
+    constructor(sections?: Array<Array<Vector3>>, options?: {
+        closed?: boolean | undefined;
+        capStart?: boolean | undefined;
+        capEnd?: boolean | undefined;
+    });
     /**
      * Holds the constructor parameters that have been
      * used to generate the geometry. Any modification
@@ -79,5 +68,8 @@ export class LoftGeometry extends BufferGeometry {
      *
      * @type {Object}
      */
-    parameters: LoftGeometryParameters;
+    parameters: Object;
+    copy(source: any): this;
 }
+import { BufferGeometry } from "three";
+import { Vector3 } from "three";

@@ -1,8 +1,3 @@
-import { AnimationActionLoopStyles, AnimationBlendMode } from "../constants.js";
-import { Object3D } from "../core/Object3D.js";
-import { AnimationClip } from "./AnimationClip.js";
-import { AnimationMixer } from "./AnimationMixer.js";
-
 /**
  * An instance of `AnimationAction` schedules the playback of an animation which is
  * stored in {@link AnimationClip}.
@@ -16,29 +11,44 @@ export class AnimationAction {
      * @param {?Object3D} [localRoot=null] - The root object on which this action is performed.
      * @param {(NormalAnimationBlendMode|AdditiveAnimationBlendMode)} [blendMode] - The blend mode.
      */
-    constructor(
-        mixer: AnimationMixer,
-        clip: AnimationClip,
-        localRoot?: Object3D | null,
-        blendMode?: AnimationBlendMode,
-    );
+    constructor(mixer: AnimationMixer, clip: AnimationClip, localRoot?: Object3D | null, blendMode?: number | number);
+    _mixer: AnimationMixer;
+    _clip: AnimationClip;
+    _localRoot: any;
     /**
      * Defines how the animation is blended/combined when two or more animations
      * are simultaneously played.
+     *
+     * @type {(NormalAnimationBlendMode|AdditiveAnimationBlendMode)}
      */
-    blendMode: AnimationBlendMode;
+    blendMode: number | number;
+    _interpolantSettings: {
+        endingStart: number;
+        endingEnd: number;
+    };
+    _interpolants: any[];
+    _propertyBindings: any[];
+    _cacheIndex: any;
+    _byClipCacheIndex: any;
+    _timeScaleInterpolant: any;
+    _restoreTimeScale: number | null;
+    _weightInterpolant: any;
     /**
      * The loop mode, set via {@link AnimationAction#setLoop}.
      *
+     * @type {(LoopRepeat|LoopOnce|LoopPingPong)}
      * @default LoopRepeat
      */
-    loop: AnimationActionLoopStyles;
+    loop: number | number | number;
+    _loopCount: number;
+    _startTime: number | null;
     /**
      * The local time of this action (in seconds, starting with `0`).
      *
      * The value gets clamped or wrapped to `[0,clip.duration]` (according to the
      * loop state).
      *
+     * @type {number}
      * @default 0
      */
     time: number;
@@ -46,17 +56,21 @@ export class AnimationAction {
      * Scaling factor for the {@link AnimationAction#time}. A value of `0` causes the
      * animation to pause. Negative values cause the animation to play backwards.
      *
+     * @type {number}
      * @default 1
      */
     timeScale: number;
+    _effectiveTimeScale: number;
     /**
      * The degree of influence of this action (in the interval `[0, 1]`). Values
      * between `0` (no impact) and `1` (full impact) can be used to blend between
      * several actions.
      *
+     * @type {number}
      * @default 1
      */
     weight: number;
+    _effectiveWeight: number;
     /**
      * The number of repetitions of the performed clip over the course of this action.
      * Can be set via {@link AnimationAction#setLoop}.
@@ -64,12 +78,14 @@ export class AnimationAction {
      * Setting this number has no effect if {@link AnimationAction#loop} is set to
      * `THREE:LoopOnce`.
      *
+     * @type {number}
      * @default Infinity
      */
     repetitions: number;
     /**
      * If set to `true`, the playback of the action is paused.
      *
+     * @type {boolean}
      * @default false
      */
     paused: boolean;
@@ -79,6 +95,7 @@ export class AnimationAction {
      * When the action is re-enabled, the animation continues from its current
      * time (setting `enabled` to `false` doesn't reset the action).
      *
+     * @type {boolean}
      * @default true
      */
     enabled: boolean;
@@ -92,18 +109,21 @@ export class AnimationAction {
      * Note: This member has no impact if the action is interrupted (it
      * has only an effect if its last loop has really finished).
      *
+     * @type {boolean}
      * @default false
      */
     clampWhenFinished: boolean;
     /**
      * Enables smooth interpolation without separate clips for start, loop and end.
      *
+     * @type {boolean}
      * @default true
      */
     zeroSlopeAtStart: boolean;
     /**
      * Enables smooth interpolation without separate clips for start, loop and end.
      *
+     * @type {boolean}
      * @default true
      */
     zeroSlopeAtEnd: boolean;
@@ -151,7 +171,7 @@ export class AnimationAction {
      * @param {number} repetitions - The number of repetitions.
      * @return {AnimationAction} A reference to this animation action.
      */
-    setLoop(mode: AnimationActionLoopStyles, repetitions: number): AnimationAction;
+    setLoop(mode: number | number | number, repetitions: number): AnimationAction;
     /**
      * Sets the effective weight of this action.
      *
@@ -282,5 +302,10 @@ export class AnimationAction {
      * @return {Object3D} The root object.
      */
     getRoot(): Object3D;
-    _scheduleFading(duration: number, weightNow: number, weightThen: number): this;
+    _update(time: any, deltaTime: any, timeDirection: any, accuIndex: any): void;
+    _updateWeight(time: any): number;
+    _updateTimeScale(time: any): number;
+    _updateTime(deltaTime: any): any;
+    _setEndings(atStart: any, atEnd: any, pingPong: any): void;
+    _scheduleFading(duration: any, weightNow: any, weightThen: any): this;
 }

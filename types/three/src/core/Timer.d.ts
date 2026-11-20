@@ -12,8 +12,15 @@
  * timer.connect( document ); // use Page Visibility API
  * ```
  */
-declare class Timer {
-    constructor();
+export class Timer {
+    _previousTime: number;
+    _currentTime: number;
+    _startTime: number;
+    _delta: number;
+    _elapsed: number;
+    _timescale: number;
+    _document: Document | null;
+    _pageVisibilityHandler: typeof handleVisibilityChange | null;
     /**
      * Connect the timer to the given document.Calling this method is not mandatory to
      * use the timer but enables the usage of the Page Visibility API to avoid large time
@@ -51,13 +58,13 @@ declare class Timer {
      * @param {number} timescale - The timescale to set.
      * @return {Timer} A reference to this timer.
      */
-    setTimescale(timescale: number): this;
+    setTimescale(timescale: number): Timer;
     /**
      * Resets the time computation for the current simulation step.
      *
      * @return {Timer} A reference to this timer.
      */
-    reset(): this;
+    reset(): Timer;
     /**
      * Can be used to free all internal resources. Usually called when
      * the timer instance isn't required anymore.
@@ -73,7 +80,7 @@ declare class Timer {
      * time will be determined with `performance.now`.
      * @return {Timer} A reference to this timer.
      */
-    update(timestamp?: number): this;
+    update(timestamp: number): Timer;
 }
-
-export { Timer };
+declare function handleVisibilityChange(): void;
+export {};

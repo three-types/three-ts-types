@@ -1,10 +1,3 @@
-export type Matrix2Tuple = [
-    n11: number,
-    n12: number,
-    n21: number,
-    n22: number,
-];
-
 /**
  * Represents a 2x2 matrix.
  *
@@ -33,40 +26,28 @@ export type Matrix2Tuple = [
  */
 export class Matrix2 {
     /**
-     * This flag can be used for type testing.
-     *
-     * @type {boolean}
-     * @readonly
-     * @default true
-     */
-    readonly isMatrix2: true;
-    /**
-     * Constructs a new 2x2 matrix. This constructor
-     * initializes the matrix as an identity matrix.
-     */
-    constructor();
-    /**
      * Constructs a new 2x2 matrix. The arguments are supposed to be
-     * in row-major order.
+     * in row-major order. If no arguments are provided, the constructor
+     * initializes the matrix as an identity matrix.
      *
      * @param {number} [n11] - 1-1 matrix element.
      * @param {number} [n12] - 1-2 matrix element.
      * @param {number} [n21] - 2-1 matrix element.
      * @param {number} [n22] - 2-2 matrix element.
      */
-    constructor(n11: number, n12: number, n21: number, n22: number);
+    constructor(n11?: number, n12?: number, n21?: number, n22?: number);
     /**
      * A column-major list of matrix values.
      *
      * @type {Array<number>}
      */
-    elements: Matrix2Tuple;
+    elements: Array<number>;
     /**
      * Sets this matrix to the 2x2 identity matrix.
      *
      * @return {Matrix2} A reference to this matrix.
      */
-    identity(): this;
+    identity(): Matrix2;
     /**
      * Sets the elements of the matrix from the given array.
      *
@@ -74,7 +55,7 @@ export class Matrix2 {
      * @param {number} [offset=0] - Index of the first element in the array.
      * @return {Matrix2} A reference to this matrix.
      */
-    fromArray(array: ArrayLike<number>, offset?: number): this;
+    fromArray(array: Array<number>, offset?: number): Matrix2;
     /**
      * Sets the elements of the matrix.The arguments are supposed to be
      * in row-major order.
@@ -85,5 +66,5 @@ export class Matrix2 {
      * @param {number} n22 - 2-2 matrix element.
      * @return {Matrix2} A reference to this matrix.
      */
-    set(n11: number, n12: number, n21: number, n22: number): this;
+    set(n11: number, n12: number, n21: number, n22: number): Matrix2;
 }

@@ -1,13 +1,4 @@
-import { Camera } from "../../cameras/Camera.js";
-import { BufferGeometry, GeometryGroup } from "../../core/BufferGeometry.js";
-import { Object3D } from "../../core/Object3D.js";
-import { Material } from "../../materials/Material.js";
-import { Frustum } from "../../math/Frustum.js";
-import { FrustumArray } from "../../math/FrustumArray.js";
-import { Matrix4 } from "../../math/Matrix4.js";
-import ClippingContext from "./ClippingContext.js";
-import Renderer from "./Renderer.js";
-
+export default StandardDrawingPipeline;
 /**
  * Decides which objects of a scene are rendered and how they are submitted to the render list.
  * The default implementation performs frustum culling and pushes every renderable object as a
@@ -63,7 +54,7 @@ declare class StandardDrawingPipeline {
      * @param {Camera} camera - The camera.
      * @return {Promise|undefined} Resolves when the resources are ready.
      */
-    prepareAsync(scene: Object3D, camera: Camera): Promise<void> | undefined;
+    prepareAsync(): Promise<any> | undefined;
     /**
      * Frees the resources of the pipeline. Called by {@link Renderer#dispose}, subclasses holding GPU
      * resources release them here.
@@ -75,19 +66,19 @@ declare class StandardDrawingPipeline {
      * @param {Camera} camera - The camera.
      * @param {RenderContext} renderContext - The render context.
      */
-    begin(camera: Camera, renderContext: unknown): void;
+    begin(camera: Camera, renderContext: RenderContext): void;
     /**
      * Begins the projection into the given render list.
      *
      * @param {RenderList} renderList - The render list.
      */
-    beginRenderList(renderList: unknown): void;
+    beginRenderList(renderList: RenderList): void;
     /**
      * Finishes the projection into the given render list.
      *
      * @param {RenderList} renderList - The render list.
      */
-    finishRenderList(renderList: unknown): void;
+    finishRenderList(renderList: RenderList): void;
     /**
      * Returns `true` if the given object is culled by the camera and should not be rendered.
      * Objects of render bundles are not culled, a bundle is recorded once and drawn with
@@ -111,13 +102,13 @@ declare class StandardDrawingPipeline {
      * @param {ClippingContext} clippingContext - The current clipping context.
      */
     pushRenderItem(
-        renderList: unknown,
+        renderList: RenderList,
         object: Object3D,
         geometry: BufferGeometry,
         material: Material,
         groupOrder: number,
         z: number,
-        group: GeometryGroup | null,
+        group: Object | null,
         clippingContext: ClippingContext,
     ): void;
     /**
@@ -134,9 +125,10 @@ declare class StandardDrawingPipeline {
         object: Object3D,
         camera: Camera,
         groupOrder: number,
-        renderList: unknown,
+        renderList: RenderList,
         clippingContext: ClippingContext,
     ): void;
 }
-
-export default StandardDrawingPipeline;
+import { Frustum } from "../../math/Frustum.js";
+import { FrustumArray } from "../../math/FrustumArray.js";
+import { Matrix4 } from "../../math/Matrix4.js";

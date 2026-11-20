@@ -1,19 +1,3 @@
-import { Matrix4 } from "./Matrix4.js";
-import { Vector2 } from "./Vector2.js";
-import { Vector3 } from "./Vector3.js";
-
-export type Matrix3Tuple = [
-    n11: number,
-    n12: number,
-    n13: number,
-    n21: number,
-    n22: number,
-    n23: number,
-    n31: number,
-    n32: number,
-    n33: number,
-];
-
 /**
  * Represents a 3x3 matrix.
  *
@@ -44,21 +28,9 @@ export type Matrix3Tuple = [
  */
 export class Matrix3 {
     /**
-     * This flag can be used for type testing.
-     *
-     * @type {boolean}
-     * @readonly
-     * @default true
-     */
-    readonly isMatrix3: true;
-    /**
-     * Constructs a new 3x3 matrix. This constructor
-     * initializes the matrix as an identity matrix.
-     */
-    constructor();
-    /**
      * Constructs a new 3x3 matrix. The arguments are supposed to be
-     * in row-major order.
+     * in row-major order. If no arguments are provided, the constructor
+     * initializes the matrix as an identity matrix.
      *
      * @param {number} [n11] - 1-1 matrix element.
      * @param {number} [n12] - 1-2 matrix element.
@@ -71,22 +43,22 @@ export class Matrix3 {
      * @param {number} [n33] - 3-3 matrix element.
      */
     constructor(
-        n11: number,
-        n12: number,
-        n13: number,
-        n21: number,
-        n22: number,
-        n23: number,
-        n31: number,
-        n32: number,
-        n33: number,
+        n11?: number,
+        n12?: number,
+        n13?: number,
+        n21?: number,
+        n22?: number,
+        n23?: number,
+        n31?: number,
+        n32?: number,
+        n33?: number,
     );
     /**
      * A column-major list of matrix values.
      *
      * @type {Array<number>}
      */
-    elements: Matrix3Tuple;
+    elements: Array<number>;
     /**
      * Sets the elements of the matrix.The arguments are supposed to be
      * in row-major order.
@@ -103,29 +75,29 @@ export class Matrix3 {
      * @return {Matrix3} A reference to this matrix.
      */
     set(
-        n11: number,
-        n12: number,
-        n13: number,
-        n21: number,
-        n22: number,
-        n23: number,
-        n31: number,
-        n32: number,
-        n33: number,
+        n11?: number,
+        n12?: number,
+        n13?: number,
+        n21?: number,
+        n22?: number,
+        n23?: number,
+        n31?: number,
+        n32?: number,
+        n33?: number,
     ): Matrix3;
     /**
      * Sets this matrix to the 3x3 identity matrix.
      *
      * @return {Matrix3} A reference to this matrix.
      */
-    identity(): this;
+    identity(): Matrix3;
     /**
      * Copies the values of the given matrix to this instance.
      *
      * @param {Matrix3} m - The matrix to copy.
      * @return {Matrix3} A reference to this matrix.
      */
-    copy(m: Matrix3): this;
+    copy(m: Matrix3): Matrix3;
     /**
      * Extracts the basis of this matrix into the three axis vectors provided.
      *
@@ -134,7 +106,7 @@ export class Matrix3 {
      * @param {Vector3} zAxis - The basis's z axis.
      * @return {Matrix3} A reference to this matrix.
      */
-    extractBasis(xAxis: Vector3, yAxis: Vector3, zAxis: Vector3): this;
+    extractBasis(xAxis: Vector3, yAxis: Vector3, zAxis: Vector3): Matrix3;
     /**
      * Set this matrix to the upper 3x3 matrix of the given 4x4 matrix.
      *
@@ -148,14 +120,14 @@ export class Matrix3 {
      * @param {Matrix3} m - The matrix to multiply with.
      * @return {Matrix3} A reference to this matrix.
      */
-    multiply(m: Matrix3): this;
+    multiply(m: Matrix3): Matrix3;
     /**
      * Pre-multiplies this matrix by the given 3x3 matrix.
      *
      * @param {Matrix3} m - The matrix to multiply with.
      * @return {Matrix3} A reference to this matrix.
      */
-    premultiply(m: Matrix3): this;
+    premultiply(m: Matrix3): Matrix3;
     /**
      * Multiples the given 3x3 matrices and stores the result
      * in this matrix.
@@ -164,14 +136,14 @@ export class Matrix3 {
      * @param {Matrix3} b - The second matrix.
      * @return {Matrix3} A reference to this matrix.
      */
-    multiplyMatrices(a: Matrix3, b: Matrix3): this;
+    multiplyMatrices(a: Matrix3, b: Matrix3): Matrix3;
     /**
      * Multiplies every component of the matrix by the given scalar.
      *
      * @param {number} s - The scalar.
      * @return {Matrix3} A reference to this matrix.
      */
-    multiplyScalar(s: number): this;
+    multiplyScalar(s: number): Matrix3;
     /**
      * Computes and returns the determinant of this matrix.
      *
@@ -185,13 +157,13 @@ export class Matrix3 {
      *
      * @return {Matrix3} A reference to this matrix.
      */
-    invert(): this;
+    invert(): Matrix3;
     /**
      * Transposes this matrix in place.
      *
      * @return {Matrix3} A reference to this matrix.
      */
-    transpose(): this;
+    transpose(): Matrix3;
     /**
      * Computes the normal matrix which is the inverse transpose of the upper
      * left 3x3 portion of the given 4x4 matrix.
@@ -199,14 +171,14 @@ export class Matrix3 {
      * @param {Matrix4} matrix4 - The 4x4 matrix.
      * @return {Matrix3} A reference to this matrix.
      */
-    getNormalMatrix(matrix4: Matrix4): this;
+    getNormalMatrix(matrix4: Matrix4): Matrix3;
     /**
      * Transposes this matrix into the supplied array, and returns itself unchanged.
      *
      * @param {Array<number>} r - An array to store the transposed matrix elements.
      * @return {Matrix3} A reference to this matrix.
      */
-    transposeIntoArray(r: number[]): this;
+    transposeIntoArray(r: Array<number>): Matrix3;
     /**
      * Sets the UV transform matrix from offset, repeat, rotation, and center.
      *
@@ -219,7 +191,7 @@ export class Matrix3 {
      * @param {number} cy - Center y of rotation
      * @return {Matrix3} A reference to this matrix.
      */
-    setUvTransform(tx: number, ty: number, sx: number, sy: number, rotation: number, cx: number, cy: number): this;
+    setUvTransform(tx: number, ty: number, sx: number, sy: number, rotation: number, cx: number, cy: number): Matrix3;
     /**
      * Scales this matrix with the given scalar values.
      *
@@ -228,7 +200,7 @@ export class Matrix3 {
      * @param {number} sy - The amount to scale in the Y axis.
      * @return {Matrix3} A reference to this matrix.
      */
-    scale(sx: number, sy: number): this;
+    scale(sx: number, sy: number): Matrix3;
     /**
      * Rotates this matrix by the given angle.
      *
@@ -236,7 +208,7 @@ export class Matrix3 {
      * @param {number} theta - The rotation in radians.
      * @return {Matrix3} A reference to this matrix.
      */
-    rotate(theta: number): this;
+    rotate(theta: number): Matrix3;
     /**
      * Translates this matrix by the given scalar values.
      *
@@ -245,7 +217,7 @@ export class Matrix3 {
      * @param {number} ty - The amount to translate in the Y axis.
      * @return {Matrix3} A reference to this matrix.
      */
-    translate(tx: number, ty: number): this;
+    translate(tx: number, ty: number): Matrix3;
     /**
      * Sets this matrix as a 2D translation transform.
      *
@@ -253,22 +225,14 @@ export class Matrix3 {
      * @param {number} y - The amount to translate in the Y axis.
      * @return {Matrix3} A reference to this matrix.
      */
-    makeTranslation(v: Vector2): this;
-    /**
-     * Sets this matrix as a 2D translation transform.
-     *
-     * @param {number|Vector2} x - The amount to translate in the X axis or alternatively a translation vector.
-     * @param {number} y - The amount to translate in the Y axis.
-     * @return {Matrix3} A reference to this matrix.
-     */
-    makeTranslation(x: number, y: number): this;
+    makeTranslation(x: number | Vector2, y: number): Matrix3;
     /**
      * Sets this matrix as a 2D rotational transformation.
      *
      * @param {number} theta - The rotation in radians.
      * @return {Matrix3} A reference to this matrix.
      */
-    makeRotation(theta: number): this;
+    makeRotation(theta: number): Matrix3;
     /**
      * Sets this matrix as a 2D scale transform.
      *
@@ -276,7 +240,7 @@ export class Matrix3 {
      * @param {number} y - The amount to scale in the Y axis.
      * @return {Matrix3} A reference to this matrix.
      */
-    makeScale(x: number, y: number): this;
+    makeScale(x: number, y: number): Matrix3;
     /**
      * Returns `true` if this matrix is equal with the given one.
      *
@@ -291,7 +255,7 @@ export class Matrix3 {
      * @param {number} [offset=0] - Index of the first element in the array.
      * @return {Matrix3} A reference to this matrix.
      */
-    fromArray(array: ArrayLike<number>, offset?: number): this;
+    fromArray(array: Array<number>, offset?: number): Matrix3;
     /**
      * Writes the elements of this matrix to the given array. If no array is provided,
      * the method returns a new instance.
@@ -300,11 +264,11 @@ export class Matrix3 {
      * @param {number} [offset=0] - Index of the first element in the array.
      * @return {Array<number>} The matrix elements in column-major order.
      */
-    toArray<TArray extends ArrayLike<number> = Matrix3Tuple>(array?: TArray, offset?: number): TArray;
+    toArray(array?: Array<number>, offset?: number): Array<number>;
     /**
      * Returns a matrix with copied values from this instance.
      *
      * @return {Matrix3} A clone of this instance.
      */
-    clone(): this;
+    clone(): Matrix3;
 }

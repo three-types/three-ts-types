@@ -19,7 +19,7 @@ export class CylinderGeometry extends BufferGeometry {
      * @param {Object} data - A JSON object representing the serialized geometry.
      * @return {CylinderGeometry} A new instance.
      */
-    static fromJSON(data: {}): CylinderGeometry;
+    static fromJSON(data: Object): CylinderGeometry;
     /**
      * Constructs a new cylinder geometry.
      *
@@ -50,16 +50,7 @@ export class CylinderGeometry extends BufferGeometry {
      *
      * @type {Object}
      */
-    readonly parameters: {
-        readonly radiusTop: number;
-        readonly radiusBottom: number;
-        readonly height: number;
-        readonly radialSegments: number;
-        readonly heightSegments: number;
-        readonly openEnded: boolean;
-        readonly thetaStart: number;
-        readonly thetaLength: number;
-    };
-    copy(source: CylinderGeometry): this;
+    parameters: Object;
+    copy(source: any): this;
 }
 import { BufferGeometry } from "../core/BufferGeometry.js";

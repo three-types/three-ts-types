@@ -1,22 +1,18 @@
-import { RenderTarget, RenderTargetOptions } from "../../core/RenderTarget.js";
-import { CubeTexture } from "../../textures/CubeTexture.js";
-import { Texture } from "../../textures/Texture.js";
-import Renderer from "./Renderer.js";
-
+export default CubeRenderTarget;
 /**
  * This class represents a cube render target. It is a special version
  * of `WebGLCubeRenderTarget` which is compatible with `WebGPURenderer`.
  *
  * @augments RenderTarget
  */
-declare class CubeRenderTarget extends RenderTarget<CubeTexture> {
+declare class CubeRenderTarget extends RenderTarget {
     /**
      * Constructs a new cube render target.
      *
      * @param {number} [size=1] - The size of the render target.
      * @param {RenderTarget~Options} [options] - The configuration object.
      */
-    constructor(size?: number, options?: RenderTargetOptions);
+    constructor(size?: number, options?: {});
     /**
      * This flag can be used for type testing.
      *
@@ -32,7 +28,7 @@ declare class CubeRenderTarget extends RenderTarget<CubeTexture> {
      * @param {Texture} texture - The equirectangular texture.
      * @return {CubeRenderTarget} A reference to this cube render target.
      */
-    fromEquirectangularTexture(renderer: Renderer, texture: Texture): this;
+    fromEquirectangularTexture(renderer: Renderer, texture: Texture): CubeRenderTarget;
     /**
      * Clears this cube render target.
      *
@@ -43,5 +39,4 @@ declare class CubeRenderTarget extends RenderTarget<CubeTexture> {
      */
     clear(renderer: Renderer, color?: boolean, depth?: boolean, stencil?: boolean): void;
 }
-
-export default CubeRenderTarget;
+import { RenderTarget } from "../../core/RenderTarget.js";

@@ -1,15 +1,52 @@
-import { Color } from "../math/Color.js";
-import { Vector2 } from "../math/Vector2.js";
-import { Texture } from "../textures/Texture.js";
-import { MapColorPropertiesToColorRepresentations } from "./Material.js";
-import { MeshStandardMaterial, MeshStandardMaterialProperties } from "./MeshStandardMaterial.js";
-
-export interface MeshPhysicalMaterialProperties extends MeshStandardMaterialProperties {
+/**
+ * An extension of the {@link MeshStandardMaterial}, providing more advanced
+ * physically-based rendering properties:
+ *
+ * - Anisotropy: Ability to represent the anisotropic property of materials
+ * as observable with brushed metals.
+ * - Clearcoat: Some materials — like car paints, carbon fiber, and wet surfaces — require
+ * a clear, reflective layer on top of another layer that may be irregular or rough.
+ * Clearcoat approximates this effect, without the need for a separate transparent surface.
+ * - Diffuse roughness: Produces the flatter appearance and enhanced backscattering of
+ * rough diffuse surfaces such as clay, concrete, and unpolished materials.
+ * - Iridescence: Allows to render the effect where hue varies  depending on the viewing
+ * angle and illumination angle. This can be seen on soap bubbles, oil films, or on the
+ * wings of many insects.
+ * - Physically-based transparency: One limitation of {@link Material#opacity} is that highly
+ * transparent materials are less reflective. Physically-based transmission provides a more
+ * realistic option for thin, transparent surfaces like glass.
+ * - Advanced reflectivity: More flexible reflectivity for non-metallic materials.
+ * - Retroreflection: Redirects specular light back toward the light source for
+ * safety materials like road markings and reflective tape.
+ * - Sheen: Can be used for representing cloth and fabric materials.
+ *
+ * As a result of these complex shading features, `MeshPhysicalMaterial` has a
+ * higher performance cost, per pixel, than other three.js materials. Most
+ * effects are disabled by default, and add cost as they are enabled. For
+ * best results, always specify an environment map when using this material.
+ *
+ * @augments MeshStandardMaterial
+ * @demo scenes/material-browser.html#MeshPhysicalMaterial
+ */
+export class MeshPhysicalMaterial extends MeshStandardMaterial {
+    /**
+     * This flag can be used for type testing.
+     *
+     * @type {boolean}
+     * @readonly
+     * @default true
+     */
+    readonly isMeshPhysicalMaterial: boolean;
+    defines: {
+        STANDARD: string;
+        PHYSICAL: string;
+    };
     /**
      * The rotation of the anisotropy in tangent, bitangent space, measured in radians
      * counter-clockwise from the tangent. When `anisotropyMap` is present, this
      * property provides additional rotation to the vectors in the texture.
      *
+     * @type {number}
      * @default 0
      */
     anisotropyRotation: number;
@@ -39,6 +76,7 @@ export interface MeshPhysicalMaterialProperties extends MeshStandardMaterialProp
     /**
      * Roughness of the clear coat layer, from `0.0` to `1.0`.
      *
+     * @type {number}
      * @default 0
      */
     clearcoatRoughness: number;
@@ -57,6 +95,7 @@ export interface MeshPhysicalMaterialProperties extends MeshStandardMaterialProp
      * How much `clearcoatNormalMap` affects the clear coat layer, from
      * `(0,0)` to `(1,1)`.
      *
+     * @type {Vector2}
      * @default (1,1)
      */
     clearcoatNormalScale: Vector2;
@@ -84,21 +123,10 @@ export interface MeshPhysicalMaterialProperties extends MeshStandardMaterialProp
     /**
      * Index-of-refraction for non-metallic materials, from `1.0` to `2.333`.
      *
+     * @type {number}
      * @default 1.5
      */
     ior: number;
-    /**
-     * Degree of reflectivity, from `0.0` to `1.0`. Default is `0.5`, which
-     * corresponds to an index-of-refraction of `1.5`.
-     *
-     * This models the reflectivity of non-metallic materials. It has no effect
-     * when `metalness` is `1.0`
-     *
-     * @name MeshPhysicalMaterial#reflectivity
-     * @default 0.5
-     */
-    get reflectivity(): number;
-    set reflectivity(reflectivity: number);
     /**
      * The red channel of this texture is multiplied against `iridescence`, for per-pixel
      * control over iridescence.
@@ -114,12 +142,14 @@ export interface MeshPhysicalMaterialProperties extends MeshStandardMaterialProp
      * Strength of the iridescence RGB color shift effect, represented by an index-of-refraction.
      * Between `1.0` to `2.333`.
      *
+     * @type {number}
      * @default 1.3
      */
     iridescenceIOR: number;
     /**
      * The minimum thickness of the iridescence layer in nanometers.
      *
+     * @type {number}
      * @default 100
      */
     iridescenceThicknessMinimum: number;
@@ -127,6 +157,7 @@ export interface MeshPhysicalMaterialProperties extends MeshStandardMaterialProp
      * The maximum thickness of the iridescence layer in nanometers. If no
      * `iridescenceThicknessMap` is defined, this value is used as the thickness.
      *
+     * @type {number}
      * @default 400
      */
     iridescenceThicknessMaximum: number;
@@ -148,6 +179,7 @@ export interface MeshPhysicalMaterialProperties extends MeshStandardMaterialProp
     /**
      * The sheen tint.
      *
+     * @type {Color}
      * @default (0,0,0)
      */
     sheenColor: Color;
@@ -166,6 +198,7 @@ export interface MeshPhysicalMaterialProperties extends MeshStandardMaterialProp
     /**
      * Roughness of the sheen layer, from `0.0` to `1.0`.
      *
+     * @type {number}
      * @default 1
      */
     sheenRoughness: number;
@@ -196,6 +229,7 @@ export interface MeshPhysicalMaterialProperties extends MeshStandardMaterialProp
      * coordinate space of the mesh. If the value is `0` the material is
      * thin-walled. Otherwise the material is a volume boundary.
      *
+     * @type {number}
      * @default 0
      */
     thickness: number;
@@ -215,6 +249,7 @@ export interface MeshPhysicalMaterialProperties extends MeshStandardMaterialProp
      * the medium before interacting with a particle. The value is given in world
      * space units, and must be greater than zero.
      *
+     * @type {number}
      * @default Infinity
      */
     attenuationDistance: number;
@@ -222,6 +257,7 @@ export interface MeshPhysicalMaterialProperties extends MeshStandardMaterialProp
      * The color that white light turns into due to absorption when reaching the
      * attenuation distance.
      *
+     * @type {Color}
      * @default (1,1,1)
      */
     attenuationColor: Color;
@@ -229,6 +265,7 @@ export interface MeshPhysicalMaterialProperties extends MeshStandardMaterialProp
      * A float that scales the amount of specular reflection for non-metals only.
      * When set to zero, the model is effectively Lambertian. From `0.0` to `1.0`.
      *
+     * @type {number}
      * @default 1
      */
     specularIntensity: number;
@@ -246,6 +283,7 @@ export interface MeshPhysicalMaterialProperties extends MeshStandardMaterialProp
     /**
      * Tints the specular reflection at normal incidence for non-metals only.
      *
+     * @type {Color}
      * @default (1,1,1)
      */
     specularColor: Color;
@@ -261,10 +299,19 @@ export interface MeshPhysicalMaterialProperties extends MeshStandardMaterialProp
      * @default null
      */
     specularColorMap: Texture | null;
+    _anisotropy: number;
+    _clearcoat: number;
+    _diffuseRoughness: number;
+    _dispersion: number;
+    _iridescence: number;
+    _retroreflectivity: number;
+    _sheen: number;
+    _transmission: number;
     set anisotropy(value: number);
     /**
      * The anisotropy strength, from `0.0` to `1.0`.
      *
+     * @type {number}
      * @default 0
      */
     get anisotropy(): number;
@@ -274,6 +321,7 @@ export interface MeshPhysicalMaterialProperties extends MeshStandardMaterialProp
      * clear coat related properties to enable multilayer materials that have a
      * thin translucent layer over the base layer.
      *
+     * @type {number}
      * @default 0
      */
     get clearcoat(): number;
@@ -283,6 +331,7 @@ export interface MeshPhysicalMaterialProperties extends MeshStandardMaterialProp
      * uses Lambertian diffuse reflection. Values above `0.0` use the EON
      * energy-preserving rough diffuse model.
      *
+     * @type {number}
      * @default 0
      */
     get diffuseRoughness(): number;
@@ -291,6 +340,7 @@ export interface MeshPhysicalMaterialProperties extends MeshStandardMaterialProp
      * The intensity of the iridescence layer, simulating RGB color shift based on the angle between
      * the surface and the viewer, from `0.0` to `1.0`.
      *
+     * @type {number}
      * @default 0
      */
     get iridescence(): number;
@@ -300,6 +350,7 @@ export interface MeshPhysicalMaterialProperties extends MeshStandardMaterialProp
      * through a relatively clear volume. Any value zero or larger is valid, the typical range of
      * realistic values is `[0, 1]`. This property can be only be used with transmissive objects.
      *
+     * @type {number}
      * @default 0
      */
     get dispersion(): number;
@@ -310,6 +361,7 @@ export interface MeshPhysicalMaterialProperties extends MeshStandardMaterialProp
      * reflected about the surface normal, redirecting the specular lobe back
      * toward the light source.
      *
+     * @type {number}
      * @default 0
      */
     get retroreflectivity(): number;
@@ -317,6 +369,7 @@ export interface MeshPhysicalMaterialProperties extends MeshStandardMaterialProp
     /**
      * The intensity of the sheen layer, from `0.0` to `1.0`.
      *
+     * @type {number}
      * @default 0
      */
     get sheen(): number;
@@ -330,61 +383,21 @@ export interface MeshPhysicalMaterialProperties extends MeshStandardMaterialProp
      *
      * When transmission is non-zero, `opacity` should be  set to `1`.
      *
+     * @type {number}
      * @default 0
      */
     get transmission(): number;
-    set iridescenceThicknessRange(value: [number, number]);
+    set iridescenceThicknessRange(value: Array<number, number>);
     /**
      * Array of exactly 2 elements, specifying minimum and maximum thickness of the iridescence layer.
      *
      * @deprecated since r187. Use {@link MeshPhysicalMaterial#iridescenceThicknessMinimum} and {@link MeshPhysicalMaterial#iridescenceThicknessMaximum} instead.
+     * @type {Array<number,number>}
      * @default [100,400]
      */
-    get iridescenceThicknessRange(): [number, number];
+    get iridescenceThicknessRange(): Array<number, number>;
+    copy(source: any): this;
 }
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface MeshPhysicalMaterialParameters
-    extends Partial<MapColorPropertiesToColorRepresentations<MeshPhysicalMaterialProperties>>
-{}
-
-/**
- * An extension of the {@link MeshStandardMaterial}, providing more advanced
- * physically-based rendering properties:
- *
- * - Anisotropy: Ability to represent the anisotropic property of materials
- * as observable with brushed metals.
- * - Clearcoat: Some materials — like car paints, carbon fiber, and wet surfaces — require
- * a clear, reflective layer on top of another layer that may be irregular or rough.
- * Clearcoat approximates this effect, without the need for a separate transparent surface.
- * - Diffuse roughness: Produces the flatter appearance and enhanced backscattering of
- * rough diffuse surfaces such as clay, concrete, and unpolished materials.
- * - Iridescence: Allows to render the effect where hue varies  depending on the viewing
- * angle and illumination angle. This can be seen on soap bubbles, oil films, or on the
- * wings of many insects.
- * - Physically-based transparency: One limitation of {@link Material#opacity} is that highly
- * transparent materials are less reflective. Physically-based transmission provides a more
- * realistic option for thin, transparent surfaces like glass.
- * - Advanced reflectivity: More flexible reflectivity for non-metallic materials.
- * - Retroreflection: Redirects specular light back toward the light source for
- * safety materials like road markings and reflective tape.
- * - Sheen: Can be used for representing cloth and fabric materials.
- *
- * As a result of these complex shading features, `MeshPhysicalMaterial` has a
- * higher performance cost, per pixel, than other three.js materials. Most
- * effects are disabled by default, and add cost as they are enabled. For
- * best results, always specify an environment map when using this material.
- */
-export class MeshPhysicalMaterial extends MeshStandardMaterial {
-    constructor(parameters?: MeshPhysicalMaterialParameters);
-    /**
-     * This flag can be used for type testing.
-     *
-     * @default true
-     */
-    readonly isMeshPhysicalMaterial: boolean;
-    setValues(values?: MeshPhysicalMaterialParameters): void;
-}
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface MeshPhysicalMaterial extends MeshPhysicalMaterialProperties {}
+import { Color } from "../math/Color.js";
+import { Vector2 } from "../math/Vector2.js";
+import { MeshStandardMaterial } from "./MeshStandardMaterial.js";

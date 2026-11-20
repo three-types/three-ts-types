@@ -1,13 +1,3 @@
-import {
-    MagnificationTextureFilter,
-    Mapping,
-    MinificationTextureFilter,
-    PixelFormat,
-    TextureDataType,
-    Wrapping,
-} from "../constants.js";
-import { Texture } from "./Texture.js";
-
 /**
  * A texture for use with a video.
  *
@@ -25,7 +15,7 @@ import { Texture } from "./Texture.js";
  *
  * @augments Texture
  */
-export class VideoTexture<TVideo = HTMLVideoElement> extends Texture<TVideo> {
+export class VideoTexture extends Texture {
     /**
      * Constructs a new video texture.
      *
@@ -40,14 +30,14 @@ export class VideoTexture<TVideo = HTMLVideoElement> extends Texture<TVideo> {
      * @param {number} [anisotropy=Texture.DEFAULT_ANISOTROPY] - The anisotropy value.
      */
     constructor(
-        video: TVideo,
-        mapping?: Mapping,
-        wrapS?: Wrapping,
-        wrapT?: Wrapping,
-        magFilter?: MagnificationTextureFilter,
-        minFilter?: MinificationTextureFilter,
-        format?: PixelFormat,
-        type?: TextureDataType,
+        video: HTMLVideoElement,
+        mapping?: number,
+        wrapS?: number,
+        wrapT?: number,
+        magFilter?: number,
+        minFilter?: number,
+        format?: number,
+        type?: number,
         anisotropy?: number,
     );
     /**
@@ -57,8 +47,17 @@ export class VideoTexture<TVideo = HTMLVideoElement> extends Texture<TVideo> {
      * @readonly
      * @default true
      */
-    readonly isVideoTexture: true;
-    clone(): this;
+    readonly isVideoTexture: boolean;
+    /**
+     * The video frame request callback identifier, which is a positive integer.
+     *
+     * Value of 0 represents no scheduled rVFC.
+     *
+     * @private
+     * @type {number}
+     */
+    private _requestVideoFrameCallbackId;
+    clone(): any;
     /**
      * This method is called automatically by the renderer and sets {@link Texture#needsUpdate}
      * to `true` every time a new frame is available.
@@ -67,3 +66,4 @@ export class VideoTexture<TVideo = HTMLVideoElement> extends Texture<TVideo> {
      */
     update(): void;
 }
+import { Texture } from "./Texture.js";

@@ -19,7 +19,7 @@ export class RingGeometry extends BufferGeometry {
      * @param {Object} data - A JSON object representing the serialized geometry.
      * @return {RingGeometry} A new instance.
      */
-    static fromJSON(data: {}): RingGeometry;
+    static fromJSON(data: Object): RingGeometry;
     /**
      * Constructs a new ring geometry.
      *
@@ -45,14 +45,7 @@ export class RingGeometry extends BufferGeometry {
      *
      * @type {Object}
      */
-    readonly parameters: {
-        readonly innerRadius: number;
-        readonly outerRadius: number;
-        readonly thetaSegments: number;
-        readonly phiSegments: number;
-        readonly thetaStart: number;
-        readonly thetaLength: number;
-    };
-    copy(source: RingGeometry): this;
+    parameters: Object;
+    copy(source: any): this;
 }
 import { BufferGeometry } from "../core/BufferGeometry.js";

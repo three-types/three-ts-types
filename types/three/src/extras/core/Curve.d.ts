@@ -1,22 +1,16 @@
-import { Vector2 } from "../../math/Vector2.js";
-import { Vector3 } from "../../math/Vector3.js";
-
-export interface CurveJSON {
-    metadata: { version: number; type: string; generator: string };
-    arcLengthDivisions: number;
-    type: string;
-}
-
 /**
  * An abstract base class for creating an analytic curve object that contains methods
  * for interpolation.
  *
  * @abstract
  */
-export abstract class Curve<TVector extends Vector2 | Vector3> {
+export class Curve {
     /**
      * The type property is used for detecting the object type
      * in context of serialization/deserialization.
+     *
+     * @type {string}
+     * @readonly
      */
     readonly type: string;
     /**
@@ -25,15 +19,25 @@ export abstract class Curve<TVector extends Vector2 | Vector3> {
      * precision when using methods like {@link Curve#getSpacedPoints}, it is
      * recommended to increase the value of this property if the curve is very large.
      *
+     * @type {number}
      * @default 200
      */
     arcLengthDivisions: number;
     /**
      * Must be set to `true` if the curve parameters have changed.
      *
+     * @type {boolean}
      * @default false
      */
     needsUpdate: boolean;
+    /**
+     * An internal cache that holds precomputed curve length values.
+     *
+     * @private
+     * @type {?Array<number>}
+     * @default null
+     */
+    private cacheArcLengths;
     /**
      * This method returns a vector in 2D or 3D space (depending on the curve definition)
      * for the given interpolation factor.
@@ -43,7 +47,7 @@ export abstract class Curve<TVector extends Vector2 | Vector3> {
      * @param {(Vector2|Vector3)} [optionalTarget] - The optional target vector the result is written to.
      * @return {(Vector2|Vector3)} The position on the curve. It can be a 2D or 3D vector depending on the curve definition.
      */
-    getPoint(t: number, optionalTarget?: TVector): TVector;
+    getPoint(): Vector2 | Vector3;
     /**
      * This method returns a vector in 2D or 3D space (depending on the curve definition)
      * for the given interpolation factor. Unlike {@link Curve#getPoint}, this method honors the length
@@ -53,7 +57,7 @@ export abstract class Curve<TVector extends Vector2 | Vector3> {
      * @param {(Vector2|Vector3)} [optionalTarget] - The optional target vector the result is written to.
      * @return {(Vector2|Vector3)} The position on the curve. It can be a 2D or 3D vector depending on the curve definition.
      */
-    getPointAt(u: number, optionalTarget?: TVector): TVector;
+    getPointAt(u: number, optionalTarget?: Vector2 | Vector3): Vector2 | Vector3;
     /**
      * This method samples the curve via {@link Curve#getPoint} and returns an array of points representing
      * the curve shape.
@@ -61,7 +65,7 @@ export abstract class Curve<TVector extends Vector2 | Vector3> {
      * @param {number} [divisions=5] - The number of divisions.
      * @return {Array<(Vector2|Vector3)>} An array holding the sampled curve values. The number of points is `divisions + 1`.
      */
-    getPoints(divisions?: number): Array<TVector>;
+    getPoints(divisions?: number): Array<(Vector2 | Vector3)>;
     /**
      * This method samples the curve via {@link Curve#getPointAt} and returns an array of points representing
      * the curve shape. Unlike {@link Curve#getPoints}, this method returns equi-spaced points across the entire
@@ -70,7 +74,7 @@ export abstract class Curve<TVector extends Vector2 | Vector3> {
      * @param {number} [divisions=5] - The number of divisions.
      * @return {Array<(Vector2|Vector3)>} An array holding the sampled curve values. The number of points is `divisions + 1`.
      */
-    getSpacedPoints(divisions?: number): Array<TVector>;
+    getSpacedPoints(divisions?: number): Array<(Vector2 | Vector3)>;
     /**
      * Returns the total arc length of the curve.
      *
@@ -111,7 +115,7 @@ export abstract class Curve<TVector extends Vector2 | Vector3> {
      * @param {(Vector2|Vector3)} [optionalTarget] - The optional target vector the result is written to.
      * @return {(Vector2|Vector3)} The tangent vector.
      */
-    getTangent(t: number, optionalTarget?: TVector): TVector;
+    getTangent(t: number, optionalTarget?: Vector2 | Vector3): Vector2 | Vector3;
     /**
      * Same as {@link Curve#getTangent} but with equidistant samples.
      *
@@ -120,7 +124,7 @@ export abstract class Curve<TVector extends Vector2 | Vector3> {
      * @return {(Vector2|Vector3)} The tangent vector.
      * @see {@link Curve#getPointAt}
      */
-    getTangentAt(u: number, optionalTarget?: TVector): TVector;
+    getTangentAt(u: number, optionalTarget?: Vector2 | Vector3): Vector2 | Vector3;
     /**
      * Generates the Frenet Frames. Requires a curve definition in 3D space. Used
      * in geometries like {@link TubeGeometry} or {@link ExtrudeGeometry}.
@@ -139,26 +143,28 @@ export abstract class Curve<TVector extends Vector2 | Vector3> {
      *
      * @return {Curve} A clone of this instance.
      */
-    clone(): this;
+    clone(): Curve;
     /**
      * Copies the values of the given curve to this instance.
      *
      * @param {Curve} source - The curve to copy.
      * @return {Curve} A reference to this curve.
      */
-    copy(source: Curve<TVector>): this;
+    copy(source: Curve): Curve;
     /**
      * Serializes the curve into JSON.
      *
      * @return {Object} A JSON object representing the serialized curve.
      * @see {@link ObjectLoader#parse}
      */
-    toJSON(): CurveJSON;
+    toJSON(): Object;
     /**
      * Deserializes the curve from the given JSON.
      *
      * @param {Object} json - The JSON holding the serialized curve.
      * @return {Curve} A reference to this curve.
      */
-    fromJSON(json: CurveJSON): this;
+    fromJSON(json: Object): Curve;
 }
+import { Vector2 } from "../../math/Vector2.js";
+import { Vector3 } from "../../math/Vector3.js";

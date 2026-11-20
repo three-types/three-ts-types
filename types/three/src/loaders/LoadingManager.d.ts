@@ -1,5 +1,3 @@
-import { Loader } from "./Loader.js";
-
 /**
  * The global default loading manager.
  *
@@ -32,39 +30,42 @@ export class LoadingManager {
      * @param {Function} [onProgress] - Executes when single items have been loaded.
      * @param {Function} [onError] - Executes when an error occurs.
      */
-    constructor(
-        onLoad?: () => void,
-        onProgress?: (url: string, loaded: number, total: number) => void,
-        onError?: (url: string) => void,
-    );
+    constructor(onLoad?: Function, onProgress?: Function, onError?: Function);
     /**
      * Executes when an item starts loading.
      *
      * @type {Function|undefined}
      * @default undefined
      */
-    onStart: ((url: string, loaded: number, total: number) => void) | undefined;
+    onStart: Function | undefined;
     /**
      * Executes when all items have been loaded.
      *
      * @type {Function|undefined}
      * @default undefined
      */
-    onLoad: (() => void) | undefined;
+    onLoad: Function | undefined;
     /**
      * Executes when single items have been loaded.
      *
      * @type {Function|undefined}
      * @default undefined
      */
-    onProgress: ((url: string, loaded: number, total: number) => void) | undefined;
+    onProgress: Function | undefined;
     /**
      * Executes when an error occurs.
      *
      * @type {Function|undefined}
      * @default undefined
      */
-    onError: ((url: string) => void) | undefined;
+    onError: Function | undefined;
+    /**
+     * Used for aborting ongoing requests in loaders using this manager.
+     *
+     * @private
+     * @type {AbortController | null}
+     */
+    private _abortController;
     /**
      * This should be called by any loader using the manager when the loader
      * starts loading an item.
@@ -128,7 +129,7 @@ export class LoadingManager {
      * @param {function(string):string} transform - URL modifier callback. Called with an URL and must return a resolved URL.
      * @return {LoadingManager} A reference to this loading manager.
      */
-    setURLModifier: (transform?: (url: string) => string) => this;
+    setURLModifier: (transform: (arg0: string) => string) => LoadingManager;
     /**
      * Registers a loader with the given regular expression. Can be used to
      * define what loader should be used in order to load specific files. A
@@ -143,14 +144,14 @@ export class LoadingManager {
      * @param {Loader} loader - A loader that should handle matched cases.
      * @return {LoadingManager} A reference to this loading manager.
      */
-    addHandler: (regex: RegExp, loader: Loader) => this;
+    addHandler: (regex: string, loader: Loader) => LoadingManager;
     /**
      * Removes the loader for the given regular expression.
      *
      * @param {string} regex - A regular expression.
      * @return {LoadingManager} A reference to this loading manager.
      */
-    removeHandler: (regex: RegExp) => this;
+    removeHandler: (regex: string) => LoadingManager;
     /**
      * Can be used to retrieve the registered loader for the given file path.
      *
@@ -165,7 +166,7 @@ export class LoadingManager {
      *
      * @return {LoadingManager} A reference to this loading manager.
      */
-    abort: () => this;
+    abort: () => LoadingManager;
     /**
      * Used for aborting ongoing requests in loaders using this manager.
      *

@@ -1,22 +1,3 @@
-import { AnimationBlendMode } from "../constants.js";
-import { Object3D } from "../core/Object3D.js";
-import { Vector3 } from "../math/Vector3.js";
-import { Bone } from "../objects/Bone.js";
-import { KeyframeTrack, KeyframeTrackJSON } from "./KeyframeTrack.js";
-
-export interface AnimationClipJSON {
-    name: string;
-    duration: number;
-    tracks: KeyframeTrackJSON[];
-    uuid: string;
-    blendMode: AnimationBlendMode;
-}
-
-export interface MorphTarget {
-    name: string;
-    vertices: Vector3[];
-}
-
 /**
  * A reusable set of keyframe tracks which represent an animation.
  */
@@ -28,7 +9,7 @@ export class AnimationClip {
      * @param {Object} json - The serialized animation clip.
      * @return {AnimationClip} The new animation clip.
      */
-    static parse(json: AnimationClipJSON): AnimationClip;
+    static parse(json: Object): AnimationClip;
     /**
      * Serializes the given animation clip into JSON.
      *
@@ -36,7 +17,7 @@ export class AnimationClip {
      * @param {AnimationClip} clip - The animation clip to serialize.
      * @return {Object} The JSON object.
      */
-    static toJSON(clip: AnimationClip): AnimationClipJSON;
+    static toJSON(clip: AnimationClip): Object;
     /**
      * Returns a new animation clip from the passed morph targets array of a
      * geometry, taking a name and the number of frames per second.
@@ -53,7 +34,7 @@ export class AnimationClip {
      */
     static CreateFromMorphTargetSequence(
         name: string,
-        morphTargetSequence: Array<MorphTarget>,
+        morphTargetSequence: Array<Object>,
         fps: number,
         noLoop: boolean,
     ): AnimationClip;
@@ -82,7 +63,7 @@ export class AnimationClip {
      * @return {Array<AnimationClip>} An array of new animation clips.
      */
     static CreateClipsFromMorphTargetSequences(
-        morphTargets: Array<MorphTarget>,
+        morphTargets: Array<Object>,
         fps: number,
         noLoop: boolean,
     ): Array<AnimationClip>;
@@ -100,33 +81,51 @@ export class AnimationClip {
      * @param {(NormalAnimationBlendMode|AdditiveAnimationBlendMode)} [blendMode=NormalAnimationBlendMode] - Defines how the animation
      * is blended/combined when two or more animations are simultaneously played.
      */
-    constructor(name?: string, duration?: number, tracks?: Array<KeyframeTrack>, blendMode?: AnimationBlendMode);
+    constructor(
+        name?: string,
+        duration?: number,
+        tracks?: Array<KeyframeTrack>,
+        blendMode?: number | AdditiveAnimationBlendMode,
+    );
     /**
      * The clip's name.
+     *
+     * @type {string}
      */
     name: string;
     /**
      *  An array of keyframe tracks.
+     *
+     * @type {Array<KeyframeTrack>}
      */
     tracks: Array<KeyframeTrack>;
     /**
      * The clip's duration in seconds.
+     *
+     * @type {number}
      */
     duration: number;
     /**
      * Defines how the animation is blended/combined when two or more animations
      * are simultaneously played.
+     *
+     * @type {(NormalAnimationBlendMode|AdditiveAnimationBlendMode)}
      */
-    blendMode: AnimationBlendMode;
+    blendMode: number | AdditiveAnimationBlendMode;
     /**
      * The UUID of the animation clip.
+     *
+     * @type {string}
+     * @readonly
      */
     readonly uuid: string;
     /**
      * An object that can be used to store custom data about the animation clip.
      * It should not hold references to functions as these will not be cloned.
+     *
+     * @type {Object}
      */
-    userData: Record<string, unknown>;
+    userData: Object;
     /**
      * Sets the duration of this clip to the duration of its longest keyframe track.
      *
@@ -158,11 +157,12 @@ export class AnimationClip {
      *
      * @return {AnimationClip} A clone of this instance.
      */
-    clone(): this;
+    clone(): AnimationClip;
     /**
      * Serializes this animation clip into JSON.
      *
      * @return {Object} The JSON object.
      */
-    toJSON(): AnimationClipJSON;
+    toJSON(): Object;
 }
+import { KeyframeTrack } from "./KeyframeTrack.js";

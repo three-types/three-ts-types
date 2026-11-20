@@ -1,14 +1,37 @@
-import { DepthPackingStrategies } from "../constants.js";
-import { Texture } from "../textures/Texture.js";
-import { MapColorPropertiesToColorRepresentations, Material, MaterialProperties } from "./Material.js";
-
-export interface MeshDepthMaterialProperties extends MaterialProperties {
+/**
+ * A material for drawing geometry by depth. Depth is based off of the camera
+ * near and far plane. White is nearest, black is farthest.
+ *
+ * @augments Material
+ * @demo scenes/material-browser.html#MeshDepthMaterial
+ */
+export class MeshDepthMaterial extends Material {
+    /**
+     * Constructs a new mesh depth material.
+     *
+     * @param {Object} [parameters] - An object with one or more properties
+     * defining the material's appearance. Any property of the material
+     * (including any property from inherited materials) can be passed
+     * in here. Color values can be passed any type of value accepted
+     * by {@link Color#set}.
+     */
+    constructor(parameters?: Object);
+    /**
+     * This flag can be used for type testing.
+     *
+     * @type {boolean}
+     * @readonly
+     * @default true
+     */
+    readonly isMeshDepthMaterial: boolean;
+    type: string;
     /**
      * Type for depth packing.
      *
+     * @type {(BasicDepthPacking|RGBADepthPacking|RGBDepthPacking|RGDepthPacking)}
      * @default BasicDepthPacking
      */
-    depthPacking: DepthPackingStrategies;
+    depthPacking: number | RGBADepthPacking | RGBDepthPacking | RGDepthPacking;
     /**
      * The color map. May optionally include an alpha channel, typically combined
      * with {@link Material#transparent} or {@link Material#alphaTest}.
@@ -58,6 +81,7 @@ export interface MeshDepthMaterialProperties extends MaterialProperties {
      * displacement, and white is maximum displacement). Without a displacement
      * map set, this value is not applied.
      *
+     * @type {number}
      * @default 1
      */
     displacementScale: number;
@@ -66,12 +90,14 @@ export interface MeshDepthMaterialProperties extends MaterialProperties {
      * The bias is added to the scaled sample of the displacement map.
      * Without a displacement map set, this value is not applied.
      *
+     * @type {number}
      * @default 0
      */
     displacementBias: number;
     /**
      * Renders the geometry as a wireframe.
      *
+     * @type {boolean}
      * @default false
      */
     wireframe: boolean;
@@ -81,39 +107,10 @@ export interface MeshDepthMaterialProperties extends MaterialProperties {
      * WebGL and WebGPU ignore this property and always render
      * 1 pixel wide lines.
      *
+     * @type {number}
      * @default 1
      */
     wireframeLinewidth: number;
+    copy(source: any): this;
 }
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface MeshDepthMaterialParameters
-    extends Partial<MapColorPropertiesToColorRepresentations<MeshDepthMaterialProperties>>
-{}
-
-/**
- * A material for drawing geometry by depth. Depth is based off of the camera
- * near and far plane. White is nearest, black is farthest.
- */
-export class MeshDepthMaterial extends Material {
-    /**
-     * Constructs a new mesh depth material.
-     *
-     * @param {Object} [parameters] - An object with one or more properties
-     * defining the material's appearance. Any property of the material
-     * (including any property from inherited materials) can be passed
-     * in here. Color values can be passed any type of value accepted
-     * by {@link Color#set}.
-     */
-    constructor(parameters?: MeshDepthMaterialParameters);
-    /**
-     * This flag can be used for type testing.
-     *
-     * @default true
-     */
-    readonly isMeshDepthMaterial: boolean;
-    setValues(values?: MeshDepthMaterialParameters): void;
-}
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface MeshDepthMaterial extends MeshDepthMaterialProperties {}
+import { Material } from "./Material.js";

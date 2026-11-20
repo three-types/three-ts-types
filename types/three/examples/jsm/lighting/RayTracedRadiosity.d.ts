@@ -1,5 +1,3 @@
-import { Node, Scene, WebGPURenderer } from "three/webgpu";
-
 /**
  * Approximates diffuse global illumination with ray traced radiosity, as a source of irradiance for
  * {@link LightMapper}. Every sample casts cosine-distributed rays from each point through a
@@ -84,6 +82,28 @@ export class RayTracedRadiosity {
      * @default 0.001
      */
     bias: number;
+    _bvh: any;
+    _geometry: BufferGeometry | null;
+    _trace: any;
+    _surface: any;
+    _visibility: any;
+    _triangles: import("three/tsl").StorageBufferNode | null;
+    _materials: any;
+    _lights: any;
+    _lightCount: number;
+    _emitters: any;
+    _emitterCount: number;
+    _lightMapMeshes: any[];
+    _cache: LightMapper | null;
+    _environment: any;
+    _sky: import("three/tsl").StorageBufferNode | null;
+    _environmentIntensity: import("three/tsl").UniformNode;
+    _environmentRotation: import("three/tsl").UniformNode;
+    _environmentInverseRotation: import("three/tsl").UniformNode;
+    _firstRay: number;
+    _firstRayNode: import("three/tsl").Node;
+    _raysNode: import("three/tsl").Node;
+    _biasNode: import("three/tsl").Node;
     /**
      * Collects the meshes of the scene, builds the BVH and solves the cached bounces. Call this again
      * after changing the scene or the lighting.
@@ -96,6 +116,55 @@ export class RayTracedRadiosity {
      * Frees all internal resources.
      */
     dispose(): void;
+    /**
+     * Disposes the BVH, the scene buffers and the bounce cache.
+     *
+     * @private
+     */
+    private _clear;
+    /**
+     * Merges the visible meshes into one world space geometry, builds its BVH and stores the
+     * materials, emissive triangles and lights.
+     *
+     * @private
+     * @param {Scene} scene - The scene.
+     */
+    private _collect;
+    /**
+     * Builds the table that samples the sky by the power of its latitude-longitude cells, measured on
+     * the GPU from the radiance that the rays see. So any equirectangular or cube texture works, also
+     * without data on the CPU, like the textures of TextureLoader and CubeTextureLoader, and render
+     * targets. A cell stores its power and the sum of the powers of its row up to it. Then an item per
+     * row stores the power of the row, the sum of the powers of the rows up to it, and the factor that
+     * turns the power of a cell of the row into its density over the solid angle.
+     *
+     * @private
+     * @param {WebGPURenderer} renderer - The renderer.
+     */
+    private _createSky;
+    /**
+     * Creates the functions that trace rays through the BVH.
+     *
+     * @private
+     */
+    private _createTrace;
+    /**
+     * Solves the cached bounces. Every iteration gathers one sample from the previous one, then the
+     * converged estimate is refined by accumulating samples.
+     *
+     * @private
+     */
+    private _solve;
+    /**
+     * Returns the irradiance gathered with rays at a world-space position and normal.
+     *
+     * @private
+     * @param {Node<vec3>} positionNode - The world-space position.
+     * @param {Node<vec3>} normalNode - The world-space normal.
+     * @param {boolean} analyticLights - Whether to add the direct light of the analytic lights.
+     * @return {Node<vec3>} The irradiance.
+     */
+    private _gather;
 }
 /**
  * Creates a world-space diffuse irradiance sampler for a prepared {@link RayTracedRadiosity}, for
@@ -109,4 +178,6 @@ export class RayTracedRadiosity {
  */
 export function rayTracedRadiosityIrradiance(radiosity: RayTracedRadiosity, { analyticLights }?: {
     analyticLights?: boolean | undefined;
-}): (position: Node<"vec3">, normal: Node<"vec3">) => Node<"vec3">;
+}): (arg0: Node<any>, arg1: Node<any>) => Node<any>;
+import { BufferGeometry } from "three/webgpu";
+import { LightMapper } from "./LightMapper.js";

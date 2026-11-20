@@ -1,6 +1,3 @@
-import { Vector2 } from "../../math/Vector2.js";
-import { Curve } from "../core/Curve.js";
-
 /**
  * A curve representing a 2D Quadratic Bezier curve.
  *
@@ -22,7 +19,7 @@ import { Curve } from "../core/Curve.js";
  *
  * @augments Curve
  */
-export class QuadraticBezierCurve extends Curve<Vector2> {
+export class QuadraticBezierCurve extends Curve {
     /**
      * Constructs a new Quadratic Bezier curve.
      *
@@ -34,19 +31,28 @@ export class QuadraticBezierCurve extends Curve<Vector2> {
     /**
      * This flag can be used for type testing.
      *
+     * @type {boolean}
+     * @readonly
      * @default true
      */
-    readonly isQuadraticBezierCurve: true;
+    readonly isQuadraticBezierCurve: boolean;
+    type: string;
     /**
      * The start point.
+     *
+     * @type {Vector2}
      */
     v0: Vector2;
     /**
      * The control point.
+     *
+     * @type {Vector2}
      */
     v1: Vector2;
     /**
      * The end point.
+     *
+     * @type {Vector2}
      */
     v2: Vector2;
     /**
@@ -57,5 +63,8 @@ export class QuadraticBezierCurve extends Curve<Vector2> {
      * @return {Vector2} The position on the curve.
      */
     getPoint(t: number, optionalTarget?: Vector2): Vector2;
-    copy(source: QuadraticBezierCurve): this;
+    copy(source: any): this;
+    fromJSON(json: any): this;
 }
+import { Vector2 } from "../../math/Vector2.js";
+import { Curve } from "../core/Curve.js";

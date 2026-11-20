@@ -21,7 +21,7 @@ export class BoxGeometry extends BufferGeometry {
      * @param {Object} data - A JSON object representing the serialized geometry.
      * @return {BoxGeometry} A new instance.
      */
-    static fromJSON(data: {}): BoxGeometry;
+    static fromJSON(data: Object): BoxGeometry;
     /**
      * Constructs a new box geometry.
      *
@@ -47,14 +47,7 @@ export class BoxGeometry extends BufferGeometry {
      *
      * @type {Object}
      */
-    readonly parameters: {
-        readonly width: number;
-        readonly height: number;
-        readonly depth: number;
-        readonly widthSegments: number;
-        readonly heightSegments: number;
-        readonly depthSegments: number;
-    };
-    copy(source: BoxGeometry): this;
+    parameters: Object;
+    copy(source: any): this;
 }
 import { BufferGeometry } from "../core/BufferGeometry.js";

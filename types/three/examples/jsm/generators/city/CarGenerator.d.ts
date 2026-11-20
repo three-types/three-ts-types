@@ -1,10 +1,3 @@
-import { BufferGeometry, ColorRepresentation, Group, Matrix4, MeshStandardNodeMaterial } from "three/webgpu";
-
-export interface CarGeneratorPlacement {
-    matrix: Matrix4;
-    color: ColorRepresentation;
-}
-
 /**
  * A low-poly car fleet with lofted bodies, circular wheel arches, curved
  * windscreens and recessed alloy wheels. Separate cabin panels define the
@@ -27,17 +20,15 @@ export interface CarGeneratorPlacement {
  */
 export class CarGenerator {
     constructor(parameters?: {});
-
     parameters: {};
-
-    geometries: Map<string, BufferGeometry>;
-    materials: Map<string, MeshStandardNodeMaterial>;
+    geometries: Map<any, any>;
+    materials: Map<any, any>;
     mesh: Group | null;
-
-    build(cars: CarGeneratorPlacement[]): Group;
+    build(cars: any): Group;
     dispose(): void;
-
-    static defaults: {};
-
-    static taxiColor: number;
 }
+export namespace CarGenerator {
+    let defaults: {};
+    let taxiColor: number;
+}
+import { Group } from "three";

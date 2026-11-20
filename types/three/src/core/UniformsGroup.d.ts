@@ -1,71 +1,88 @@
-import { Usage } from "../constants.js";
-import { EventDispatcher } from "./EventDispatcher.js";
-import { Uniform } from "./Uniform.js";
-
-export interface UniformsGroupEventMap {
-    dispose: {};
-}
-
 /**
  * A class for managing multiple uniforms in a single group. The renderer will process
  * such a definition as a single UBO.
  *
  * Since this class can only be used in context of {@link ShaderMaterial}, it is only supported
  * in {@link WebGLRenderer}.
+ *
+ * @augments EventDispatcher
  */
-export class UniformsGroup<TEventMap extends UniformsGroupEventMap = UniformsGroupEventMap>
-    extends EventDispatcher<TEventMap>
-{
-    constructor();
+export class UniformsGroup extends EventDispatcher {
     /**
      * This flag can be used for type testing.
      *
+     * @type {boolean}
+     * @readonly
      * @default true
      */
-    readonly isUniformsGroup: true;
-    id: number;
+    readonly isUniformsGroup: boolean;
     /**
      * The name of the uniforms group.
+     *
+     * @type {string}
      */
     name: string;
     /**
      * The buffer usage.
      *
+     * @type {(StaticDrawUsage|DynamicDrawUsage|StreamDrawUsage|StaticReadUsage|DynamicReadUsage|StreamReadUsage|StaticCopyUsage|DynamicCopyUsage|StreamCopyUsage)}
      * @default StaticDrawUsage
      */
-    usage: Usage;
+    usage:
+        | number
+        | DynamicDrawUsage
+        | StreamDrawUsage
+        | StaticReadUsage
+        | DynamicReadUsage
+        | StreamReadUsage
+        | StaticCopyUsage
+        | DynamicCopyUsage
+        | StreamCopyUsage;
     /**
      * An array holding the uniforms.
+     *
+     * @type {Array<Uniform>}
      */
-    uniforms: Array<Uniform | Uniform[]>;
+    uniforms: Array<Uniform>;
     /**
      * Adds the given uniform to this uniforms group.
      *
      * @param {Uniform} uniform - The uniform to add.
      * @return {UniformsGroup} A reference to this uniforms group.
      */
-    add(uniform: Uniform | Uniform[]): this;
+    add(uniform: Uniform): UniformsGroup;
     /**
      * Removes the given uniform from this uniforms group.
      *
      * @param {Uniform} uniform - The uniform to remove.
      * @return {UniformsGroup} A reference to this uniforms group.
      */
-    remove(uniform: Uniform | Uniform[]): this;
+    remove(uniform: Uniform): UniformsGroup;
     /**
      * Sets the name of this uniforms group.
      *
      * @param {string} name - The name to set.
      * @return {UniformsGroup} A reference to this uniforms group.
      */
-    setName(name: string): this;
+    setName(name: string): UniformsGroup;
     /**
      * Sets the usage of this uniforms group.
      *
      * @param {(StaticDrawUsage|DynamicDrawUsage|StreamDrawUsage|StaticReadUsage|DynamicReadUsage|StreamReadUsage|StaticCopyUsage|DynamicCopyUsage|StreamCopyUsage)} value - The usage to set.
      * @return {UniformsGroup} A reference to this uniforms group.
      */
-    setUsage(value: Usage): this;
+    setUsage(
+        value:
+            | number
+            | DynamicDrawUsage
+            | StreamDrawUsage
+            | StaticReadUsage
+            | DynamicReadUsage
+            | StreamReadUsage
+            | StaticCopyUsage
+            | DynamicCopyUsage
+            | StreamCopyUsage,
+    ): UniformsGroup;
     /**
      * Frees the GPU-related resources allocated by this instance. Call this
      * method whenever this instance is no longer used in your app.
@@ -79,7 +96,7 @@ export class UniformsGroup<TEventMap extends UniformsGroupEventMap = UniformsGro
      * @param {UniformsGroup} source - The uniforms group to copy.
      * @return {UniformsGroup} A reference to this uniforms group.
      */
-    copy(source: UniformsGroup): this;
+    copy(source: UniformsGroup): UniformsGroup;
     /**
      * Returns a new uniforms group with copied values from this instance.
      *
@@ -87,3 +104,4 @@ export class UniformsGroup<TEventMap extends UniformsGroupEventMap = UniformsGro
      */
     clone(): UniformsGroup;
 }
+import { EventDispatcher } from "./EventDispatcher.js";

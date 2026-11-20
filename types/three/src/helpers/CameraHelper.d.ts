@@ -1,7 +1,3 @@
-import { Camera } from "../cameras/Camera.js";
-import { Color } from "../math/Color.js";
-import { LineSegments } from "../objects/LineSegments.js";
-
 /**
  * This helps with visualizing what a camera contains in its frustum. It
  * visualizes the frustum of a camera using a line segments.
@@ -18,6 +14,8 @@ import { LineSegments } from "../objects/LineSegments.js";
  * const helper = new THREE.CameraHelper( camera );
  * scene.add( helper );
  * ```
+ *
+ * @augments LineSegments
  */
 export class CameraHelper extends LineSegments {
     /**
@@ -28,10 +26,14 @@ export class CameraHelper extends LineSegments {
     constructor(camera: Camera);
     /**
      * The camera being visualized.
+     *
+     * @type {Camera}
      */
     camera: Camera;
     /**
      * This contains the points used to visualize the camera.
+     *
+     * @type {Object<string,Array<number>>}
      */
     pointMap: {
         [x: string]: number[];
@@ -52,3 +54,6 @@ export class CameraHelper extends LineSegments {
      */
     update(): void;
 }
+import { Camera } from "../cameras/Camera.js";
+import { Color } from "../math/Color.js";
+import { LineSegments } from "../objects/LineSegments.js";

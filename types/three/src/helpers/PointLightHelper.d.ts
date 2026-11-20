@@ -1,7 +1,3 @@
-import { PointLight } from "../lights/PointLight.js";
-import { ColorRepresentation } from "../math/Color.js";
-import { Mesh } from "../objects/Mesh.js";
-
 /**
  * This displays a helper object consisting of a spherical mesh for
  * visualizing an instance of {@link PointLight}.
@@ -15,6 +11,8 @@ import { Mesh } from "../objects/Mesh.js";
  * const pointLightHelper = new THREE.PointLightHelper( pointLight, sphereSize );
  * scene.add( pointLightHelper );
  * ```
+ *
+ * @augments Mesh
  */
 export class PointLightHelper extends Mesh {
     /**
@@ -25,19 +23,25 @@ export class PointLightHelper extends Mesh {
      * @param {number|Color|string} [color] - The helper's color. If not set, the helper will take
      * the color of the light.
      */
-    constructor(light: PointLight, sphereSize?: number, color?: ColorRepresentation);
+    constructor(light: PointLight, sphereSize?: number, color?: number | Color | string);
     /**
      * The light being visualized.
+     *
+     * @type {PointLight}
      */
     light: PointLight;
     /**
      * The color parameter passed in the constructor.
      * If not set, the helper will take the color of the light.
+     *
+     * @type {number|Color|string}
      */
-    color: ColorRepresentation | undefined;
+    color: number | Color | string;
+    matrix: any;
     /**
      * Updates the helper to match the position of the
      * light being visualized.
      */
     update(): void;
 }
+import { Mesh } from "../objects/Mesh.js";

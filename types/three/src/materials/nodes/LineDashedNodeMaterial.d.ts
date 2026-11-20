@@ -1,12 +1,28 @@
-import Node from "../../nodes/core/Node.js";
-import { LineDashedMaterialParameters, LineDashedMaterialProperties } from "../LineDashedMaterial.js";
-import { MapColorPropertiesToColorRepresentations } from "../Material.js";
-import NodeMaterial, { NodeMaterialNodeProperties } from "./NodeMaterial.js";
-
-export interface LineDashedNodeMaterialNodeProperties extends NodeMaterialNodeProperties {
+export default LineDashedNodeMaterial;
+/**
+ * Node material version of  {@link LineDashedMaterial}.
+ *
+ * @augments NodeMaterial
+ */
+declare class LineDashedNodeMaterial extends NodeMaterial {
+    /**
+     * Constructs a new line dashed node material.
+     *
+     * @param {Object} [parameters] - The configuration parameter.
+     */
+    constructor(parameters?: Object);
+    /**
+     * This flag can be used for type testing.
+     *
+     * @type {boolean}
+     * @readonly
+     * @default true
+     */
+    readonly isLineDashedNodeMaterial: boolean;
     /**
      * The dash offset.
      *
+     * @type {number}
      * @default 0
      */
     dashOffset: number;
@@ -18,9 +34,10 @@ export interface LineDashedNodeMaterialNodeProperties extends NodeMaterialNodePr
      * If you don't want to overwrite the offset but modify the existing
      * value instead, use {@link materialLineDashOffset}.
      *
+     * @type {?Node<float>}
      * @default null
      */
-    offsetNode: Node | null;
+    offsetNode: Node<any> | null;
     /**
      * The scale of dash materials is by default inferred from the `scale`
      * property. This node property allows to overwrite the default
@@ -29,9 +46,10 @@ export interface LineDashedNodeMaterialNodeProperties extends NodeMaterialNodePr
      * If you don't want to overwrite the scale but modify the existing
      * value instead, use {@link materialLineScale}.
      *
+     * @type {?Node<float>}
      * @default null
      */
-    dashScaleNode: Node | null;
+    dashScaleNode: Node<any> | null;
     /**
      * The dash size of dash materials is by default inferred from the `dashSize`
      * property. This node property allows to overwrite the default
@@ -40,9 +58,10 @@ export interface LineDashedNodeMaterialNodeProperties extends NodeMaterialNodePr
      * If you don't want to overwrite the dash size but modify the existing
      * value instead, use {@link materialLineDashSize}.
      *
+     * @type {?Node<float>}
      * @default null
      */
-    dashSizeNode: Node | null;
+    dashSizeNode: Node<any> | null;
     /**
      * The gap size of dash materials is by default inferred from the `gapSize`
      * property. This node property allows to overwrite the default
@@ -51,38 +70,9 @@ export interface LineDashedNodeMaterialNodeProperties extends NodeMaterialNodePr
      * If you don't want to overwrite the gap size but modify the existing
      * value instead, use {@link materialLineGapSize}.
      *
+     * @type {?Node<float>}
      * @default null
      */
-    gapSizeNode: Node | null;
+    gapSizeNode: Node<any> | null;
 }
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface LineDashedNodeMaterialParameters
-    extends
-        Partial<MapColorPropertiesToColorRepresentations<LineDashedNodeMaterialNodeProperties>>,
-        LineDashedMaterialParameters
-{}
-
-/**
- * Node material version of  {@link LineDashedMaterial}.
- */
-declare class LineDashedNodeMaterial extends NodeMaterial {
-    /**
-     * Constructs a new line dashed node material.
-     *
-     * @param {Object} [parameters] - The configuration parameter.
-     */
-    constructor(parameters?: LineDashedNodeMaterialParameters);
-    /**
-     * This flag can be used for type testing.
-     *
-     * @default true
-     */
-    readonly isLineDashedNodeMaterial: boolean;
-    setValues(values?: LineDashedNodeMaterialParameters): void;
-}
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface LineDashedNodeMaterial extends LineDashedNodeMaterialNodeProperties, LineDashedMaterialProperties {}
-
-export default LineDashedNodeMaterial;
+import NodeMaterial from "./NodeMaterial.js";

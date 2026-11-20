@@ -1,26 +1,3 @@
-import { Color } from "../math/Color.js";
-import { MapColorPropertiesToColorRepresentations, Material, MaterialProperties } from "./Material.js";
-
-export interface ShadowMaterialProperties extends MaterialProperties {
-    /**
-     * Color of the material.
-     *
-     * @default (0,0,0)
-     */
-    color: Color;
-    /**
-     * Whether the material is affected by fog or not.
-     *
-     * @default true
-     */
-    fog: boolean;
-}
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface ShadowMaterialParameters
-    extends Partial<MapColorPropertiesToColorRepresentations<ShadowMaterialProperties>>
-{}
-
 /**
  * This material can receive shadows, but otherwise is completely transparent.
  *
@@ -36,6 +13,8 @@ export interface ShadowMaterialParameters
  * plane.receiveShadow = true;
  * scene.add( plane );
  * ```
+ *
+ * @augments Material
  */
 export class ShadowMaterial extends Material {
     /**
@@ -47,15 +26,31 @@ export class ShadowMaterial extends Material {
      * in here. Color values can be passed any type of value accepted
      * by {@link Color#set}.
      */
-    constructor(parameters?: ShadowMaterialParameters);
+    constructor(parameters?: Object);
     /**
      * This flag can be used for type testing.
      *
+     * @type {boolean}
+     * @readonly
      * @default true
      */
     readonly isShadowMaterial: boolean;
-    setValues(values?: ShadowMaterialParameters): void;
+    type: string;
+    /**
+     * Color of the material.
+     *
+     * @type {Color}
+     * @default (0,0,0)
+     */
+    color: Color;
+    /**
+     * Whether the material is affected by fog or not.
+     *
+     * @type {boolean}
+     * @default true
+     */
+    fog: boolean;
+    copy(source: any): this;
 }
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface ShadowMaterial extends ShadowMaterialProperties {}
+import { Color } from "../math/Color.js";
+import { Material } from "./Material.js";

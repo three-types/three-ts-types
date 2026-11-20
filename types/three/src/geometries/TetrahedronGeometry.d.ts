@@ -13,14 +13,6 @@
  */
 export class TetrahedronGeometry extends PolyhedronGeometry {
     /**
-     * Factory method for creating an instance of this class from the given
-     * JSON object.
-     *
-     * @param {Object} data - A JSON object representing the serialized geometry.
-     * @return {TetrahedronGeometry} A new instance.
-     */
-    static fromJSON(data: {}): TetrahedronGeometry;
-    /**
      * Constructs a new tetrahedron geometry.
      *
      * @param {number} [radius=1] - Radius of the tetrahedron.

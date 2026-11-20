@@ -19,7 +19,7 @@ export class PlaneGeometry extends BufferGeometry {
      * @param {Object} data - A JSON object representing the serialized geometry.
      * @return {PlaneGeometry} A new instance.
      */
-    static fromJSON(data: {}): PlaneGeometry;
+    static fromJSON(data: Object): PlaneGeometry;
     /**
      * Constructs a new plane geometry.
      *
@@ -36,12 +36,7 @@ export class PlaneGeometry extends BufferGeometry {
      *
      * @type {Object}
      */
-    readonly parameters: {
-        readonly width: number;
-        readonly height: number;
-        readonly widthSegments: number;
-        readonly heightSegments: number;
-    };
-    copy(source: PlaneGeometry): this;
+    parameters: Object;
+    copy(source: any): this;
 }
 import { BufferGeometry } from "../core/BufferGeometry.js";

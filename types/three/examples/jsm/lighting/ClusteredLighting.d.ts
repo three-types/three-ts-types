@@ -1,6 +1,3 @@
-import { Light, Lighting, LightsNode, Scene } from "three/webgpu";
-import ClusteredLightsNode from "../tsl/lighting/ClusteredLightsNode.js";
-
 /**
  * A custom lighting implementation based on Forward+ Clustered Shading that
  * overwrites the default lighting system in {@link WebGPURenderer}. Suitable
@@ -17,11 +14,6 @@ import ClusteredLightsNode from "../tsl/lighting/ClusteredLightsNode.js";
  * @three_import import { ClusteredLighting } from 'three/addons/lighting/ClusteredLighting.js';
  */
 export class ClusteredLighting extends Lighting {
-    maxLights: number;
-    tileSize: number;
-    zSlices: number;
-    maxLightsPerCluster: number;
-
     /**
      * Constructs a new clustered lighting system.
      *
@@ -31,7 +23,25 @@ export class ClusteredLighting extends Lighting {
      * @param {number} [maxLightsPerCluster=64] - Per-cluster light-list capacity.
      */
     constructor(maxLights?: number, tileSize?: number, zSlices?: number, maxLightsPerCluster?: number);
-
+    maxLights: number;
+    tileSize: number;
+    zSlices: number;
+    maxLightsPerCluster: number;
+    /**
+     * The number of renders in progress per scene. A scene rendered inside one of its own
+     * renders (e.g. by a reflector) has more than one.
+     *
+     * @private
+     * @type {WeakMap<Scene, number>}
+     */
+    private _activeRenders;
+    /**
+     * The lights nodes of nested renders of the same scene, per scene and depth.
+     *
+     * @private
+     * @type {WeakMap<Scene, Array<ClusteredLightsNode>>}
+     */
+    private _nestedNodes;
     /**
      * Creates a new clustered lights node for the given array of lights.
      *
@@ -41,7 +51,7 @@ export class ClusteredLighting extends Lighting {
      * @param {Array<Light>} lights - The lights.
      * @return {ClusteredLightsNode} The clustered lights node.
      */
-    createNode(lights?: Light[]): ClusteredLightsNode;
+    createNode(lights?: Array<Light>): ClusteredLightsNode;
     /**
      * Returns the lights node of the given scene for the current render depth of that scene.
      * A scene rendered inside one of its own renders uses another node, so it never modifies
@@ -67,3 +77,5 @@ export class ClusteredLighting extends Lighting {
      */
     finishRender(scene: Scene): void;
 }
+import { Lighting } from "three/webgpu";
+import ClusteredLightsNode from "../tsl/lighting/ClusteredLightsNode.js";

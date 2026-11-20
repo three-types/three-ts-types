@@ -13,14 +13,6 @@
  */
 export class OctahedronGeometry extends PolyhedronGeometry {
     /**
-     * Factory method for creating an instance of this class from the given
-     * JSON object.
-     *
-     * @param {Object} data - A JSON object representing the serialized geometry.
-     * @return {OctahedronGeometry} A new instance.
-     */
-    static fromJSON(data: {}): OctahedronGeometry;
-    /**
      * Constructs a new octahedron geometry.
      *
      * @param {number} [radius=1] - Radius of the octahedron.

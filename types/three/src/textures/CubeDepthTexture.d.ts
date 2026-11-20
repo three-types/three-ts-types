@@ -1,29 +1,10 @@
-import {
-    DepthTexturePixelFormat,
-    MagnificationTextureFilter,
-    Mapping,
-    MinificationTextureFilter,
-    TextureDataType,
-    Wrapping,
-} from "../constants.js";
-import { DepthTexture, DepthTextureImageData } from "./DepthTexture.js";
-
-export type CubeDepthTextureImageData = [
-    DepthTextureImageData,
-    DepthTextureImageData,
-    DepthTextureImageData,
-    DepthTextureImageData,
-    DepthTextureImageData,
-    DepthTextureImageData,
-];
-
 /**
  * This class can be used to automatically save the depth information of a
  * cube rendering into a cube texture with depth format. Used for PointLight shadows.
  *
  * @augments DepthTexture
  */
-export class CubeDepthTexture extends DepthTexture<CubeDepthTextureImageData> {
+export class CubeDepthTexture extends DepthTexture {
     /**
      * Constructs a new cube depth texture.
      *
@@ -39,15 +20,20 @@ export class CubeDepthTexture extends DepthTexture<CubeDepthTextureImageData> {
      */
     constructor(
         size: number,
-        type?: TextureDataType,
-        mapping?: Mapping,
-        wrapS?: Wrapping,
-        wrapT?: Wrapping,
-        magFilter?: MagnificationTextureFilter,
-        minFilter?: MinificationTextureFilter,
+        type?: number,
+        mapping?: number,
+        wrapS?: number,
+        wrapT?: number,
+        magFilter?: number,
+        minFilter?: number,
         anisotropy?: number,
-        format?: DepthTexturePixelFormat,
+        format?: number,
     );
+    image: {
+        width: number;
+        height: number;
+        depth: number;
+    }[];
     /**
      * This flag can be used for type testing.
      *
@@ -55,7 +41,7 @@ export class CubeDepthTexture extends DepthTexture<CubeDepthTextureImageData> {
      * @readonly
      * @default true
      */
-    readonly isCubeDepthTexture: true;
+    readonly isCubeDepthTexture: boolean;
     /**
      * Set to true for cube texture handling in WebGLTextures.
      *
@@ -63,12 +49,13 @@ export class CubeDepthTexture extends DepthTexture<CubeDepthTextureImageData> {
      * @readonly
      * @default true
      */
-    readonly isCubeTexture: true;
-    set images(value: CubeDepthTextureImageData);
+    readonly isCubeTexture: boolean;
+    set images(value: Array<new(width?: number, height?: number) => HTMLImageElement>);
     /**
      * Alias for {@link CubeDepthTexture#image}.
      *
      * @type {Array<Image>}
      */
-    get images(): CubeDepthTextureImageData;
+    get images(): Array<new(width?: number, height?: number) => HTMLImageElement>;
 }
+import { DepthTexture } from "./DepthTexture.js";

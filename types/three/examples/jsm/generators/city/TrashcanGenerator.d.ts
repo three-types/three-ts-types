@@ -1,10 +1,3 @@
-import { InstancedMeshGenerator } from "./InstancedMeshGenerator.js";
-
-export interface TrashcanGeneratorParameters {
-    radius: number;
-    height: number;
-}
-
 /**
  * The NYC green wire-mesh litter basket: a slightly tapered drum with a heavy top
  * rim, a foot ring and a dark bag of trash inside. Built once and instanced across
@@ -17,8 +10,13 @@ export interface TrashcanGeneratorParameters {
  * scene.add( cans.build( placements ) ); // placements: Matrix4[]
  * ```
  */
-export class TrashcanGenerator extends InstancedMeshGenerator<TrashcanGeneratorParameters> {
-    constructor(parameters?: Partial<TrashcanGeneratorParameters>);
-
-    static defaults: TrashcanGeneratorParameters;
+export class TrashcanGenerator extends InstancedMeshGenerator {
+    constructor(parameters?: {});
 }
+export namespace TrashcanGenerator {
+    namespace defaults {
+        let radius: number;
+        let height: number;
+    }
+}
+import { InstancedMeshGenerator } from "./InstancedMeshGenerator.js";

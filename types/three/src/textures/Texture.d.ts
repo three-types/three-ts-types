@@ -1,95 +1,3 @@
-import {
-    AnyMapping,
-    AnyPixelFormat,
-    ColorSpace,
-    MagnificationTextureFilter,
-    Mapping,
-    MinificationTextureFilter,
-    PixelFormat,
-    PixelFormatGPU,
-    TextureDataType,
-    Wrapping,
-} from "../constants.js";
-import { EventDispatcher } from "../core/EventDispatcher.js";
-import { RenderTarget } from "../core/RenderTarget.js";
-import { Matrix3 } from "../math/Matrix3.js";
-import { Vector2 } from "../math/Vector2.js";
-import { CompressedTextureMipmap } from "./CompressedTexture.js";
-import { CubeTexture } from "./CubeTexture.js";
-import { TextureSource } from "./TextureSource.js";
-
-// NOTE: DOM upload fields are not implemented where parameters are accepted.
-export interface TextureParameters {
-    mapping?: AnyMapping | undefined;
-    // image?: TexImageSource | OffscreenCanvas | undefined;
-    // channel?: number | undefined;
-
-    wrapS?: Wrapping | undefined;
-    wrapT?: Wrapping | undefined;
-    wrapR?: Wrapping | undefined;
-
-    format?: PixelFormat | undefined;
-    internalFormat?: PixelFormatGPU | null | undefined;
-    type?: TextureDataType | undefined;
-    colorSpace?: ColorSpace | undefined;
-
-    magFilter?: MagnificationTextureFilter | undefined;
-    minFilter?: MinificationTextureFilter | undefined;
-    anisotropy?: number | undefined;
-
-    flipY?: boolean | undefined;
-
-    generateMipmaps?: boolean | undefined;
-    mipmapsAutoUpdate?: boolean | undefined;
-    // premultiplyAlpha?: boolean | undefined;
-    // unpackAlignment?: number | undefined;
-}
-
-export interface TextureJSON {
-    metadata: { version: number; type: string; generator: string };
-
-    uuid: string;
-    name: string;
-
-    image: string;
-
-    mapping: AnyMapping;
-    channel: number;
-
-    repeat: [x: number, y: number];
-    offset: [x: number, y: number];
-    center: [x: number, y: number];
-    rotation: number;
-
-    wrap: [wrapS: number, wrapT: number];
-
-    format: AnyPixelFormat;
-    internalFormat: PixelFormatGPU | null;
-    type: TextureDataType;
-    colorSpace: string;
-
-    minFilter: MinificationTextureFilter;
-    magFilter: MagnificationTextureFilter;
-    anisotropy: number;
-
-    flipY: boolean;
-
-    generateMipmaps: boolean;
-    mipmapsAutoUpdate: boolean;
-    premultiplyAlpha: boolean;
-    unpackAlignment: number;
-
-    userData?: Record<string, unknown>;
-}
-
-/** Shim for OffscreenCanvas. */
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface OffscreenCanvas extends EventTarget {}
-
-export interface TextureEventMap {
-    dispose: {};
-}
-
 /**
  * Base class for all textures.
  *
@@ -98,9 +6,7 @@ export interface TextureEventMap {
  *
  * @augments EventDispatcher
  */
-export class Texture<TImage = unknown, TEventMap extends TextureEventMap = TextureEventMap>
-    extends EventDispatcher<TEventMap>
-{
+export class Texture extends EventDispatcher {
     /**
      * Constructs a new texture.
      *
@@ -116,16 +22,16 @@ export class Texture<TImage = unknown, TEventMap extends TextureEventMap = Textu
      * @param {string} [colorSpace=NoColorSpace] - The color space.
      */
     constructor(
-        image?: TImage,
-        mapping?: Mapping,
-        wrapS?: Wrapping,
-        wrapT?: Wrapping,
-        magFilter?: MagnificationTextureFilter,
-        minFilter?: MinificationTextureFilter,
-        format?: PixelFormat,
-        type?: TextureDataType,
+        image?: Object | null,
+        mapping?: number,
+        wrapS?: number,
+        wrapT?: number,
+        magFilter?: number,
+        minFilter?: number,
+        format?: number,
+        type?: number,
         anisotropy?: number,
-        colorSpace?: ColorSpace,
+        colorSpace?: string,
     );
     /**
      * This flag can be used for type testing.
@@ -134,14 +40,7 @@ export class Texture<TImage = unknown, TEventMap extends TextureEventMap = Textu
      * @readonly
      * @default true
      */
-    readonly isTexture: true;
-    /**
-     * The ID of the texture.
-     *
-     * @type {number}
-     * @readonly
-     */
-    readonly id: number;
+    readonly isTexture: boolean;
     /**
      * The UUID of the texture.
      *
@@ -163,13 +62,13 @@ export class Texture<TImage = unknown, TEventMap extends TextureEventMap = Textu
      *
      * @type {TextureSource}
      */
-    source: TextureSource<TImage>;
+    source: TextureSource;
     /**
      * An array holding user-defined mipmaps.
      *
      * @type {Array<Object>}
      */
-    mipmaps: CompressedTextureMipmap[] | CubeTexture[] | HTMLCanvasElement[];
+    mipmaps: Array<Object>;
     /**
      * How the texture is applied to the object. The value `UVMapping`
      * is the default, where texture or uv coordinates are used to apply the map.
@@ -177,7 +76,12 @@ export class Texture<TImage = unknown, TEventMap extends TextureEventMap = Textu
      * @type {(UVMapping|CubeReflectionMapping|CubeRefractionMapping|EquirectangularReflectionMapping|EquirectangularRefractionMapping)}
      * @default UVMapping
      */
-    mapping: AnyMapping;
+    mapping:
+        | number
+        | CubeReflectionMapping
+        | CubeRefractionMapping
+        | EquirectangularReflectionMapping
+        | EquirectangularRefractionMapping;
     /**
      * Lets you select the uv attribute to map the texture to. `0` for `uv`,
      * `1` for `uv1`, `2` for `uv2` and `3` for `uv3`.
@@ -193,7 +97,7 @@ export class Texture<TImage = unknown, TEventMap extends TextureEventMap = Textu
      * @type {(RepeatWrapping|ClampToEdgeWrapping|MirroredRepeatWrapping)}
      * @default ClampToEdgeWrapping
      */
-    wrapS: Wrapping;
+    wrapS: number | number | number;
     /**
      * This defines how the texture is wrapped horizontally and corresponds to
      * *V* in UV mapping.
@@ -201,21 +105,33 @@ export class Texture<TImage = unknown, TEventMap extends TextureEventMap = Textu
      * @type {(RepeatWrapping|ClampToEdgeWrapping|MirroredRepeatWrapping)}
      * @default ClampToEdgeWrapping
      */
-    wrapT: Wrapping;
+    wrapT: number | number | number;
     /**
      * How the texture is sampled when a texel covers more than one pixel.
      *
      * @type {(NearestFilter|NearestMipmapNearestFilter|NearestMipmapLinearFilter|LinearFilter|LinearMipmapNearestFilter|LinearMipmapLinearFilter)}
      * @default LinearFilter
      */
-    magFilter: MagnificationTextureFilter;
+    magFilter:
+        | NearestFilter
+        | NearestMipmapNearestFilter
+        | NearestMipmapLinearFilter
+        | number
+        | LinearMipmapNearestFilter
+        | number;
     /**
      * How the texture is sampled when a texel covers less than one pixel.
      *
      * @type {(NearestFilter|NearestMipmapNearestFilter|NearestMipmapLinearFilter|LinearFilter|LinearMipmapNearestFilter|LinearMipmapLinearFilter)}
      * @default LinearMipmapLinearFilter
      */
-    minFilter: MinificationTextureFilter;
+    minFilter:
+        | NearestFilter
+        | NearestMipmapNearestFilter
+        | NearestMipmapLinearFilter
+        | number
+        | LinearMipmapNearestFilter
+        | number;
     /**
      * The number of samples taken along the axis through the pixel that has the
      * highest density of texels. By default, this value is `1`. A higher value
@@ -232,7 +148,7 @@ export class Texture<TImage = unknown, TEventMap extends TextureEventMap = Textu
      * @type {number}
      * @default RGBAFormat
      */
-    format: AnyPixelFormat;
+    format: number;
     /**
      * The default internal format is derived from {@link Texture#format} and {@link Texture#type} and
      * defines how the texture data is going to be stored on the GPU.
@@ -242,14 +158,14 @@ export class Texture<TImage = unknown, TEventMap extends TextureEventMap = Textu
      * @type {?string}
      * @default null
      */
-    internalFormat: PixelFormatGPU | null;
+    internalFormat: string | null;
     /**
      * The data type of the texture.
      *
      * @type {number}
      * @default UnsignedByteType
      */
-    type: TextureDataType;
+    type: number;
     /**
      * How much a single repetition of the texture is offset from the beginning,
      * in each direction U and V. Typical range is `0.0` to `1.0`.
@@ -364,14 +280,14 @@ export class Texture<TImage = unknown, TEventMap extends TextureEventMap = Textu
      *
      * @type {Object}
      */
-    userData: Record<string, any>;
+    userData: Object;
     /**
      * This can be used to only update parts of a data texture (for example, just a few rows).
      * Use the `addUpdateRange()` function to add ranges to this array.
      *
      * @type {Array<Object>}
      */
-    updateRanges: Array<{ start: number; count: number }>;
+    updateRanges: Array<Object>;
     /**
      * This starts at `0` and counts how many times {@link Texture#needsUpdate} is set to `true`.
      *
@@ -387,14 +303,14 @@ export class Texture<TImage = unknown, TEventMap extends TextureEventMap = Textu
      * @type {?Function}
      * @default null
      */
-    onUpdate: ((texture: Texture) => void) | null;
+    onUpdate: Function | null;
     /**
      * An optional back reference to the textures render target.
      *
      * @type {?(RenderTarget|WebGLRenderTarget)}
      * @default null
      */
-    renderTarget: RenderTarget | null;
+    renderTarget: (RenderTarget | WebGLRenderTarget) | null;
     /**
      * Indicates whether a texture belongs to a render target or not.
      *
@@ -428,7 +344,7 @@ export class Texture<TImage = unknown, TEventMap extends TextureEventMap = Textu
      * @readonly
      * @default false
      */
-    isPMREMTexture: boolean;
+    readonly isPMREMTexture: boolean;
     /**
      * Whether the texture should use one of the 16 bit integer formats which are normalized
      * to [0, 1] or [-1, 1] (depending on signed/unsigned) when sampled.
@@ -440,22 +356,22 @@ export class Texture<TImage = unknown, TEventMap extends TextureEventMap = Textu
     /**
      * The width of the texture in pixels.
      */
-    get width(): number;
+    get width(): any;
     /**
      * The height of the texture in pixels.
      */
-    get height(): number;
+    get height(): any;
     /**
      * The depth of the texture in pixels.
      */
-    get depth(): number;
-    set image(value: TImage);
+    get depth(): any;
+    set image(value: Object | null);
     /**
      * The image object holding the texture data.
      *
      * @type {?Object}
      */
-    get image(): TImage;
+    get image(): Object | null;
     /**
      * Updates the texture transformation matrix from the properties {@link Texture#offset},
      * {@link Texture#repeat}, {@link Texture#rotation}, and {@link Texture#center}.
@@ -481,14 +397,14 @@ export class Texture<TImage = unknown, TEventMap extends TextureEventMap = Textu
      *
      * @return {Texture} A clone of this instance.
      */
-    clone(): this;
+    clone(): Texture;
     /**
      * Copies the values of the given texture to this instance.
      *
      * @param {Texture} source - The texture to copy.
      * @return {Texture} A reference to this instance.
      */
-    copy(source: Texture<TImage>): this;
+    copy(source: Texture): Texture;
     /**
      * Setting this property to `true` indicates the engine the texture
      * must be updated in the next render. This triggers a texture upload
@@ -503,7 +419,7 @@ export class Texture<TImage = unknown, TEventMap extends TextureEventMap = Textu
      * Sets this texture's properties based on `values`.
      * @param {Object} values - A container with texture parameters.
      */
-    setValues(values: TextureParameters): void;
+    setValues(values: Object): void;
     /**
      * Serializes the texture into JSON.
      *
@@ -511,7 +427,7 @@ export class Texture<TImage = unknown, TEventMap extends TextureEventMap = Textu
      * @return {Object} A JSON object representing the serialized texture.
      * @see {@link ObjectLoader#parse}
      */
-    toJSON(meta?: string | {}): TextureJSON;
+    toJSON(meta: (Object | string) | null): Object;
     /**
      * Frees the GPU-related resources allocated by this instance. Call this
      * method whenever this instance is no longer used in your app.
@@ -539,22 +455,14 @@ export class Texture<TImage = unknown, TEventMap extends TextureEventMap = Textu
      * @param {boolean} value
      */
     set needsPMREMUpdate(value: boolean);
-    /**
-     * The default image for all textures.
-     *
-     * @default null
-     */
-    static DEFAULT_IMAGE: null;
-    /**
-     * The default mapping for all textures.
-     *
-     * @default UVMapping
-     */
-    static DEFAULT_MAPPING: Mapping;
-    /**
-     * The default anisotropy value for all textures.
-     *
-     * @default 1
-     */
-    static DEFAULT_ANISOTROPY: number;
 }
+export namespace Texture {
+    export let DEFAULT_IMAGE: (new(width?: number, height?: number) => HTMLImageElement) | null;
+    export { UVMapping as DEFAULT_MAPPING };
+    export let DEFAULT_ANISOTROPY: number;
+}
+import { UVMapping } from "../constants.js";
+import { EventDispatcher } from "../core/EventDispatcher.js";
+import { Matrix3 } from "../math/Matrix3.js";
+import { Vector2 } from "../math/Vector2.js";
+import { TextureSource } from "./TextureSource.js";

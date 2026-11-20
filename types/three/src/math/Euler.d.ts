@@ -1,11 +1,3 @@
-import { Matrix4 } from "./Matrix4.js";
-import { Quaternion } from "./Quaternion.js";
-import { Vector3 } from "./Vector3.js";
-
-export type EulerOrder = "XYZ" | "YXZ" | "ZXY" | "ZYX" | "YZX" | "XZY";
-
-export type EulerTuple = [x: number, y: number, z: number, order?: EulerOrder];
-
 /**
  * A class representing Euler angles.
  *
@@ -31,7 +23,7 @@ export class Euler {
      * @param {number} [z=0] - The angle of the z axis in radians.
      * @param {string} [order=Euler.DEFAULT_ORDER] - A string representing the order that the rotations are applied.
      */
-    constructor(x?: number, y?: number, z?: number, order?: EulerOrder);
+    constructor(x?: number, y?: number, z?: number, order?: string);
     /**
      * This flag can be used for type testing.
      *
@@ -39,7 +31,11 @@ export class Euler {
      * @readonly
      * @default true
      */
-    readonly isEuler: true;
+    readonly isEuler: boolean;
+    _x: number;
+    _y: number;
+    _z: number;
+    _order: string;
     set x(value: number);
     /**
      * The angle of the x axis in radians.
@@ -64,14 +60,14 @@ export class Euler {
      * @default 0
      */
     get z(): number;
-    set order(value: EulerOrder);
+    set order(value: string);
     /**
      * A string representing the order that the rotations are applied.
      *
      * @type {string}
      * @default 'XYZ'
      */
-    get order(): EulerOrder;
+    get order(): string;
     /**
      * Sets the Euler components.
      *
@@ -81,20 +77,20 @@ export class Euler {
      * @param {string} [order] - A string representing the order that the rotations are applied.
      * @return {Euler} A reference to this Euler instance.
      */
-    set(x: number, y: number, z: number, order?: EulerOrder): Euler;
+    set(x: number, y: number, z: number, order?: string): Euler;
     /**
      * Returns a new Euler instance with copied values from this instance.
      *
      * @return {Euler} A clone of this instance.
      */
-    clone(): this;
+    clone(): Euler;
     /**
      * Copies the values of the given Euler instance to this instance.
      *
      * @param {Euler} euler - The Euler instance to copy.
      * @return {Euler} A reference to this Euler instance.
      */
-    copy(euler: Euler): this;
+    copy(euler: Euler): Euler;
     /**
      * Sets the angles of this Euler instance from a pure rotation matrix.
      *
@@ -103,7 +99,7 @@ export class Euler {
      * @param {boolean} [update=true] - Whether the internal `onChange` callback should be executed or not.
      * @return {Euler} A reference to this Euler instance.
      */
-    setFromRotationMatrix(m: Matrix4, order?: EulerOrder, update?: boolean): Euler;
+    setFromRotationMatrix(m: Matrix4, order?: string, update?: boolean): Euler;
     /**
      * Sets the angles of this Euler instance from a normalized quaternion.
      *
@@ -112,7 +108,7 @@ export class Euler {
      * @param {boolean} [update=true] - Whether the internal `onChange` callback should be executed or not.
      * @return {Euler} A reference to this Euler instance.
      */
-    setFromQuaternion(q: Quaternion, order?: EulerOrder, update?: boolean): Euler;
+    setFromQuaternion(q: Quaternion, order?: string, update?: boolean): Euler;
     /**
      * Sets the angles of this Euler instance from the given vector.
      *
@@ -120,7 +116,7 @@ export class Euler {
      * @param {string} [order] - A string representing the order that the rotations are applied.
      * @return {Euler} A reference to this Euler instance.
      */
-    setFromVector3(v: Vector3, order?: EulerOrder): Euler;
+    setFromVector3(v: Vector3, order?: string): Euler;
     /**
      * Resets the euler angle with a new order by creating a quaternion from this
      * euler angle and then setting this euler angle with the quaternion and the
@@ -131,7 +127,7 @@ export class Euler {
      * @param {string} [newOrder] - A string representing the new order that the rotations are applied.
      * @return {Euler} A reference to this Euler instance.
      */
-    reorder(newOrder?: EulerOrder): Euler;
+    reorder(newOrder?: string): Euler;
     /**
      * Returns `true` if this Euler instance is equal with the given one.
      *
@@ -147,7 +143,7 @@ export class Euler {
      * @param {Array<number,number,number,?string>} array - An array holding the Euler component values.
      * @return {Euler} A reference to this Euler instance.
      */
-    fromArray(array: EulerTuple): Euler;
+    fromArray(array: Array<number, number, number, string | null>): Euler;
     /**
      * Writes the components of this Euler instance to the given array. If no array is provided,
      * the method returns a new instance.
@@ -156,14 +152,13 @@ export class Euler {
      * @param {number} [offset=0] - Index of the first element in the array.
      * @return {Array<number,number,number,string>} The Euler components.
      */
-    toArray(array?: Partial<EulerTuple>, offset?: number): EulerTuple;
+    toArray(array?: Array<number, number, number, string>, offset?: number): Array<number, number, number, string>;
+    _onChange(callback: any): this;
+    _onChangeCallback(): void;
     [Symbol.iterator](): Generator<string | number, void, unknown>;
-    /**
-     * The default Euler angle order.
-     *
-     * @static
-     * @type {string}
-     * @default 'XYZ'
-     */
-    static DEFAULT_ORDER: EulerOrder;
 }
+export namespace Euler {
+    let DEFAULT_ORDER: string;
+}
+import { Matrix4 } from "./Matrix4.js";
+import { Quaternion } from "./Quaternion.js";

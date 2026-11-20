@@ -1,6 +1,3 @@
-import { TypedArray } from "../core/BufferAttribute.js";
-import { Quaternion } from "./Quaternion.js";
-
 export const DEG2RAD: number;
 export const RAD2DEG: number;
 /**
@@ -196,18 +193,7 @@ export function setQuaternionFromProperEuler(
  * @param {TypedArray} array - The typed array that defines the data type of the value.
  * @return {number} The normalized value.
  */
-export function normalize(
-    value: number,
-    array:
-        | Float32Array
-        | Uint32Array
-        | Uint16Array
-        | Uint8Array
-        | Uint8ClampedArray
-        | Int32Array
-        | Int16Array
-        | Int8Array,
-): number;
+export function normalize(value: number, array: TypedArray): number;
 /**
  * Denormalizes the given value according to the given typed array.
  *
@@ -215,18 +201,7 @@ export function normalize(
  * @param {TypedArray} array - The typed array that defines the data type of the value.
  * @return {number} The denormalized (float) value in the range `[0,1]` or `[-1,1]`
  */
-export function denormalize(
-    value: number,
-    array:
-        | Float32Array
-        | Uint32Array
-        | Uint16Array
-        | Uint8Array
-        | Uint8ClampedArray
-        | Int32Array
-        | Int16Array
-        | Int8Array,
-): number;
+export function denormalize(value: number, array: TypedArray): number;
 /**
  * Returns the factor used by {@link normalize} and {@link denormalize} for the given typed array,
  * or `undefined` if the values are not scaled (float arrays) or the array type is not supported.
@@ -235,29 +210,29 @@ export function denormalize(
  * @return {number|undefined} The normalization factor.
  */
 export function getNormalizationScale(array: TypedArray): number | undefined;
-export const MathUtils: {
-    DEG2RAD: typeof DEG2RAD;
-    RAD2DEG: typeof RAD2DEG;
-    generateUUID: typeof generateUUID;
-    clamp: typeof clamp;
-    euclideanModulo: typeof euclideanModulo;
-    mapLinear: typeof mapLinear;
-    inverseLerp: typeof inverseLerp;
-    lerp: typeof lerp;
-    damp: typeof damp;
-    pingpong: typeof pingpong;
-    smoothstep: typeof smoothstep;
-    smootherstep: typeof smootherstep;
-    randInt: typeof randInt;
-    randFloat: typeof randFloat;
-    randFloatSpread: typeof randFloatSpread;
-    seededRandom: typeof seededRandom;
-    degToRad: typeof degToRad;
-    radToDeg: typeof radToDeg;
-    isPowerOfTwo: typeof isPowerOfTwo;
-    ceilPowerOfTwo: typeof ceilPowerOfTwo;
-    floorPowerOfTwo: typeof floorPowerOfTwo;
-    setQuaternionFromProperEuler: typeof setQuaternionFromProperEuler;
-    normalize: typeof normalize;
-    denormalize: typeof denormalize;
-};
+export namespace MathUtils {
+    export { DEG2RAD };
+    export { RAD2DEG };
+    export { generateUUID };
+    export { clamp };
+    export { euclideanModulo };
+    export { mapLinear };
+    export { inverseLerp };
+    export { lerp };
+    export { damp };
+    export { pingpong };
+    export { smoothstep };
+    export { smootherstep };
+    export { randInt };
+    export { randFloat };
+    export { randFloatSpread };
+    export { seededRandom };
+    export { degToRad };
+    export { radToDeg };
+    export { isPowerOfTwo };
+    export { ceilPowerOfTwo };
+    export { floorPowerOfTwo };
+    export { setQuaternionFromProperEuler };
+    export { normalize };
+    export { denormalize };
+}

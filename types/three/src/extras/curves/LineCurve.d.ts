@@ -1,12 +1,9 @@
-import { Vector2 } from "../../math/Vector2.js";
-import { Curve } from "../core/Curve.js";
-
 /**
  * A curve representing a 2D line segment.
  *
  * @augments Curve
  */
-export class LineCurve extends Curve<Vector2> {
+export class LineCurve extends Curve {
     /**
      * Constructs a new line curve.
      *
@@ -17,15 +14,22 @@ export class LineCurve extends Curve<Vector2> {
     /**
      * This flag can be used for type testing.
      *
+     * @type {boolean}
+     * @readonly
      * @default true
      */
-    readonly isLineCurve: true;
+    readonly isLineCurve: boolean;
+    type: string;
     /**
      * The start point.
+     *
+     * @type {Vector2}
      */
     v1: Vector2;
     /**
      * The end point.
+     *
+     * @type {Vector2}
      */
     v2: Vector2;
     /**
@@ -36,5 +40,11 @@ export class LineCurve extends Curve<Vector2> {
      * @return {Vector2} The position on the line.
      */
     getPoint(t: number, optionalTarget?: Vector2): Vector2;
-    copy(source: LineCurve): this;
+    getPointAt(u: any, optionalTarget: any): Vector2;
+    getTangent(t: any, optionalTarget?: Vector2): Vector2;
+    getTangentAt(u: any, optionalTarget: any): Vector2;
+    copy(source: any): this;
+    fromJSON(json: any): this;
 }
+import { Vector2 } from "../../math/Vector2.js";
+import { Curve } from "../core/Curve.js";

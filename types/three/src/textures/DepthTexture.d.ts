@@ -1,31 +1,10 @@
-import {
-    DepthTexturePixelFormat,
-    MagnificationTextureFilter,
-    Mapping,
-    MinificationTextureFilter,
-    TextureComparisonFunction,
-    TextureDataType,
-    Wrapping,
-} from "../constants.js";
-import { Texture, TextureJSON } from "./Texture.js";
-
-export interface DepthTextureImageData {
-    width: number | undefined;
-    height: number | undefined;
-    depth: number;
-}
-
-export interface DepthTextureJSON extends TextureJSON {
-    compareFunction: TextureComparisonFunction | null;
-}
-
 /**
  * This class can be used to automatically save the depth information of a
  * rendering into a texture.
  *
  * @augments Texture
  */
-export class DepthTexture<TImage = DepthTextureImageData> extends Texture<TImage> {
+export class DepthTexture extends Texture {
     /**
      * Constructs a new depth texture.
      *
@@ -42,16 +21,16 @@ export class DepthTexture<TImage = DepthTextureImageData> extends Texture<TImage
      * @param {number} [depth=1] - The depth of the texture.
      */
     constructor(
-        width?: number,
-        height?: number,
-        type?: TextureDataType,
-        mapping?: Mapping,
-        wrapS?: Wrapping,
-        wrapT?: Wrapping,
-        magFilter?: MagnificationTextureFilter,
-        minFilter?: MinificationTextureFilter,
+        width: number,
+        height: number,
+        type?: number,
+        mapping?: number,
+        wrapS?: number,
+        wrapT?: number,
+        magFilter?: number,
+        minFilter?: number,
         anisotropy?: number,
-        format?: DepthTexturePixelFormat,
+        format?: number,
         depth?: number,
     );
     /**
@@ -61,15 +40,26 @@ export class DepthTexture<TImage = DepthTextureImageData> extends Texture<TImage
      * @readonly
      * @default true
      */
-    readonly isDepthTexture: true;
-    format: DepthTexturePixelFormat;
+    readonly isDepthTexture: boolean;
     /**
      * Code corresponding to the depth compare function.
      *
      * @type {?(NeverCompare|LessCompare|EqualCompare|LessEqualCompare|GreaterCompare|NotEqualCompare|GreaterEqualCompare|AlwaysCompare)}
      * @default null
      */
-    compareFunction: TextureComparisonFunction | null;
-    copy(source: DepthTexture<TImage>): this;
-    toJSON(meta?: string | {}): DepthTextureJSON;
+    compareFunction:
+        | (
+            | NeverCompare
+            | LessCompare
+            | EqualCompare
+            | LessEqualCompare
+            | GreaterCompare
+            | NotEqualCompare
+            | GreaterEqualCompare
+            | AlwaysCompare
+        )
+        | null;
+    copy(source: any): this;
+    toJSON(meta: any): Object;
 }
+import { Texture } from "./Texture.js";

@@ -1,4 +1,7 @@
-export interface ExtrudeGeometryOptions {
+/**
+ * ~Options
+ */
+export type ExtrudeGeometry = {
     /**
      * - Number of points on the curves.
      */
@@ -34,31 +37,12 @@ export interface ExtrudeGeometryOptions {
     /**
      * - A 3D spline path along which the shape should be extruded. Bevels not supported for path extrusion.
      */
-    extrudePath?: Curve<Vector3> | undefined;
+    extrudePath?: Curve | null;
     /**
      * - An object that provides UV generator functions for custom UV generation.
      */
-    UVGenerator?: UVGenerator | undefined;
-}
-
-export interface UVGenerator {
-    generateTopUV(
-        geometry: ExtrudeGeometry,
-        vertices: number[],
-        indexA: number,
-        indexB: number,
-        indexC: number,
-    ): Vector2[];
-    generateSideWallUV(
-        geometry: ExtrudeGeometry,
-        vertices: number[],
-        indexA: number,
-        indexB: number,
-        indexC: number,
-        indexD: number,
-    ): Vector2[];
-}
-
+    UVGenerator?: Object | undefined;
+};
 /**
  * Creates extruded geometry from a path shape.
  *
@@ -90,14 +74,14 @@ export class ExtrudeGeometry extends BufferGeometry {
      * @param {Array<Shape>} shapes - An array of shapes.
      * @return {ExtrudeGeometry} A new instance.
      */
-    static fromJSON(data: {}, shapes: Array<Shape>): ExtrudeGeometry;
+    static fromJSON(data: Object, shapes: Array<Shape>): ExtrudeGeometry;
     /**
      * Constructs a new extrude geometry.
      *
      * @param {Shape|Array<Shape>} [shapes] - A shape or an array of shapes.
      * @param {ExtrudeGeometry~Options} [options] - The extrude settings.
      */
-    constructor(shapes?: Shape | Array<Shape>, options?: ExtrudeGeometryOptions);
+    constructor(shapes?: Shape | Array<Shape>, options?: {});
     /**
      * Holds the constructor parameters that have been
      * used to generate the geometry. Any modification
@@ -105,14 +89,9 @@ export class ExtrudeGeometry extends BufferGeometry {
      *
      * @type {Object}
      */
-    readonly parameters: {
-        readonly shapes: Shape | Shape[];
-        readonly options: ExtrudeGeometryOptions;
-    };
-    copy(source: ExtrudeGeometry): this;
+    parameters: Object;
+    copy(source: any): this;
+    toJSON(): any;
 }
 import { BufferGeometry } from "../core/BufferGeometry.js";
-import { Curve } from "../extras/core/Curve.js";
 import { Shape } from "../extras/core/Shape.js";
-import { Vector2 } from "../math/Vector2.js";
-import { Vector3 } from "../math/Vector3.js";

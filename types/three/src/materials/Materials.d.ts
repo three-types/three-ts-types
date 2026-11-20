@@ -1,18 +1,38 @@
-export * from "./LineBasicMaterial.js";
-export * from "./LineDashedMaterial.js";
-export * from "./Material.js";
-export * from "./MeshBasicMaterial.js";
-export * from "./MeshDepthMaterial.js";
-export * from "./MeshDistanceMaterial.js";
-export * from "./MeshLambertMaterial.js";
-export * from "./MeshMatcapMaterial.js";
-export * from "./MeshNormalMaterial.js";
-export * from "./MeshPhongMaterial.js";
-export * from "./MeshPhysicalMaterial.js";
-export * from "./MeshStandardMaterial.js";
-export * from "./MeshToonMaterial.js";
-export * from "./PointsMaterial.js";
-export * from "./RawShaderMaterial.js";
-export * from "./ShaderMaterial.js";
-export * from "./ShadowMaterial.js";
-export * from "./SpriteMaterial.js";
+import { LineBasicMaterial } from "./LineBasicMaterial.js";
+import { LineDashedMaterial } from "./LineDashedMaterial.js";
+import { Material } from "./Material.js";
+import { MeshBasicMaterial } from "./MeshBasicMaterial.js";
+import { MeshDepthMaterial } from "./MeshDepthMaterial.js";
+import { MeshDistanceMaterial } from "./MeshDistanceMaterial.js";
+import { MeshLambertMaterial } from "./MeshLambertMaterial.js";
+import { MeshMatcapMaterial } from "./MeshMatcapMaterial.js";
+import { MeshNormalMaterial } from "./MeshNormalMaterial.js";
+import { MeshPhongMaterial } from "./MeshPhongMaterial.js";
+import { MeshPhysicalMaterial } from "./MeshPhysicalMaterial.js";
+import { MeshStandardMaterial } from "./MeshStandardMaterial.js";
+import { MeshToonMaterial } from "./MeshToonMaterial.js";
+import { PointsMaterial } from "./PointsMaterial.js";
+import { RawShaderMaterial } from "./RawShaderMaterial.js";
+import { ShaderMaterial } from "./ShaderMaterial.js";
+import { ShadowMaterial } from "./ShadowMaterial.js";
+import { SpriteMaterial } from "./SpriteMaterial.js";
+export {
+    LineBasicMaterial,
+    LineDashedMaterial,
+    Material,
+    MeshBasicMaterial,
+    MeshDepthMaterial,
+    MeshDistanceMaterial,
+    MeshLambertMaterial,
+    MeshMatcapMaterial,
+    MeshNormalMaterial,
+    MeshPhongMaterial,
+    MeshPhysicalMaterial,
+    MeshStandardMaterial,
+    MeshToonMaterial,
+    PointsMaterial,
+    RawShaderMaterial,
+    ShaderMaterial,
+    ShadowMaterial,
+    SpriteMaterial,
+};

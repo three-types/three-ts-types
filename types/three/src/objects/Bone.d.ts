@@ -1,5 +1,3 @@
-import { Object3D, Object3DEventMap } from "../core/Object3D.js";
-
 /**
  * A bone which is part of a {@link Skeleton}. The skeleton in turn is used by
  * the {@link SkinnedMesh}.
@@ -14,7 +12,7 @@ import { Object3D, Object3DEventMap } from "../core/Object3D.js";
  *
  * @augments Object3D
  */
-export class Bone<TEventMap extends Object3DEventMap = Object3DEventMap> extends Object3D<TEventMap> {
+export class Bone extends Object3D {
     /**
      * This flag can be used for type testing.
      *
@@ -22,5 +20,7 @@ export class Bone<TEventMap extends Object3DEventMap = Object3DEventMap> extends
      * @readonly
      * @default true
      */
-    readonly isBone: true;
+    readonly isBone: boolean;
+    type: string;
 }
+import { Object3D } from "../core/Object3D.js";

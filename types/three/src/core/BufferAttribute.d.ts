@@ -1,47 +1,8 @@
-import { AttributeGPUType, Usage } from "../constants.js";
-import { Matrix3 } from "../math/Matrix3.js";
-import { Matrix4 } from "../math/Matrix4.js";
-import { EventDispatcher } from "./EventDispatcher.js";
-
-export type TypedArray =
-    | Int8Array
-    | Uint8Array
-    | Uint8ClampedArray
-    | Int16Array
-    | Uint16Array
-    | Int32Array
-    | Uint32Array
-    | Float32Array
-    | Float64Array;
-
-export type TypedArrayConstructor =
-    | Int8ArrayConstructor
-    | Uint8ArrayConstructor
-    | Uint8ClampedArrayConstructor
-    | Int16ArrayConstructor
-    | Uint16ArrayConstructor
-    | Int32ArrayConstructor
-    | Uint32ArrayConstructor
-    | Float32ArrayConstructor
-    | Float64ArrayConstructor;
-
-export interface BufferAttributeJSON {
-    itemSize: number;
-    type: string;
-    array: number[];
-    normalized: boolean;
-
-    name?: string;
-    usage?: Usage;
-}
-
-export interface BufferAttributeEventMap {
-    dispose: {};
-}
-
 /**
  * Convenient class that can be used when creating a `Float32` buffer attribute with
  * a plain `Array` instance.
+ *
+ * @augments BufferAttribute
  */
 export class Float32BufferAttribute extends BufferAttribute {
     /**
@@ -51,11 +12,7 @@ export class Float32BufferAttribute extends BufferAttribute {
      * @param {number} itemSize - The item size.
      * @param {boolean} [normalized=false] - Whether the data are normalized or not.
      */
-    constructor(
-        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
-        itemSize: number,
-        normalized?: boolean,
-    );
+    constructor(array: Array<number> | Float32Array, itemSize: number, normalized?: boolean);
 }
 /**
  * Convenient class that can be used when creating a `Float16` buffer attribute with
@@ -63,25 +20,17 @@ export class Float32BufferAttribute extends BufferAttribute {
  *
  * The attribute data are stored in a `Float16Array`. If `Float16Array` is not supported,
  * the class falls back to `Float32Array`.
+ *
+ * @augments BufferAttribute
  */
 export class Float16BufferAttribute extends BufferAttribute {
-    /**
-     * Constructs a new buffer attribute.
-     *
-     * @param {(Array<number>|Float16Array)} array - The array holding the attribute data.
-     * @param {number} itemSize - The item size.
-     * @param {boolean} [normalized=false] - Whether the data are normalized or not.
-     */
-    constructor(
-        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
-        itemSize: number,
-        normalized?: boolean,
-    );
-    readonly isFloat16BufferAttribute: true;
+    isFloat16BufferAttribute: boolean;
 }
 /**
  * Convenient class that can be used when creating a `UInt32` buffer attribute with
  * a plain `Array` instance.
+ *
+ * @augments BufferAttribute
  */
 export class Uint32BufferAttribute extends BufferAttribute {
     /**
@@ -91,15 +40,13 @@ export class Uint32BufferAttribute extends BufferAttribute {
      * @param {number} itemSize - The item size.
      * @param {boolean} [normalized=false] - Whether the data are normalized or not.
      */
-    constructor(
-        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
-        itemSize: number,
-        normalized?: boolean,
-    );
+    constructor(array: Array<number> | Uint32Array, itemSize: number, normalized?: boolean);
 }
 /**
  * Convenient class that can be used when creating a `Int32` buffer attribute with
  * a plain `Array` instance.
+ *
+ * @augments BufferAttribute
  */
 export class Int32BufferAttribute extends BufferAttribute {
     /**
@@ -109,15 +56,13 @@ export class Int32BufferAttribute extends BufferAttribute {
      * @param {number} itemSize - The item size.
      * @param {boolean} [normalized=false] - Whether the data are normalized or not.
      */
-    constructor(
-        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
-        itemSize: number,
-        normalized?: boolean,
-    );
+    constructor(array: Array<number> | Int32Array, itemSize: number, normalized?: boolean);
 }
 /**
  * Convenient class that can be used when creating a `UInt16` buffer attribute with
  * a plain `Array` instance.
+ *
+ * @augments BufferAttribute
  */
 export class Uint16BufferAttribute extends BufferAttribute {
     /**
@@ -127,15 +72,13 @@ export class Uint16BufferAttribute extends BufferAttribute {
      * @param {number} itemSize - The item size.
      * @param {boolean} [normalized=false] - Whether the data are normalized or not.
      */
-    constructor(
-        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
-        itemSize: number,
-        normalized?: boolean,
-    );
+    constructor(array: Array<number> | Uint16Array, itemSize: number, normalized?: boolean);
 }
 /**
  * Convenient class that can be used when creating a `Int16` buffer attribute with
  * a plain `Array` instance.
+ *
+ * @augments BufferAttribute
  */
 export class Int16BufferAttribute extends BufferAttribute {
     /**
@@ -145,15 +88,13 @@ export class Int16BufferAttribute extends BufferAttribute {
      * @param {number} itemSize - The item size.
      * @param {boolean} [normalized=false] - Whether the data are normalized or not.
      */
-    constructor(
-        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
-        itemSize: number,
-        normalized?: boolean,
-    );
+    constructor(array: Array<number> | Int16Array, itemSize: number, normalized?: boolean);
 }
 /**
  * Convenient class that can be used when creating a `UInt8Clamped` buffer attribute with
  * a plain `Array` instance.
+ *
+ * @augments BufferAttribute
  */
 export class Uint8ClampedBufferAttribute extends BufferAttribute {
     /**
@@ -163,15 +104,13 @@ export class Uint8ClampedBufferAttribute extends BufferAttribute {
      * @param {number} itemSize - The item size.
      * @param {boolean} [normalized=false] - Whether the data are normalized or not.
      */
-    constructor(
-        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
-        itemSize: number,
-        normalized?: boolean,
-    );
+    constructor(array: Array<number> | Uint8ClampedArray, itemSize: number, normalized?: boolean);
 }
 /**
  * Convenient class that can be used when creating a `UInt8` buffer attribute with
  * a plain `Array` instance.
+ *
+ * @augments BufferAttribute
  */
 export class Uint8BufferAttribute extends BufferAttribute {
     /**
@@ -181,15 +120,13 @@ export class Uint8BufferAttribute extends BufferAttribute {
      * @param {number} itemSize - The item size.
      * @param {boolean} [normalized=false] - Whether the data are normalized or not.
      */
-    constructor(
-        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
-        itemSize: number,
-        normalized?: boolean,
-    );
+    constructor(array: Array<number> | Uint8Array, itemSize: number, normalized?: boolean);
 }
 /**
  * Convenient class that can be used when creating a `Int8` buffer attribute with
  * a plain `Array` instance.
+ *
+ * @augments BufferAttribute
  */
 export class Int8BufferAttribute extends BufferAttribute {
     /**
@@ -199,11 +136,7 @@ export class Int8BufferAttribute extends BufferAttribute {
      * @param {number} itemSize - The item size.
      * @param {boolean} [normalized=false] - Whether the data are normalized or not.
      */
-    constructor(
-        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
-        itemSize: number,
-        normalized?: boolean,
-    );
+    constructor(array: Array<number> | Int8Array, itemSize: number, normalized?: boolean);
 }
 /**
  * This class stores data for an attribute (such as vertex positions, face
@@ -213,9 +146,7 @@ export class Int8BufferAttribute extends BufferAttribute {
  * When working with vector-like data, the `fromBufferAttribute( attribute, index )`
  * helper methods on vector and color class might be helpful. E.g. {@link Vector3#fromBufferAttribute}.
  */
-export class BufferAttribute<TEventMap extends BufferAttributeEventMap = BufferAttributeEventMap>
-    extends EventDispatcher<TEventMap>
-{
+export class BufferAttribute extends EventDispatcher {
     /**
      * Constructs a new buffer attribute.
      *
@@ -227,31 +158,38 @@ export class BufferAttribute<TEventMap extends BufferAttributeEventMap = BufferA
     /**
      * This flag can be used for type testing.
      *
+     * @type {boolean}
+     * @readonly
      * @default true
      */
-    readonly isBufferAttribute: true;
-    /**
-     * The ID of the buffer attribute.
-     */
-    readonly id: number;
+    readonly isBufferAttribute: boolean;
     /**
      * The name of the buffer attribute.
+     *
+     * @type {string}
      */
     name: string;
     /**
      * The array holding the attribute data. It should have `itemSize * numVertices`
      * elements, where `numVertices` is the number of vertices in the associated geometry.
+     *
+     * @type {TypedArray}
      */
     array: TypedArray;
     /**
      * The number of values of the array that should be associated with a particular vertex.
      * For instance, if this attribute is storing a 3-component vector (such as a position,
      * normal, or color), then the value should be `3`.
+     *
+     * @type {number}
      */
     itemSize: number;
     /**
      * Represents the number of items this buffer attribute stores. It is internally computed
      * by dividing the `array` length by the `itemSize`.
+     *
+     * @type {number}
+     * @readonly
      */
     readonly count: number;
     /**
@@ -260,6 +198,8 @@ export class BufferAttribute<TEventMap extends BufferAttributeEventMap = BufferA
      * and `normalized` is `true`, the values `0 - +65535` in the array data will be mapped to
      * `0.0f - +1.0f` in the GLSL attribute. If `normalized` is `false`, the values will be converted
      * to floats unmodified, i.e. `65535` becomes `65535.0f`.
+     *
+     * @type {boolean}
      */
     normalized: boolean;
     /**
@@ -268,39 +208,59 @@ export class BufferAttribute<TEventMap extends BufferAttributeEventMap = BufferA
      * Note: After the initial use of a buffer, its usage cannot be changed. Instead,
      * instantiate a new one and set the desired usage before the next render.
      *
+     * @type {(StaticDrawUsage|DynamicDrawUsage|StreamDrawUsage|StaticReadUsage|DynamicReadUsage|StreamReadUsage|StaticCopyUsage|DynamicCopyUsage|StreamCopyUsage)}
      * @default StaticDrawUsage
      */
-    usage: Usage;
+    usage:
+        | number
+        | DynamicDrawUsage
+        | StreamDrawUsage
+        | StaticReadUsage
+        | DynamicReadUsage
+        | StreamReadUsage
+        | StaticCopyUsage
+        | DynamicCopyUsage
+        | StreamCopyUsage;
     /**
      * This can be used to only update some components of stored vectors (for example, just the
      * component related to color). Use the `addUpdateRange()` function to add ranges to this array.
+     *
+     * @type {Array<Object>}
      */
-    updateRanges: Array<{
-        start: number;
-        count: number;
-    }>;
+    updateRanges: Array<Object>;
     /**
      * Configures the bound GPU type for use in shaders.
      *
      * Note: this only has an effect for integer arrays and is not configurable for float arrays.
      * For lower precision float types, use `Float16BufferAttribute`.
      *
+     * @type {(FloatType|IntType)}
      * @default FloatType
      */
-    gpuType: AttributeGPUType;
+    gpuType: number | IntType;
     /**
      * A version number, incremented every time the `needsUpdate` is set to `true`.
+     *
+     * @type {number}
      */
     version: number;
+    /**
+     * Cached normalization factor, see {@link MathUtils#getNormalizationScale}.
+     *
+     * @private
+     * @type {number|undefined}
+     */
+    private _normalizationScale;
     /**
      * A callback function that is executed after the renderer has transferred the attribute
      * array data to the GPU.
      */
-    onUploadCallback: () => void;
+    onUploadCallback(): void;
     /**
      * Flag to indicate that this attribute has changed and should be re-sent to
      * the GPU. Set this to `true` when you modify the value of the array.
      *
+     * @type {number}
      * @default false
      * @param {boolean} value
      */
@@ -311,7 +271,18 @@ export class BufferAttribute<TEventMap extends BufferAttributeEventMap = BufferA
      * @param {(StaticDrawUsage|DynamicDrawUsage|StreamDrawUsage|StaticReadUsage|DynamicReadUsage|StreamReadUsage|StaticCopyUsage|DynamicCopyUsage|StreamCopyUsage)} value - The usage to set.
      * @return {BufferAttribute} A reference to this buffer attribute.
      */
-    setUsage(value: Usage): this;
+    setUsage(
+        value:
+            | number
+            | DynamicDrawUsage
+            | StreamDrawUsage
+            | StaticReadUsage
+            | DynamicReadUsage
+            | StreamReadUsage
+            | StaticCopyUsage
+            | DynamicCopyUsage
+            | StreamCopyUsage,
+    ): BufferAttribute;
     /**
      * Adds a range of data in the data array to be updated on the GPU.
      *
@@ -329,7 +300,7 @@ export class BufferAttribute<TEventMap extends BufferAttributeEventMap = BufferA
      * @param {BufferAttribute} source - The buffer attribute to copy.
      * @return {BufferAttribute} A reference to this instance.
      */
-    copy(source: BufferAttribute): this;
+    copy(source: BufferAttribute): BufferAttribute;
     /**
      * Copies a vector from the given buffer attribute to this one. The start
      * and destination position in the attribute buffers are represented by the
@@ -340,14 +311,14 @@ export class BufferAttribute<TEventMap extends BufferAttributeEventMap = BufferA
      * @param {number} index2 - The source index into the given buffer attribute.
      * @return {BufferAttribute} A reference to this instance.
      */
-    copyAt(index1: number, attribute: BufferAttribute, index2: number): this;
+    copyAt(index1: number, attribute: BufferAttribute, index2: number): BufferAttribute;
     /**
      * Copies the given array data into this buffer attribute.
      *
      * @param {(TypedArray|Array)} array - The array to copy.
      * @return {BufferAttribute} A reference to this instance.
      */
-    copyArray(array: ArrayLike<number>): this;
+    copyArray(array: TypedArray | any[]): BufferAttribute;
     /**
      * Applies the given 3x3 matrix to the given attribute. Works with
      * item size `2` and `3`.
@@ -355,7 +326,7 @@ export class BufferAttribute<TEventMap extends BufferAttributeEventMap = BufferA
      * @param {Matrix3} m - The matrix to apply.
      * @return {BufferAttribute} A reference to this instance.
      */
-    applyMatrix3(m: Matrix3): this;
+    applyMatrix3(m: Matrix3): BufferAttribute;
     /**
      * Applies the given 4x4 matrix to the given attribute. Only works with
      * item size `3`.
@@ -363,7 +334,7 @@ export class BufferAttribute<TEventMap extends BufferAttributeEventMap = BufferA
      * @param {Matrix4} m - The matrix to apply.
      * @return {BufferAttribute} A reference to this instance.
      */
-    applyMatrix4(m: Matrix4): this;
+    applyMatrix4(m: Matrix4): BufferAttribute;
     /**
      * Applies the given 3x3 normal matrix to the given attribute. Only works with
      * item size `3`.
@@ -371,7 +342,7 @@ export class BufferAttribute<TEventMap extends BufferAttributeEventMap = BufferA
      * @param {Matrix3} m - The normal matrix to apply.
      * @return {BufferAttribute} A reference to this instance.
      */
-    applyNormalMatrix(m: Matrix3): this;
+    applyNormalMatrix(m: Matrix3): BufferAttribute;
     /**
      * Applies the given 4x4 matrix to the given attribute. Only works with
      * item size `3` and with direction vectors.
@@ -379,7 +350,7 @@ export class BufferAttribute<TEventMap extends BufferAttributeEventMap = BufferA
      * @param {Matrix4} m - The matrix to apply.
      * @return {BufferAttribute} A reference to this instance.
      */
-    transformDirection(m: Matrix4): this;
+    transformDirection(m: Matrix4): BufferAttribute;
     /**
      * Sets the given array data in the buffer attribute.
      *
@@ -387,7 +358,7 @@ export class BufferAttribute<TEventMap extends BufferAttributeEventMap = BufferA
      * @param {number} [offset=0] - The offset in this buffer attribute's array.
      * @return {BufferAttribute} A reference to this instance.
      */
-    set(value: ArrayLike<number> | ArrayBufferView, offset?: number): this;
+    set(value: TypedArray | any[], offset?: number): BufferAttribute;
     /**
      * Returns the given component of the vector at the given index.
      *
@@ -404,7 +375,7 @@ export class BufferAttribute<TEventMap extends BufferAttributeEventMap = BufferA
      * @param {number} value - The value to set.
      * @return {BufferAttribute} A reference to this instance.
      */
-    setComponent(index: number, component: number, value: number): void;
+    setComponent(index: number, component: number, value: number): BufferAttribute;
     /**
      * Returns the x component of the vector at the given index.
      *
@@ -419,7 +390,7 @@ export class BufferAttribute<TEventMap extends BufferAttributeEventMap = BufferA
      * @param {number} x - The value to set.
      * @return {BufferAttribute} A reference to this instance.
      */
-    setX(index: number, x: number): this;
+    setX(index: number, x: number): BufferAttribute;
     /**
      * Returns the y component of the vector at the given index.
      *
@@ -434,7 +405,7 @@ export class BufferAttribute<TEventMap extends BufferAttributeEventMap = BufferA
      * @param {number} y - The value to set.
      * @return {BufferAttribute} A reference to this instance.
      */
-    setY(index: number, y: number): this;
+    setY(index: number, y: number): BufferAttribute;
     /**
      * Returns the z component of the vector at the given index.
      *
@@ -449,7 +420,7 @@ export class BufferAttribute<TEventMap extends BufferAttributeEventMap = BufferA
      * @param {number} z - The value to set.
      * @return {BufferAttribute} A reference to this instance.
      */
-    setZ(index: number, z: number): this;
+    setZ(index: number, z: number): BufferAttribute;
     /**
      * Returns the w component of the vector at the given index.
      *
@@ -464,7 +435,7 @@ export class BufferAttribute<TEventMap extends BufferAttributeEventMap = BufferA
      * @param {number} w - The value to set.
      * @return {BufferAttribute} A reference to this instance.
      */
-    setW(index: number, w: number): this;
+    setW(index: number, w: number): BufferAttribute;
     /**
      * Sets the x and y component of the vector at the given index.
      *
@@ -473,7 +444,7 @@ export class BufferAttribute<TEventMap extends BufferAttributeEventMap = BufferA
      * @param {number} y - The value for the y component to set.
      * @return {BufferAttribute} A reference to this instance.
      */
-    setXY(index: number, x: number, y: number): this;
+    setXY(index: number, x: number, y: number): BufferAttribute;
     /**
      * Sets the x, y and z component of the vector at the given index.
      *
@@ -483,7 +454,7 @@ export class BufferAttribute<TEventMap extends BufferAttributeEventMap = BufferA
      * @param {number} z - The value for the z component to set.
      * @return {BufferAttribute} A reference to this instance.
      */
-    setXYZ(index: number, x: number, y: number, z: number): this;
+    setXYZ(index: number, x: number, y: number, z: number): BufferAttribute;
     /**
      * Sets the x, y, z and w component of the vector at the given index.
      *
@@ -494,7 +465,7 @@ export class BufferAttribute<TEventMap extends BufferAttributeEventMap = BufferA
      * @param {number} w - The value for the w component to set.
      * @return {BufferAttribute} A reference to this instance.
      */
-    setXYZW(index: number, x: number, y: number, z: number, w: number): this;
+    setXYZW(index: number, x: number, y: number, z: number, w: number): BufferAttribute;
     /**
      * Sets the given callback function that is executed after the Renderer has transferred
      * the attribute array data to the GPU. Can be used to perform clean-up operations after
@@ -503,7 +474,7 @@ export class BufferAttribute<TEventMap extends BufferAttributeEventMap = BufferA
      * @param {Function} callback - The `onUpload()` callback.
      * @return {BufferAttribute} A reference to this instance.
      */
-    onUpload(callback: () => void): this;
+    onUpload(callback: Function): BufferAttribute;
     /**
      * Returns a new buffer attribute with copied values from this instance.
      *
@@ -515,9 +486,22 @@ export class BufferAttribute<TEventMap extends BufferAttributeEventMap = BufferA
      *
      * @return {Object} A JSON object representing the serialized buffer attribute.
      */
-    toJSON(): BufferAttributeJSON;
+    toJSON(): Object;
     /**
      * Frees the GPU-related resources allocated by this instance. Available only in {@link WebGPURenderer}.
      */
     dispose(): void;
+    /**
+     * Denormalizes the value using cached normalization factor.
+     *
+     * @private
+     */
+    private _denormalize;
+    /**
+     * Normalizes the value using cached normalization factor.
+     *
+     * @private
+     */
+    private _normalize;
 }
+import { EventDispatcher } from "./EventDispatcher.js";

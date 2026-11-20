@@ -1,11 +1,11 @@
 /**
  * ~TexData
  */
-export interface DataTextureLoaderTexData {
+export type DataTextureLoader = {
     /**
      * - An object holding width, height and the texture data.
      */
-    image?: DataTextureImageData | undefined;
+    image?: Object | undefined;
     /**
      * - The width of the base mip.
      */
@@ -17,15 +17,15 @@ export interface DataTextureLoaderTexData {
     /**
      * - The texture data.
      */
-    data?: TypedArray | undefined;
+    data?: TypedArray;
     /**
      * - The texture format.
      */
-    format?: PixelFormat | undefined;
+    format?: number | undefined;
     /**
      * - The texture type.
      */
-    type?: TextureDataType | undefined;
+    type?: number | undefined;
     /**
      * - If set to `true`, the texture is flipped along the vertical axis when uploaded to the GPU.
      */
@@ -33,11 +33,11 @@ export interface DataTextureLoaderTexData {
     /**
      * - The wrapS value.
      */
-    wrapS?: Wrapping | undefined;
+    wrapS?: number | undefined;
     /**
      * - The wrapT value.
      */
-    wrapT?: Wrapping | undefined;
+    wrapT?: number | undefined;
     /**
      * - The anisotropy value.
      */
@@ -49,21 +49,20 @@ export interface DataTextureLoaderTexData {
     /**
      * - The color space.
      */
-    colorSpace?: ColorSpace | undefined;
+    colorSpace?: string | undefined;
     /**
      * - The mag filter.
      */
-    magFilter?: MagnificationTextureFilter | undefined;
+    magFilter?: number | undefined;
     /**
      * - The min filter.
      */
-    minFilter?: MinificationTextureFilter | undefined;
+    minFilter?: number | undefined;
     /**
      * - The mipmaps.
      */
-    mipmaps?: CompressedTextureMipmap[] | CubeTexture[] | HTMLCanvasElement[] | undefined;
-    mipmapCount?: number | undefined;
-}
+    mipmaps?: Object[] | undefined;
+};
 /**
  * Abstract base class for loading binary texture formats RGBE, EXR or TGA.
  * Textures are internally loaded via {@link FileLoader}.
@@ -74,7 +73,7 @@ export interface DataTextureLoaderTexData {
  * @abstract
  * @augments Loader
  */
-export abstract class DataTextureLoader extends Loader<DataTexture> {
+export class DataTextureLoader extends Loader {
     /**
      * Starts loading from the given URL and passes the loaded data texture
      * to the `onLoad()` callback. The method also returns a new texture object which can
@@ -89,11 +88,10 @@ export abstract class DataTextureLoader extends Loader<DataTexture> {
      */
     load(
         url: string,
-        onLoad?: (data: DataTexture, texData: DataTextureLoaderTexData) => void,
-        onProgress?: OnProgressCallback,
-        onError?: OnErrorCallback,
+        onLoad: (arg0: DataTexture) => any,
+        onProgress: onProgressCallback,
+        onError: onErrorCallback,
     ): DataTexture;
-    abstract parse(buffer: ArrayBuffer): DataTextureLoaderTexData;
     /**
      * Parses the given buffer and returns a configured data texture. Use this method
      * for parsing texture data that is already in memory (e.g. drag and drop or data
@@ -103,17 +101,14 @@ export abstract class DataTextureLoader extends Loader<DataTexture> {
      * @return {DataTexture} The data texture.
      */
     createDataTexture(buffer: ArrayBuffer): DataTexture;
+    /**
+     * Applies the given parsed texture data to the given data texture.
+     *
+     * @private
+     * @param {DataTexture} texture - The data texture.
+     * @param {DataTextureLoader~TexData} texData - The parsed texture data.
+     */
+    private _applyTexData;
 }
-import {
-    ColorSpace,
-    MagnificationTextureFilter,
-    MinificationTextureFilter,
-    PixelFormat,
-    TextureDataType,
-    Wrapping,
-} from "../constants.js";
-import { TypedArray } from "../core/BufferAttribute.js";
-import { CompressedTextureMipmap } from "../textures/CompressedTexture.js";
-import { CubeTexture } from "../textures/CubeTexture.js";
-import { DataTexture, DataTextureImageData } from "../textures/DataTexture.js";
-import { Loader, OnErrorCallback, OnProgressCallback } from "./Loader.js";
+import { DataTexture } from "../textures/DataTexture.js";
+import { Loader } from "./Loader.js";

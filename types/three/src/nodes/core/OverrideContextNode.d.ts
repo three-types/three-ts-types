@@ -1,49 +1,3 @@
-import { NodeShaderStage } from "./constants.js";
-import ContextNode from "./ContextNode.js";
-import Node from "./Node.js";
-import NodeBuilder from "./NodeBuilder.js";
-
-/**
- * A specialized context node designed to override specific target nodes within a
- * node sub-graph or flow. This allows replacing specific inputs (e.g., normal
- * and position vectors) dynamically during compilation for a specific flow node,
- * without having to reconstruct or duplicate the source nodes.
- *
- * ```js
- * // Method chaining example:
- * node.overrideNode( positionLocal, () => positionLocal.add( vec3( 1, 0, 0 ) ) );
- *
- * // Context assignment example:
- * material.contextNode = overrideNode( positionLocal, () => positionLocal.add( vec3( 1, 0, 0 ) ) );
- * ```
- *
- * @augments ContextNode
- */
-declare class OverrideContextNode extends ContextNode<unknown> {
-    /**
-     * Constructs a new override context node.
-     *
-     * @param {Map<Node, Function>} overrideNodes - A map mapping target nodes to their respective override callback functions.
-     * @param {Node|null} [flowNode=null] - The node whose context should be modified.
-     * @param {?string} [shaderStage=null] - The shader stage the overrides apply to, all stages by default.
-     */
-    constructor(
-        overrideNodes: Map<Node, (nodeBuilder: NodeBuilder) => Node>,
-        flowNode?: Node | null,
-        shaderStage?: NodeShaderStage | null,
-    );
-    /**
-     * This flag can be used for type testing.
-     *
-     * @type {boolean}
-     * @readonly
-     * @default true
-     */
-    readonly isOverrideContextNode: boolean;
-}
-
-export default OverrideContextNode;
-
 /**
  * TSL function for creating an `OverrideContextNode` to override a single target node.
  *
@@ -60,10 +14,9 @@ export default OverrideContextNode;
  */
 export function overrideNode(
     targetNode: Node,
-    callback?: ((nodeBuilder: NodeBuilder) => Node) | Node | null,
+    callback?: Function | Node | null,
     flowNode?: Node | null,
 ): OverrideContextNode;
-
 /**
  * TSL function for creating an `OverrideContextNode` to override multiple target nodes.
  *
@@ -83,20 +36,43 @@ export function overrideNode(
  * @return {OverrideContextNode} The created override context node.
  */
 export function overrideNodes(
-    overrides:
-        | Map<Node, ((nodeBuilder: NodeBuilder) => Node) | Node | null>
-        | Array<[Node, ((nodeBuilder: NodeBuilder) => Node) | Node | null]>,
+    overrides: Map<Node, (Function | Node)> | Array<Array<Node | Function | Node>>,
     flowNode?: Node | null,
-    shaderStage?: NodeShaderStage | null,
+    shaderStage?: string | null,
 ): OverrideContextNode;
-
-declare module "./Node.js" {
-    interface NodeElements {
-        overrideNodes: (
-            overrides:
-                | Map<Node, ((nodeBuilder: NodeBuilder) => Node) | Node | null>
-                | Array<[Node, ((nodeBuilder: NodeBuilder) => Node) | Node | null]>,
-            shaderStage?: NodeShaderStage | null,
-        ) => OverrideContextNode;
-    }
+export default OverrideContextNode;
+/**
+ * A specialized context node designed to override specific target nodes within a
+ * node sub-graph or flow. This allows replacing specific inputs (e.g., normal
+ * and position vectors) dynamically during compilation for a specific flow node,
+ * without having to reconstruct or duplicate the source nodes.
+ *
+ * ```js
+ * // Method chaining example:
+ * node.overrideNode( positionLocal, () => positionLocal.add( vec3( 1, 0, 0 ) ) );
+ *
+ * // Context assignment example:
+ * material.contextNode = overrideNode( positionLocal, () => positionLocal.add( vec3( 1, 0, 0 ) ) );
+ * ```
+ *
+ * @augments ContextNode
+ */
+declare class OverrideContextNode extends ContextNode {
+    /**
+     * Constructs a new override context node.
+     *
+     * @param {Map<Node, Function>} overrideNodes - A map mapping target nodes to their respective override callback functions.
+     * @param {Node|null} [flowNode=null] - The node whose context should be modified.
+     * @param {?string} [shaderStage=null] - The shader stage the overrides apply to, all stages by default.
+     */
+    constructor(overrideNodes: Map<Node, Function>, flowNode?: Node | null, shaderStage?: string | null);
+    /**
+     * This flag can be used for type testing.
+     *
+     * @type {boolean}
+     * @readonly
+     * @default true
+     */
+    readonly isOverrideContextNode: boolean;
 }
+import ContextNode from "./ContextNode.js";

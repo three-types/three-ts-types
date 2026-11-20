@@ -1,13 +1,3 @@
-import {
-    MagnificationTextureFilter,
-    Mapping,
-    MinificationTextureFilter,
-    PixelFormat,
-    TextureDataType,
-    Wrapping,
-} from "../constants.js";
-import { Texture } from "./Texture.js";
-
 /**
  * Creates a texture from a canvas element.
  *
@@ -16,7 +6,7 @@ import { Texture } from "./Texture.js";
  *
  * @augments Texture
  */
-export class CanvasTexture<TCanvas = HTMLCanvasElement> extends Texture<TCanvas> {
+export class CanvasTexture extends Texture {
     /**
      * Constructs a new texture.
      *
@@ -31,14 +21,14 @@ export class CanvasTexture<TCanvas = HTMLCanvasElement> extends Texture<TCanvas>
      * @param {number} [anisotropy=Texture.DEFAULT_ANISOTROPY] - The anisotropy value.
      */
     constructor(
-        canvas?: TCanvas,
-        mapping?: Mapping,
-        wrapS?: Wrapping,
-        wrapT?: Wrapping,
-        magFilter?: MagnificationTextureFilter,
-        minFilter?: MinificationTextureFilter,
-        format?: PixelFormat,
-        type?: TextureDataType,
+        canvas?: HTMLCanvasElement,
+        mapping?: number,
+        wrapS?: number,
+        wrapT?: number,
+        magFilter?: number,
+        minFilter?: number,
+        format?: number,
+        type?: number,
         anisotropy?: number,
     );
     /**
@@ -48,5 +38,6 @@ export class CanvasTexture<TCanvas = HTMLCanvasElement> extends Texture<TCanvas>
      * @readonly
      * @default true
      */
-    readonly isCanvasTexture: true;
+    readonly isCanvasTexture: boolean;
 }
+import { Texture } from "./Texture.js";

@@ -13,7 +13,7 @@
  *
  * @augments Loader
  */
-export class BufferGeometryLoader extends Loader<InstancedBufferGeometry | BufferGeometry> {
+export class BufferGeometryLoader extends Loader {
     /**
      * Starts loading from the given URL and pass the loaded geometry to the `onLoad()` callback.
      *
@@ -24,9 +24,9 @@ export class BufferGeometryLoader extends Loader<InstancedBufferGeometry | Buffe
      */
     load(
         url: string,
-        onLoad: (data: InstancedBufferGeometry | BufferGeometry) => void,
-        onProgress?: OnProgressCallback,
-        onError?: OnErrorCallback,
+        onLoad: (arg0: BufferGeometry) => any,
+        onProgress: onProgressCallback,
+        onError: onErrorCallback,
     ): void;
     /**
      * Parses the given JSON object and returns a geometry.
@@ -34,8 +34,7 @@ export class BufferGeometryLoader extends Loader<InstancedBufferGeometry | Buffe
      * @param {Object} json - The serialized geometry.
      * @return {BufferGeometry} The parsed geometry.
      */
-    parse(json: unknown): InstancedBufferGeometry | BufferGeometry;
+    parse(json: Object): BufferGeometry;
 }
 import { BufferGeometry } from "../core/BufferGeometry.js";
-import { InstancedBufferGeometry } from "../core/InstancedBufferGeometry.js";
-import { Loader, OnErrorCallback, OnProgressCallback } from "./Loader.js";
+import { Loader } from "./Loader.js";

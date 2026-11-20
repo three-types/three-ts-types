@@ -1,10 +1,3 @@
-import { Vector2, Vector2Tuple } from "../../math/Vector2.js";
-import { CurvePath, CurvePathJSON } from "./CurvePath.js";
-
-export interface PathJSON extends CurvePathJSON {
-    currentPoint: Vector2Tuple;
-}
-
 /**
  * A 2D path representation. The class provides methods for creating paths
  * and contours of 2D shapes similar to the 2D Canvas API.
@@ -27,7 +20,7 @@ export interface PathJSON extends CurvePathJSON {
  *
  * @augments CurvePath
  */
-export class Path extends CurvePath<Vector2> {
+export class Path extends CurvePath {
     /**
      * Constructs a new path.
      *
@@ -36,6 +29,8 @@ export class Path extends CurvePath<Vector2> {
     constructor(points?: Array<Vector2>);
     /**
      * The current offset of the path. Any new curve added will start here.
+     *
+     * @type {Vector2}
      */
     currentPoint: Vector2;
     /**
@@ -45,7 +40,7 @@ export class Path extends CurvePath<Vector2> {
      * @param {Array<Vector2>} points - An array of 2D points.
      * @return {Path} A reference to this path.
      */
-    setFromPoints(points: Array<Vector2>): this;
+    setFromPoints(points: Array<Vector2>): Path;
     /**
      * Moves {@link Path#currentPoint} to the given point.
      *
@@ -53,7 +48,7 @@ export class Path extends CurvePath<Vector2> {
      * @param {number} y - The y coordinate.
      * @return {Path} A reference to this path.
      */
-    moveTo(x: number, y: number): this;
+    moveTo(x: number, y: number): Path;
     /**
      * Adds an instance of {@link LineCurve} to the path by connecting
      * the current point with the given one.
@@ -62,7 +57,7 @@ export class Path extends CurvePath<Vector2> {
      * @param {number} y - The y coordinate of the end point.
      * @return {Path} A reference to this path.
      */
-    lineTo(x: number, y: number): this;
+    lineTo(x: number, y: number): Path;
     /**
      * Adds an instance of {@link QuadraticBezierCurve} to the path by connecting
      * the current point with the given one.
@@ -73,7 +68,7 @@ export class Path extends CurvePath<Vector2> {
      * @param {number} aY - The y coordinate of the end point.
      * @return {Path} A reference to this path.
      */
-    quadraticCurveTo(aCPx: number, aCPy: number, aX: number, aY: number): this;
+    quadraticCurveTo(aCPx: number, aCPy: number, aX: number, aY: number): Path;
     /**
      * Adds an instance of {@link CubicBezierCurve} to the path by connecting
      * the current point with the given one.
@@ -86,7 +81,7 @@ export class Path extends CurvePath<Vector2> {
      * @param {number} aY - The y coordinate of the end point.
      * @return {Path} A reference to this path.
      */
-    bezierCurveTo(aCP1x: number, aCP1y: number, aCP2x: number, aCP2y: number, aX: number, aY: number): this;
+    bezierCurveTo(aCP1x: number, aCP1y: number, aCP2x: number, aCP2y: number, aX: number, aY: number): Path;
     /**
      * Adds an instance of {@link SplineCurve} to the path by connecting
      * the current point with the given list of points.
@@ -94,7 +89,7 @@ export class Path extends CurvePath<Vector2> {
      * @param {Array<Vector2>} pts - An array of points in 2D space.
      * @return {Path} A reference to this path.
      */
-    splineThru(pts: Array<Vector2>): this;
+    splineThru(pts: Array<Vector2>): Path;
     /**
      * Adds an arc as an instance of {@link EllipseCurve} to the path, positioned relative
      * to the current point.
@@ -114,7 +109,7 @@ export class Path extends CurvePath<Vector2> {
         aStartAngle?: number,
         aEndAngle?: number,
         aClockwise?: boolean,
-    ): this;
+    ): Path;
     /**
      * Adds an absolutely positioned arc as an instance of {@link EllipseCurve} to the path.
      *
@@ -133,7 +128,7 @@ export class Path extends CurvePath<Vector2> {
         aStartAngle?: number,
         aEndAngle?: number,
         aClockwise?: boolean,
-    ): this;
+    ): Path;
     /**
      * Adds an ellipse as an instance of {@link EllipseCurve} to the path, positioned relative
      * to the current point
@@ -157,7 +152,7 @@ export class Path extends CurvePath<Vector2> {
         aEndAngle?: number,
         aClockwise?: boolean,
         aRotation?: number,
-    ): this;
+    ): Path;
     /**
      * Adds an absolutely positioned ellipse as an instance of {@link EllipseCurve} to the path.
      *
@@ -180,8 +175,9 @@ export class Path extends CurvePath<Vector2> {
         aEndAngle?: number,
         aClockwise?: boolean,
         aRotation?: number,
-    ): this;
-    copy(source: Path): this;
-    toJSON(): PathJSON;
-    fromJSON(json: PathJSON): this;
+    ): Path;
+    copy(source: any): this;
+    fromJSON(json: any): this;
 }
+import { Vector2 } from "../../math/Vector2.js";
+import { CurvePath } from "./CurvePath.js";

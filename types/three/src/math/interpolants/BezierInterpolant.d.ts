@@ -1,6 +1,3 @@
-import { TypedArray } from "../../core/BufferAttribute.js";
-import { Interpolant } from "../Interpolant.js";
-
 /**
  * A Bezier interpolant using cubic Bezier curves with 2D control points.
  *
@@ -19,5 +16,6 @@ import { Interpolant } from "../Interpolant.js";
  * @augments Interpolant
  */
 export class BezierInterpolant extends Interpolant {
-    interpolate_(i1: number, t0: number, t: number, t1: number): TypedArray;
+    interpolate_(i1: any, t0: any, t: any, t1: any): TypedArray;
 }
+import { Interpolant } from "../Interpolant.js";

@@ -1,24 +1,7 @@
-import { Vector2 } from "../math/Vector2.js";
-import { Vector3 } from "../math/Vector3.js";
-
-export type SerializedImage =
-    | string
-    | {
-        data: number[];
-        width: number;
-        height: number;
-        type: string;
-    };
-
-export interface TextureSourceJSON {
-    uuid: string;
-    url: SerializedImage | SerializedImage[];
-}
-
 /**
  * @deprecated since r186. Use {@link TextureSource} instead. `Source` has been renamed to `TextureSource`.
  */
-export class Source<TData> extends TextureSource<TData> {
+export class Source extends TextureSource {
     /**
      * This flag can be used for type testing.
      *
@@ -27,7 +10,7 @@ export class Source<TData> extends TextureSource<TData> {
      * @readonly
      * @default true
      */
-    readonly isSource: true;
+    readonly isSource: boolean;
 }
 /**
  * Represents the data source of a texture.
@@ -35,13 +18,13 @@ export class Source<TData> extends TextureSource<TData> {
  * The main purpose of this class is to decouple the data definition from the texture
  * definition so the same data can be used with multiple texture instances.
  */
-export class TextureSource<TData> {
+export class TextureSource {
     /**
      * Constructs a new texture source.
      *
      * @param {any} [data=null] - The data definition of a texture.
      */
-    constructor(data?: TData);
+    constructor(data?: any);
     /**
      * This flag can be used for type testing.
      *
@@ -49,14 +32,7 @@ export class TextureSource<TData> {
      * @readonly
      * @default true
      */
-    readonly isTextureSource: true;
-    /**
-     * The ID of the source.
-     *
-     * @type {number}
-     * @readonly
-     */
-    readonly id: number;
+    readonly isTextureSource: boolean;
     /**
      * The UUID of the source.
      *
@@ -69,7 +45,7 @@ export class TextureSource<TData> {
      *
      * @type {any}
      */
-    data: TData;
+    data: any;
     /**
      * This property is only relevant when {@link TextureSource#needsUpdate} is set to `true` and
      * provides more control on how texture data should be processed. When `dataReady` is set
@@ -94,7 +70,7 @@ export class TextureSource<TData> {
      * @param {(Vector2|Vector3)} target - The target object the result is written into.
      * @return {(Vector2|Vector3)} The dimensions of the source.
      */
-    getSize<TTarget extends Vector2 | Vector3>(target: TTarget): TTarget;
+    getSize(target: Vector2 | Vector3): Vector2 | Vector3;
     /**
      * When the property is set to `true`, the engine allocates the memory
      * for the texture (if necessary) and triggers the actual texture upload
@@ -112,5 +88,5 @@ export class TextureSource<TData> {
      * @return {Object} A JSON object representing the serialized source.
      * @see {@link ObjectLoader#parse}
      */
-    toJSON(meta?: string | {}): TextureSourceJSON;
+    toJSON(meta: (Object | string) | null): Object;
 }

@@ -1,5 +1,3 @@
-import { Object3D, Object3DEventMap } from "../core/Object3D.js";
-
 /**
  * This is almost identical to an {@link Object3D}. Its purpose is to
  * make working with groups of objects syntactically clearer.
@@ -17,7 +15,7 @@ import { Object3D, Object3DEventMap } from "../core/Object3D.js";
  *
  * @augments Object3D
  */
-export class Group<TEventMap extends Object3DEventMap = Object3DEventMap> extends Object3D<TEventMap> {
+export class Group extends Object3D {
     /**
      * This flag can be used for type testing.
      *
@@ -25,5 +23,7 @@ export class Group<TEventMap extends Object3DEventMap = Object3DEventMap> extend
      * @readonly
      * @default true
      */
-    readonly isGroup: true;
+    readonly isGroup: boolean;
+    type: string;
 }
+import { Object3D } from "../core/Object3D.js";

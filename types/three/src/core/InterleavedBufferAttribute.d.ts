@@ -1,8 +1,3 @@
-import { Matrix3 } from "../math/Matrix3.js";
-import { Matrix4 } from "../math/Matrix4.js";
-import { BufferAttribute, TypedArray } from "./BufferAttribute.js";
-import { InterleavedBuffer } from "./InterleavedBuffer.js";
-
 /**
  * An alternative version of a buffer attribute with interleaved data. Interleaved
  * attributes share a common interleaved data storage ({@link InterleavedBuffer}) and refer with
@@ -21,41 +16,66 @@ export class InterleavedBufferAttribute {
     /**
      * This flag can be used for type testing.
      *
+     * @type {boolean}
+     * @readonly
      * @default true
      */
-    readonly isInterleavedBufferAttribute: true;
+    readonly isInterleavedBufferAttribute: boolean;
     /**
      * The name of the buffer attribute.
+     *
+     * @type {string}
      */
     name: string;
     /**
      * The buffer holding the interleaved data.
+     *
+     * @type {InterleavedBuffer}
      */
     data: InterleavedBuffer;
     /**
      * The item size, see {@link BufferAttribute#itemSize}.
+     *
+     * @type {number}
      */
     itemSize: number;
     /**
      * The attribute offset into the buffer.
+     *
+     * @type {number}
      */
     offset: number;
     /**
      * Whether the data are normalized or not, see {@link BufferAttribute#normalized}
+     *
+     * @type {InterleavedBuffer}
      */
-    normalized: boolean;
+    normalized: InterleavedBuffer;
+    /**
+     * Cached normalization factor, see {@link MathUtils#getNormalizationScale}.
+     *
+     * @private
+     * @type {number|undefined}
+     */
+    private _normalizationScale;
     /**
      * The item count of this buffer attribute.
+     *
+     * @type {number}
+     * @readonly
      */
     get count(): number;
     /**
      * The array holding the interleaved buffer attribute data.
+     *
+     * @type {TypedArray}
      */
     get array(): TypedArray;
     /**
      * Flag to indicate that this attribute has changed and should be re-sent to
      * the GPU. Set this to `true` when you modify the value of the array.
      *
+     * @type {number}
      * @default false
      * @param {boolean} value
      */
@@ -67,7 +87,7 @@ export class InterleavedBufferAttribute {
      * @param {Matrix4} m - The matrix to apply.
      * @return {InterleavedBufferAttribute} A reference to this instance.
      */
-    applyMatrix4(m: Matrix4): this;
+    applyMatrix4(m: Matrix4): InterleavedBufferAttribute;
     /**
      * Applies the given 3x3 normal matrix to the given attribute. Only works with
      * item size `3`.
@@ -75,7 +95,7 @@ export class InterleavedBufferAttribute {
      * @param {Matrix3} m - The normal matrix to apply.
      * @return {InterleavedBufferAttribute} A reference to this instance.
      */
-    applyNormalMatrix(m: Matrix3): this;
+    applyNormalMatrix(m: Matrix3): InterleavedBufferAttribute;
     /**
      * Applies the given 4x4 matrix to the given attribute. Only works with
      * item size `3` and with direction vectors.
@@ -83,7 +103,7 @@ export class InterleavedBufferAttribute {
      * @param {Matrix4} m - The matrix to apply.
      * @return {InterleavedBufferAttribute} A reference to this instance.
      */
-    transformDirection(m: Matrix4): this;
+    transformDirection(m: Matrix4): InterleavedBufferAttribute;
     /**
      * Returns the given component of the vector at the given index.
      *
@@ -100,7 +120,7 @@ export class InterleavedBufferAttribute {
      * @param {number} value - The value to set.
      * @return {InterleavedBufferAttribute} A reference to this instance.
      */
-    setComponent(index: number, component: number, value: number): this;
+    setComponent(index: number, component: number, value: number): InterleavedBufferAttribute;
     /**
      * Sets the x component of the vector at the given index.
      *
@@ -108,7 +128,7 @@ export class InterleavedBufferAttribute {
      * @param {number} x - The value to set.
      * @return {InterleavedBufferAttribute} A reference to this instance.
      */
-    setX(index: number, x: number): this;
+    setX(index: number, x: number): InterleavedBufferAttribute;
     /**
      * Sets the y component of the vector at the given index.
      *
@@ -116,7 +136,7 @@ export class InterleavedBufferAttribute {
      * @param {number} y - The value to set.
      * @return {InterleavedBufferAttribute} A reference to this instance.
      */
-    setY(index: number, y: number): this;
+    setY(index: number, y: number): InterleavedBufferAttribute;
     /**
      * Sets the z component of the vector at the given index.
      *
@@ -124,7 +144,7 @@ export class InterleavedBufferAttribute {
      * @param {number} z - The value to set.
      * @return {InterleavedBufferAttribute} A reference to this instance.
      */
-    setZ(index: number, z: number): this;
+    setZ(index: number, z: number): InterleavedBufferAttribute;
     /**
      * Sets the w component of the vector at the given index.
      *
@@ -132,7 +152,7 @@ export class InterleavedBufferAttribute {
      * @param {number} w - The value to set.
      * @return {InterleavedBufferAttribute} A reference to this instance.
      */
-    setW(index: number, w: number): this;
+    setW(index: number, w: number): InterleavedBufferAttribute;
     /**
      * Returns the x component of the vector at the given index.
      *
@@ -169,7 +189,7 @@ export class InterleavedBufferAttribute {
      * @param {number} y - The value for the y component to set.
      * @return {InterleavedBufferAttribute} A reference to this instance.
      */
-    setXY(index: number, x: number, y: number): this;
+    setXY(index: number, x: number, y: number): InterleavedBufferAttribute;
     /**
      * Sets the x, y and z component of the vector at the given index.
      *
@@ -179,7 +199,7 @@ export class InterleavedBufferAttribute {
      * @param {number} z - The value for the z component to set.
      * @return {InterleavedBufferAttribute} A reference to this instance.
      */
-    setXYZ(index: number, x: number, y: number, z: number): this;
+    setXYZ(index: number, x: number, y: number, z: number): InterleavedBufferAttribute;
     /**
      * Sets the x, y, z and w component of the vector at the given index.
      *
@@ -190,7 +210,7 @@ export class InterleavedBufferAttribute {
      * @param {number} w - The value for the w component to set.
      * @return {InterleavedBufferAttribute} A reference to this instance.
      */
-    setXYZW(index: number, x: number, y: number, z: number, w: number): this;
+    setXYZW(index: number, x: number, y: number, z: number, w: number): InterleavedBufferAttribute;
     /**
      * Returns a new buffer attribute with copied values from this instance.
      *
@@ -199,7 +219,7 @@ export class InterleavedBufferAttribute {
      * @param {Object} [data] - An object with interleaved buffers that allows to retain the interleaved property.
      * @return {BufferAttribute|InterleavedBufferAttribute} A clone of this instance.
      */
-    clone(data?: {}): BufferAttribute;
+    clone(data?: Object): BufferAttribute | InterleavedBufferAttribute;
     /**
      * Serializes the buffer attribute into JSON.
      *
@@ -208,11 +228,18 @@ export class InterleavedBufferAttribute {
      * @param {Object} [data] - An optional value holding meta information about the serialization.
      * @return {Object} A JSON object representing the serialized buffer attribute.
      */
-    toJSON(data?: {}): {
-        isInterleavedBufferAttribute: true;
-        itemSize: number;
-        data: string;
-        offset: number;
-        normalized: boolean;
-    };
+    toJSON(data?: Object): Object;
+    /**
+     * Denormalizes the value using cached normalization factor.
+     *
+     * @private
+     */
+    private _denormalize;
+    /**
+     * Normalizes the value using cached normalization factor.
+     *
+     * @private
+     */
+    private _normalize;
 }
+import { BufferAttribute } from "./BufferAttribute.js";

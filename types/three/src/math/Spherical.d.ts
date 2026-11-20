@@ -1,5 +1,3 @@
-import { Vector3 } from "./Vector3.js";
-
 /**
  * This class can be used to represent points in 3D space as
  * [Spherical coordinates](https://en.wikipedia.org/wiki/Spherical_coordinate_system).
@@ -42,21 +40,21 @@ export class Spherical {
      * @param {number} theta - The azimuthal angle.
      * @return {Spherical} A reference to this spherical.
      */
-    set(radius: number, phi: number, theta: number): this;
+    set(radius: number, phi: number, theta: number): Spherical;
     /**
      * Copies the values of the given spherical to this instance.
      *
      * @param {Spherical} other - The spherical to copy.
      * @return {Spherical} A reference to this spherical.
      */
-    copy(other: Spherical): this;
+    copy(other: Spherical): Spherical;
     /**
      * Restricts the polar angle [page:.phi phi] to be between `0.000001` and pi -
      * `0.000001`.
      *
      * @return {Spherical} A reference to this spherical.
      */
-    makeSafe(): this;
+    makeSafe(): Spherical;
     /**
      * Sets the spherical components from the given vector which is assumed to hold
      * Cartesian coordinates.
@@ -64,7 +62,7 @@ export class Spherical {
      * @param {Vector3} v - The vector to set.
      * @return {Spherical} A reference to this spherical.
      */
-    setFromVector3(v: Vector3): this;
+    setFromVector3(v: Vector3): Spherical;
     /**
      * Sets the spherical components from the given Cartesian coordinates.
      *
@@ -73,11 +71,11 @@ export class Spherical {
      * @param {number} z - The z value.
      * @return {Spherical} A reference to this spherical.
      */
-    setFromCartesianCoords(x: number, y: number, z: number): this;
+    setFromCartesianCoords(x: number, y: number, z: number): Spherical;
     /**
      * Returns a new spherical with copied values from this instance.
      *
      * @return {Spherical} A clone of this instance.
      */
-    clone(): this;
+    clone(): Spherical;
 }

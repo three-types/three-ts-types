@@ -1,8 +1,7 @@
-import { TypedArray } from "./BufferAttribute.js";
-import { InterleavedBuffer } from "./InterleavedBuffer.js";
-
 /**
  * An instanced version of an interleaved buffer.
+ *
+ * @augments InterleavedBuffer
  */
 export class InstancedInterleavedBuffer extends InterleavedBuffer {
     /**
@@ -16,14 +15,21 @@ export class InstancedInterleavedBuffer extends InterleavedBuffer {
     /**
      * This flag can be used for type testing.
      *
+     * @type {boolean}
+     * @readonly
      * @default true
      */
-    readonly isInstancedInterleavedBuffer: true;
+    readonly isInstancedInterleavedBuffer: boolean;
     /**
      * Defines how often a value of this buffer attribute should be repeated,
      * see {@link InstancedBufferAttribute#meshPerAttribute}.
      *
+     * @type {number}
      * @default 1
      */
     meshPerAttribute: number;
+    copy(source: any): this;
+    clone(data: any): InterleavedBuffer;
+    toJSON(data: any): Object;
 }
+import { InterleavedBuffer } from "./InterleavedBuffer.js";

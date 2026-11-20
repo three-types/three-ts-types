@@ -1,8 +1,3 @@
-import { Texture } from "./Texture.js";
-
-interface GPUTexture {
-}
-
 /**
  * Represents a texture created externally with the same renderer context.
  *
@@ -11,7 +6,7 @@ interface GPUTexture {
  *
  * @augments Texture
  */
-export class ExternalTexture extends Texture<null> {
+export class ExternalTexture extends Texture {
     /**
      * Creates a new raw texture.
      *
@@ -32,6 +27,7 @@ export class ExternalTexture extends Texture<null> {
      * @readonly
      * @default true
      */
-    readonly isExternalTexture: true;
-    copy(source: ExternalTexture): this;
+    readonly isExternalTexture: boolean;
+    copy(source: any): this;
 }
+import { Texture } from "./Texture.js";

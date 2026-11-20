@@ -21,7 +21,7 @@ export class TorusKnotGeometry extends BufferGeometry {
      * @param {Object} data - A JSON object representing the serialized geometry.
      * @return {TorusKnotGeometry} A new instance.
      */
-    static fromJSON(data: {}): TorusKnotGeometry;
+    static fromJSON(data: Object): TorusKnotGeometry;
     /**
      * Constructs a new torus knot geometry.
      *
@@ -47,14 +47,7 @@ export class TorusKnotGeometry extends BufferGeometry {
      *
      * @type {Object}
      */
-    readonly parameters: {
-        readonly radius: number;
-        readonly tube: number;
-        readonly tubularSegments: number;
-        readonly radialSegments: number;
-        readonly p: number;
-        readonly q: number;
-    };
-    copy(source: TorusKnotGeometry): this;
+    parameters: Object;
+    copy(source: any): this;
 }
 import { BufferGeometry } from "../core/BufferGeometry.js";

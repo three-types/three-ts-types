@@ -1,5 +1,3 @@
-import { RenderTarget, Texture, WebGPURenderer } from "three/webgpu";
-
 /**
  * Fills the gutters of a baked map: the texels outside the charts of a UV atlas, e.g. of a light map or an
  * ambient occlusion map. Texture filtering reads texels on both sides of the border of a chart, and the mip
@@ -41,6 +39,13 @@ export class GutterFillGenerator {
      * @type {WebGPURenderer}
      */
     renderer: WebGPURenderer;
+    _width: number;
+    _height: number;
+    _levels: any[];
+    _passes: any[];
+    _source: import("three/tsl").TextureNode;
+    _firstLevel: import("three/tsl").TextureNode;
+    _fill: NodeMaterial;
     /**
      * Fills the gutters of a map.
      *
@@ -54,4 +59,31 @@ export class GutterFillGenerator {
      * Frees all internal resources.
      */
     dispose(): void;
+    /**
+     * Sizes the levels and collects the passes of a map size.
+     *
+     * @private
+     * @param {number} width - The width of the map.
+     * @param {number} height - The height of the map.
+     */
+    private _setSize;
+    /**
+     * Returns a pass of a level, created on first use, with one thread per texel of the level. The top level reads
+     * the map, the others the level above.
+     *
+     * @private
+     * @param {number} index - The level, counted from the coarsest one.
+     * @param {boolean} top - Whether the level is the top one.
+     * @param {boolean} isPull - Whether to return the pull pass, or the push pass.
+     * @return {ComputeNode} The pass.
+     */
+    private _getPass;
+    /**
+     * Frees the levels and the passes.
+     *
+     * @private
+     */
+    private _disposeLevels;
 }
+import { NodeMaterial } from "three/webgpu";
+import { RenderTarget } from "three/webgpu";

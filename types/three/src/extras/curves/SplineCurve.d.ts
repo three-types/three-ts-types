@@ -1,6 +1,3 @@
-import { Vector2 } from "../../math/Vector2.js";
-import { Curve } from "../core/Curve.js";
-
 /**
  * A curve representing a 2D spline curve.
  *
@@ -25,7 +22,7 @@ import { Curve } from "../core/Curve.js";
  *
  * @augments Curve
  */
-export class SplineCurve extends Curve<Vector2> {
+export class SplineCurve extends Curve {
     /**
      * Constructs a new 2D spline curve.
      *
@@ -35,11 +32,16 @@ export class SplineCurve extends Curve<Vector2> {
     /**
      * This flag can be used for type testing.
      *
+     * @type {boolean}
+     * @readonly
      * @default true
      */
-    readonly isSplineCurve: true;
+    readonly isSplineCurve: boolean;
+    type: string;
     /**
      * An array of 2D points defining the curve.
+     *
+     * @type {Array<Vector2>}
      */
     points: Array<Vector2>;
     /**
@@ -50,5 +52,8 @@ export class SplineCurve extends Curve<Vector2> {
      * @return {Vector2} The position on the curve.
      */
     getPoint(t: number, optionalTarget?: Vector2): Vector2;
-    copy(source: SplineCurve): this;
+    copy(source: any): this;
+    fromJSON(json: any): this;
 }
+import { Vector2 } from "../../math/Vector2.js";
+import { Curve } from "../core/Curve.js";

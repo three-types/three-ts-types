@@ -1,84 +1,3 @@
-import { Camera } from "../cameras/Camera.js";
-import { Ray } from "../math/Ray.js";
-import { Vector2 } from "../math/Vector2.js";
-import { Vector3 } from "../math/Vector3.js";
-import { XRTargetRaySpace } from "../renderers/webxr/WebXRController.js";
-import { Layers } from "./Layers.js";
-import { Object3D } from "./Object3D.js";
-
-export interface Face {
-    a: number;
-    b: number;
-    c: number;
-    normal: Vector3;
-    materialIndex: number;
-}
-
-/**
- * The intersection point of a raycaster intersection test.
- */
-export interface Intersection<TIntersected extends Object3D = Object3D> {
-    /**
-     * The distance from the ray's origin to the intersection point.
-     */
-    distance: number;
-    /**
-     * Some 3D objects e.g. {@link Points} provide the distance of the
-     * intersection to the nearest point on the ray. For other objects it will be `undefined`.
-     */
-    distanceToRay?: number | undefined;
-    /**
-     * The intersection point, in world coordinates.
-     */
-    point: Vector3;
-    index?: number | undefined;
-    /**
-     * The face that has been intersected.
-     */
-    face?: Face | null | undefined;
-    /**
-     * The face index.
-     */
-    faceIndex?: number | null | undefined;
-    barycoord?: Vector3 | null;
-    /**
-     * The 3D object that has been intersected.
-     */
-    object: TIntersected;
-    /**
-     * U,V coordinates at point of intersection.
-     */
-    uv?: Vector2 | undefined;
-    /**
-     * Second set of U,V coordinates at point of intersection.
-     */
-    uv1?: Vector2 | undefined;
-    /**
-     * Interpolated normal vector at point of intersection.
-     */
-    normal?: Vector3;
-    /**
-     * The index number of the instance where the ray
-     * intersects the {@link InstancedMesh}.
-     */
-    instanceId?: number | undefined;
-    pointOnLine?: Vector3;
-    /**
-     * The index number of the instance where the ray
-     * intersects the {@link BatchedMesh}.
-     */
-    batchId?: number;
-}
-
-export interface RaycasterParameters {
-    Mesh: any;
-    Line: { threshold: number };
-    Line2?: { threshold: number };
-    LOD: any;
-    Points: { threshold: number };
-    Sprite: any;
-}
-
 /**
  * This class is designed to assist with raycasting. Raycasting is used for
  * mouse picking (working out what objects in the 3d space the mouse is over)
@@ -93,20 +12,24 @@ export class Raycaster {
      * @param {number} [near=0] - All results returned are further away than near. Near can't be negative.
      * @param {number} [far=Infinity] - All results returned are closer than far. Far can't be lower than near.
      */
-    constructor(origin?: Vector3, direction?: Vector3, near?: number, far?: number);
+    constructor(origin: Vector3, direction: Vector3, near?: number, far?: number);
     /**
      * The ray used for raycasting.
+     *
+     * @type {Ray}
      */
     ray: Ray;
     /**
      * All results returned are further away than near. Near can't be negative.
      *
+     * @type {number}
      * @default 0
      */
     near: number;
     /**
      * All results returned are closer than far. Far can't be lower than near.
      *
+     * @type {number}
      * @default Infinity
      */
     far: number;
@@ -115,6 +38,7 @@ export class Raycaster {
      * billboarded objects like sprites. This field can be set manually or
      * is set when calling `setFromCamera()`.
      *
+     * @type {?Camera}
      * @default null
      */
     camera: Camera | null;
@@ -126,6 +50,8 @@ export class Raycaster {
      * raycaster.layers.set( 1 );
      * object.layers.enable( 1 );
      * ```
+     *
+     * @type {Layers}
      */
     layers: Layers;
     /**
@@ -141,8 +67,10 @@ export class Raycaster {
      * }
      * ```
      * Where `threshold` is the precision of the raycaster when intersecting objects, in world units.
+     *
+     * @type {Object}
      */
-    params: RaycasterParameters;
+    params: Object;
     /**
      * Updates the ray with a new origin and direction by copying the values from the arguments.
      *
@@ -164,7 +92,25 @@ export class Raycaster {
      * @param {WebXRController} controller - The controller to copy the position and direction from.
      * @return {Raycaster} A reference to this raycaster.
      */
-    setFromXRController(controller: XRTargetRaySpace): this;
+    setFromXRController(controller: WebXRController): Raycaster;
+    /**
+     * The intersection point of a raycaster intersection test.
+     * @typedef {Object} Raycaster~Intersection
+     * @property {number} distance - The distance from the ray's origin to the intersection point.
+     * @property {number} distanceToRay -  Some 3D objects e.g. {@link Points} provide the distance of the
+     * intersection to the nearest point on the ray. For other objects it will be `undefined`.
+     * @property {Vector3} point - The intersection point, in world coordinates.
+     * @property {Object} face - The face that has been intersected.
+     * @property {number} faceIndex - The face index.
+     * @property {Object3D} object - The 3D object that has been intersected.
+     * @property {Vector2} uv - U,V coordinates at point of intersection.
+     * @property {Vector2} uv1 - Second set of U,V coordinates at point of intersection.
+     * @property {Vector3} normal - Interpolated normal vector at point of intersection.
+     * @property {number} instanceId - The index number of the instance where the ray
+     * intersects the {@link InstancedMesh}.
+     * @property {number} batchId - The index number of the instance where the ray
+     * intersects the {@link BatchedMesh}.
+     */
     /**
      * Checks all intersection between the ray and the object with or without the
      * descendants. Intersections are returned sorted by distance, closest first.
@@ -188,11 +134,7 @@ export class Raycaster {
      * @param {Array<Raycaster~Intersection>} [intersects=[]] The target array that holds the result of the method.
      * @return {Array<Raycaster~Intersection>} An array holding the intersection points.
      */
-    intersectObject<TIntersected extends Object3D>(
-        object: Object3D,
-        recursive?: boolean,
-        intersects?: Array<Intersection<TIntersected>>,
-    ): Array<Intersection<TIntersected>>;
+    intersectObject(object: Object3D, recursive?: boolean, intersects?: any[]): Array<Raycaster>;
     /**
      * Checks all intersection between the ray and the objects with or without
      * the descendants. Intersections are returned sorted by distance, closest first.
@@ -203,9 +145,7 @@ export class Raycaster {
      * @param {Array<Raycaster~Intersection>} [intersects=[]] The target array that holds the result of the method.
      * @return {Array<Raycaster~Intersection>} An array holding the intersection points.
      */
-    intersectObjects<TIntersected extends Object3D>(
-        objects: Object3D[],
-        recursive?: boolean,
-        intersects?: Array<Intersection<TIntersected>>,
-    ): Array<Intersection<TIntersected>>;
+    intersectObjects(objects: Array<Object3D>, recursive?: boolean, intersects?: any[]): Array<Raycaster>;
 }
+import { Ray } from "../math/Ray.js";
+import { Layers } from "./Layers.js";

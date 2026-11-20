@@ -1,18 +1,3 @@
-import { BufferAttribute } from "../core/BufferAttribute.js";
-import { InterleavedBufferAttribute } from "../core/InterleavedBufferAttribute.js";
-import { Euler } from "./Euler.js";
-import { Matrix4 } from "./Matrix4.js";
-import { Vector3, Vector3Like } from "./Vector3.js";
-
-export interface QuaternionLike {
-    readonly x: number;
-    readonly y: number;
-    readonly z: number;
-    readonly w: number;
-}
-
-export type QuaternionTuple = [x: number, y: number, z: number, w: number];
-
 /**
  * Class for representing a Quaternion. Quaternions are used in three.js to represent rotations.
  *
@@ -88,7 +73,11 @@ export class Quaternion {
      * @readonly
      * @default true
      */
-    readonly isQuaternion: true;
+    readonly isQuaternion: boolean;
+    _x: number;
+    _y: number;
+    _z: number;
+    _w: number;
     set x(value: number);
     /**
      * The x value of this quaternion.
@@ -130,20 +119,20 @@ export class Quaternion {
      * @param {number} w - The w value of this quaternion.
      * @return {Quaternion} A reference to this quaternion.
      */
-    set(x: number, y: number, z: number, w: number): this;
+    set(x: number, y: number, z: number, w: number): Quaternion;
     /**
      * Returns a new quaternion with copied values from this instance.
      *
      * @return {Quaternion} A clone of this instance.
      */
-    clone(): this;
+    clone(): Quaternion;
     /**
      * Copies the values of the given quaternion to this instance.
      *
      * @param {Quaternion} quaternion - The quaternion to copy.
      * @return {Quaternion} A reference to this quaternion.
      */
-    copy(quaternion: QuaternionLike): this;
+    copy(quaternion: Quaternion): Quaternion;
     /**
      * Sets this quaternion from the rotation specified by the given
      * Euler angles.
@@ -152,7 +141,7 @@ export class Quaternion {
      * @param {boolean} [update=true] - Whether the internal `onChange` callback should be executed or not.
      * @return {Quaternion} A reference to this quaternion.
      */
-    setFromEuler(euler: Euler, update?: boolean): this;
+    setFromEuler(euler: Euler, update?: boolean): Quaternion;
     /**
      * Sets this quaternion from the given axis and angle.
      *
@@ -160,14 +149,14 @@ export class Quaternion {
      * @param {number} angle - The angle in radians.
      * @return {Quaternion} A reference to this quaternion.
      */
-    setFromAxisAngle(axis: Vector3Like, angle: number): this;
+    setFromAxisAngle(axis: Vector3, angle: number): Quaternion;
     /**
      * Sets this quaternion from the given rotation matrix.
      *
      * @param {Matrix4} m - A 4x4 matrix of which the upper 3x3 of matrix is a pure rotation matrix (i.e. unscaled).
      * @return {Quaternion} A reference to this quaternion.
      */
-    setFromRotationMatrix(m: Matrix4): this;
+    setFromRotationMatrix(m: Matrix4): Quaternion;
     /**
      * Sets this quaternion to the rotation required to rotate the direction vector
      * `vFrom` to the direction vector `vTo`.
@@ -176,7 +165,7 @@ export class Quaternion {
      * @param {Vector3} vTo - The second (normalized) direction vector.
      * @return {Quaternion} A reference to this quaternion.
      */
-    setFromUnitVectors(vFrom: Vector3, vTo: Vector3Like): this;
+    setFromUnitVectors(vFrom: Vector3, vTo: Vector3): Quaternion;
     /**
      * Returns the angle between this quaternion and the given one in radians.
      *
@@ -192,21 +181,21 @@ export class Quaternion {
      * @param {number} step - The angular step in radians.
      * @return {Quaternion} A reference to this quaternion.
      */
-    rotateTowards(q: Quaternion, step: number): this;
+    rotateTowards(q: Quaternion, step: number): Quaternion;
     /**
      * Sets this quaternion to the identity quaternion; that is, to the
      * quaternion that represents "no rotation".
      *
      * @return {Quaternion} A reference to this quaternion.
      */
-    identity(): this;
+    identity(): Quaternion;
     /**
      * Inverts this quaternion via {@link Quaternion#conjugate}. The
      * quaternion is assumed to have unit length.
      *
      * @return {Quaternion} A reference to this quaternion.
      */
-    invert(): this;
+    invert(): Quaternion;
     /**
      * Returns the rotational conjugate of this quaternion. The conjugate of a
      * quaternion represents the same rotation in the opposite direction about
@@ -214,7 +203,7 @@ export class Quaternion {
      *
      * @return {Quaternion} A reference to this quaternion.
      */
-    conjugate(): this;
+    conjugate(): Quaternion;
     /**
      * Calculates the dot product of this quaternion and the given one.
      *
@@ -244,21 +233,21 @@ export class Quaternion {
      *
      * @return {Quaternion} A reference to this quaternion.
      */
-    normalize(): this;
+    normalize(): Quaternion;
     /**
      * Multiplies this quaternion by the given one.
      *
      * @param {Quaternion} q - The quaternion.
      * @return {Quaternion} A reference to this quaternion.
      */
-    multiply(q: Quaternion): this;
+    multiply(q: Quaternion): Quaternion;
     /**
      * Pre-multiplies this quaternion by the given one.
      *
      * @param {Quaternion} q - The quaternion.
      * @return {Quaternion} A reference to this quaternion.
      */
-    premultiply(q: Quaternion): this;
+    premultiply(q: Quaternion): Quaternion;
     /**
      * Multiplies the given quaternions and stores the result in this instance.
      *
@@ -266,7 +255,7 @@ export class Quaternion {
      * @param {Quaternion} b - The second quaternion.
      * @return {Quaternion} A reference to this quaternion.
      */
-    multiplyQuaternions(a: Quaternion, b: Quaternion): this;
+    multiplyQuaternions(a: Quaternion, b: Quaternion): Quaternion;
     /**
      * Performs a spherical linear interpolation between this quaternion and the target quaternion.
      *
@@ -274,7 +263,7 @@ export class Quaternion {
      * @param {number} t - The interpolation factor. A value in the range `[0,1]` will interpolate. A value outside the range `[0,1]` will extrapolate.
      * @return {Quaternion} A reference to this quaternion.
      */
-    slerp(qb: Quaternion, t: number): this;
+    slerp(qb: Quaternion, t: number): Quaternion;
     /**
      * Performs a spherical linear interpolation between the given quaternions
      * and stores the result in this quaternion.
@@ -284,13 +273,13 @@ export class Quaternion {
      * @param {number} t - The interpolation factor in the closed interval `[0, 1]`.
      * @return {Quaternion} A reference to this quaternion.
      */
-    slerpQuaternions(qa: Quaternion, qb: Quaternion, t: number): this;
+    slerpQuaternions(qa: Quaternion, qb: Quaternion, t: number): Quaternion;
     /**
      * Sets this quaternion to a uniformly random, normalized quaternion.
      *
      * @return {Quaternion} A reference to this quaternion.
      */
-    random(): this;
+    random(): Quaternion;
     /**
      * Returns `true` if this quaternion is equal with the given one.
      *
@@ -305,7 +294,7 @@ export class Quaternion {
      * @param {number} [offset=0] - The offset into the array.
      * @return {Quaternion} A reference to this quaternion.
      */
-    fromArray(array: number[] | ArrayLike<number>, offset?: number): this;
+    fromArray(array: Array<number>, offset?: number): Quaternion;
     /**
      * Writes the components of this quaternion to the given array. If no array is provided,
      * the method returns a new instance.
@@ -314,25 +303,7 @@ export class Quaternion {
      * @param {number} [offset=0] - Index of the first element in the array.
      * @return {Array<number>} The quaternion components.
      */
-    toArray(array?: number[], offset?: number): number[];
-    /**
-     * Writes the components of this quaternion to the given array. If no array is provided,
-     * the method returns a new instance.
-     *
-     * @param {Array<number>} [array=[]] - The target array holding the quaternion components.
-     * @param {number} [offset=0] - Index of the first element in the array.
-     * @return {Array<number>} The quaternion components.
-     */
-    toArray(array?: QuaternionTuple, offset?: 0): QuaternionTuple;
-    /**
-     * Writes the components of this quaternion to the given array. If no array is provided,
-     * the method returns a new instance.
-     *
-     * @param {Array<number>} [array=[]] - The target array holding the quaternion components.
-     * @param {number} [offset=0] - Index of the first element in the array.
-     * @return {Array<number>} The quaternion components.
-     */
-    toArray(array: ArrayLike<number>, offset?: number): ArrayLike<number>;
+    toArray(array?: Array<number>, offset?: number): Array<number>;
     /**
      * Sets the components of this quaternion from the given buffer attribute.
      *
@@ -340,13 +311,15 @@ export class Quaternion {
      * @param {number} index - The index into the attribute.
      * @return {Quaternion} A reference to this quaternion.
      */
-    fromBufferAttribute(attribute: BufferAttribute | InterleavedBufferAttribute, index: number): this;
+    fromBufferAttribute(attribute: BufferAttribute, index: number): Quaternion;
     /**
      * This methods defines the serialization result of this class. Returns the
      * numerical elements of this quaternion in an array of format `[x, y, z, w]`.
      *
      * @return {Array<number>} The serialized quaternion.
      */
-    toJSON(): [number, number, number, number];
+    toJSON(): Array<number>;
+    _onChange(callback: any): this;
+    _onChangeCallback(): void;
     [Symbol.iterator](): Generator<number, void, unknown>;
 }

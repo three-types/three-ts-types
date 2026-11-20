@@ -1,5 +1,3 @@
-import { Light, Mesh, Node, Texture, TextureNode, WebGPURenderer } from "three/webgpu";
-
 /**
  * Bakes indirect diffuse irradiance into a light map. The irradiance is defined by a
  * function that returns a TSL node for a world-space position and normal, e.g. a prepared
@@ -55,7 +53,7 @@ export class LightMapper {
     constructor(
         renderer: WebGPURenderer,
         size: number,
-        irradianceNode: (position: Node<"vec3">, normal: Node<"vec3">, sample: Node<"float">) => Node<"vec3">,
+        irradianceNode: (arg0: Node<vec3>, arg1: Node<vec3>, arg2: Node<any>) => Node<vec3>,
         { lights, variance, guides }?: {
             lights?: Light[] | undefined;
             variance?: boolean | undefined;
@@ -73,7 +71,7 @@ export class LightMapper {
      *
      * @type {function(Node<vec3>, Node<vec3>, Node<float>): Node<vec3>}
      */
-    irradianceNode: (position: Node<"vec3">, normal: Node<"vec3">, sample: Node<"float">) => Node<"vec3">;
+    irradianceNode: (arg0: Node<vec3>, arg1: Node<vec3>, arg2: Node<any>) => Node<vec3>;
     /**
      * The light map size in texels.
      *
@@ -88,6 +86,8 @@ export class LightMapper {
      * @default 0
      */
     readonly samples: number;
+    _accumulation: RenderTarget;
+    _renderTarget: RenderTarget;
     /**
      * The baked light map. It stores linear diffuse irradiance in lux, without baked
      * albedo, material ambient occlusion, or display exposure, and uses `uv1`.
@@ -106,6 +106,7 @@ export class LightMapper {
      * @readonly
      */
     readonly varianceTexture: Texture | null;
+    _guides: RenderTarget | null;
     /**
      * The world-space position of the surface of each texel, with the index of its chart + 1 in alpha,
      * or 0 in alpha for texels without a surface. A chart is a set of triangles that are connected in
@@ -122,6 +123,21 @@ export class LightMapper {
      * @readonly
      */
     readonly normalTexture: Texture | null;
+    _textureNodes: {};
+    _scene: Scene;
+    _guideScene: Scene;
+    _camera: OrthographicCamera;
+    _objects: any[];
+    _jitter: import("three/tsl").UniformNode;
+    _sample: import("three/tsl").UniformNode;
+    _weight: import("three/tsl").UniformNode;
+    _floatSums: any;
+    _charts: number;
+    _guidesNeedUpdate: boolean;
+    _frontMaterial: NodeMaterial;
+    _backMaterial: NodeMaterial;
+    _guideMaterials: NodeMaterial[] | null;
+    _quad: QuadMesh;
     /**
      * Returns a texture of the light mapper: `'color'`, the light map, or the inputs of a denoiser like
      * {@link DenoiseNode}: `'variance'` with the `variance` option, `'position'` and `'normal'` with
@@ -153,6 +169,18 @@ export class LightMapper {
      */
     update(samples?: number): void;
     /**
+     * Returns the weight of a sample. Similar samples added to a half float sum round in the same
+     * direction, so their weights are spread over the rounding step of the sum, which grows with it,
+     * and the samples round up and down evenly. The weights are also scaled down, so the sums of
+     * bright texels stay below the largest half float, 65504, since the resolve divides by the sum
+     * of the weights. Float sums weigh all samples the same.
+     *
+     * @private
+     * @param {number} index - The index of the sample.
+     * @return {number} The weight.
+     */
+    private _sampleWeight;
+    /**
      * Discards the accumulated samples.
      */
     reset(): void;
@@ -160,4 +188,45 @@ export class LightMapper {
      * Frees all internal resources.
      */
     dispose(): void;
+    /**
+     * Adds a proxy of a mesh that rasterizes its surface and charts into the guides.
+     *
+     * @private
+     * @param {Mesh} object - The mesh.
+     */
+    private _addGuide;
+    /**
+     * Rasterizes the world-space positions, normals and chart indices of the meshes into the guides, with the
+     * jitters of a range of samples, so that the guides cover the texels that the samples cover, also at the
+     * borders of the charts. The texel centers come last, the interior texels keep them.
+     *
+     * @private
+     * @param {number} start - The first sample, 0 clears the guides.
+     * @param {number} end - The sample after the last one.
+     */
+    private _renderGuides;
+    /**
+     * Creates a material that rasterizes meshes in UV space and outputs irradiance.
+     *
+     * @private
+     * @param {function(Node<vec3>, Node<vec3>, Node<float>): Node<vec3>} irradianceNode - The irradiance function.
+     * @param {boolean} flipNormal - Whether to flip the normal, for back-sided meshes.
+     * @param {Array<Light>} directLights - Direct lights to include.
+     * @return {NodeMaterial} The material.
+     */
+    private _createBakeMaterial;
+    /**
+     * Creates the material that rasterizes the guides in UV space.
+     *
+     * @private
+     * @param {boolean} flipNormal - Whether to flip the normal, for back-sided meshes.
+     * @return {NodeMaterial} The material.
+     */
+    private _createGuideMaterial;
 }
+import { RenderTarget } from "three/webgpu";
+import { Scene } from "three/webgpu";
+import { OrthographicCamera } from "three/webgpu";
+import { NodeMaterial } from "three/webgpu";
+import { QuadMesh } from "three/webgpu";
+import { Mesh } from "three/webgpu";

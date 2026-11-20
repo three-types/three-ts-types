@@ -18,7 +18,7 @@ declare class NodeObjectLoader extends ObjectLoader {
      * @type {Object<string,Node.constructor>}
      */
     nodes: {
-        [x: string]: new(...args: any[]) => Node;
+        [x: string]: Node.constructor;
     };
     /**
      * Represents a dictionary of node material types.
@@ -26,8 +26,15 @@ declare class NodeObjectLoader extends ObjectLoader {
      * @type {Object<string,NodeMaterial.constructor>}
      */
     nodeMaterials: {
-        [x: string]: new() => NodeMaterial;
+        [x: string]: NodeMaterial.constructor;
     };
+    /**
+     * A reference to hold the `nodes` JSON property.
+     *
+     * @private
+     * @type {?Object[]}
+     */
+    private _nodesJSON;
     /**
      * Defines the dictionary of node types.
      *
@@ -35,8 +42,8 @@ declare class NodeObjectLoader extends ObjectLoader {
      * @return {NodeObjectLoader} A reference to this loader.
      */
     setNodes(value: {
-        [x: string]: new(...args: any[]) => Node;
-    }): this;
+        [x: string]: Node.constructor;
+    }): NodeObjectLoader;
     /**
      * Defines the dictionary of node material types.
      *
@@ -44,8 +51,8 @@ declare class NodeObjectLoader extends ObjectLoader {
      * @return {NodeObjectLoader} A reference to this loader.
      */
     setNodeMaterials(value: {
-        [x: string]: new() => NodeMaterial;
-    }): this;
+        [x: string]: NodeMaterial.constructor;
+    }): NodeObjectLoader;
     /**
      * Parses the node objects from the given JSON.
      *
@@ -53,14 +60,14 @@ declare class NodeObjectLoader extends ObjectLoader {
      * @param {Function} onLoad - The onLoad callback function.
      * @return {Object3D}. The parsed 3D object.
      */
-    parse(json: unknown, onLoad?: (object: Object3D) => void): Object3D;
+    parse(json: Object, onLoad: Function): Object3D;
     /**
      * Async version of {@link NodeObjectLoader#parse}.
      *
      * @param {Object} json - The JSON definition
      * @return {Promise<Object3D>} A Promise that resolves with the parsed 3D object.
      */
-    parseAsync(json: unknown): Promise<Object3D>;
+    parseAsync(json: Object): Promise<Object3D>;
     /**
      * Parses the node objects from the given JSON and textures.
      *
@@ -80,15 +87,10 @@ declare class NodeObjectLoader extends ObjectLoader {
      * @param {Object<string,Texture>} textures - The texture library.
      * @return {Object<string,NodeMaterial>}. The parsed materials.
      */
-    parseMaterials(json: unknown, textures: {
+    parseMaterials(json: Object, textures: {
         [x: string]: Texture;
     }): {
         [x: string]: NodeMaterial;
     };
 }
-import { Object3D } from "../../core/Object3D.js";
 import { ObjectLoader } from "../../loaders/ObjectLoader.js";
-import NodeMaterial from "../../materials/nodes/NodeMaterial.js";
-import { Node } from "../../nodes/Nodes.js";
-import { Texture } from "../../textures/Texture.js";
-import { LoadingManager } from "../LoadingManager.js";

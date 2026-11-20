@@ -1,25 +1,3 @@
-import {
-    CompressedPixelFormat,
-    MagnificationTextureFilter,
-    Mapping,
-    MinificationTextureFilter,
-    TextureDataType,
-    Wrapping,
-} from "../constants.js";
-import { TypedArray } from "../core/BufferAttribute.js";
-import { Texture } from "./Texture.js";
-
-export interface CompressedTextureMipmap {
-    data: TypedArray;
-    width: number;
-    height: number;
-}
-
-export interface CompressedTextureImageData {
-    width: number;
-    height: number;
-}
-
 /**
  * Creates a texture based on data in compressed form.
  *
@@ -27,7 +5,7 @@ export interface CompressedTextureImageData {
  *
  * @augments Texture
  */
-export class CompressedTexture<TImageData = CompressedTextureImageData> extends Texture<TImageData> {
+export class CompressedTexture extends Texture {
     /**
      * Constructs a new compressed texture.
      *
@@ -46,16 +24,16 @@ export class CompressedTexture<TImageData = CompressedTextureImageData> extends 
      * @param {string} [colorSpace=NoColorSpace] - The color space.
      */
     constructor(
-        mipmaps: CompressedTextureMipmap[] | undefined,
+        mipmaps?: Array<Object>,
         width: number,
         height: number,
-        format?: CompressedPixelFormat,
-        type?: TextureDataType,
-        mapping?: Mapping,
-        wrapS?: Wrapping,
-        wrapT?: Wrapping,
-        magFilter?: MagnificationTextureFilter,
-        minFilter?: MinificationTextureFilter,
+        format?: number,
+        type?: number,
+        mapping?: number,
+        wrapS?: number,
+        wrapT?: number,
+        magFilter?: number,
+        minFilter?: number,
         anisotropy?: number,
         colorSpace?: string,
     );
@@ -66,12 +44,6 @@ export class CompressedTexture<TImageData = CompressedTextureImageData> extends 
      * @readonly
      * @default true
      */
-    readonly isCompressedTexture: true;
-    /**
-     * This array holds for all mipmaps (including the bases mip) the data and dimensions.
-     *
-     * @type {Array<Object>}
-     */
-    mipmaps: CompressedTextureMipmap[];
-    format: CompressedPixelFormat;
+    readonly isCompressedTexture: boolean;
 }
+import { Texture } from "./Texture.js";

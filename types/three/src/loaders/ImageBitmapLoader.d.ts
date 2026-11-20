@@ -26,7 +26,7 @@
  *
  * @augments Loader
  */
-export class ImageBitmapLoader extends Loader<ImageBitmap> {
+export class ImageBitmapLoader extends Loader {
     /**
      * This flag can be used for type testing.
      *
@@ -34,14 +34,21 @@ export class ImageBitmapLoader extends Loader<ImageBitmap> {
      * @readonly
      * @default true
      */
-    readonly isImageBitmapLoader: true;
+    readonly isImageBitmapLoader: boolean;
     /**
      * Represents the loader options.
      *
      * @type {Object}
      * @default {premultiplyAlpha:'none'}
      */
-    options: ImageBitmapOptions;
+    options: Object;
+    /**
+     * Used for aborting requests.
+     *
+     * @private
+     * @type {AbortController}
+     */
+    private _abortController;
     /**
      * Sets the given loader options. The structure of the object must match the `options` parameter of
      * [createImageBitmap](https://developer.mozilla.org/en-US/docs/Web/API/Window/createImageBitmap).
@@ -52,7 +59,7 @@ export class ImageBitmapLoader extends Loader<ImageBitmap> {
      * @param {Object} options - The loader options to set.
      * @return {ImageBitmapLoader} A reference to this image bitmap loader.
      */
-    setOptions(options: ImageBitmapOptions): this;
+    setOptions(options: Object): ImageBitmapLoader;
     /**
      * Starts loading from the given URL and pass the loaded image bitmap to the `onLoad()` callback.
      *
@@ -63,15 +70,15 @@ export class ImageBitmapLoader extends Loader<ImageBitmap> {
      */
     load(
         url: string,
-        onLoad?: (data: ImageBitmap) => void,
-        onProgress?: OnProgressCallback,
-        onError?: OnErrorCallback,
+        onLoad: (arg0: ImageBitmap) => any,
+        onProgress: onProgressCallback,
+        onError: onErrorCallback,
     ): void;
     /**
      * Aborts ongoing fetch requests.
      *
      * @return {ImageBitmapLoader} A reference to this instance.
      */
-    abort(): this;
+    abort(): ImageBitmapLoader;
 }
-import { Loader, OnErrorCallback, OnProgressCallback } from "./Loader.js";
+import { Loader } from "./Loader.js";

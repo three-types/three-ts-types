@@ -1,20 +1,9 @@
-import { Wrapping } from "../constants.js";
-import { TypedArray } from "../core/BufferAttribute.js";
-import { Texture } from "./Texture.js";
-
-export interface DataArrayTextureImageData {
-    data: TypedArray | null;
-    width: number;
-    height: number;
-    depth: number;
-}
-
 /**
  * Creates an array of textures directly from raw buffer data.
  *
  * @augments Texture
  */
-export class DataArrayTexture extends Texture<DataArrayTextureImageData> {
+export class DataArrayTexture extends Texture {
     /**
      * Constructs a new data array texture.
      *
@@ -31,7 +20,7 @@ export class DataArrayTexture extends Texture<DataArrayTextureImageData> {
      * @readonly
      * @default true
      */
-    readonly isDataArrayTexture: true;
+    readonly isDataArrayTexture: boolean;
     /**
      * This defines how the texture is wrapped in the depth and corresponds to
      * *W* in UVW mapping.
@@ -39,7 +28,7 @@ export class DataArrayTexture extends Texture<DataArrayTextureImageData> {
      * @type {(RepeatWrapping|ClampToEdgeWrapping|MirroredRepeatWrapping)}
      * @default ClampToEdgeWrapping
      */
-    wrapR: Wrapping;
+    wrapR: RepeatWrapping | number | MirroredRepeatWrapping;
     /**
      * A set of all layers which need to be updated in the texture.
      *
@@ -52,7 +41,7 @@ export class DataArrayTexture extends Texture<DataArrayTextureImageData> {
      * @param {DataArrayTexture} source - The texture to copy.
      * @return {DataArrayTexture} A reference to this instance.
      */
-    copy(source: DataArrayTexture): this;
+    copy(source: DataArrayTexture): DataArrayTexture;
     /**
      * Describes that a specific layer of the texture needs to be updated.
      * Normally when {@link Texture#needsUpdate} is set to `true`, the
@@ -68,3 +57,4 @@ export class DataArrayTexture extends Texture<DataArrayTextureImageData> {
      */
     clearLayerUpdates(): void;
 }
+import { Texture } from "./Texture.js";

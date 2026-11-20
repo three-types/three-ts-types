@@ -1,6 +1,3 @@
-import { Object3D } from "../core/Object3D.js";
-import { AudioListener } from "./AudioListener.js";
-
 /**
  * Represents a non-positional ( global ) audio object.
  *
@@ -23,28 +20,43 @@ import { AudioListener } from "./AudioListener.js";
  * 	sound.play();
  * });
  * ```
+ *
+ * @augments Object3D
  */
-export class Audio<TNode extends AudioNode = GainNode> extends Object3D {
+export class Audio extends Object3D {
     /**
      * Constructs a new audio.
      *
      * @param {AudioListener} listener - The global audio listener.
      */
     constructor(listener: AudioListener);
+    type: string;
     /**
      * The global audio listener.
+     *
+     * @type {AudioListener}
+     * @readonly
      */
     readonly listener: AudioListener;
     /**
      * The audio context.
+     *
+     * @type {AudioContext}
+     * @readonly
      */
     readonly context: AudioContext;
     /**
      * The gain node used for volume control.
+     *
+     * @type {GainNode}
+     * @readonly
      */
     readonly gain: GainNode;
     /**
      * Whether to start playback automatically or not.
+     *
+     * @type {boolean}
+     * @default false
      */
     autoplay: boolean;
     /**
@@ -52,7 +64,9 @@ export class Audio<TNode extends AudioNode = GainNode> extends Object3D {
      *
      * Defined via {@link Audio#setBuffer}.
      *
+     * @type {?AudioBuffer}
      * @default null
+     * @readonly
      */
     readonly buffer: AudioBuffer | null;
     /**
@@ -61,7 +75,9 @@ export class Audio<TNode extends AudioNode = GainNode> extends Object3D {
      *
      * Defined via {@link Audio#setDetune}.
      *
+     * @type {number}
      * @default 0
+     * @readonly
      */
     readonly detune: number;
     /**
@@ -69,13 +85,16 @@ export class Audio<TNode extends AudioNode = GainNode> extends Object3D {
      *
      * Defined via {@link Audio#setLoop}.
      *
+     * @type {boolean}
      * @default false
+     * @readonly
      */
     readonly loop: boolean;
     /**
      * Defines where in the audio buffer the replay should
      * start, in seconds.
      *
+     * @type {number}
      * @default 0
      */
     loopStart: number;
@@ -83,6 +102,7 @@ export class Audio<TNode extends AudioNode = GainNode> extends Object3D {
      * Defines where in the audio buffer the replay should
      * stop, in seconds.
      *
+     * @type {number}
      * @default 0
      */
     loopEnd: number;
@@ -90,20 +110,24 @@ export class Audio<TNode extends AudioNode = GainNode> extends Object3D {
      * An offset to the time within the audio buffer the playback
      * should begin, in seconds.
      *
+     * @type {number}
      * @default 0
      */
     offset: number;
     /**
      * Overrides the default duration of the audio.
      *
+     * @type {undefined|number}
      * @default undefined
      */
-    duration: number | undefined;
+    duration: undefined | number;
     /**
      * The playback speed.
      *
      * Defined via {@link Audio#setPlaybackRate}.
      *
+     * @type {number}
+     * @readonly
      * @default 1
      */
     readonly playbackRate: number;
@@ -113,6 +137,8 @@ export class Audio<TNode extends AudioNode = GainNode> extends Object3D {
      * This flag will be automatically set when using {@link Audio#play},
      * {@link Audio#pause}, {@link Audio#stop}.
      *
+     * @type {boolean}
+     * @readonly
      * @default false
      */
     readonly isPlaying: boolean;
@@ -123,6 +149,8 @@ export class Audio<TNode extends AudioNode = GainNode> extends Object3D {
      * This flag will be automatically set when audio sources are
      * defined.
      *
+     * @type {boolean}
+     * @readonly
      * @default true
      */
     readonly hasPlaybackControl: boolean;
@@ -131,6 +159,8 @@ export class Audio<TNode extends AudioNode = GainNode> extends Object3D {
      *
      * The property is automatically by one of the `set*()` methods.
      *
+     * @type {?AudioNode}
+     * @readonly
      * @default null
      */
     readonly source: AudioNode | null;
@@ -139,22 +169,30 @@ export class Audio<TNode extends AudioNode = GainNode> extends Object3D {
      *
      * The property is automatically set by one of the `set*()` methods.
      *
+     * @type {('empty'|'audioNode'|'mediaNode'|'mediaStreamNode'|'buffer')}
+     * @readonly
      * @default 'empty'
      */
     readonly sourceType: "empty" | "audioNode" | "mediaNode" | "mediaStreamNode" | "buffer";
+    _startedAt: number;
+    _progress: number;
+    _connected: boolean;
     /**
      * Can be used to apply a variety of low-order filters to create
      * more complex sound effects e.g. via `BiquadFilterNode`.
      *
      * The property is automatically set by {@link Audio#setFilters}.
+     *
+     * @type {Array<AudioNode>}
+     * @readonly
      */
-    readonly filters: AudioNode[];
+    readonly filters: Array<AudioNode>;
     /**
      * Returns the output audio node.
      *
      * @return {GainNode} The output node.
      */
-    getOutput(): TNode;
+    getOutput(): GainNode;
     /**
      * Sets the given audio node as the source of this instance.
      *
@@ -163,7 +201,7 @@ export class Audio<TNode extends AudioNode = GainNode> extends Object3D {
      * @param {AudioNode} audioNode - The audio node like an instance of `OscillatorNode`.
      * @return {Audio} A reference to this instance.
      */
-    setNodeSource(audioNode: AudioNode): this;
+    setNodeSource(audioNode: AudioNode): Audio;
     /**
      * Sets the given media element as the source of this instance.
      *
@@ -172,7 +210,7 @@ export class Audio<TNode extends AudioNode = GainNode> extends Object3D {
      * @param {HTMLMediaElement} mediaElement - The media element.
      * @return {Audio} A reference to this instance.
      */
-    setMediaElementSource(mediaElement: HTMLMediaElement): this;
+    setMediaElementSource(mediaElement: HTMLMediaElement): Audio;
     /**
      * Sets the given media stream as the source of this instance.
      *
@@ -181,7 +219,7 @@ export class Audio<TNode extends AudioNode = GainNode> extends Object3D {
      * @param {MediaStream} mediaStream - The media stream.
      * @return {Audio} A reference to this instance.
      */
-    setMediaStreamSource(mediaStream: MediaStream): this;
+    setMediaStreamSource(mediaStream: MediaStream): Audio;
     /**
      * Sets the given audio buffer as the source of this instance.
      *
@@ -190,7 +228,7 @@ export class Audio<TNode extends AudioNode = GainNode> extends Object3D {
      * @param {AudioBuffer} audioBuffer - The audio buffer.
      * @return {Audio} A reference to this instance.
      */
-    setBuffer(audioBuffer: AudioBuffer): this;
+    setBuffer(audioBuffer: AudioBuffer): Audio;
     /**
      * Starts the playback of the audio.
      *
@@ -199,7 +237,7 @@ export class Audio<TNode extends AudioNode = GainNode> extends Object3D {
      * @param {number} [delay=0] - The delay, in seconds, at which the audio should start playing.
      * @return {Audio|undefined} A reference to this instance.
      */
-    play(delay?: number): this | undefined;
+    play(delay?: number): Audio | undefined;
     /**
      * Pauses the playback of the audio.
      *
@@ -207,7 +245,7 @@ export class Audio<TNode extends AudioNode = GainNode> extends Object3D {
      *
      * @return {Audio|undefined} A reference to this instance.
      */
-    pause(): this | undefined;
+    pause(): Audio | undefined;
     /**
      * Stops the playback of the audio.
      *
@@ -216,41 +254,41 @@ export class Audio<TNode extends AudioNode = GainNode> extends Object3D {
      * @param {number} [delay=0] - The delay, in seconds, at which the audio should stop playing.
      * @return {Audio|undefined} A reference to this instance.
      */
-    stop(delay?: number): this | undefined;
+    stop(delay?: number): Audio | undefined;
     /**
      * Connects to the audio source. This is used internally on
      * initialisation and when setting / removing filters.
      *
      * @return {Audio} A reference to this instance.
      */
-    connect(): this;
+    connect(): Audio;
     /**
      * Disconnects to the audio source. This is used internally on
      * initialisation and when setting / removing filters.
      *
      * @return {Audio|undefined} A reference to this instance.
      */
-    disconnect(): this | undefined;
+    disconnect(): Audio | undefined;
     /**
      * Returns the current set filters.
      *
      * @return {Array<AudioNode>} The list of filters.
      */
-    getFilters(): AudioNode[];
+    getFilters(): Array<AudioNode>;
     /**
      * Sets an array of filters and connects them with the audio source.
      *
      * @param {Array<AudioNode>} [value] - A list of filters.
      * @return {Audio} A reference to this instance.
      */
-    setFilters(value?: AudioNode[]): this;
+    setFilters(value?: Array<AudioNode>): Audio;
     /**
      * Defines the detuning of oscillation in cents.
      *
      * @param {number} value - The detuning of oscillation in cents.
      * @return {Audio} A reference to this instance.
      */
-    setDetune(value: number): this;
+    setDetune(value: number): Audio;
     /**
      * Returns the detuning of oscillation in cents.
      *
@@ -269,7 +307,7 @@ export class Audio<TNode extends AudioNode = GainNode> extends Object3D {
      * @param {AudioNode} [filter] - The filter to set.
      * @return {Audio} A reference to this instance.
      */
-    setFilter(filter?: AudioNode): this;
+    setFilter(filter?: AudioNode): Audio;
     /**
      * Sets the playback rate.
      *
@@ -278,7 +316,7 @@ export class Audio<TNode extends AudioNode = GainNode> extends Object3D {
      * @param {number} [value] - The playback rate to set.
      * @return {Audio|undefined} A reference to this instance.
      */
-    setPlaybackRate(value?: number): this | undefined;
+    setPlaybackRate(value?: number): Audio | undefined;
     /**
      * Returns the current playback rate.
 
@@ -305,7 +343,7 @@ export class Audio<TNode extends AudioNode = GainNode> extends Object3D {
      * @param {boolean} value - Whether the audio should loop or not.
      * @return {Audio|undefined} A reference to this instance.
      */
-    setLoop(value: boolean): this | undefined;
+    setLoop(value: boolean): Audio | undefined;
     /**
      * Sets the loop start value which defines where in the audio buffer the replay should
      * start, in seconds.
@@ -313,7 +351,7 @@ export class Audio<TNode extends AudioNode = GainNode> extends Object3D {
      * @param {number} value - The loop start value.
      * @return {Audio} A reference to this instance.
      */
-    setLoopStart(value: number): this;
+    setLoopStart(value: number): Audio;
     /**
      * Sets the loop end value which defines where in the audio buffer the replay should
      * stop, in seconds.
@@ -321,7 +359,7 @@ export class Audio<TNode extends AudioNode = GainNode> extends Object3D {
      * @param {number} value - The loop end value.
      * @return {Audio} A reference to this instance.
      */
-    setLoopEnd(value: number): this;
+    setLoopEnd(value: number): Audio;
     /**
      * Returns the volume.
      *
@@ -334,7 +372,8 @@ export class Audio<TNode extends AudioNode = GainNode> extends Object3D {
      * @param {number} value - The volume to set.
      * @return {Audio} A reference to this instance.
      */
-    setVolume(value: number): this;
-    copy(source: Audio, recursive?: boolean): this;
-    clone(recursive?: boolean): this;
+    setVolume(value: number): Audio;
+    copy(source: any, recursive: any): this;
+    clone(recursive: any): any;
 }
+import { Object3D } from "../core/Object3D.js";

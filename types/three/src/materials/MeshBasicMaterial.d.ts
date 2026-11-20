@@ -1,13 +1,35 @@
-import { Combine } from "../constants.js";
-import { Color } from "../math/Color.js";
-import { Euler } from "../math/Euler.js";
-import { Texture } from "../textures/Texture.js";
-import { MapColorPropertiesToColorRepresentations, Material, MaterialProperties } from "./Material.js";
-
-export interface MeshBasicMaterialProperties extends MaterialProperties {
+/**
+ * A material for drawing geometries in a simple shaded (flat or wireframe) way.
+ *
+ * This material is not affected by lights.
+ *
+ * @augments Material
+ * @demo scenes/material-browser.html#MeshBasicMaterial
+ */
+export class MeshBasicMaterial extends Material {
+    /**
+     * Constructs a new mesh basic material.
+     *
+     * @param {Object} [parameters] - An object with one or more properties
+     * defining the material's appearance. Any property of the material
+     * (including any property from inherited materials) can be passed
+     * in here. Color values can be passed any type of value accepted
+     * by {@link Color#set}.
+     */
+    constructor(parameters?: Object);
+    /**
+     * This flag can be used for type testing.
+     *
+     * @type {boolean}
+     * @readonly
+     * @default true
+     */
+    readonly isMeshBasicMaterial: boolean;
+    type: string;
     /**
      * Color of the material.
      *
+     * @type {Color}
      * @default (1,1,1)
      */
     color: Color;
@@ -40,6 +62,7 @@ export interface MeshBasicMaterialProperties extends MaterialProperties {
     /**
      * Intensity of the baked light.
      *
+     * @type {number}
      * @default 1
      */
     lightMapIntensity: number;
@@ -60,6 +83,7 @@ export interface MeshBasicMaterialProperties extends MaterialProperties {
      * Intensity of the ambient occlusion effect. Range is `[0,1]`, where `0`
      * disables ambient occlusion and `1` applies the AO map at full strength.
      *
+     * @type {number}
      * @default 1
      */
     aoMapIntensity: number;
@@ -106,6 +130,7 @@ export interface MeshBasicMaterialProperties extends MaterialProperties {
     /**
      * The rotation of the environment map in radians.
      *
+     * @type {Euler}
      * @default (0,0,0)
      */
     envMapRotation: Euler;
@@ -115,13 +140,15 @@ export interface MeshBasicMaterialProperties extends MaterialProperties {
      * When set to `MixOperation`, the {@link MeshBasicMaterial#reflectivity} is used to
      * blend between the two colors.
      *
+     * @type {(MultiplyOperation|MixOperation|AddOperation)}
      * @default MultiplyOperation
      */
-    combine: Combine;
+    combine: number | MixOperation | AddOperation;
     /**
      * How much the environment map affects the surface.
      * The valid range is between `0` (no reflections) and `1` (full reflections).
      *
+     * @type {number}
      * @default 1
      */
     reflectivity: number;
@@ -131,12 +158,14 @@ export interface MeshBasicMaterialProperties extends MaterialProperties {
      * modes {@link CubeRefractionMapping} and {@link EquirectangularRefractionMapping}.
      * The refraction ratio should not exceed `1`.
      *
+     * @type {number}
      * @default 0.98
      */
     refractionRatio: number;
     /**
      * Renders the geometry as a wireframe.
      *
+     * @type {boolean}
      * @default false
      */
     wireframe: boolean;
@@ -145,6 +174,7 @@ export interface MeshBasicMaterialProperties extends MaterialProperties {
      *
      * Can only be used with {@link SVGRenderer}.
      *
+     * @type {number}
      * @default 1
      */
     wireframeLinewidth: number;
@@ -153,6 +183,7 @@ export interface MeshBasicMaterialProperties extends MaterialProperties {
      *
      * Can only be used with {@link SVGRenderer}.
      *
+     * @type {('round'|'bevel'|'miter')}
      * @default 'round'
      */
     wireframeLinecap: "round" | "bevel" | "miter";
@@ -161,46 +192,19 @@ export interface MeshBasicMaterialProperties extends MaterialProperties {
      *
      * Can only be used with {@link SVGRenderer}.
      *
+     * @type {('round'|'bevel'|'miter')}
      * @default 'round'
      */
     wireframeLinejoin: "round" | "bevel" | "miter";
     /**
      * Whether the material is affected by fog or not.
      *
+     * @type {boolean}
      * @default true
      */
     fog: boolean;
+    copy(source: any): this;
 }
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface MeshBasicMaterialParameters
-    extends Partial<MapColorPropertiesToColorRepresentations<MeshBasicMaterialProperties>>
-{}
-
-/**
- * A material for drawing geometries in a simple shaded (flat or wireframe) way.
- *
- * This material is not affected by lights.
- */
-export class MeshBasicMaterial extends Material {
-    /**
-     * Constructs a new mesh basic material.
-     *
-     * @param {Object} [parameters] - An object with one or more properties
-     * defining the material's appearance. Any property of the material
-     * (including any property from inherited materials) can be passed
-     * in here. Color values can be passed any type of value accepted
-     * by {@link Color#set}.
-     */
-    constructor(parameters?: MeshBasicMaterialParameters);
-    /**
-     * This flag can be used for type testing.
-     *
-     * @default true
-     */
-    readonly isMeshBasicMaterial: boolean;
-    setValues(values?: MeshBasicMaterialParameters): void;
-}
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface MeshBasicMaterial extends MeshBasicMaterialProperties {}
+import { Color } from "../math/Color.js";
+import { Euler } from "../math/Euler.js";
+import { Material } from "./Material.js";

@@ -1,5 +1,3 @@
-import { Object3D } from "../core/Object3D.js";
-
 /**
  * A group of objects that receives a shared animation state.
  *
@@ -30,13 +28,32 @@ export class AnimationObjectGroup {
     /**
      * This flag can be used for type testing.
      *
+     * @type {boolean}
+     * @readonly
      * @default true
      */
-    readonly isAnimationObjectGroup: true;
+    readonly isAnimationObjectGroup: boolean;
     /**
      * The UUID of the 3D object.
+     *
+     * @type {string}
+     * @readonly
      */
     readonly uuid: string;
+    _objects: any[];
+    nCachedObjects_: number;
+    _indicesByUUID: {};
+    _paths: any[];
+    _parsedPaths: any[];
+    _bindings: any[];
+    _bindingsIndicesByPath: {};
+    stats: {
+        objects: {
+            readonly total: number;
+            readonly inUse: number;
+        };
+        readonly bindingsPerObject: number;
+    };
     /**
      * Adds an arbitrary number of objects to this animation group.
      *
@@ -55,4 +72,6 @@ export class AnimationObjectGroup {
      * @param {...Object3D} arguments - The 3D objects to uncache.
      */
     uncache(...args: Object3D[]): void;
+    subscribe_(path: any, parsedPath: any): any;
+    unsubscribe_(path: any): void;
 }

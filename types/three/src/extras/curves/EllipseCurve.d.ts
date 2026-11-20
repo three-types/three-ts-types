@@ -1,6 +1,3 @@
-import { Vector2 } from "../../math/Vector2.js";
-import { Curve } from "../core/Curve.js";
-
 /**
  * A curve representing an ellipse.
  *
@@ -24,7 +21,7 @@ import { Curve } from "../core/Curve.js";
  *
  * @augments Curve
  */
-export class EllipseCurve extends Curve<Vector2> {
+export class EllipseCurve extends Curve {
     /**
      * Constructs a new ellipse curve.
      *
@@ -50,18 +47,23 @@ export class EllipseCurve extends Curve<Vector2> {
     /**
      * This flag can be used for type testing.
      *
+     * @type {boolean}
+     * @readonly
      * @default true
      */
-    readonly isEllipseCurve: true;
+    readonly isEllipseCurve: boolean;
+    type: string;
     /**
      * The X center of the ellipse.
      *
+     * @type {number}
      * @default 0
      */
     aX: number;
     /**
      * The Y center of the ellipse.
      *
+     * @type {number}
      * @default 0
      */
     aY: number;
@@ -69,6 +71,7 @@ export class EllipseCurve extends Curve<Vector2> {
      * The radius of the ellipse in the x direction.
      * Setting the this value equal to the {@link EllipseCurve#yRadius} will result in a circle.
      *
+     * @type {number}
      * @default 1
      */
     xRadius: number;
@@ -76,30 +79,35 @@ export class EllipseCurve extends Curve<Vector2> {
      * The radius of the ellipse in the y direction.
      * Setting the this value equal to the {@link EllipseCurve#xRadius} will result in a circle.
      *
+     * @type {number}
      * @default 1
      */
     yRadius: number;
     /**
      * The start angle of the curve in radians starting from the positive X axis.
      *
+     * @type {number}
      * @default 0
      */
     aStartAngle: number;
     /**
      * The end angle of the curve in radians starting from the positive X axis.
      *
+     * @type {number}
      * @default Math.PI*2
      */
     aEndAngle: number;
     /**
      * Whether the ellipse is drawn clockwise or not.
      *
+     * @type {boolean}
      * @default false
      */
     aClockwise: boolean;
     /**
      * The rotation angle of the ellipse in radians, counterclockwise from the positive X axis.
      *
+     * @type {number}
      * @default 0
      */
     aRotation: number;
@@ -111,5 +119,8 @@ export class EllipseCurve extends Curve<Vector2> {
      * @return {Vector2} The position on the curve.
      */
     getPoint(t: number, optionalTarget?: Vector2): Vector2;
-    copy(source: EllipseCurve): this;
+    copy(source: any): this;
+    fromJSON(json: any): this;
 }
+import { Vector2 } from "../../math/Vector2.js";
+import { Curve } from "../core/Curve.js";

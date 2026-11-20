@@ -1,5 +1,3 @@
-import { Vector3 } from "./Vector3.js";
-
 /**
  * Represents a third-order spherical harmonics (SH). Light probes use this class
  * to encode lighting information.
@@ -22,7 +20,7 @@ export class SphericalHarmonics3 {
      * @readonly
      * @default true
      */
-    readonly isSphericalHarmonics3: true;
+    readonly isSphericalHarmonics3: boolean;
     /**
      * An array holding the (9) SH coefficients.
      *
@@ -111,7 +109,7 @@ export class SphericalHarmonics3 {
      *
      * @return {SphericalHarmonics3} A clone of this instance.
      */
-    clone(): this;
+    clone(): SphericalHarmonics3;
     /**
      * Sets the SH coefficients of this instance from the given array.
      *
@@ -119,7 +117,7 @@ export class SphericalHarmonics3 {
      * @param {number} [offset=0] - The array offset where to start copying.
      * @return {SphericalHarmonics3} A clone of this instance.
      */
-    fromArray(array: number[] | ArrayLike<number>, offset?: number): this;
+    fromArray(array: Array<number>, offset?: number): SphericalHarmonics3;
     /**
      * Returns an array with the SH coefficients, or copies them into the provided
      * array. The coefficients are represented as numbers.
@@ -128,14 +126,6 @@ export class SphericalHarmonics3 {
      * @param {number} [offset=0] - The array offset where to start copying.
      * @return {Array<number>} An array with flat SH coefficients.
      */
-    toArray(array?: number[], offset?: number): number[];
-    /**
-     * Returns an array with the SH coefficients, or copies them into the provided
-     * array. The coefficients are represented as numbers.
-     *
-     * @param {Array<number>} [array=[]] - The target array.
-     * @param {number} [offset=0] - The array offset where to start copying.
-     * @return {Array<number>} An array with flat SH coefficients.
-     */
-    toArray(array: ArrayLike<number>, offset?: number): ArrayLike<number>;
+    toArray(array?: Array<number>, offset?: number): Array<number>;
 }
+import { Vector3 } from "./Vector3.js";

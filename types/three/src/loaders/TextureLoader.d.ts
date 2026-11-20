@@ -14,7 +14,7 @@
  *
  * @augments Loader
  */
-export class TextureLoader extends Loader<Texture<HTMLImageElement>> {
+export class TextureLoader extends Loader {
     /**
      * Starts loading from the given URL and pass the fully loaded texture
      * to the `onLoad()` callback. The method also returns a new texture object which can
@@ -29,10 +29,10 @@ export class TextureLoader extends Loader<Texture<HTMLImageElement>> {
      */
     load(
         url: string,
-        onLoad?: (data: Texture<HTMLImageElement>) => void,
-        onProgress?: OnProgressCallback,
-        onError?: OnErrorCallback,
-    ): Texture<HTMLImageElement>;
+        onLoad?: (arg0: Texture) => any,
+        onProgress?: onProgressCallback,
+        onError?: onErrorCallback,
+    ): Texture;
 }
 import { Texture } from "../textures/Texture.js";
-import { Loader, OnErrorCallback, OnProgressCallback } from "./Loader.js";
+import { Loader } from "./Loader.js";

@@ -1,8 +1,4 @@
-import { BufferAttribute } from "../../core/BufferAttribute.js";
-import { Object3D } from "../../core/Object3D.js";
-import { Texture } from "../../textures/Texture.js";
-import ReadbackBuffer from "./ReadbackBuffer.js";
-
+export default Info;
 /**
  * This renderer module provides a series of statistical information
  * about the GPU memory and the rendering process. Useful for debugging
@@ -49,14 +45,7 @@ declare class Info {
      * @property {number} points - The number of rendered point primitives of the current frame.
      * @property {number} lines - The number of rendered line primitives of the current frame.
      */
-    readonly render: {
-        calls: number;
-        frameCalls: number;
-        drawCalls: number;
-        triangles: number;
-        points: number;
-        lines: number;
-    };
+    readonly render: Object;
     /**
      * Compute related metrics.
      *
@@ -65,10 +54,7 @@ declare class Info {
      * @property {number} calls - The number of compute calls since the app has been started.
      * @property {number} frameCalls - The number of compute calls of the current frame.
      */
-    readonly compute: {
-        calls: number;
-        frameCalls: number;
-    };
+    readonly compute: Object;
     /**
      * Memory related metrics.
      *
@@ -94,27 +80,14 @@ declare class Info {
      * @property {number} uniformBuffersSize - The memory size of active uniform buffers in bytes.
      * @property {number} total - The total memory size in bytes.
      */
-    readonly memory: {
-        attributes: number;
-        attributesSize: number;
-        geometries: number;
-        indexAttributes: number;
-        indexAttributesSize: number;
-        indirectStorageAttributes: number;
-        indirectStorageAttributesSize: number;
-        programs: number;
-        programsSize: number;
-        readbackBuffers: number;
-        readbackBuffersSize: number;
-        renderTargets: number;
-        storageAttributes: number;
-        storageAttributesSize: number;
-        textures: number;
-        texturesSize: number;
-        uniformBuffers: number;
-        uniformBuffersSize: number;
-        total: number;
-    };
+    readonly memory: Object;
+    /**
+     * Map for storing calculated byte sizes of tracked objects.
+     *
+     * @type {WeakMap<Object, number>}
+     * @private
+     */
+    private memoryMap;
     /**
      * This method should be executed per draw call and updates the corresponding metrics.
      *
@@ -137,20 +110,28 @@ declare class Info {
      * @param {Texture} texture
      * @param {Object} options - The texture's size and level information.
      */
-    createTexture(texture: Texture, options: { width: number; height: number; depth: number; levels: number }): void;
+    createTexture(texture: Texture, options: Object): void;
     /**
      * Updates the tracked memory of a texture when its default texture is replaced with the loaded one.
      *
      * @param {Texture} texture
      * @param {Object} options - The texture's size and level information.
      */
-    updateTexture(texture: Texture, options: { width: number; height: number; depth: number; levels: number }): void;
+    updateTexture(texture: Texture, options: Object): void;
     /**
      * Tracks texture memory explicitly, updating counts and byte tracking.
      *
      * @param {Texture} texture
      */
     destroyTexture(texture: Texture): void;
+    /**
+     * Tracks attribute memory explicitly, updating counts and byte tracking.
+     *
+     * @param {BufferAttribute} attribute
+     * @param {string} type - type of attribute
+     * @private
+     */
+    private _createAttribute;
     /**
      * Tracks a regular attribute memory explicitly.
      *
@@ -193,6 +174,45 @@ declare class Info {
      * @param {ReadbackBuffer} readbackBuffer - The readback buffer to track.
      */
     destroyReadbackBuffer(readbackBuffer: ReadbackBuffer): void;
+    /**
+     * Tracks a uniform buffer memory explicitly.
+     *
+     * @param {UniformBuffer} uniformBuffer - The uniform buffer to track.
+     */
+    createUniformBuffer(uniformBuffer: UniformBuffer): void;
+    /**
+     * Tracks a uniform buffer memory explicitly.
+     *
+     * @param {UniformBuffer} uniformBuffer - The uniform buffer to track.
+     */
+    destroyUniformBuffer(uniformBuffer: UniformBuffer): void;
+    /**
+     * Tracks program memory explicitly, updating counts and byte tracking.
+     *
+     * @param {ProgrammableStage} program - The program to track.
+     */
+    createProgram(program: ProgrammableStage): void;
+    /**
+     * Tracks program memory explicitly, updating counts and byte tracking.
+     *
+     * @param {Object} program - The program to track.
+     */
+    destroyProgram(program: Object): void;
+    /**
+     * Calculates the memory size of a texture in bytes.
+     *
+     * @param {Texture} texture - The texture to calculate the size for.
+     * @param {Object} options - The texture's size and level information.
+     * @return {number} The calculated size in bytes.
+     * @private
+     */
+    private _getTextureMemorySize;
+    /**
+     * Calculates the memory size of an attribute in bytes.
+     *
+     * @param {BufferAttribute} attribute - The attribute to calculate the size for.
+     * @return {number} The calculated size in bytes.
+     * @private
+     */
+    private _getAttributeMemorySize;
 }
-
-export default Info;

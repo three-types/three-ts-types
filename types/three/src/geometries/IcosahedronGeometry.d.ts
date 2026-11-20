@@ -13,14 +13,6 @@
  */
 export class IcosahedronGeometry extends PolyhedronGeometry {
     /**
-     * Factory method for creating an instance of this class from the given
-     * JSON object.
-     *
-     * @param {Object} data - A JSON object representing the serialized geometry.
-     * @return {IcosahedronGeometry} A new instance.
-     */
-    static fromJSON(data: {}): IcosahedronGeometry;
-    /**
      * Constructs a new icosahedron geometry.
      *
      * @param {number} [radius=1] - Radius of the icosahedron.

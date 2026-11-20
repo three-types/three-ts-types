@@ -9,11 +9,11 @@ export class AudioContext {
      *
      * @return {Window.AudioContext} The native audio context.
      */
-    static getContext(): AudioContext;
+    static getContext(): Window.AudioContext;
     /**
      * Allows to set the global native audio context from outside.
      *
      * @param {Window.AudioContext} value - The native context to set.
      */
-    static setContext(value: AudioContext): void;
+    static setContext(value: Window.AudioContext): void;
 }

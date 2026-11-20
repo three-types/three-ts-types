@@ -11,7 +11,7 @@ declare class NodeMaterialLoader extends MaterialLoader {
      * @type {Object<string,Node.constructor>}
      */
     nodes: {
-        [x: string]: new(...args: any[]) => Node;
+        [x: string]: Node.constructor;
     };
     /**
      * Represents a dictionary of node material types.
@@ -19,7 +19,7 @@ declare class NodeMaterialLoader extends MaterialLoader {
      * @type {Object<string,NodeMaterial.constructor>}
      */
     nodeMaterials: {
-        [x: string]: new() => NodeMaterial;
+        [x: string]: NodeMaterial.constructor;
     };
     /**
      * Parses the node material from the given JSON.
@@ -27,7 +27,7 @@ declare class NodeMaterialLoader extends MaterialLoader {
      * @param {Object} json - The JSON definition
      * @return {NodeMaterial}. The parsed material.
      */
-    parse(json: unknown): NodeMaterial;
+    parse(json: Object): NodeMaterial;
     /**
      * Defines the dictionary of node types.
      *
@@ -35,8 +35,8 @@ declare class NodeMaterialLoader extends MaterialLoader {
      * @return {NodeLoader} A reference to this loader.
      */
     setNodes(value: {
-        [x: string]: new(...args: any[]) => Node;
-    }): this;
+        [x: string]: Node.constructor;
+    }): NodeLoader;
     /**
      * Defines the dictionary of node material types.
      *
@@ -44,16 +44,14 @@ declare class NodeMaterialLoader extends MaterialLoader {
      * @return {NodeLoader} A reference to this loader.
      */
     setNodeMaterials(value: {
-        [x: string]: new() => NodeMaterial;
-    }): this;
+        [x: string]: NodeMaterial.constructor;
+    }): NodeLoader;
     /**
      * Creates a node material from the given type.
      *
      * @param {string} type - The node material type.
      * @return {Node} The created node material instance.
      */
-    createMaterialFromType(type: string): NodeMaterial;
+    createMaterialFromType(type: string): Node;
 }
 import { MaterialLoader } from "../../loaders/MaterialLoader.js";
-import NodeMaterial from "../../materials/nodes/NodeMaterial.js";
-import { Node } from "../../nodes/Nodes.js";

@@ -1,30 +1,3 @@
-import { JSONMeta, Object3DJSON, Object3DJSONObject } from "../core/Object3D.js";
-import { Camera } from "./Camera.js";
-
-export interface OrthographicCameraJSONObject extends Object3DJSONObject {
-    zoom: number;
-    left: number;
-    right: number;
-    top: number;
-    bottom: number;
-    near: number;
-    far: number;
-
-    view?: {
-        enabled: boolean;
-        fullWidth: number;
-        fullHeight: number;
-        offsetX: number;
-        offsetY: number;
-        width: number;
-        height: number;
-    };
-}
-
-export interface OrthographicCameraJSON extends Object3DJSON {
-    object: OrthographicCameraJSONObject;
-}
-
 /**
  * Camera that uses [orthographic projection](https://en.wikipedia.org/wiki/Orthographic_projection).
  *
@@ -36,6 +9,8 @@ export interface OrthographicCameraJSON extends Object3DJSON {
  * const camera = new THREE.OrthographicCamera( width / - 2, width / 2, height / 2, height / - 2, 1, 1000 );
  * scene.add( camera );
  * ```
+ *
+ * @augments Camera
  */
 export class OrthographicCamera extends Camera {
     /**
@@ -52,12 +27,15 @@ export class OrthographicCamera extends Camera {
     /**
      * This flag can be used for type testing.
      *
+     * @type {boolean}
+     * @readonly
      * @default true
      */
     readonly isOrthographicCamera: boolean;
     /**
      * The zoom factor of the camera.
      *
+     * @type {number}
      * @default 1
      */
     zoom: number;
@@ -65,38 +43,35 @@ export class OrthographicCamera extends Camera {
      * Represents the frustum window specification. This property should not be edited
      * directly but via {@link PerspectiveCamera#setViewOffset} and {@link PerspectiveCamera#clearViewOffset}.
      *
+     * @type {?Object}
      * @default null
      */
-    view: {
-        enabled: boolean;
-        fullWidth: number;
-        fullHeight: number;
-        offsetX: number;
-        offsetY: number;
-        width: number;
-        height: number;
-    } | null;
+    view: Object | null;
     /**
      * The left plane of the camera's frustum.
      *
+     * @type {number}
      * @default -1
      */
     left: number;
     /**
      * The right plane of the camera's frustum.
      *
+     * @type {number}
      * @default 1
      */
     right: number;
     /**
      * The top plane of the camera's frustum.
      *
+     * @type {number}
      * @default 1
      */
     top: number;
     /**
      * The bottom plane of the camera's frustum.
      *
+     * @type {number}
      * @default -1
      */
     bottom: number;
@@ -107,6 +82,7 @@ export class OrthographicCamera extends Camera {
      * Note that, unlike for the {@link PerspectiveCamera}, `0` is a
      * valid value for an orthographic camera's near plane.
      *
+     * @type {number}
      * @default 0.1
      */
     near: number;
@@ -114,10 +90,11 @@ export class OrthographicCamera extends Camera {
      * The camera's far plane. Must be greater than the
      * current value of {@link OrthographicCamera#near}.
      *
+     * @type {number}
      * @default 2000
      */
     far: number;
-    copy(source: OrthographicCamera, recursive?: boolean): this;
+    copy(source: any, recursive: any): this;
     /**
      * Sets an offset in a larger frustum. This is useful for multi-window or
      * multi-monitor/multi-machine setups.
@@ -140,5 +117,6 @@ export class OrthographicCamera extends Camera {
      * camera properties.
      */
     updateProjectionMatrix(): void;
-    toJSON(meta?: JSONMeta): OrthographicCameraJSON;
+    toJSON(meta: any): Object;
 }
+import { Camera } from "./Camera.js";

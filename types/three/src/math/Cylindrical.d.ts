@@ -1,5 +1,3 @@
-import { Vector3 } from "./Vector3.js";
-
 /**
  * This class can be used to represent points in 3D space as
  * [Cylindrical coordinates](https://en.wikipedia.org/wiki/Cylindrical_coordinate_system).
@@ -42,14 +40,14 @@ export class Cylindrical {
      * @param {number} y - The height value.
      * @return {Cylindrical} A reference to this cylindrical.
      */
-    set(radius: number, theta: number, y: number): this;
+    set(radius: number, theta: number, y: number): Cylindrical;
     /**
      * Copies the values of the given cylindrical to this instance.
      *
      * @param {Cylindrical} other - The cylindrical to copy.
      * @return {Cylindrical} A reference to this cylindrical.
      */
-    copy(other: Cylindrical): this;
+    copy(other: Cylindrical): Cylindrical;
     /**
      * Sets the cylindrical components from the given vector which is assumed to hold
      * Cartesian coordinates.
@@ -57,7 +55,7 @@ export class Cylindrical {
      * @param {Vector3} v - The vector to set.
      * @return {Cylindrical} A reference to this cylindrical.
      */
-    setFromVector3(v: Vector3): this;
+    setFromVector3(v: Vector3): Cylindrical;
     /**
      * Sets the cylindrical components from the given Cartesian coordinates.
      *
@@ -66,11 +64,11 @@ export class Cylindrical {
      * @param {number} z - The x value.
      * @return {Cylindrical} A reference to this cylindrical.
      */
-    setFromCartesianCoords(x: number, y: number, z: number): this;
+    setFromCartesianCoords(x: number, y: number, z: number): Cylindrical;
     /**
      * Returns a new cylindrical with copied values from this instance.
      *
      * @return {Cylindrical} A clone of this instance.
      */
-    clone(): this;
+    clone(): Cylindrical;
 }

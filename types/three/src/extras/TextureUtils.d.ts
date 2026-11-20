@@ -1,6 +1,3 @@
-import { CompressedPixelFormat, PixelFormat, TextureDataType } from "../constants.js";
-import { Texture } from "../textures/Texture.js";
-
 /**
  * Scales the texture as large as possible within its surface without cropping
  * or stretching the texture. The method preserves the original aspect ratio of
@@ -37,12 +34,7 @@ export function fill(texture: Texture): Texture;
  * @param {number} type - The texture's type.
  * @return {number} The byte length.
  */
-export function getByteLength(
-    width: number,
-    height: number,
-    format: PixelFormat | CompressedPixelFormat,
-    type: TextureDataType,
-): number;
+export function getByteLength(width: number, height: number, format: number, type: number): number;
 /**
  * A class containing utility functions for textures.
  *
@@ -85,10 +77,5 @@ export class TextureUtils {
      * @param {number} type - The texture's type.
      * @return {number} The byte length.
      */
-    static getByteLength(
-        width: number,
-        height: number,
-        format: PixelFormat | CompressedPixelFormat,
-        type: TextureDataType,
-    ): number;
+    static getByteLength(width: number, height: number, format: number, type: number): number;
 }

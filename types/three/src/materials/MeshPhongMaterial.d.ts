@@ -1,14 +1,42 @@
-import { Combine, NormalMapTypes } from "../constants.js";
-import { Color } from "../math/Color.js";
-import { Euler } from "../math/Euler.js";
-import { Vector2 } from "../math/Vector2.js";
-import { Texture } from "../textures/Texture.js";
-import { MapColorPropertiesToColorRepresentations, Material, MaterialProperties } from "./Material.js";
-
-export interface MeshPhongMaterialProperties extends MaterialProperties {
+/**
+ * A material for shiny surfaces with specular highlights.
+ *
+ * The material uses a non-physically based [Blinn-Phong](https://en.wikipedia.org/wiki/Blinn-Phong_shading_model)
+ * model for calculating reflectance. Unlike the Lambertian model used in the
+ * {@link MeshLambertMaterial} this can simulate shiny surfaces with specular
+ * highlights (such as varnished wood). `MeshPhongMaterial` uses per-fragment shading.
+ *
+ * Performance will generally be greater when using this material over the
+ * {@link MeshStandardMaterial} or {@link MeshPhysicalMaterial}, at the cost of
+ * some graphical accuracy.
+ *
+ * @augments Material
+ * @demo scenes/material-browser.html#MeshPhongMaterial
+ */
+export class MeshPhongMaterial extends Material {
+    /**
+     * Constructs a new mesh phong material.
+     *
+     * @param {Object} [parameters] - An object with one or more properties
+     * defining the material's appearance. Any property of the material
+     * (including any property from inherited materials) can be passed
+     * in here. Color values can be passed any type of value accepted
+     * by {@link Color#set}.
+     */
+    constructor(parameters?: Object);
+    /**
+     * This flag can be used for type testing.
+     *
+     * @type {boolean}
+     * @readonly
+     * @default true
+     */
+    readonly isMeshPhongMaterial: boolean;
+    type: string;
     /**
      * Color of the material.
      *
+     * @type {Color}
      * @default (1,1,1)
      */
     color: Color;
@@ -16,11 +44,14 @@ export interface MeshPhongMaterialProperties extends MaterialProperties {
      * Specular color of the material. The default color is set to `0x111111` (very dark grey)
      *
      * This defines how shiny the material is and the color of its shine.
+     *
+     * @type {Color}
      */
     specular: Color;
     /**
      * How shiny the specular highlight is; a higher value gives a sharper highlight.
      *
+     * @type {number}
      * @default 30
      */
     shininess: number;
@@ -53,6 +84,7 @@ export interface MeshPhongMaterialProperties extends MaterialProperties {
     /**
      * Intensity of the baked light.
      *
+     * @type {number}
      * @default 1
      */
     lightMapIntensity: number;
@@ -73,6 +105,7 @@ export interface MeshPhongMaterialProperties extends MaterialProperties {
      * Intensity of the ambient occlusion effect. Range is `[0,1]`, where `0`
      * disables ambient occlusion and `1` applies the AO map at full strength.
      *
+     * @type {number}
      * @default 1
      */
     aoMapIntensity: number;
@@ -80,12 +113,14 @@ export interface MeshPhongMaterialProperties extends MaterialProperties {
      * Emissive (light) color of the material, essentially a solid color
      * unaffected by other lighting.
      *
+     * @type {Color}
      * @default (0,0,0)
      */
     emissive: Color;
     /**
      * Intensity of the emissive light. Modulates the emissive color.
      *
+     * @type {number}
      * @default 1
      */
     emissiveIntensity: number;
@@ -118,6 +153,7 @@ export interface MeshPhongMaterialProperties extends MaterialProperties {
     /**
      * How much the bump map affects the material. Typical range is `[0,1]`.
      *
+     * @type {number}
      * @default 1
      */
     bumpScale: number;
@@ -139,13 +175,15 @@ export interface MeshPhongMaterialProperties extends MaterialProperties {
     /**
      * The type of normal map.
      *
+     * @type {(TangentSpaceNormalMap|ObjectSpaceNormalMap)}
      * @default TangentSpaceNormalMap
      */
-    normalMapType: NormalMapTypes;
+    normalMapType: number | ObjectSpaceNormalMap;
     /**
      * How much the normal map affects the material. Typical value range is `[0,1]`.
      * Only affects tangent space normal maps.
      *
+     * @type {Vector2}
      * @default (1,1)
      */
     normalScale: Vector2;
@@ -171,6 +209,7 @@ export interface MeshPhongMaterialProperties extends MaterialProperties {
      * displacement, and white is maximum displacement). Without a displacement
      * map set, this value is not applied.
      *
+     * @type {number}
      * @default 1
      */
     displacementScale: number;
@@ -179,6 +218,7 @@ export interface MeshPhongMaterialProperties extends MaterialProperties {
      * The bias is added to the scaled sample of the displacement map.
      * Without a displacement map set, this value is not applied.
      *
+     * @type {number}
      * @default 0
      */
     displacementBias: number;
@@ -227,6 +267,7 @@ export interface MeshPhongMaterialProperties extends MaterialProperties {
     /**
      * The rotation of the environment map in radians.
      *
+     * @type {Euler}
      * @default (0,0,0)
      */
     envMapRotation: Euler;
@@ -236,19 +277,22 @@ export interface MeshPhongMaterialProperties extends MaterialProperties {
      * When set to `MixOperation`, the {@link MeshBasicMaterial#reflectivity} is used to
      * blend between the two colors.
      *
+     * @type {(MultiplyOperation|MixOperation|AddOperation)}
      * @default MultiplyOperation
      */
-    combine: Combine;
+    combine: number | MixOperation | AddOperation;
     /**
      * How much the environment map affects the surface.
      * The valid range is between `0` (no reflections) and `1` (full reflections).
      *
+     * @type {number}
      * @default 1
      */
     reflectivity: number;
     /**
      * Scales the effect of the environment map by multiplying its color.
      *
+     * @type {number}
      * @default 1
      */
     envMapIntensity: number;
@@ -258,12 +302,14 @@ export interface MeshPhongMaterialProperties extends MaterialProperties {
      * modes {@link CubeRefractionMapping} and {@link EquirectangularRefractionMapping}.
      * The refraction ratio should not exceed `1`.
      *
+     * @type {number}
      * @default 0.98
      */
     refractionRatio: number;
     /**
      * Renders the geometry as a wireframe.
      *
+     * @type {boolean}
      * @default false
      */
     wireframe: boolean;
@@ -272,6 +318,7 @@ export interface MeshPhongMaterialProperties extends MaterialProperties {
      *
      * Can only be used with {@link SVGRenderer}.
      *
+     * @type {number}
      * @default 1
      */
     wireframeLinewidth: number;
@@ -280,6 +327,7 @@ export interface MeshPhongMaterialProperties extends MaterialProperties {
      *
      * Can only be used with {@link SVGRenderer}.
      *
+     * @type {('round'|'bevel'|'miter')}
      * @default 'round'
      */
     wireframeLinecap: "round" | "bevel" | "miter";
@@ -288,59 +336,27 @@ export interface MeshPhongMaterialProperties extends MaterialProperties {
      *
      * Can only be used with {@link SVGRenderer}.
      *
+     * @type {('round'|'bevel'|'miter')}
      * @default 'round'
      */
     wireframeLinejoin: "round" | "bevel" | "miter";
     /**
      * Whether the material is rendered with flat shading or not.
      *
+     * @type {boolean}
      * @default false
      */
     flatShading: boolean;
     /**
      * Whether the material is affected by fog or not.
      *
+     * @type {boolean}
      * @default true
      */
     fog: boolean;
+    copy(source: any): this;
 }
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface MeshPhongMaterialParameters
-    extends Partial<MapColorPropertiesToColorRepresentations<MeshPhongMaterialProperties>>
-{}
-
-/**
- * A material for shiny surfaces with specular highlights.
- *
- * The material uses a non-physically based [Blinn-Phong](https://en.wikipedia.org/wiki/Blinn-Phong_shading_model)
- * model for calculating reflectance. Unlike the Lambertian model used in the
- * {@link MeshLambertMaterial} this can simulate shiny surfaces with specular
- * highlights (such as varnished wood). `MeshPhongMaterial` uses per-fragment shading.
- *
- * Performance will generally be greater when using this material over the
- * {@link MeshStandardMaterial} or {@link MeshPhysicalMaterial}, at the cost of
- * some graphical accuracy.
- */
-export class MeshPhongMaterial extends Material {
-    /**
-     * Constructs a new mesh phong material.
-     *
-     * @param {Object} [parameters] - An object with one or more properties
-     * defining the material's appearance. Any property of the material
-     * (including any property from inherited materials) can be passed
-     * in here. Color values can be passed any type of value accepted
-     * by {@link Color#set}.
-     */
-    constructor(parameters?: MeshPhongMaterialParameters);
-    /**
-     * This flag can be used for type testing.
-     *
-     * @default true
-     */
-    readonly isMeshPhongMaterial: boolean;
-    setValues(values?: MeshPhongMaterialParameters): void;
-}
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface MeshPhongMaterial extends MeshPhongMaterialProperties {}
+import { Color } from "../math/Color.js";
+import { Euler } from "../math/Euler.js";
+import { Vector2 } from "../math/Vector2.js";
+import { Material } from "./Material.js";

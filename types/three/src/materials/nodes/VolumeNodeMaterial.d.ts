@@ -1,37 +1,8 @@
-import Node from "../../nodes/core/Node.js";
-import VolumetricLightingModel from "../../nodes/functions/VolumetricLightingModel.js";
-import { MapColorPropertiesToColorRepresentations, MaterialParameters, MaterialProperties } from "../Material.js";
-import NodeMaterial, { NodeMaterialNodeProperties } from "./NodeMaterial.js";
-
-export interface VolumeNodeMaterialNodeProperties extends NodeMaterialNodeProperties {
-    /**
-     * Number of steps used for raymarching.
-     *
-     * @default 25
-     */
-    steps: number;
-    /**
-     * Offsets the distance a ray has been traveled through a volume.
-     * Can be used to implement dithering to reduce banding.
-     *
-     * @default null
-     */
-    offsetNode: Node;
-    /**
-     * Node used for scattering calculations.
-     *
-     * @default null
-     */
-    scatteringNode: (params: { positionRay: Node<"vec3"> }) => Node | null;
-}
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface VolumeNodeMaterialParameters
-    extends Partial<MapColorPropertiesToColorRepresentations<VolumeNodeMaterialNodeProperties>>, MaterialParameters
-{}
-
+export default VolumeNodeMaterial;
 /**
  * Volume node material.
+ *
+ * @augments NodeMaterial
  */
 declare class VolumeNodeMaterial extends NodeMaterial {
     /**
@@ -39,18 +10,39 @@ declare class VolumeNodeMaterial extends NodeMaterial {
      *
      * @param {Object} [parameters] - The configuration parameter.
      */
-    constructor(parameters?: VolumeNodeMaterialParameters);
+    constructor(parameters?: Object);
     /**
      * This flag can be used for type testing.
      *
+     * @type {boolean}
+     * @readonly
      * @default true
      */
     readonly isVolumeNodeMaterial: boolean;
-    setValues(values?: VolumeNodeMaterialParameters): void;
+    /**
+     * Number of steps used for raymarching.
+     *
+     * @type {number}
+     * @default 25
+     */
+    steps: number;
+    /**
+     * Offsets the distance a ray has been traveled through a volume.
+     * Can be used to implement dithering to reduce banding.
+     *
+     * @type {Node<float>}
+     * @default null
+     */
+    offsetNode: Node<float>;
+    /**
+     * Node used for scattering calculations.
+     *
+     * @type {Function|FunctionNode<vec4>}
+     * @default null
+     */
+    scatteringNode: Function | FunctionNode<vec4>;
+    side: number;
     setupLightingModel(): VolumetricLightingModel;
 }
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface VolumeNodeMaterial extends VolumeNodeMaterialNodeProperties, MaterialProperties {}
-
-export default VolumeNodeMaterial;
+import VolumetricLightingModel from "../../nodes/functions/VolumetricLightingModel.js";
+import NodeMaterial from "./NodeMaterial.js";

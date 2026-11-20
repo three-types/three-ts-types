@@ -22,40 +22,54 @@ export class GLBufferAttribute {
      */
     constructor(
         buffer: WebGLBuffer,
-        type: GLenum,
+        type: number,
         itemSize: number,
-        elementSize: 1 | 2 | 4,
+        elementSize: number,
         count: number,
         normalized?: boolean,
     );
     /**
      * This flag can be used for type testing.
      *
+     * @type {boolean}
+     * @readonly
      * @default true
      */
-    readonly isGLBufferAttribute: true;
+    readonly isGLBufferAttribute: boolean;
     /**
      * The name of the buffer attribute.
+     *
+     * @type {string}
      */
     name: string;
     /**
      * The native WebGL buffer.
+     *
+     * @type {WebGLBuffer}
      */
     buffer: WebGLBuffer;
     /**
      * The native data type.
+     *
+     * @type {number}
      */
-    type: GLenum;
+    type: number;
     /**
      * The item size, see {@link BufferAttribute#itemSize}.
+     *
+     * @type {number}
      */
     itemSize: number;
     /**
      * The corresponding size (in bytes) for the given `type` parameter.
+     *
+     * @type {number}
      */
-    elementSize: 1 | 2 | 4;
+    elementSize: number;
     /**
      * The expected number of vertices in VBO.
+     *
+     * @type {number}
      */
     count: number;
     /**
@@ -64,16 +78,21 @@ export class GLBufferAttribute {
      * and `normalized` is `true`, the values `0 - +65535` in the buffer data will be mapped to
      * `0.0f - +1.0f` in the GLSL attribute. If `normalized` is `false`, the values will be converted
      * to floats unmodified, i.e. `65535` becomes `65535.0f`.
+     *
+     * @type {boolean}
      */
     normalized: boolean;
     /**
      * A version number, incremented every time the `needsUpdate` is set to `true`.
+     *
+     * @type {number}
      */
     version: number;
     /**
      * Flag to indicate that this attribute has changed and should be re-sent to
      * the GPU. Set this to `true` when you modify the value of the array.
      *
+     * @type {number}
      * @default false
      * @param {boolean} value
      */
@@ -84,7 +103,7 @@ export class GLBufferAttribute {
      * @param {WebGLBuffer} buffer - The buffer to set.
      * @return {BufferAttribute} A reference to this instance.
      */
-    setBuffer(buffer: WebGLBuffer): this;
+    setBuffer(buffer: WebGLBuffer): BufferAttribute;
     /**
      * Sets the given native data type and element size.
      *
@@ -92,19 +111,19 @@ export class GLBufferAttribute {
      * @param {number} elementSize - The corresponding size (in bytes) for the given `type` parameter.
      * @return {BufferAttribute} A reference to this instance.
      */
-    setType(type: GLenum, elementSize: 1 | 2 | 4): this;
+    setType(type: number, elementSize: number): BufferAttribute;
     /**
      * Sets the item size.
      *
      * @param {number} itemSize - The item size.
      * @return {BufferAttribute} A reference to this instance.
      */
-    setItemSize(itemSize: number): this;
+    setItemSize(itemSize: number): BufferAttribute;
     /**
      * Sets the count (the expected number of vertices in VBO).
      *
      * @param {number} count - The count.
      * @return {BufferAttribute} A reference to this instance.
      */
-    setCount(count: number): this;
+    setCount(count: number): BufferAttribute;
 }

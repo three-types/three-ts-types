@@ -24,7 +24,7 @@ export class ShapeGeometry extends BufferGeometry {
      * @param {Array<Shape>} shapes - An array of shapes.
      * @return {ShapeGeometry} A new instance.
      */
-    static fromJSON(data: {}, shapes: Array<Shape>): ShapeGeometry;
+    static fromJSON(data: Object, shapes: Array<Shape>): ShapeGeometry;
     /**
      * Constructs a new shape geometry.
      *
@@ -39,11 +39,9 @@ export class ShapeGeometry extends BufferGeometry {
      *
      * @type {Object}
      */
-    readonly parameters: {
-        readonly shapes: Shape | Shape[];
-        readonly curveSegments: number;
-    };
-    copy(source: ShapeGeometry): this;
+    parameters: Object;
+    copy(source: any): this;
+    toJSON(): any;
 }
 import { BufferGeometry } from "../core/BufferGeometry.js";
 import { Shape } from "../extras/core/Shape.js";

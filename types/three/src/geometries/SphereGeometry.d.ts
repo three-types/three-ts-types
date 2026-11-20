@@ -19,7 +19,7 @@ export class SphereGeometry extends BufferGeometry {
      * @param {Object} data - A JSON object representing the serialized geometry.
      * @return {SphereGeometry} A new instance.
      */
-    static fromJSON(data: {}): SphereGeometry;
+    static fromJSON(data: Object): SphereGeometry;
     /**
      * Constructs a new sphere geometry.
      *
@@ -47,15 +47,7 @@ export class SphereGeometry extends BufferGeometry {
      *
      * @type {Object}
      */
-    readonly parameters: {
-        readonly radius: number;
-        readonly widthSegments: number;
-        readonly heightSegments: number;
-        readonly phiStart: number;
-        readonly phiLength: number;
-        readonly thetaStart: number;
-        readonly thetaLength: number;
-    };
-    copy(source: SphereGeometry): this;
+    parameters: Object;
+    copy(source: any): this;
 }
 import { BufferGeometry } from "../core/BufferGeometry.js";

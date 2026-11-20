@@ -1,13 +1,3 @@
-import {
-    MagnificationTextureFilter,
-    Mapping,
-    MinificationTextureFilter,
-    PixelFormat,
-    TextureDataType,
-    Wrapping,
-} from "../constants.js";
-import { VideoTexture } from "./VideoTexture.js";
-
 /**
  * This class can be used as an alternative way to define video data. Instead of using
  * an instance of `HTMLVideoElement` like with `VideoTexture`, `VideoFrameTexture` expects each frame is
@@ -21,7 +11,7 @@ import { VideoTexture } from "./VideoTexture.js";
  *
  * @augments VideoTexture
  */
-export class VideoFrameTexture extends VideoTexture<VideoFrame | {}> {
+export class VideoFrameTexture extends VideoTexture {
     /**
      * Constructs a new video frame texture.
      *
@@ -35,13 +25,13 @@ export class VideoFrameTexture extends VideoTexture<VideoFrame | {}> {
      * @param {number} [anisotropy=Texture.DEFAULT_ANISOTROPY] - The anisotropy value.
      */
     constructor(
-        mapping?: Mapping,
-        wrapS?: Wrapping,
-        wrapT?: Wrapping,
-        magFilter?: MagnificationTextureFilter,
-        minFilter?: MinificationTextureFilter,
-        format?: PixelFormat,
-        type?: TextureDataType,
+        mapping?: number,
+        wrapS?: number,
+        wrapT?: number,
+        magFilter?: number,
+        minFilter?: number,
+        format?: number,
+        type?: number,
         anisotropy?: number,
     );
     /**
@@ -51,7 +41,7 @@ export class VideoFrameTexture extends VideoTexture<VideoFrame | {}> {
      * @readonly
      * @default true
      */
-    readonly isVideoFrameTexture: true;
+    readonly isVideoFrameTexture: boolean;
     /**
      * Sets the current frame of the video. This will automatically update the texture
      * so the data can be used for rendering.
@@ -60,3 +50,4 @@ export class VideoFrameTexture extends VideoTexture<VideoFrame | {}> {
      */
     setFrame(frame: VideoFrame): void;
 }
+import { VideoTexture } from "./VideoTexture.js";

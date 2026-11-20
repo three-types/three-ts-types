@@ -1,21 +1,3 @@
-import {
-    ColorSpace,
-    MagnificationTextureFilter,
-    Mapping,
-    MinificationTextureFilter,
-    PixelFormat,
-    TextureDataType,
-    Wrapping,
-} from "../constants.js";
-import { TypedArray } from "../core/BufferAttribute.js";
-import { Texture } from "./Texture.js";
-
-export interface DataTextureImageData {
-    data: TypedArray | null;
-    width: number;
-    height: number;
-}
-
 /**
  * Creates a texture directly from raw buffer data.
  *
@@ -26,7 +8,7 @@ export interface DataTextureImageData {
  *
  * @augments Texture
  */
-export class DataTexture extends Texture<DataTextureImageData> {
+export class DataTexture extends Texture {
     /**
      * Constructs a new data texture.
      *
@@ -47,15 +29,15 @@ export class DataTexture extends Texture<DataTextureImageData> {
         data?: TypedArray | null,
         width?: number,
         height?: number,
-        format?: PixelFormat,
-        type?: TextureDataType,
-        mapping?: Mapping,
-        wrapS?: Wrapping,
-        wrapT?: Wrapping,
-        magFilter?: MagnificationTextureFilter,
-        minFilter?: MinificationTextureFilter,
+        format?: number,
+        type?: number,
+        mapping?: number,
+        wrapS?: number,
+        wrapT?: number,
+        magFilter?: number,
+        minFilter?: number,
         anisotropy?: number,
-        colorSpace?: ColorSpace,
+        colorSpace?: string,
     );
     /**
      * This flag can be used for type testing.
@@ -64,5 +46,6 @@ export class DataTexture extends Texture<DataTextureImageData> {
      * @readonly
      * @default true
      */
-    readonly isDataTexture: true;
+    readonly isDataTexture: boolean;
 }
+import { Texture } from "./Texture.js";

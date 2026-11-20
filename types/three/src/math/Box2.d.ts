@@ -1,5 +1,3 @@
-import { Vector2, Vector2Like } from "./Vector2.js";
-
 /**
  * Represents an axis-aligned bounding box (AABB) in 2D space.
  */
@@ -47,7 +45,7 @@ export class Box2 {
      * @param {Array<Vector2>} points - An array holding 2D position data as instances of {@link Vector2}.
      * @return {Box2} A reference to this bounding box.
      */
-    setFromPoints(points: Vector2Like[]): Box2;
+    setFromPoints(points: Array<Vector2>): Box2;
     /**
      * Centers this box on the given center vector and sets this box's width, height and
      * depth to the given size values.
@@ -62,14 +60,14 @@ export class Box2 {
      *
      * @return {Box2} A clone of this instance.
      */
-    clone(): this;
+    clone(): Box2;
     /**
      * Copies the values of the given box to this instance.
      *
      * @param {Box2} box - The box to copy.
      * @return {Box2} A reference to this bounding box.
      */
-    copy(box: Box2): this;
+    copy(box: Box2): Box2;
     /**
      * Makes this box empty which means in encloses a zero space in 2D.
      *
@@ -104,7 +102,7 @@ export class Box2 {
      * @param {Vector2} point - The point that should be included by the bounding box.
      * @return {Box2} A reference to this bounding box.
      */
-    expandByPoint(point: Vector2Like): Box2;
+    expandByPoint(point: Vector2): Box2;
     /**
      * Expands this box equilaterally by the given vector. The width of this
      * box will be expanded by the x component of the vector in both
@@ -204,3 +202,4 @@ export class Box2 {
      */
     equals(box: Box2): boolean;
 }
+import { Vector2 } from "./Vector2.js";

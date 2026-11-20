@@ -1,13 +1,11 @@
-import UniformGroupNode from "./UniformGroupNode.js";
-import UniformNode from "./UniformNode.js";
-
+export default NodeUniform;
 /**
  * {@link NodeBuilder} is going to create instances of this class during the build process
  * of nodes. They represent the final shader uniforms that are going to be generated
  * by the builder. A dictionary of node uniforms is maintained in {@link NodeBuilder#uniforms}
  * for this purpose.
  */
-declare class NodeUniform<TNodeType, TValue> {
+declare class NodeUniform {
     /**
      * Constructs a new node uniform.
      *
@@ -15,7 +13,7 @@ declare class NodeUniform<TNodeType, TValue> {
      * @param {string} type - The type of the uniform.
      * @param {UniformNode} node - An reference to the node.
      */
-    constructor(name: string, type: string, node: UniformNode<TNodeType, TValue>);
+    constructor(name: string, type: string, node: UniformNode);
     /**
      * This flag can be used for type testing.
      *
@@ -41,14 +39,14 @@ declare class NodeUniform<TNodeType, TValue> {
      *
      * @type {UniformNode}
      */
-    node: UniformNode<TNodeType, TValue>;
-    set value(val: TValue);
+    node: UniformNode;
+    set value(val: any);
     /**
      * The value of the uniform node.
      *
      * @type {any}
      */
-    get value(): TValue;
+    get value(): any;
     /**
      * The id of the uniform node.
      *
@@ -62,5 +60,3 @@ declare class NodeUniform<TNodeType, TValue> {
      */
     get groupNode(): UniformGroupNode;
 }
-
-export default NodeUniform;
