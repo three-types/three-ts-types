@@ -105,7 +105,7 @@ declare class InspectorBase<TEventMap extends InspectorBaseEventMap = InspectorB
      */
     beginRender(uid: string, scene: Scene, camera: Camera, renderTarget: RenderTarget): void;
     /**
-     * Called when an animation loop ends.
+     * Called when a render operation ends.
      *
      * @param {string} uid - A unique identifier for the render context.
      */

@@ -10,10 +10,11 @@ import ReadbackBuffer from "./ReadbackBuffer.js";
  */
 declare class Info {
     /**
-     * Whether frame related metrics should automatically
-     * be resetted or not. This property should be set to `false`
-     * by apps which manage their own animation loop. They must
-     * then call `renderer.info.reset()` once per frame manually.
+     * Whether frame related metrics should automatically be reset at the
+     * start of each animation frame or not. The renderer runs its internal
+     * animation loop once `render()` or `compute()` has been called, even
+     * when the app manages its own animation loop. When set to `false`, the
+     * app must call `renderer.info.reset()` manually.
      *
      * @type {boolean}
      * @default true
@@ -29,7 +30,7 @@ declare class Info {
      */
     readonly frame: number;
     /**
-     * The number of render calls since the
+     * The number of render and compute calls since the
      * app has been started.
      *
      * @type {number}

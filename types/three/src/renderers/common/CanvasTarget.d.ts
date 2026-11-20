@@ -25,8 +25,6 @@ declare class CanvasTarget<TEventMap extends CanvasTargetEventMap = CanvasTarget
     constructor(domElement: HTMLCanvasElement | OffscreenCanvas);
     /**
      * A reference to the canvas element the renderer is drawing to.
-     * This value of this property will automatically be created by
-     * the renderer.
      *
      * @type {HTMLCanvasElement|OffscreenCanvas}
      */
@@ -105,9 +103,9 @@ declare class CanvasTarget<TEventMap extends CanvasTargetEventMap = CanvasTarget
     /**
      * Defines the scissor rectangle.
      *
-     * @param {number | Vector4} x - The horizontal coordinate for the lower left corner of the box in logical pixel unit.
+     * @param {number | Vector4} x - The horizontal coordinate for the upper left corner of the box in logical pixel unit.
      * Instead of passing four arguments, the method also works with a single four-dimensional vector.
-     * @param {number} y - The vertical coordinate for the lower left corner of the box in logical pixel unit.
+     * @param {number} y - The vertical coordinate for the upper left corner of the box in logical pixel unit.
      * @param {number} width - The width of the scissor box in logical pixel unit.
      * @param {number} height - The height of the scissor box in logical pixel unit.
      */
@@ -138,19 +136,19 @@ declare class CanvasTarget<TEventMap extends CanvasTargetEventMap = CanvasTarget
     /**
      * Defines the viewport.
      *
-     * @param {number | Vector4} x - The horizontal coordinate for the lower left corner of the viewport origin in logical pixel unit.
-     * @param {number} y - The vertical coordinate for the lower left corner of the viewport origin  in logical pixel unit.
+     * @param {number | Vector4} x - The horizontal coordinate for the upper left corner of the viewport origin in logical pixel unit.
+     * @param {number} y - The vertical coordinate for the upper left corner of the viewport origin in logical pixel unit.
      * @param {number} width - The width of the viewport in logical pixel unit.
      * @param {number} height - The height of the viewport in logical pixel unit.
-     * @param {number} minDepth - The minimum depth value of the viewport. WebGPU only.
-     * @param {number} maxDepth - The maximum depth value of the viewport. WebGPU only.
+     * @param {number} [minDepth=0] - The minimum depth value of the viewport. WebGPU only.
+     * @param {number} [maxDepth=1] - The maximum depth value of the viewport. WebGPU only.
      */
     setViewport(x: number, y: number, width: number, height: number, minDepth?: number, maxDepth?: number): void;
     /**
      * Frees the GPU-related resources allocated by this instance. Call this
      * method whenever this instance is no longer used in your app.
      *
-     * @fires RenderTarget#dispose
+     * @fires CanvasTarget#dispose
      */
     dispose(): void;
 }
