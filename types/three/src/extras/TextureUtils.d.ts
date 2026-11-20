@@ -7,7 +7,7 @@ import { Texture } from "../textures/Texture.js";
  * the texture. Akin to CSS `object-fit: contain`
  *
  * @param {Texture} texture - The texture.
- * @param {number} aspect - The texture's aspect ratio.
+ * @param {number} aspect - The aspect ratio (width / height) of the surface the texture is displayed on.
  * @return {Texture} The updated texture.
  */
 export function contain(texture: Texture, aspect: number): Texture;
@@ -17,7 +17,7 @@ export function contain(texture: Texture, aspect: number): Texture;
  * Akin to CSS `object-fit: cover`.
  *
  * @param {Texture} texture - The texture.
- * @param {number} aspect - The texture's aspect ratio.
+ * @param {number} aspect - The aspect ratio (width / height) of the surface the texture is displayed on.
  * @return {Texture} The updated texture.
  */
 export function cover(texture: Texture, aspect: number): Texture;
@@ -55,7 +55,7 @@ export class TextureUtils {
      * the texture. Akin to CSS `object-fit: contain`
      *
      * @param {Texture} texture - The texture.
-     * @param {number} aspect - The texture's aspect ratio.
+     * @param {number} aspect - The aspect ratio (width / height) of the surface the texture is displayed on.
      * @return {Texture} The updated texture.
      */
     static contain(texture: Texture, aspect: number): Texture;
@@ -65,7 +65,7 @@ export class TextureUtils {
      * Akin to CSS `object-fit: cover`.
      *
      * @param {Texture} texture - The texture.
-     * @param {number} aspect - The texture's aspect ratio.
+     * @param {number} aspect - The aspect ratio (width / height) of the surface the texture is displayed on.
      * @return {Texture} The updated texture.
      */
     static cover(texture: Texture, aspect: number): Texture;

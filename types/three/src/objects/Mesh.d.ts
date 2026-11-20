@@ -110,7 +110,7 @@ export class Mesh<
      */
     intersectsFrustum(frustum: Frustum | FrustumArray): boolean;
     /**
-     * Computes intersection points between a casted ray and this line.
+     * Computes intersection points between a casted ray and this mesh.
      *
      * @param {Raycaster} raycaster - The raycaster.
      * @param {Array<Object>} intersects - The target array that holds the intersection points.

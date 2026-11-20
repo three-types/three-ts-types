@@ -308,7 +308,7 @@ export class Vector2 {
      */
     dot(v: Vector2Like): number;
     /**
-     * Calculates the cross product of the given vector with this instance.
+     * Calculates the cross product of this vector and the given one (in that order).
      *
      * @param {Vector2} v - The vector to compute the cross product with.
      * @return {number} The result of the cross product.

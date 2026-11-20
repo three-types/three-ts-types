@@ -30,7 +30,8 @@ export class InterleavedBuffer {
      */
     stride: number;
     /**
-     * The total number of elements in the array
+     * The number of items (vertices) stored in the buffer, computed by dividing
+     * the `array` length by the `stride`.
      */
     count: number;
     /**
@@ -85,9 +86,10 @@ export class InterleavedBuffer {
      */
     setUsage(value: Usage): this;
     /**
-     * Adds a range of data in the data array to be updated on the GPU.
+     * Adds a range of data in the data array to be updated on the GPU. The ranges are
+     * applied with the next upload triggered via `needsUpdate` and cleared afterwards.
      *
-     * @param {number} start - Position at which to start update.
+     * @param {number} start - The index into the array (in elements, not items) at which to start the update.
      * @param {number} count - The number of components to update.
      */
     addUpdateRange(start: number, count: number): void;
@@ -124,7 +126,7 @@ export class InterleavedBuffer {
     /**
      * Returns a new interleaved buffer with copied values from this instance.
      *
-     * @param {Object} [data] - An object with shared array buffers that allows to retain shared structures.
+     * @param {Object} data - An object with shared array buffers that allows to retain shared structures.
      * @return {InterleavedBuffer} A clone of this instance.
      */
     clone(data: {}): InterleavedBuffer;
@@ -140,7 +142,7 @@ export class InterleavedBuffer {
     /**
      * Serializes the interleaved buffer into JSON.
      *
-     * @param {Object} [data] - An optional value holding meta information about the serialization.
+     * @param {Object} data - An object holding meta information about the serialization.
      * @return {Object} A JSON object representing the serialized interleaved buffer.
      */
     toJSON(data: {}): {

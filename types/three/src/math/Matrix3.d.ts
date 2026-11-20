@@ -24,7 +24,7 @@ export type Matrix3Tuple = [
  * order, while internally they are stored in the {@link Matrix3#elements} array in column-major order.
  * This means that calling:
  * ```js
- * const m = new THREE.Matrix();
+ * const m = new THREE.Matrix3();
  * m.set( 11, 12, 13,
  *        21, 22, 23,
  *        31, 32, 33 );

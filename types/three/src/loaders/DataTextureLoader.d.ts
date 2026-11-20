@@ -11,7 +11,7 @@ export interface DataTextureLoaderTexData {
      */
     width?: number | undefined;
     /**
-     * - The width of the base mip.
+     * - The height of the base mip.
      */
     height?: number | undefined;
     /**

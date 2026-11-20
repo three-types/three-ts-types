@@ -61,7 +61,7 @@ export class MaterialLoader extends Loader<Material> {
      * Textures are not embedded in the material JSON so they have
      * to be injected before the loading process starts.
      *
-     * @param {Object} value - A dictionary holding textures for material properties.
+     * @param {Object<string,Texture>} value - A dictionary holding textures for material properties, keyed by texture UUID.
      * @return {MaterialLoader} A reference to this material loader.
      */
     setTextures(value: {

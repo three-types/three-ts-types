@@ -25,7 +25,8 @@ export class UniformsGroup<TEventMap extends UniformsGroupEventMap = UniformsGro
     readonly isUniformsGroup: true;
     id: number;
     /**
-     * The name of the uniforms group.
+     * The name of the uniforms group. Must match the name of the
+     * respective uniform block in the shader.
      */
     name: string;
     /**
@@ -70,7 +71,7 @@ export class UniformsGroup<TEventMap extends UniformsGroupEventMap = UniformsGro
      * Frees the GPU-related resources allocated by this instance. Call this
      * method whenever this instance is no longer used in your app.
      *
-     * @fires Texture#dispose
+     * @fires UniformsGroup#dispose
      */
     dispose(): void;
     /**

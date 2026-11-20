@@ -120,8 +120,8 @@ export class Audio<TNode extends AudioNode = GainNode> extends Object3D {
      * Indicates whether the audio playback can be controlled
      * with method like {@link Audio#play} or {@link Audio#pause}.
      *
-     * This flag will be automatically set when audio sources are
-     * defined.
+     * This flag is set to `false` by {@link Audio#setNodeSource},
+     * {@link Audio#setMediaElementSource} and {@link Audio#setMediaStreamSource}.
      *
      * @default true
      */
@@ -185,7 +185,7 @@ export class Audio<TNode extends AudioNode = GainNode> extends Object3D {
     /**
      * Sets the given audio buffer as the source of this instance.
      *
-     * {@link Audio#sourceType} is set to `buffer` and {@link Audio#hasPlaybackControl} to `true`.
+     * {@link Audio#sourceType} is set to `buffer`.
      *
      * @param {AudioBuffer} audioBuffer - The audio buffer.
      * @return {Audio} A reference to this instance.
@@ -308,7 +308,8 @@ export class Audio<TNode extends AudioNode = GainNode> extends Object3D {
     setLoop(value: boolean): this | undefined;
     /**
      * Sets the loop start value which defines where in the audio buffer the replay should
-     * start, in seconds.
+     * start, in seconds. Only used when {@link Audio#loop} is `true` and {@link Audio#loopEnd}
+     * is greater than this value, and applied on the next call of {@link Audio#play}.
      *
      * @param {number} value - The loop start value.
      * @return {Audio} A reference to this instance.
@@ -316,7 +317,9 @@ export class Audio<TNode extends AudioNode = GainNode> extends Object3D {
     setLoopStart(value: number): this;
     /**
      * Sets the loop end value which defines where in the audio buffer the replay should
-     * stop, in seconds.
+     * stop, in seconds. A value of `0` (the default) loops the whole buffer and also ignores
+     * {@link Audio#loopStart}. Only used when {@link Audio#loop} is `true` and applied on the
+     * next call of {@link Audio#play}.
      *
      * @param {number} value - The loop end value.
      * @return {Audio} A reference to this instance.

@@ -16,7 +16,8 @@ export interface ExtrudeGeometryOptions {
      */
     bevelEnabled?: boolean | undefined;
     /**
-     * - How deep into the original shape the bevel goes.
+     * - How far the bevel extends along the extrusion axis, below `z = 0`
+     * and beyond `depth`. With bevels enabled, the total thickness is `depth + 2 * bevelThickness`.
      */
     bevelThickness?: number | undefined;
     /**

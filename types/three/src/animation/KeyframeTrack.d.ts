@@ -179,13 +179,13 @@ export class KeyframeTrack {
     /**
      * The time buffer type of this keyframe track.
      *
-     * @default Float32Array.constructor
+     * @default Float32Array
      */
     TimeBufferType: TypedArrayConstructor | ArrayConstructor;
     /**
      * The value buffer type of this keyframe track.
      *
-     * @default Float32Array.constructor
+     * @default Float32Array
      */
     ValueBufferType: TypedArrayConstructor | ArrayConstructor;
     /**

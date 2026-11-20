@@ -21,7 +21,7 @@ import { LineSegments } from "../objects/LineSegments.js";
  */
 export class CameraHelper extends LineSegments {
     /**
-     * Constructs a new arrow helper.
+     * Constructs a new camera helper.
      *
      * @param {Camera} camera - The camera to visualize.
      */

@@ -71,8 +71,8 @@ export class GLBufferAttribute {
      */
     version: number;
     /**
-     * Flag to indicate that this attribute has changed and should be re-sent to
-     * the GPU. Set this to `true` when you modify the value of the array.
+     * Flag to indicate that this attribute has changed. Setting it to `true` increments
+     * {@link GLBufferAttribute#version}.
      *
      * @default false
      * @param {boolean} value
@@ -82,7 +82,7 @@ export class GLBufferAttribute {
      * Sets the given native WebGL buffer.
      *
      * @param {WebGLBuffer} buffer - The buffer to set.
-     * @return {BufferAttribute} A reference to this instance.
+     * @return {GLBufferAttribute} A reference to this instance.
      */
     setBuffer(buffer: WebGLBuffer): this;
     /**
@@ -90,21 +90,21 @@ export class GLBufferAttribute {
      *
      * @param {number} type - The native data type (e.g. `gl.FLOAT`).
      * @param {number} elementSize - The corresponding size (in bytes) for the given `type` parameter.
-     * @return {BufferAttribute} A reference to this instance.
+     * @return {GLBufferAttribute} A reference to this instance.
      */
     setType(type: GLenum, elementSize: 1 | 2 | 4): this;
     /**
      * Sets the item size.
      *
      * @param {number} itemSize - The item size.
-     * @return {BufferAttribute} A reference to this instance.
+     * @return {GLBufferAttribute} A reference to this instance.
      */
     setItemSize(itemSize: number): this;
     /**
      * Sets the count (the expected number of vertices in VBO).
      *
      * @param {number} count - The count.
-     * @return {BufferAttribute} A reference to this instance.
+     * @return {GLBufferAttribute} A reference to this instance.
      */
     setCount(count: number): this;
 }

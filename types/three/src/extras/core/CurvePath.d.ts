@@ -53,7 +53,26 @@ export class CurvePath<TVector extends Vector2 | Vector3> extends Curve<TVector>
      * @return {Array<number>} The curve lengths.
      */
     getCurveLengths(): Array<number>;
+    /**
+     * This method samples the curve path via {@link CurvePath#getPoint} and returns an array of
+     * equi-spaced points across the entire path. If {@link CurvePath#autoClose} is `true`, the
+     * first point is appended at the end.
+     *
+     * @param {number} [divisions=40] - The number of divisions.
+     * @return {Array<(Vector2|Vector3)>} An array holding the sampled curve values.
+     */
     getSpacedPoints(divisions?: number): TVector[];
+    /**
+     * This method samples each curve of the path and returns an array of points representing
+     * the path shape. Consecutive duplicate points are removed. If {@link CurvePath#autoClose}
+     * is `true`, the first point is appended at the end if necessary.
+     *
+     * @param {number} [divisions=12] - The number of divisions per curve. Line curves always use
+     * one division, ellipse curves twice this value and {@link SplineCurve} instances this value times their
+     * point count. All other curves use this value.
+     * @return {Array<(Vector2|Vector3)>} An array holding the sampled curve values.
+     */
+    getPoints(divisions?: number): TVector[];
     copy(source: CurvePath<TVector>): this;
     toJSON(): CurvePathJSON;
     fromJSON(json: CurvePathJSON): this;

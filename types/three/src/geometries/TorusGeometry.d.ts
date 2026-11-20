@@ -38,8 +38,9 @@ export class TorusGeometry extends BufferGeometry {
      * @param {number} [radialSegments=12] - The number of radial segments.
      * @param {number} [tubularSegments=48] - The number of tubular segments.
      * @param {number} [arc=Math.PI*2] - Central angle in radians.
-     * @param {number} [thetaStart=0] - Start of the tubular sweep in radians.
-     * @param {number} [thetaLength=Math.PI*2] - Length of the tubular sweep in radians.
+     * @param {number} [thetaStart=0] - Start angle of the sweep around the tube's cross-section, in radians.
+     * @param {number} [thetaLength=Math.PI*2] - Central angle of the sweep around the tube's cross-section, in radians.
+     * The default value results in a closed tube.
      */
     constructor(
         radius?: number,

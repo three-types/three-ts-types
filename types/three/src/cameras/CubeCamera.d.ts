@@ -55,13 +55,13 @@ export class CubeCamera extends Object3D {
      *
      * @param {number} near - The camera's near plane.
      * @param {number} far - The camera's far plane.
-     * @param {WebGLCubeRenderTarget} renderTarget - The cube render target.
+     * @param {(WebGLCubeRenderTarget|CubeRenderTarget)} renderTarget - The cube render target.
      */
     constructor(near: number, far: number, renderTarget: WebGLCubeRenderTarget | CubeRenderTarget);
     /**
      * A reference to the cube render target.
      */
-    renderTarget: WebGLCubeRenderTarget;
+    renderTarget: WebGLCubeRenderTarget | CubeRenderTarget;
     /**
      * The current active coordinate system.
      *

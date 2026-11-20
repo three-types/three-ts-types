@@ -95,6 +95,9 @@ export class Skeleton {
     /**
      * Computes the bone inverse matrices. This method resets {@link Skeleton#boneInverses}
      * and fills it with new matrices.
+     *
+     * The matrices are computed from the current world matrices of the bones. Make sure
+     * they are up to date before calling this method, e.g. via {@link Object3D#updateMatrixWorld}.
      */
     calculateInverses(): void;
     /**
@@ -102,7 +105,9 @@ export class Skeleton {
      */
     pose(): void;
     /**
-     * Resets the skeleton to the base pose.
+     * Updates the bone matrices from the current world matrices of the bones and
+     * the bone inverse matrices, and flags the bone texture for upload. This method
+     * is automatically called by the renderer.
      */
     update(): void;
     /**
@@ -134,7 +139,7 @@ export class Skeleton {
      * Setups the skeleton by the given JSON and bones.
      *
      * @param {Object} json - The skeleton as serialized JSON.
-     * @param {Object<string, Bone>} bones - An array of bones.
+     * @param {Object<string, Bone>} bones - A dictionary of bones, keyed by their UUID.
      * @return {Skeleton} A reference of this instance.
      */
     fromJSON(json: SkeletonJSON, bones: {
