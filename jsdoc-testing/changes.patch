@@ -26736,7 +26736,7 @@ index ca4dd3dff..a65e1ccc8 100644
 -export const computeSkinning: () => void;
 +export const computeSkinning: (skinnedMesh: SkinnedMesh, toPosition?: Node<'vec3'> | Vector3 | null) => void;
 diff --git a/jsdoc-testing/jsdoc/src/nodes/core/Node.d.ts b/jsdoc-testing/jsdoc/src/nodes/core/Node.d.ts
-index 9b7757276..6a4332498 100644
+index cd420f14a..e322ed033 100644
 --- a/jsdoc-testing/jsdoc/src/nodes/core/Node.d.ts
 +++ b/jsdoc-testing/jsdoc/src/nodes/core/Node.d.ts
 @@ -1,10 +1,85 @@
@@ -26891,9 +26891,18 @@ index 9b7757276..6a4332498 100644
 -    isCacheable(): boolean;
 +    isCacheable(builder: NodeBuilder): boolean;
      /**
+      * Whether this node is dead code, e.g. an assignment to a variable that is never read,
+      * or a shadow that is never used. Dead code is not analyzed, generated nor updated.
+@@ -142,7 +192,7 @@ declare class Node extends EventDispatcher {
+      * @param {NodeBuilder} builder - The current node builder.
+      * @return {boolean} Whether this node is dead code.
+      */
+-    isDeadCode(): boolean;
++    isDeadCode(builder: NodeBuilder): boolean;
+     /**
       * Makes this node assignable and adds it to the current stack,
       * so it can be declared where it was created if it is assigned later.
-@@ -141,7 +191,7 @@ declare class Node extends EventDispatcher {
+@@ -150,7 +200,7 @@ declare class Node extends EventDispatcher {
       *
       * @return {Node} A reference to this node.
       */
@@ -26902,7 +26911,7 @@ index 9b7757276..6a4332498 100644
      /**
       * Checks if this node is assignable without a forced declaration.
       *
-@@ -156,87 +206,6 @@ declare class Node extends EventDispatcher {
+@@ -165,87 +215,6 @@ declare class Node extends EventDispatcher {
       * @returns {boolean} Whether this node is assigned.
       */
      isAssign(builder: NodeBuilder): boolean;
@@ -26990,7 +26999,7 @@ index 9b7757276..6a4332498 100644
      /**
       * Set this property to `true` when the node should be regenerated.
       *
-@@ -258,7 +227,7 @@ declare class Node extends EventDispatcher {
+@@ -267,7 +236,7 @@ declare class Node extends EventDispatcher {
       * @type {string}
       * @readonly
       */
@@ -26999,7 +27008,7 @@ index 9b7757276..6a4332498 100644
      /**
       * Convenient method for defining {@link Node#update}.
       *
-@@ -266,7 +235,7 @@ declare class Node extends EventDispatcher {
+@@ -275,7 +244,7 @@ declare class Node extends EventDispatcher {
       * @param {string} updateType - The update type.
       * @return {Node} A reference to this node.
       */
@@ -27008,7 +27017,7 @@ index 9b7757276..6a4332498 100644
      /**
       * The method can be implemented to update the node's internal state when it is used to render an object.
       * The {@link Node#updateType} property defines how often the update is executed.
-@@ -275,7 +244,7 @@ declare class Node extends EventDispatcher {
+@@ -284,7 +253,7 @@ declare class Node extends EventDispatcher {
       * @param {NodeFrame} frame - A reference to the current node frame.
       * @return {?boolean} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
       */
@@ -27017,7 +27026,7 @@ index 9b7757276..6a4332498 100644
      /**
       * Convenient method for defining {@link Node#update}. Similar to {@link Node#onUpdate}, but
       * this method automatically sets the update type to `FRAME`.
-@@ -283,7 +252,7 @@ declare class Node extends EventDispatcher {
+@@ -292,7 +261,7 @@ declare class Node extends EventDispatcher {
       * @param {Function} callback - The update method.
       * @return {Node} A reference to this node.
       */
@@ -27026,7 +27035,7 @@ index 9b7757276..6a4332498 100644
      /**
       * Convenient method for defining {@link Node#update}. Similar to {@link Node#onUpdate}, but
       * this method automatically sets the update type to `RENDER`.
-@@ -291,7 +260,7 @@ declare class Node extends EventDispatcher {
+@@ -300,7 +269,7 @@ declare class Node extends EventDispatcher {
       * @param {Function} callback - The update method.
       * @return {Node} A reference to this node.
       */
@@ -27035,7 +27044,7 @@ index 9b7757276..6a4332498 100644
      /**
       * Convenient method for defining {@link Node#update}. Similar to {@link Node#onUpdate}, but
       * this method automatically sets the update type to `OBJECT`.
-@@ -299,14 +268,14 @@ declare class Node extends EventDispatcher {
+@@ -308,14 +277,14 @@ declare class Node extends EventDispatcher {
       * @param {Function} callback - The update method.
       * @return {Node} A reference to this node.
       */
@@ -27052,7 +27061,7 @@ index 9b7757276..6a4332498 100644
      /**
       * Nodes might refer to other objects like materials. This method allows to dynamically update the reference
       * to such objects based on a given state (e.g. the current node frame or builder).
-@@ -314,7 +283,7 @@ declare class Node extends EventDispatcher {
+@@ -323,7 +292,7 @@ declare class Node extends EventDispatcher {
       * @param {any} state - This method can be invocated in different contexts so `state` can refer to any object type.
       * @return {any} The updated reference.
       */
@@ -27061,7 +27070,7 @@ index 9b7757276..6a4332498 100644
      /**
       * By default this method returns the value of the {@link Node#global} flag. This method
       * can be overwritten in derived classes if an analytical way is required to determine the
-@@ -323,7 +292,7 @@ declare class Node extends EventDispatcher {
+@@ -332,7 +301,7 @@ declare class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {boolean} Whether this node is global or not.
       */
@@ -27070,7 +27079,7 @@ index 9b7757276..6a4332498 100644
      /**
       * Returns the child nodes of this node.
       *
-@@ -335,26 +304,12 @@ declare class Node extends EventDispatcher {
+@@ -344,26 +313,12 @@ declare class Node extends EventDispatcher {
       * to register event listeners for clean up tasks.
       */
      dispose(): void;
@@ -27098,7 +27107,7 @@ index 9b7757276..6a4332498 100644
      /**
       * Returns the cache key for this node.
       *
-@@ -377,43 +332,28 @@ declare class Node extends EventDispatcher {
+@@ -386,43 +341,28 @@ declare class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {string} The hash.
       */
@@ -27146,7 +27155,7 @@ index 9b7757276..6a4332498 100644
      /**
       * Certain types are composed of multiple elements. For example a `vec3`
       * is composed of three `float` values. This method returns the type of
-@@ -430,7 +370,7 @@ declare class Node extends EventDispatcher {
+@@ -439,7 +379,7 @@ declare class Node extends EventDispatcher {
       * @param {string} name - The name of the member.
       * @return {string} The type of the node.
       */
@@ -27155,7 +27164,7 @@ index 9b7757276..6a4332498 100644
      /**
       * Returns the node's type.
       *
-@@ -464,7 +404,7 @@ declare class Node extends EventDispatcher {
+@@ -473,7 +413,7 @@ declare class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {?number} The number of elements in the node array.
       */
@@ -27164,7 +27173,7 @@ index 9b7757276..6a4332498 100644
      /**
       * Represents the setup stage which is the first step of the build process, see {@link Node#build} method.
       * This method is often overwritten in derived modules to prepare the node which is used as a node's output/result.
-@@ -473,7 +413,7 @@ declare class Node extends EventDispatcher {
+@@ -482,7 +422,7 @@ declare class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {?Node} The output node.
       */
@@ -27173,7 +27182,7 @@ index 9b7757276..6a4332498 100644
      /**
       * Represents the analyze stage which is the second step of the build process, see {@link Node#build} method.
       * This stage analyzes the node hierarchy and ensures descendent nodes are built.
-@@ -490,7 +430,7 @@ declare class Node extends EventDispatcher {
+@@ -499,7 +439,7 @@ declare class Node extends EventDispatcher {
       * @param {?string} [output] - Can be used to define the output type.
       * @return {?string} The generated shader string.
       */
@@ -27182,7 +27191,7 @@ index 9b7757276..6a4332498 100644
      /**
       * The method can be implemented to update the node's internal state before it is used to render an object.
       * The {@link Node#updateBeforeType} property defines how often the update is executed.
-@@ -499,7 +439,7 @@ declare class Node extends EventDispatcher {
+@@ -508,7 +448,7 @@ declare class Node extends EventDispatcher {
       * @param {NodeFrame} frame - A reference to the current node frame.
       * @return {?boolean} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
       */
@@ -27191,7 +27200,7 @@ index 9b7757276..6a4332498 100644
      /**
       * The method can be implemented to update the node's internal state after it was used to render an object.
       * The {@link Node#updateAfterType} property defines how often the update is executed.
-@@ -508,15 +448,7 @@ declare class Node extends EventDispatcher {
+@@ -517,15 +457,7 @@ declare class Node extends EventDispatcher {
       * @param {NodeFrame} frame - A reference to the current node frame.
       * @return {?boolean} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
       */
@@ -27208,7 +27217,7 @@ index 9b7757276..6a4332498 100644
      /**
       * This method performs the build of a node. The behavior and return value depend on the current build stage:
       * - **setup**: Prepares the node and its children for the build process. This process can also create new nodes. Returns the node itself or a variant.
-@@ -533,28 +465,188 @@ declare class Node extends EventDispatcher {
+@@ -542,28 +474,188 @@ declare class Node extends EventDispatcher {
       *
       * @return {Generator<Object>} An iterable list of serialized child objects as JSON.
       */
