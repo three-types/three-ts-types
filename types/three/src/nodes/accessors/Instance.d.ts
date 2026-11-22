@@ -11,7 +11,7 @@ import VaryingNode from "../core/VaryingNode.js";
 export const instanceColor: VaryingNode<"vec3">;
 /**
  * TSL function representing the standard instancing vertex shader setup.
- * Transforms positionLocal and normalLocal, and assigns varying color in-place.
+ * Transforms positionLocal, normalLocal and tangentLocal, and assigns varying color in-place.
  *
  * @tsl
  * @function
