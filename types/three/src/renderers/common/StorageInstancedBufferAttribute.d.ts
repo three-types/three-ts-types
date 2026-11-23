@@ -5,6 +5,4 @@ export default class StorageInstancedBufferAttribute extends InstancedBufferAttr
     readonly isStorageInstancedBufferAttribute: true;
 
     constructor(array: TypedArray | number, itemSize: number);
-
-    dispose(): void;
 }
