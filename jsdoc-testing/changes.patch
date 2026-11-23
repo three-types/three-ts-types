@@ -26735,6 +26735,84 @@ index ca4dd3dff..a65e1ccc8 100644
   */
 -export const computeSkinning: () => void;
 +export const computeSkinning: (skinnedMesh: SkinnedMesh, toPosition?: Node<'vec3'> | Vector3 | null) => void;
+diff --git a/jsdoc-testing/jsdoc/src/nodes/core/DeferredNode.d.ts b/jsdoc-testing/jsdoc/src/nodes/core/DeferredNode.d.ts
+index 513ccbbbd..b78933a30 100644
+--- a/jsdoc-testing/jsdoc/src/nodes/core/DeferredNode.d.ts
++++ b/jsdoc-testing/jsdoc/src/nodes/core/DeferredNode.d.ts
+@@ -1,11 +1,6 @@
+-/**
+- * Adds a method to all nodes that is deferred to the node they resolve to during the build.
+- * Nodes that implement the method are not affected.
+- *
+- * @param {string} name - The method name.
+- */
+-export function addDeferredMethod(name: string): void;
+-export default DeferredNode;
++import Node from './Node.js';
++import NodeBuilder from './NodeBuilder.js';
++
+ /**
+  * Calls a method of the node that the given node resolves to during the build.
+  * This makes it possible to call methods of a node that is only known in the build,
+@@ -21,19 +16,25 @@ declare class DeferredNode extends Node {
+      * @param {string} name - The method name.
+      * @param {Array<any>} params - The method parameters.
+      */
+-    constructor(node: Node, name: string, params: Array<any>);
++    constructor(node: Node, name: string, params: unknown[]);
+     /**
+      * The node whose resolved node receives the call.
+      *
+      * @type {Node}
+      */
+     node: Node;
++    /**
++     * The method name.
++     *
++     * @type {string}
++     */
++    name: string;
+     /**
+      * The method parameters.
+      *
+      * @type {Array<any>}
+      */
+-    params: Array<any>;
++    params: unknown[];
+     /**
+      * This flag can be used for type testing.
+      *
+@@ -42,9 +43,9 @@ declare class DeferredNode extends Node {
+      * @default true
+      */
+     readonly isDeferredNode: boolean;
+-    generateNodeType(builder: any, output?: null): string;
+-    getElementType(builder: any): string;
+-    getMemberType(builder: any, name: any): string;
++    generateNodeType(builder: NodeBuilder, output?: string | null): string;
++    getElementType(builder: NodeBuilder): string;
++    getMemberType(builder: NodeBuilder, name: string): string;
+     /**
+      * Returns the result of the call. It can be requested before the setup of this node,
+      * e.g. by a varying that needs the type.
+@@ -53,6 +54,15 @@ declare class DeferredNode extends Node {
+      * @return {Node} The result of the call.
+      */
+     getOutputNode(builder: NodeBuilder): Node;
+-    setup(builder: any): Node;
++    setup(builder: NodeBuilder): Node;
+ }
+-import Node from './Node.js';
++
++export default DeferredNode;
++
++/**
++ * Adds a method to all nodes that is deferred to the node they resolve to during the build.
++ * Nodes that implement the method are not affected.
++ *
++ * @param {string} name - The method name.
++ */
++export function addDeferredMethod(name: string): void;
 diff --git a/jsdoc-testing/jsdoc/src/nodes/core/Node.d.ts b/jsdoc-testing/jsdoc/src/nodes/core/Node.d.ts
 index cd420f14a..e322ed033 100644
 --- a/jsdoc-testing/jsdoc/src/nodes/core/Node.d.ts
