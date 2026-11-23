@@ -4,6 +4,4 @@ export default class StorageBufferAttribute extends BufferAttribute {
     readonly isStorageBufferAttribute: true;
 
     constructor(array: TypedArray | number, itemSize: number);
-
-    dispose(): void;
 }
