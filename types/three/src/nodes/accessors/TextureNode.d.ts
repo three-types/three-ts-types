@@ -1,4 +1,5 @@
 import { Texture } from "../../textures/Texture.js";
+import DeferredNode from "../core/DeferredNode.js";
 import Node from "../core/Node.js";
 import UniformNode from "../core/UniformNode.js";
 
@@ -105,3 +106,18 @@ export const textureLevel: (
 export const sampler: (value: Texture | TextureNode) => Node;
 
 export const samplerComparison: (value: Texture | TextureNode) => Node;
+
+declare module "../core/Node.js" {
+    // `size` and `bias` are also deferred, but are omitted since subclasses declare properties with these names
+    interface NodeElements {
+        sample: (uvNode: Node) => DeferredNode;
+        load: (uvNode: Node) => DeferredNode;
+        blur: (amountNode: Node) => DeferredNode;
+        level: (levelNode: Node) => DeferredNode;
+        compare: (compareNode: Node<"float"> | number) => DeferredNode;
+        grad: (gradeNodeX: Node, gradeNodeY: Node) => DeferredNode;
+        gather: (gatherNode?: Node<"int"> | number) => DeferredNode;
+        depth: (depthNode: Node) => DeferredNode;
+        offset: (offsetNode: Node<"ivec2">) => DeferredNode;
+    }
+}

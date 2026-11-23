@@ -263,6 +263,7 @@ const files = [
     'src/nodes/accessors/ReferenceAttributeNode',
     'src/nodes/accessors/Skinning',
     'src/nodes/core/constants',
+    'src/nodes/core/DeferredNode',
     'src/nodes/core/Node',
     'src/nodes/core/NodeAttribute',
     'src/nodes/core/NodeCache',

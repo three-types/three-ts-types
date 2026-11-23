@@ -5,7 +5,7 @@ import { NodeAccess } from "../core/constants.js";
 import Node from "../core/Node.js";
 import { Struct } from "../core/StructNode.js";
 import StructTypeNode from "../core/StructTypeNode.js";
-import StorageArrayElementNode from "../utils/StorageArrayElementNode.js";
+import ArrayElementNode from "../utils/ArrayElementNode.js";
 import BufferNode from "./BufferNode.js";
 
 interface StorageBufferNodeInterface<TNodeType> {
@@ -19,7 +19,7 @@ interface StorageBufferNodeInterface<TNodeType> {
 
     bufferObject: boolean;
 
-    element: (indexNode: Node | number) => StorageArrayElementNode<TNodeType>;
+    element: (indexNode: Node | number) => ArrayElementNode<TNodeType>;
 
     setPBO(value: boolean): this;
 

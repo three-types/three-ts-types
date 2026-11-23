@@ -24573,7 +24573,7 @@ index 1c2f7995c..a2aec4a43 100644
  let imageWidth = 1,
      imageHeight = 1;
 diff --git a/examples-testing/examples/webgpu_storage_buffer.ts b/examples-testing/examples/webgpu_storage_buffer.ts
-index ad29d8f76..4c5255415 100644
+index ad29d8f76..c774fd858 100644
 --- a/examples-testing/examples/webgpu_storage_buffer.ts
 +++ b/examples-testing/examples/webgpu_storage_buffer.ts
 @@ -2,8 +2,8 @@ import * as THREE from 'three/webgpu';
@@ -24611,7 +24611,7 @@ index ad29d8f76..4c5255415 100644
          for (let i = 0; i < type.length; i++) {
 -            const invertIndex = arrayBufferNodes[i].element(uint(size - 1).sub(instanceIndex)).toVar();
 +            const invertIndex = (
-+                arrayBufferNodes[i].element(uint(size - 1).sub(instanceIndex)) as THREE.StorageArrayElementNode<'float'>
++                arrayBufferNodes[i].element(uint(size - 1).sub(instanceIndex)) as THREE.ArrayElementNode<'float'>
 +            ).toVar();
              workgroupBarrier();
              arrayBufferNodes[i].element(instanceIndex).assign(invertIndex);
@@ -24621,7 +24621,7 @@ index ad29d8f76..4c5255415 100644
  
          If(uv().y.greaterThan(0.0), () => {
 -            const indexValue = arrayBufferNodes[0].element(index).toVar();
-+            const indexValue = (arrayBufferNodes[0].element(index) as THREE.StorageArrayElementNode<'float'>).toVar();
++            const indexValue = (arrayBufferNodes[0].element(index) as THREE.ArrayElementNode<'float'>).toVar();
              const value = float(indexValue).div(float(size)).mul(barCount).floor().div(barCount);
  
              color.assign(vec3(value, 0, 0));
@@ -24629,7 +24629,7 @@ index ad29d8f76..4c5255415 100644
  
          If(uv().y.greaterThan(0.25), () => {
 -            const indexValue = arrayBufferNodes[1].element(index).toVar();
-+            const indexValue = (arrayBufferNodes[1].element(index) as THREE.StorageArrayElementNode<'float'>).toVar();
++            const indexValue = (arrayBufferNodes[1].element(index) as THREE.ArrayElementNode<'float'>).toVar();
              const value = float(indexValue).div(float(size)).mul(barCount).floor().div(barCount);
  
              color.assign(vec3(0, value, 0));
@@ -24637,7 +24637,7 @@ index ad29d8f76..4c5255415 100644
  
          If(uv().y.greaterThan(0.5), () => {
 -            const indexValue = arrayBufferNodes[2].element(index).toVar();
-+            const indexValue = (arrayBufferNodes[2].element(index) as THREE.StorageArrayElementNode<'float'>).toVar();
++            const indexValue = (arrayBufferNodes[2].element(index) as THREE.ArrayElementNode<'float'>).toVar();
              const value = float(indexValue).div(float(size)).mul(barCount).floor().div(barCount);
  
              color.assign(vec3(0, 0, value));
@@ -24645,7 +24645,7 @@ index ad29d8f76..4c5255415 100644
  
          If(uv().y.greaterThan(0.75), () => {
 -            const indexValue = arrayBufferNodes[3].element(index).toVar();
-+            const indexValue = (arrayBufferNodes[3].element(index) as THREE.StorageArrayElementNode<'float'>).toVar();
++            const indexValue = (arrayBufferNodes[3].element(index) as THREE.ArrayElementNode<'float'>).toVar();
              const value = float(indexValue).div(float(size)).mul(barCount).floor().div(barCount);
  
              color.assign(vec3(value, value, value));
