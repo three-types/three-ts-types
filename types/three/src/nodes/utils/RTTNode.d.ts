@@ -10,7 +10,7 @@ export interface RTTNodeOptions extends RenderTargetOptions {
 declare class RTTNode extends TextureNode {
     readonly isRTTNode: true;
 
-    node: Node;
+    node: Node | null;
     width: number | null;
     height: number | null;
 
@@ -19,7 +19,7 @@ declare class RTTNode extends TextureNode {
     textureNeedsUpdate: boolean;
     autoUpdate: boolean;
 
-    constructor(node: Node, width?: number | null, height?: number | null, options?: RTTNodeOptions);
+    constructor(node?: Node | null, width?: number | null, height?: number | null, options?: RTTNodeOptions);
 
     get autoResize(): boolean;
 
