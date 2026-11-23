@@ -46,7 +46,6 @@ export * from "./utils/RTTNode.js";
 export * from "./utils/SampleNode.js";
 export * from "./utils/SpriteSheetUV.js";
 export * from "./utils/SpriteUtils.js";
-export * from "./utils/StorageArrayElementNode.js";
 export * from "./utils/Timer.js";
 export * from "./utils/TriplanarTextures.js";
 export * from "./utils/UVUtils.js";
