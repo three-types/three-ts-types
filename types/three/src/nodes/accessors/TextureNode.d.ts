@@ -15,7 +15,7 @@ interface TextureNodeInterface {
     gatherNode: Node<"int"> | null;
 
     sampler: boolean;
-    updateMatrix: boolean;
+    get updateMatrix(): boolean;
 
     referenceNode: Node | null;
 
@@ -85,6 +85,8 @@ export const texture: {
         biasNode?: Node | null,
     ): TextureNode<TNodeType>;
 };
+
+export const textureMatrix: (value: Texture | TextureNode) => UniformNode<"mat3">;
 
 export const uniformTexture: (
     value?: Texture,
