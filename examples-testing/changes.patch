@@ -23074,10 +23074,10 @@ index c25766760..e8ea3522e 100644
          .add(params, 'roughness', 0, 1)
          .name('Roughness')
 diff --git a/examples-testing/examples/webgpu_postprocessing_ssr_mirror.ts b/examples-testing/examples/webgpu_postprocessing_ssr_mirror.ts
-index e7c593c6f..d6e2bd9d8 100644
+index 0f126029e..b225ff55f 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ssr_mirror.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ssr_mirror.ts
-@@ -41,8 +41,12 @@ const params = {
+@@ -42,8 +42,12 @@ const params = {
      blurQuality: 1,
  };
  
@@ -23092,7 +23092,7 @@ index e7c593c6f..d6e2bd9d8 100644
  
  init();
  
-@@ -61,13 +65,13 @@ async function init() {
+@@ -62,13 +66,13 @@ async function init() {
          model = gltf.scene;
  
          model.traverse(function (object) {
@@ -23110,7 +23110,12 @@ index e7c593c6f..d6e2bd9d8 100644
              }
          });
  
-@@ -152,14 +156,14 @@ async function init() {
+@@ -154,18 +158,18 @@ async function init() {
+     const reflection = ssr(scenePassColor, scenePassDepth, sceneNormal, {
+         metalnessNode: scenePassMetalRough.r,
+         roughnessNode: scenePassMetalRough.g,
+-        specularNode: scenePassSpecular,
++        specularNode: scenePassSpecular as unknown as THREE.Node<'vec3'>,
          binaryRefine: params.binaryRefine,
      }).toInspector('SSR');
  
@@ -23127,7 +23132,7 @@ index e7c593c6f..d6e2bd9d8 100644
  
          switch (params.output) {
              case 'Beauty':
-@@ -186,14 +190,14 @@ async function init() {
+@@ -192,14 +196,14 @@ async function init() {
  
      // GUI
  
@@ -23144,7 +23149,7 @@ index e7c593c6f..d6e2bd9d8 100644
      ssrGui.add(params, 'enabled').name('Enabled').onChange(updateOutput);
      ssrGui.add(params, 'intensity', 0, 1).name('Intensity').onChange(updateParameters);
      ssrGui.add(params, 'quality', 0, 1, 0.01).name('Quality').onChange(updateParameters);
-@@ -201,20 +205,21 @@ async function init() {
+@@ -207,20 +211,21 @@ async function init() {
      ssrGui.add(params, 'maxDistance', 0, 1).name('Max distance').onChange(updateParameters);
      ssrGui.add(params, 'thickness', 0, 0.05).name('Thickness').onChange(updateParameters);
  

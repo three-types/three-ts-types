@@ -10,11 +10,11 @@ export interface SSRNodeOptions {
      */
     metalnessNode?: Node<"float"> | undefined;
     /**
-     * - Stochastic mode only: material normal-incidence reflectance (F0), typically an MRT `specularColorBlended` attachment (it already includes IOR, specular intensity and metalness; raw `material.specularColor` reflects too brightly). Defaults to the metalness/base-color approximation.
+     * - Material normal-incidence reflectance (F0), typically an MRT `specularColorBlended` attachment (it already includes IOR, specular intensity and metalness; raw `material.specularColor` reflects too brightly). Defaults to the metalness/base-color approximation.
      */
     specularNode?: Node<"vec3"> | undefined;
     /**
-     * - Stochastic mode only: material grazing reflectance, typically an MRT `specularF90` attachment. Defaults to one.
+     * - Material grazing reflectance, typically an MRT `specularF90` attachment. Defaults to one.
      */
     specularF90Node?: Node<"float"> | undefined;
     /**
@@ -118,7 +118,7 @@ declare class SSRNode extends Node<"vec4"> {
      */
     metalnessNode: Node<"float"> | null;
     /**
-     * Stochastic mode only: per-pixel normal-incidence reflectance (F0), typically an MRT
+     * Per-pixel normal-incidence reflectance (F0), typically an MRT
      * `specularColorBlended` attachment, which already includes IOR, specular intensity and
      * metalness (raw `material.specularColor` reflects too brightly). When `null`, F0 is
      * derived from metalness and the diffuse color.
@@ -128,7 +128,7 @@ declare class SSRNode extends Node<"vec4"> {
      */
     specularNode: Node<"vec3"> | null;
     /**
-     * Stochastic mode only: per-pixel grazing reflectance (F90), typically an MRT
+     * Per-pixel grazing reflectance (F90), typically an MRT
      * `specularF90` attachment. When `null`, the shader uses `1`.
      *
      * @type {?Node<float>}

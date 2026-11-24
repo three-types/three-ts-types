@@ -3841,7 +3841,7 @@ index 0f8db6fc4..8e1da0128 100644
 +
 +export function ssao(depthNode: Node, normalNode: Node, camera: Camera): SSAONode;
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/tsl/display/SSRNode.d.ts b/jsdoc-testing/jsdoc/examples/jsm/tsl/display/SSRNode.d.ts
-index a6b869852..1dfabaab9 100644
+index d81de19f9..a06c33d0d 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/tsl/display/SSRNode.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/tsl/display/SSRNode.d.ts
 @@ -1,6 +1,6 @@
@@ -3861,12 +3861,12 @@ index a6b869852..1dfabaab9 100644
 -    metalnessNode?: Node<any>;
 +    metalnessNode?: Node<"float"> | undefined;
      /**
-      * - Stochastic mode only: material normal-incidence reflectance (F0), typically an MRT `specularColorBlended` attachment (it already includes IOR, specular intensity and metalness; raw `material.specularColor` reflects too brightly). Defaults to the metalness/base-color approximation.
+      * - Material normal-incidence reflectance (F0), typically an MRT `specularColorBlended` attachment (it already includes IOR, specular intensity and metalness; raw `material.specularColor` reflects too brightly). Defaults to the metalness/base-color approximation.
       */
 -    specularNode?: Node<any>;
 +    specularNode?: Node<"vec3"> | undefined;
      /**
-      * - Stochastic mode only: material grazing reflectance, typically an MRT `specularF90` attachment. Defaults to one.
+      * - Material grazing reflectance, typically an MRT `specularF90` attachment. Defaults to one.
       */
 -    specularF90Node?: Node<any>;
 +    specularF90Node?: Node<"float"> | undefined;
@@ -3906,8 +3906,8 @@ index a6b869852..1dfabaab9 100644
 - * @typedef {Object} SSRNodeOptions
 - * @property {boolean} [stochastic=false] - When `false`, traces a single mirror reflection and softens roughness with a blur pass (first-generation SSR). When `true`, varies the reflection direction per pixel with stochastic GGX rays (second-generation SSR); higher quality on rough/glossy surfaces but noisier, so it expects a temporal/spatial denoiser downstream.
 - * @property {Node<float>} [metalnessNode=null] - Per-pixel metalness. Drives GGX reflection sampling and, with `reflectNonMetals=false`, the non-metal early-out.
-- * @property {Node<vec3>} [specularNode=null] - Stochastic mode only: material normal-incidence reflectance (F0), typically an MRT `specularColorBlended` attachment (it already includes IOR, specular intensity and metalness; raw `material.specularColor` reflects too brightly). Defaults to the metalness/base-color approximation.
-- * @property {Node<float>} [specularF90Node=null] - Stochastic mode only: material grazing reflectance, typically an MRT `specularF90` attachment. Defaults to one.
+- * @property {Node<vec3>} [specularNode=null] - Material normal-incidence reflectance (F0), typically an MRT `specularColorBlended` attachment (it already includes IOR, specular intensity and metalness; raw `material.specularColor` reflects too brightly). Defaults to the metalness/base-color approximation.
+- * @property {Node<float>} [specularF90Node=null] - Material grazing reflectance, typically an MRT `specularF90` attachment. Defaults to one.
 - * @property {Node<float>} [roughnessNode=null] - Per-pixel roughness. Drives GGX sampling and the blur mip selection.
 - * @property {boolean} [reflectNonMetals=false] - Only used when `stochastic=false`. When `false`, non-metallic surfaces are discarded for a noticeable performance gain; set `true` to also reflect dielectrics (e.g. marble, polished wood, plastic).
 - * @property {Texture} [environmentNode=null] - Equirectangular HDR environment map with CPU-side `image.data` (e.g. from RGBELoader). Not compatible with PMREM / `scene.environment` cubemaps.
@@ -3982,7 +3982,7 @@ index a6b869852..1dfabaab9 100644
 -    metalnessNode: Node<any> | null;
 +    metalnessNode: Node<"float"> | null;
      /**
-      * Stochastic mode only: per-pixel normal-incidence reflectance (F0), typically an MRT
+      * Per-pixel normal-incidence reflectance (F0), typically an MRT
       * `specularColorBlended` attachment, which already includes IOR, specular intensity and
 @@ -134,7 +126,7 @@ declare class SSRNode extends Node {
       * @type {?Node<vec3>}
@@ -3991,7 +3991,7 @@ index a6b869852..1dfabaab9 100644
 -    specularNode: Node<any> | null;
 +    specularNode: Node<"vec3"> | null;
      /**
-      * Stochastic mode only: per-pixel grazing reflectance (F90), typically an MRT
+      * Per-pixel grazing reflectance (F90), typically an MRT
       * `specularF90` attachment. When `null`, the shader uses `1`.
 @@ -142,24 +134,14 @@ declare class SSRNode extends Node {
       * @type {?Node<float>}
