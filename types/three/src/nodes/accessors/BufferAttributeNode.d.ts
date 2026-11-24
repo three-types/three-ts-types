@@ -102,9 +102,9 @@ declare class BufferAttributeNodeClass
      * and thus the hash should be shared as well.
      *
      * @param {NodeBuilder} builder - The current node builder.
-     * @return {string} The hash.
+     * @return {number} The hash.
      */
-    getHash(builder: NodeBuilder): string;
+    getHash(builder: NodeBuilder): number;
     /**
      * This method is overwritten since the node type is inferred from
      * the buffer attribute.

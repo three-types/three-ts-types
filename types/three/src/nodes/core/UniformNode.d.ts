@@ -68,9 +68,9 @@ declare class UniformNodeClass<TValue> extends InputNode<unknown, TValue> {
      * classes might overwrite this method with a different implementation.
      *
      * @param {NodeBuilder} builder - The current node builder.
-     * @return {string} The uniform hash.
+     * @return {number|string} The uniform hash.
      */
-    getUniformHash(builder: NodeBuilder): string;
+    getUniformHash(builder: NodeBuilder): number | string;
     /**
      * Uniform nodes with the same hash share a single uniform. This method returns the node
      * the shared uniform refers to which is the first node registered for the hash.

@@ -339,9 +339,9 @@ declare class NodeClass<TEventMap extends NodeClassEventMap = NodeClassEventMap>
      * depending on their implementation.
      *
      * @param {NodeBuilder} builder - The current node builder.
-     * @return {string} The hash.
+     * @return {number|string} The hash.
      */
-    getHash(builder: NodeBuilder): string;
+    getHash(builder: NodeBuilder): number | string;
     /**
      * Returns the update type of {@link Node#update}.
      *
