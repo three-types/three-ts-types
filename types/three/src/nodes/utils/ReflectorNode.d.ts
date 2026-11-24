@@ -18,7 +18,7 @@ export interface ReflectorNodeParameters {
 }
 
 declare class ReflectorNode extends TextureNode {
-    constructor(parameters?: ReflectorNodeParameters);
+    constructor(parameters?: ReflectorNodeParameters | null);
 
     get reflector(): ReflectorBaseNode;
 
