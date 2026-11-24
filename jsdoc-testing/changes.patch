@@ -12965,7 +12965,7 @@ index 5f7272dfe..d8a2ddd17 100644
  }
  import { BufferGeometry } from '../core/BufferGeometry.js';
 diff --git a/jsdoc-testing/jsdoc/src/geometries/TubeGeometry.d.ts b/jsdoc-testing/jsdoc/src/geometries/TubeGeometry.d.ts
-index 936cb92d2..bffa13f9e 100644
+index 8b002271c..6be4e0e77 100644
 --- a/jsdoc-testing/jsdoc/src/geometries/TubeGeometry.d.ts
 +++ b/jsdoc-testing/jsdoc/src/geometries/TubeGeometry.d.ts
 @@ -40,7 +40,7 @@ export class TubeGeometry extends BufferGeometry {
@@ -12986,15 +12986,11 @@ index 936cb92d2..bffa13f9e 100644
      /**
       * Holds the constructor parameters that have been
       * used to generate the geometry. Any modification
-@@ -58,10 +58,18 @@ export class TubeGeometry extends BufferGeometry {
+@@ -58,7 +58,13 @@ export class TubeGeometry extends BufferGeometry {
       *
       * @type {Object}
       */
 -    parameters: Object;
--    tangents: any;
--    normals: any;
--    binormals: any;
--    copy(source: any): this;
 +    readonly parameters: {
 +        readonly path: Curve<Vector3>;
 +        readonly tubularSegments: number;
@@ -13002,14 +12998,19 @@ index 936cb92d2..bffa13f9e 100644
 +        readonly radialSegments: number;
 +        readonly closed: boolean;
 +    };
-+    tangents: Vector3[];
-+    normals: Vector3[];
-+    binormals: Vector3[];
+     /**
+      * The tangents of the Frenet frames along the path.
+      *
+@@ -80,7 +86,8 @@ export class TubeGeometry extends BufferGeometry {
+      * @readonly
+      */
+     readonly binormals: Array<Vector3>;
+-    copy(source: any): this;
 +    copy(source: TubeGeometry): this;
  }
  import { BufferGeometry } from '../core/BufferGeometry.js';
 +import { Curve } from '../extras/core/Curve.js';
-+import { Vector3 } from '../math/Vector3.js';
+ import { Vector3 } from '../math/Vector3.js';
 diff --git a/jsdoc-testing/jsdoc/src/geometries/WireframeGeometry.d.ts b/jsdoc-testing/jsdoc/src/geometries/WireframeGeometry.d.ts
 index 39f9908ab..ec30d87be 100644
 --- a/jsdoc-testing/jsdoc/src/geometries/WireframeGeometry.d.ts
