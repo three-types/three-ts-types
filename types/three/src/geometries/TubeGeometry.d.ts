@@ -71,9 +71,27 @@ export class TubeGeometry extends BufferGeometry {
         readonly radialSegments: number;
         readonly closed: boolean;
     };
-    tangents: Vector3[];
-    normals: Vector3[];
-    binormals: Vector3[];
+    /**
+     * The tangents of the Frenet frames along the path.
+     *
+     * @type {Array<Vector3>}
+     * @readonly
+     */
+    readonly tangents: Array<Vector3>;
+    /**
+     * The normals of the Frenet frames along the path.
+     *
+     * @type {Array<Vector3>}
+     * @readonly
+     */
+    readonly normals: Array<Vector3>;
+    /**
+     * The binormals of the Frenet frames along the path.
+     *
+     * @type {Array<Vector3>}
+     * @readonly
+     */
+    readonly binormals: Array<Vector3>;
     copy(source: TubeGeometry): this;
 }
 import { BufferGeometry } from "../core/BufferGeometry.js";
