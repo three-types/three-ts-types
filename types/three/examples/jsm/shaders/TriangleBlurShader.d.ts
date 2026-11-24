@@ -3,7 +3,7 @@ import { IUniform } from "three";
 export const TriangleBlurShader: {
     name: string;
     uniforms: {
-        texture: IUniform;
+        tDiffuse: IUniform;
         delta: IUniform;
     };
     vertexShader: string;
