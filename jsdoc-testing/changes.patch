@@ -265,7 +265,7 @@ index b8a023b87..2081886ed 100644
 -import { MeshStandardNodeMaterial } from 'three/webgpu';
 +export function createRoadMaterial(layout: CityGeneratorLayout): MeshStandardNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/generators/ForestGenerator.d.ts b/jsdoc-testing/jsdoc/examples/jsm/generators/ForestGenerator.d.ts
-index 92a9ce34c..1b9a23055 100644
+index 263e94da9..1b9a23055 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/generators/ForestGenerator.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/generators/ForestGenerator.d.ts
 @@ -1,3 +1,25 @@
@@ -317,9 +317,9 @@ index 92a9ce34c..1b9a23055 100644
 -        to: number;
 -        castShadow: boolean;
 -    };
--    from: import("three/tsl").UniformNode;
--    to: import("three/tsl").UniformNode;
--    _cameraPosition: import("three/tsl").UniformNode;
+-    from: import("three/webgpu").UniformNode;
+-    to: import("three/webgpu").UniformNode;
+-    _cameraPosition: import("three/webgpu").UniformNode;
 +    constructor(parameters?: Partial<ForestGeneratorParameters>);
 +
 +    parameters: ForestGeneratorParameters;
@@ -373,7 +373,7 @@ index 92a9ce34c..1b9a23055 100644
 -import { Group } from 'three';
 +export function createForestMaterial(from: Node<'float'>, to: Node<'float'>, camPos: Node<'vec3'>): MeshStandardNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/generators/TerrainGenerator.d.ts b/jsdoc-testing/jsdoc/examples/jsm/generators/TerrainGenerator.d.ts
-index 098f88ace..4a6568e45 100644
+index 30220f6b4..4a6568e45 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/generators/TerrainGenerator.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/generators/TerrainGenerator.d.ts
 @@ -1,3 +1,22 @@
@@ -420,8 +420,8 @@ index 098f88ace..4a6568e45 100644
 -        talus: number;
 -        talusPasses: number;
 -    };
--    minHeight: import("three/tsl").UniformNode;
--    maxHeight: import("three/tsl").UniformNode;
+-    minHeight: import("three/webgpu").UniformNode;
+-    maxHeight: import("three/webgpu").UniformNode;
 +    constructor(parameters?: Partial<TerrainGeneratorParameters>);
 +
 +    parameters: TerrainGeneratorParameters;
@@ -1247,7 +1247,7 @@ index e82b5711c..8131a4ece 100644
 -import { Lighting } from 'three/webgpu';
 -import ClusteredLightsNode from '../tsl/lighting/ClusteredLightsNode.js';
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/lighting/LightMapper.d.ts b/jsdoc-testing/jsdoc/examples/jsm/lighting/LightMapper.d.ts
-index 7c238924e..1919d75c2 100644
+index 014fff663..1919d75c2 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/lighting/LightMapper.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/lighting/LightMapper.d.ts
 @@ -1,3 +1,5 @@
@@ -1300,9 +1300,9 @@ index 7c238924e..1919d75c2 100644
 -    _guideScene: Scene;
 -    _camera: OrthographicCamera;
 -    _objects: any[];
--    _jitter: import("three/tsl").UniformNode;
--    _sample: import("three/tsl").UniformNode;
--    _weight: import("three/tsl").UniformNode;
+-    _jitter: import("three/webgpu").UniformNode;
+-    _sample: import("three/webgpu").UniformNode;
+-    _weight: import("three/webgpu").UniformNode;
 -    _floatSums: any;
 -    _charts: number;
 -    _guidesNeedUpdate: boolean;
@@ -1609,7 +1609,7 @@ index 05e2c9045..65cc308d2 100644
 -import { Data3DTexture } from 'three';
 -import { Scene } from 'three';
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/lighting/RayTracedRadiosity.d.ts b/jsdoc-testing/jsdoc/examples/jsm/lighting/RayTracedRadiosity.d.ts
-index 43e79ee1d..449fce295 100644
+index 4b56d9b17..449fce295 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/lighting/RayTracedRadiosity.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/lighting/RayTracedRadiosity.d.ts
 @@ -1,3 +1,5 @@
@@ -1627,7 +1627,7 @@ index 43e79ee1d..449fce295 100644
 -    _trace: any;
 -    _surface: any;
 -    _visibility: any;
--    _triangles: import("three/tsl").StorageBufferNode | null;
+-    _triangles: import("three/webgpu").StorageBufferNode | null;
 -    _materials: any;
 -    _lights: any;
 -    _lightCount: number;
@@ -1636,14 +1636,14 @@ index 43e79ee1d..449fce295 100644
 -    _lightMapMeshes: any[];
 -    _cache: LightMapper | null;
 -    _environment: any;
--    _sky: import("three/tsl").StorageBufferNode | null;
--    _environmentIntensity: import("three/tsl").UniformNode;
--    _environmentRotation: import("three/tsl").UniformNode;
--    _environmentInverseRotation: import("three/tsl").UniformNode;
+-    _sky: import("three/webgpu").StorageBufferNode | null;
+-    _environmentIntensity: import("three/webgpu").UniformNode;
+-    _environmentRotation: import("three/webgpu").UniformNode;
+-    _environmentInverseRotation: import("three/webgpu").UniformNode;
 -    _firstRay: number;
--    _firstRayNode: import("three/tsl").Node;
--    _raysNode: import("three/tsl").Node;
--    _biasNode: import("three/tsl").Node;
+-    _firstRayNode: import("three/webgpu").Node;
+-    _raysNode: import("three/webgpu").Node;
+-    _biasNode: import("three/webgpu").Node;
      /**
       * Collects the meshes of the scene, builds the BVH and solves the cached bounces. Call this again
       * after changing the scene or the lighting.
@@ -1712,7 +1712,7 @@ index 43e79ee1d..449fce295 100644
 -import { LightMapper } from './LightMapper.js';
 +}): (position: Node<"vec3">, normal: Node<"vec3">) => Node<"vec3">;
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/lighting/vxgi/VXGIVolume.d.ts b/jsdoc-testing/jsdoc/examples/jsm/lighting/vxgi/VXGIVolume.d.ts
-index 914ca6ad0..f2a861d99 100644
+index 1d7f04b76..f2a861d99 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/lighting/vxgi/VXGIVolume.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/lighting/vxgi/VXGIVolume.d.ts
 @@ -1,3 +1,15 @@
@@ -1803,8 +1803,8 @@ index 914ca6ad0..f2a861d99 100644
 -    _gridSize: Vector3;
 -    _levels: number;
 -    _voxelCount: number;
--    _gridSizeNode: import("three/tsl").UniformNode[];
--    _voxelCountNode: import("three/tsl").UniformNode;
+-    _gridSizeNode: import("three/webgpu").UniformNode[];
+-    _voxelCountNode: import("three/webgpu").UniformNode;
 -    _pingPongTexture: Storage3DTexture | null;
 -    _directTexture: Storage3DTexture | null;
 -    _pingPongDirectionalTexture: Storage3DTexture | null;
@@ -1814,9 +1814,9 @@ index 914ca6ad0..f2a861d99 100644
 -    _triangleIdAttribute: StorageBufferAttribute | null;
 -    _solidAttribute: StorageBufferAttribute | null;
 -    _triangleAttribute: StorageBufferAttribute | null;
--    _trianglesNode: import("three/tsl").StorageBufferNode | null;
+-    _trianglesNode: import("three/webgpu").StorageBufferNode | null;
 -    _triangleCount: number;
--    _triangleCountNode: import("three/tsl").UniformNode;
+-    _triangleCountNode: import("three/webgpu").UniformNode;
 -    _kernels: {
 -        clear: any;
 -        voxelize: any;
@@ -1828,13 +1828,13 @@ index 914ca6ad0..f2a861d99 100644
 -        bounce: null[];
 -    } | null;
 -    _lightsArray: Vector4[];
--    _lightsNode: import("three/tsl").UniformArrayNode;
--    _lightCountNode: import("three/tsl").UniformNode;
+-    _lightsNode: import("three/webgpu").UniformArrayNode;
+-    _lightCountNode: import("three/webgpu").UniformNode;
 -    _lightKey: string;
 -    _lightTypes: any[];
 -    _lightShadows: any[];
--    _shadowMatrices: import("three/tsl").UniformNode[];
--    _shadowParams: import("three/tsl").UniformNode[];
+-    _shadowMatrices: import("three/webgpu").UniformNode[];
+-    _shadowParams: import("three/webgpu").UniformNode[];
 -    _lightsKey: string;
 -    _exclude: Set<any>;
 +    directionalWidthNode: UniformNode<"float">;
@@ -1958,7 +1958,7 @@ index 91e1c990d..69fdfdc0c 100644
 -import { Light } from 'three';
 -import { SunLightShadow } from './SunLightShadow.js';
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/lights/SunLightNode.d.ts b/jsdoc-testing/jsdoc/examples/jsm/lights/SunLightNode.d.ts
-index 50f0d40c9..0219eafa8 100644
+index 3877b2220..0219eafa8 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/lights/SunLightNode.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/lights/SunLightNode.d.ts
 @@ -1,3 +1,7 @@
@@ -1986,7 +1986,7 @@ index 50f0d40c9..0219eafa8 100644
      setupShadowNode(): SunShadowNode;
      setupDirect(): {
 -        lightDirection: any;
--        lightColor: import("three/tsl").Node;
+-        lightColor: import("three/webgpu").Node;
 +        lightDirection: Node<"vec3">;
 +        lightColor: Node;
      };
@@ -2374,7 +2374,7 @@ index 3a794d7df..40bd78652 100644
       * Called by the tiles renderer when the plugin is unregistered or the
       * tiles renderer is disposed.
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/pipelines/MeshletDrawingPipeline.d.ts b/jsdoc-testing/jsdoc/examples/jsm/pipelines/MeshletDrawingPipeline.d.ts
-index 6212d3045..2bd9c679d 100644
+index 8c79a83da..2bd9c679d 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/pipelines/MeshletDrawingPipeline.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/pipelines/MeshletDrawingPipeline.d.ts
 @@ -1,3 +1,17 @@
@@ -2894,15 +2894,15 @@ index 6212d3045..2bd9c679d 100644
 -    computeNodesBefore: any[];
 -    transformNode: any;
 -    transformFrames: number;
--    unbounded: import("three/tsl").UniformNode | null;
+-    unbounded: import("three/webgpu").UniformNode | null;
 -    transformedCount: number;
 -    added: boolean;
 -    history: boolean | undefined;
 -    rangeNodes: {
--        dataOffset: import("three/tsl").UniformNode;
--        queueOffset: import("three/tsl").UniformNode;
--        counterOffset: import("three/tsl").UniformNode;
--        maxWorkItems: import("three/tsl").UniformNode;
+-        dataOffset: import("three/webgpu").UniformNode;
+-        queueOffset: import("three/webgpu").UniformNode;
+-        counterOffset: import("three/webgpu").UniformNode;
+-        maxWorkItems: import("three/webgpu").UniformNode;
 -    } | undefined;
 -    instanceDataStride: any;
 -    objectWorldArray: Float32Array<ArrayBuffer> | undefined;
@@ -2913,8 +2913,8 @@ index 6212d3045..2bd9c679d 100644
 -        local: number;
 -        data: number;
 -    } | undefined;
--    transformCount: import("three/tsl").UniformNode | undefined;
--    transformPreviousCount: import("three/tsl").UniformNode | undefined;
+-    transformCount: import("three/webgpu").UniformNode | undefined;
+-    transformPreviousCount: import("three/webgpu").UniformNode | undefined;
 -    instanceNodes: any;
 -    historyRanges: {
 -        transform: never[];
@@ -3105,8 +3105,8 @@ index 6212d3045..2bd9c679d 100644
 -    indexEnd: number;
 -    vertexAttribute: StorageBufferAttribute;
 -    indexAttribute: StorageBufferAttribute;
--    vertexNode: import("three/tsl").StorageBufferNode;
--    indexNode: import("three/tsl").StorageBufferNode;
+-    vertexNode: import("three/webgpu").StorageBufferNode;
+-    indexNode: import("three/webgpu").StorageBufferNode;
 -    geometries: Map<any, any>;
 -    wasted: number;
 -    version: number;
@@ -3216,36 +3216,36 @@ index 6212d3045..2bd9c679d 100644
 -    geometryEnd: number;
 -    geometryIndices: WeakMap<object, any>;
 -    history: boolean;
--    historyOffset: import("three/tsl").UniformNode;
--    tableOffset: import("three/tsl").UniformNode;
--    geometryOffset: import("three/tsl").UniformNode;
--    prepassArgsBase: import("three/tsl").UniformNode;
--    occludedCounter: import("three/tsl").UniformNode;
--    maxClusters: import("three/tsl").UniformNode;
--    worldWrite: import("three/tsl").StorageBufferNode;
--    boundsWrite: import("three/tsl").StorageBufferNode;
--    instanceWorld: import("three/tsl").StorageBufferNode;
--    instanceBounds: import("three/tsl").StorageBufferNode;
--    instanceMvp: import("three/tsl").StorageBufferNode;
--    countersRead: import("three/tsl").StorageBufferNode;
--    workQueue: import("three/tsl").StorageBufferNode;
+-    historyOffset: import("three/webgpu").UniformNode;
+-    tableOffset: import("three/webgpu").UniformNode;
+-    geometryOffset: import("three/webgpu").UniformNode;
+-    prepassArgsBase: import("three/webgpu").UniformNode;
+-    occludedCounter: import("three/webgpu").UniformNode;
+-    maxClusters: import("three/webgpu").UniformNode;
+-    worldWrite: import("three/webgpu").StorageBufferNode;
+-    boundsWrite: import("three/webgpu").StorageBufferNode;
+-    instanceWorld: import("three/webgpu").StorageBufferNode;
+-    instanceBounds: import("three/webgpu").StorageBufferNode;
+-    instanceMvp: import("three/webgpu").StorageBufferNode;
+-    countersRead: import("three/webgpu").StorageBufferNode;
+-    workQueue: import("three/webgpu").StorageBufferNode;
 -    clusterDispatchAttribute: IndirectStorageBufferAttribute;
--    bufferNodes: (string | import("three/tsl").StorageBufferNode)[][];
--    projScreenMatrix: import("three/tsl").UniformNode;
--    frustumPlanes: import("three/tsl").UniformArrayNode;
--    cameraPosition: import("three/tsl").UniformNode;
--    cameraZoom: import("three/tsl").UniformNode;
--    viewSize: import("three/tsl").UniformNode;
--    lodPosition: import("three/tsl").UniformNode;
--    lodScale: import("three/tsl").UniformNode;
--    lodPerspective: import("three/tsl").UniformNode;
--    lodThreshold: import("three/tsl").UniformNode;
--    lodTransition: import("three/tsl").UniformNode;
--    minScreenRadius: import("three/tsl").UniformNode;
--    coarseScreenRadius: import("three/tsl").UniformNode;
--    transitionScreenRadius: import("three/tsl").UniformNode;
+-    bufferNodes: (string | import("three/webgpu").StorageBufferNode)[][];
+-    projScreenMatrix: import("three/webgpu").UniformNode;
+-    frustumPlanes: import("three/webgpu").UniformArrayNode;
+-    cameraPosition: import("three/webgpu").UniformNode;
+-    cameraZoom: import("three/webgpu").UniformNode;
+-    viewSize: import("three/webgpu").UniformNode;
+-    lodPosition: import("three/webgpu").UniformNode;
+-    lodScale: import("three/webgpu").UniformNode;
+-    lodPerspective: import("three/webgpu").UniformNode;
+-    lodThreshold: import("three/webgpu").UniformNode;
+-    lodTransition: import("three/webgpu").UniformNode;
+-    minScreenRadius: import("three/webgpu").UniformNode;
+-    coarseScreenRadius: import("three/webgpu").UniformNode;
+-    transitionScreenRadius: import("three/webgpu").UniformNode;
 -    computeReset: any;
--    objectEndNode: import("three/tsl").UniformNode;
+-    objectEndNode: import("three/webgpu").UniformNode;
 -    cullNodes: any[];
 -    computeNodes: any[];
 -    skipOcclusionNodes: any[];
@@ -3360,7 +3360,7 @@ index 6212d3045..2bd9c679d 100644
 -import { Matrix4 } from 'three/webgpu';
 -export {};
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/pipelines/VisibilityBufferDrawingPipeline.d.ts b/jsdoc-testing/jsdoc/examples/jsm/pipelines/VisibilityBufferDrawingPipeline.d.ts
-index 61c656e13..55ae819e3 100644
+index 7667421d8..55ae819e3 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/pipelines/VisibilityBufferDrawingPipeline.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/pipelines/VisibilityBufferDrawingPipeline.d.ts
 @@ -1,3 +1,15 @@
@@ -3434,11 +3434,11 @@ index 61c656e13..55ae819e3 100644
 - * @augments MeshletBatch
 - */
 -declare class VisibilityBufferBatch extends MeshletBatch {
--    triangleBase: import("three/tsl").UniformNode | undefined;
--    maxRasterSize: import("three/tsl").UniformNode | undefined;
--    instanceOffset: import("three/tsl").UniformNode | undefined;
+-    triangleBase: import("three/webgpu").UniformNode | undefined;
+-    maxRasterSize: import("three/webgpu").UniformNode | undefined;
+-    instanceOffset: import("three/webgpu").UniformNode | undefined;
 -    hwMesh: Mesh | undefined;
--    resolveCount: import("three/tsl").UniformNode | undefined;
+-    resolveCount: import("three/webgpu").UniformNode | undefined;
 -    resolveMesh: Mesh | undefined;
 -    fullscreenMesh: Mesh | undefined;
 -    update(...parameters: any[]): void;
@@ -3446,7 +3446,7 @@ index 61c656e13..55ae819e3 100644
 -import { Mesh } from 'three/webgpu';
 -export {};
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/tsl/display/ImportanceSampledEnvironment.d.ts b/jsdoc-testing/jsdoc/examples/jsm/tsl/display/ImportanceSampledEnvironment.d.ts
-index 352c8f713..3a19b38a4 100644
+index 22b15b700..3a19b38a4 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/tsl/display/ImportanceSampledEnvironment.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/tsl/display/ImportanceSampledEnvironment.d.ts
 @@ -1,4 +1,5 @@
@@ -3462,12 +3462,12 @@ index 352c8f713..3a19b38a4 100644
      constructor(importanceSampling?: boolean);
 -    _importanceSampling: boolean;
 -    _cdf: EnvMapCDFGenerator;
--    _totalSum: import("three/tsl").UniformNode;
--    _size: import("three/tsl").UniformNode;
--    intensity: import("three/tsl").UniformNode;
--    _mapNode: import("three/tsl").TextureNode | null;
--    _marginalNode: import("three/tsl").TextureNode | null;
--    _conditionalNode: import("three/tsl").TextureNode | null;
+-    _totalSum: import("three/webgpu").UniformNode;
+-    _size: import("three/webgpu").UniformNode;
+-    intensity: import("three/webgpu").UniformNode;
+-    _mapNode: import("three/webgpu").TextureNode | null;
+-    _marginalNode: import("three/webgpu").TextureNode | null;
+-    _conditionalNode: import("three/webgpu").TextureNode | null;
 +    intensity: UniformNode<'float'>;
      /**
       * @param {Texture} hdr - Equirectangular HDR environment map.
@@ -3841,7 +3841,7 @@ index 0f8db6fc4..8e1da0128 100644
 +
 +export function ssao(depthNode: Node, normalNode: Node, camera: Camera): SSAONode;
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/tsl/display/SSRNode.d.ts b/jsdoc-testing/jsdoc/examples/jsm/tsl/display/SSRNode.d.ts
-index d81de19f9..a06c33d0d 100644
+index a2af39ca6..a06c33d0d 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/tsl/display/SSRNode.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/tsl/display/SSRNode.d.ts
 @@ -1,6 +1,6 @@
@@ -4172,10 +4172,10 @@ index d81de19f9..a06c33d0d 100644
 -     * @type {ReferenceNode<float>}
 -     */
 -    private _cameraFar;
--    _cameraWorldMatrix: import("three/tsl").UniformNode;
--    _cameraWorldPosition: import("three/tsl").UniformNode;
--    _cameraViewMatrix: import("three/tsl").UniformNode;
--    _cameraViewMatrixInverse: import("three/tsl").UniformNode;
+-    _cameraWorldMatrix: import("three/webgpu").UniformNode;
+-    _cameraWorldPosition: import("three/webgpu").UniformNode;
+-    _cameraViewMatrix: import("three/webgpu").UniformNode;
+-    _cameraViewMatrixInverse: import("three/webgpu").UniformNode;
 -    /**
 -     * The resolution of the pass.
 -     *
@@ -4183,7 +4183,7 @@ index d81de19f9..a06c33d0d 100644
 -     * @type {UniformNode<vec2>}
 -     */
 -    private _resolution;
--    _noiseIndex: import("three/tsl").UniformNode;
+-    _noiseIndex: import("three/webgpu").UniformNode;
 -    /**
 -     * CDF-backed environment sampler. Created when {@link setEnvMap} is called.
 -     *
@@ -4394,7 +4394,7 @@ index a697e603d..b4d90ca4e 100644
 +    intensity?: Node<'float'> | number,
 +) => Node<'vec4'>;
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/tsl/lighting/ClusteredLightsNode.d.ts b/jsdoc-testing/jsdoc/examples/jsm/tsl/lighting/ClusteredLightsNode.d.ts
-index 74eeb693b..2437a2c84 100644
+index c7576e3ac..2437a2c84 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/tsl/lighting/ClusteredLightsNode.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/tsl/lighting/ClusteredLightsNode.d.ts
 @@ -1,16 +1,5 @@
@@ -4465,12 +4465,12 @@ index 74eeb693b..2437a2c84 100644
 -    _zSliceRangesTexture: DataTexture;
 -    _lightViewZ: Float32Array<ArrayBuffer>;
 -    _lightSortOrder: any[];
--    _lightsCount: import("three/tsl").UniformNode;
--    _cameraNear: import("three/tsl").UniformNode;
--    _cameraFar: import("three/tsl").UniformNode;
--    _cameraViewMatrix: import("three/tsl").UniformNode;
--    _cameraProjectionMatrix: import("three/tsl").UniformNode;
--    _gridDimensions: import("three/tsl").UniformNode;
+-    _lightsCount: import("three/webgpu").UniformNode;
+-    _cameraNear: import("three/webgpu").UniformNode;
+-    _cameraFar: import("three/webgpu").UniformNode;
+-    _cameraViewMatrix: import("three/webgpu").UniformNode;
+-    _cameraProjectionMatrix: import("three/webgpu").UniformNode;
+-    _gridDimensions: import("three/webgpu").UniformNode;
 -    /**
 -     * Updates the light data and the light ranges of the depth slices.
 -     *
@@ -4878,7 +4878,7 @@ index 014850ac9..5369ca99b 100644
 - */
 -export const misPowerHeuristic: () => void;
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/utils/GutterFillGenerator.d.ts b/jsdoc-testing/jsdoc/examples/jsm/utils/GutterFillGenerator.d.ts
-index 7ee3ef915..21ea89332 100644
+index 1eec5abd7..21ea89332 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/utils/GutterFillGenerator.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/utils/GutterFillGenerator.d.ts
 @@ -1,3 +1,5 @@
@@ -4895,8 +4895,8 @@ index 7ee3ef915..21ea89332 100644
 -    _height: number;
 -    _levels: any[];
 -    _passes: any[];
--    _source: import("three/tsl").TextureNode;
--    _firstLevel: import("three/tsl").TextureNode;
+-    _source: import("three/webgpu").TextureNode;
+-    _firstLevel: import("three/webgpu").TextureNode;
 -    _fill: NodeMaterial;
      /**
       * Fills the gutters of a map.
@@ -5029,7 +5029,7 @@ index f178f23f6..8cdcc3522 100644
 + */
 +export function createMeshlets(geometry: BufferGeometry, group?: GeometryGroup | null): Meshlets;
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/utils/SeamStitchGenerator.d.ts b/jsdoc-testing/jsdoc/examples/jsm/utils/SeamStitchGenerator.d.ts
-index 9a383f84f..e5c47c6ad 100644
+index 420fcbe8c..e5c47c6ad 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/utils/SeamStitchGenerator.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/utils/SeamStitchGenerator.d.ts
 @@ -1,3 +1,5 @@
@@ -5053,7 +5053,7 @@ index 9a383f84f..e5c47c6ad 100644
 -        compute: null;
 -        buffers: never[];
 -    } | null;
--    _source: import("three/tsl").TextureNode;
+-    _source: import("three/webgpu").TextureNode;
 -    _camera: OrthographicCamera;
      /**
       * Finds the seams of the meshes that share the atlas. Call it again when the meshes or their UVs change.
