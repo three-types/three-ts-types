@@ -276,6 +276,7 @@ const files = [
     'src/nodes/core/StructTypeNode',
     'src/nodes/core/UniformNode',
     'src/nodes/display/BlendModes',
+    'src/nodes/display/DitherFunctions',
     'src/nodes/display/FrontFacingNode',
     'src/nodes/display/PremultiplyAlphaFunctions',
     'src/nodes/lighting/OcclusionAwareIrradianceNode',
