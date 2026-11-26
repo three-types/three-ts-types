@@ -19,6 +19,7 @@ export interface RendererState {
     toneMapping: ToneMapping;
     toneMappingExposure: number;
     outputColorSpace: string;
+    dithering: boolean;
     renderTarget: RenderTarget | null;
     activeCubeFace: number;
     activeMipmapLevel: number;
