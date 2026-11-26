@@ -193,6 +193,13 @@ declare class Renderer {
      */
     toneMappingExposure: number;
     /**
+     * Whether to apply dithering to the output to remove the appearance of banding.
+     *
+     * @type {boolean}
+     * @default false
+     */
+    dithering: boolean;
+    /**
      * Whether the renderer should sort its render lists or not.
      *
      * Note: Sorting is used to attempt to properly render objects that have some degree of transparency.
@@ -840,7 +847,7 @@ declare class Renderer {
      */
     clearStencilAsync(): Promise<void>;
     /**
-     * Returns `true` if a framebuffer target is needed to perform tone mapping or color space conversion.
+     * Returns `true` if a framebuffer target is needed to perform tone mapping, color space conversion or dithering.
      * If this is the case, the renderer allocates an internal render target for that purpose.
      *
      * @type {boolean}
@@ -877,6 +884,13 @@ declare class Renderer {
      * @type {string}
      */
     get currentColorSpace(): string;
+    /**
+     * The current dithering setting of the renderer. When not producing screen output,
+     * dithering is always disabled.
+     *
+     * @type {boolean}
+     */
+    get currentDithering(): boolean;
     /**
      * Returns `true` if the rendering settings are set to screen output.
      *
