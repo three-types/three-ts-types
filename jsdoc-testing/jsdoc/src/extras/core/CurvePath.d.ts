@@ -1,0 +1,82 @@
+/**
+ * A base class extending {@link Curve}. `CurvePath` is simply an
+ * array of connected curves, but retains the API of a curve.
+ *
+ * @augments Curve
+ */
+export class CurvePath extends Curve {
+    type: string;
+    /**
+     * An array of curves defining the
+     * path.
+     *
+     * @type {Array<Curve>}
+     */
+    curves: Array<Curve>;
+    /**
+     * Whether the path should automatically be closed
+     * by a line curve.
+     *
+     * @type {boolean}
+     * @default false
+     */
+    autoClose: boolean;
+    /**
+     * An internal cache that holds precomputed curve length values.
+     *
+     * @private
+     * @type {?Array<number>}
+     * @default null
+     */
+    private cacheLengths;
+    /**
+     * Adds a curve to this curve path.
+     *
+     * @param {Curve} curve - The curve to add.
+     */
+    add(curve: Curve): void;
+    /**
+     * Adds a line curve to close the path.
+     *
+     * @return {CurvePath} A reference to this curve path.
+     */
+    closePath(): CurvePath;
+    /**
+     * This method returns a vector in 2D or 3D space (depending on the curve definitions)
+     * for the given interpolation factor.
+     *
+     * @param {number} t - A interpolation factor representing a position on the curve. Must be in the range `[0,1]`.
+     * @param {(Vector2|Vector3)} [optionalTarget] - The optional target vector the result is written to.
+     * @return {?(Vector2|Vector3)} The position on the curve. It can be a 2D or 3D vector depending on the curve definition.
+     */
+    getPoint(t: number, optionalTarget?: (Vector2 | Vector3)): (Vector2 | Vector3) | null;
+    /**
+     * Returns list of cumulative curve lengths of the defined curves.
+     *
+     * @return {Array<number>} The curve lengths.
+     */
+    getCurveLengths(): Array<number>;
+    /**
+     * This method samples the curve path via {@link CurvePath#getPoint} and returns an array of
+     * equi-spaced points across the entire path. If {@link CurvePath#autoClose} is `true`, the
+     * first point is appended at the end.
+     *
+     * @param {number} [divisions=40] - The number of divisions.
+     * @return {Array<(Vector2|Vector3)>} An array holding the sampled curve values.
+     */
+    getSpacedPoints(divisions?: number): Array<(Vector2 | Vector3)>;
+    /**
+     * This method samples each curve of the path and returns an array of points representing
+     * the path shape. Consecutive duplicate points are removed. If {@link CurvePath#autoClose}
+     * is `true`, the first point is appended at the end if necessary.
+     *
+     * @param {number} [divisions=12] - The number of divisions per curve. Line curves always use
+     * one division, ellipse curves twice this value and {@link SplineCurve} instances this value times their
+     * point count. All other curves use this value.
+     * @return {Array<(Vector2|Vector3)>} An array holding the sampled curve values.
+     */
+    getPoints(divisions?: number): Array<(Vector2 | Vector3)>;
+    copy(source: any): this;
+    fromJSON(json: any): this;
+}
+import { Curve } from './Curve.js';
