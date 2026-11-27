@@ -5,8 +5,8 @@ declare class LensflareMesh extends Mesh {
 
     constructor();
 
-    addElement: (element: LensflareElement) => void;
-    dispose: () => void;
+    addElement(element: LensflareElement): void;
+    dispose(): void;
 }
 
 declare class LensflareElement {
