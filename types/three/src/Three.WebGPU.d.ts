@@ -16,8 +16,7 @@ export { default as WebGLCapabilities } from "./renderers/webgl-fallback/utils/W
 export { default as WebGLBackend } from "./renderers/webgl-fallback/WebGLBackend.js";
 export { default as WebGPUBackend } from "./renderers/webgpu/WebGPUBackend.js";
 export { default as WebGPURenderer, WebGPURendererParameters } from "./renderers/webgpu/WebGPURenderer.js";
-import * as RendererUtils from "./renderers/common/RendererUtils.js";
-export { RendererUtils };
+export * as RendererUtils from "./renderers/common/RendererUtils.js";
 export { default as IESSpotLight } from "./lights/webgpu/IESSpotLight.js";
 export { default as ProjectorLight } from "./lights/webgpu/ProjectorLight.js";
 export { default as NodeLoader } from "./loaders/nodes/NodeLoader.js";
@@ -40,5 +39,4 @@ export { default as GLSLNodeBuilder } from "./renderers/webgl-fallback/nodes/GLS
 export { default as BasicNodeLibrary } from "./renderers/webgpu/nodes/BasicNodeLibrary.js";
 export { default as StandardNodeLibrary } from "./renderers/webgpu/nodes/StandardNodeLibrary.js";
 export { default as WGSLNodeBuilder } from "./renderers/webgpu/nodes/WGSLNodeBuilder.js";
-import * as TSL from "./Three.Nodes.js";
-export { TSL };
+export * as TSL from "./Three.Nodes.js";
