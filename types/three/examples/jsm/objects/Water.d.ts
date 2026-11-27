@@ -19,4 +19,6 @@ export interface WaterOptions {
 export class Water extends Mesh {
     material: ShaderMaterial;
     constructor(geometry: BufferGeometry, options: WaterOptions);
+
+    dispose(): void;
 }
