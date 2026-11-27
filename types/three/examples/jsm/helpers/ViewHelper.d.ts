@@ -7,14 +7,14 @@ declare class ViewHelper extends Object3D {
     center: Vector3;
     location: { top: number | null; right: number; bottom: number; left: number | null };
 
-    render: (renderer: WebGLRenderer) => void;
-    handleClick: (event: MouseEvent) => boolean;
-    setLabels: (labelX?: string, labelY?: string, labelZ?: string) => void;
-    setLabelStyle: (font?: string, color?: string, radius?: number) => void;
-    update: (delta: number) => void;
-    dispose: () => void;
-
     constructor(camera: Camera, domElement: HTMLElement);
+
+    render(renderer: WebGLRenderer): void;
+    handleClick(event: MouseEvent): boolean;
+    setLabels(labelX?: string, labelY?: string, labelZ?: string): void;
+    setLabelStyle(font?: string, color?: string, radius?: number): void;
+    update(delta: number): void;
+    dispose(): void;
 }
 
 export { ViewHelper };
