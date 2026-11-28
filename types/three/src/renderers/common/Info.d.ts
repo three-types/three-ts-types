@@ -242,3 +242,5 @@ declare class Info {
      */
     destroyReadbackBuffer(readbackBuffer: ReadbackBuffer): void;
 }
+
+export default Info;
