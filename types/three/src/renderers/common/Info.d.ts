@@ -1,5 +1,8 @@
+import { Camera } from "../../cameras/Camera.js";
 import { BufferAttribute } from "../../core/BufferAttribute.js";
 import { Object3D } from "../../core/Object3D.js";
+import { RenderTarget } from "../../core/RenderTarget.js";
+import Node from "../../nodes/core/Node.js";
 import { Texture } from "../../textures/Texture.js";
 import ReadbackBuffer from "./ReadbackBuffer.js";
 
@@ -117,6 +120,50 @@ declare class Info {
         total: number;
     };
     /**
+     * The tracked GPU resources. `creator` is the stack of the render and compute calls
+     * the resource was created in, see {@link Info#beginRender} and {@link Info#beginCompute},
+     * or `null` outside of them.
+     *
+     * @type {Set<{type: string, name: string, size: number, creator: ?Array<Object>}>}
+     * @readonly
+     */
+    readonly resources: Set<{
+        type: string;
+        name: string;
+        size: number;
+        creator: Array<Object> | null;
+    }>;
+    /**
+     * Called when a render call begins.
+     *
+     * @param {Object3D} scene - The scene or 3D object to render.
+     * @param {Camera} camera - The camera.
+     * @param {?RenderTarget} renderTarget - The render target.
+     * @param {number} activeCubeFace - The active cube face.
+     * @param {number} activeMipmapLevel - The active mipmap level.
+     */
+    beginRender(
+        scene: Object3D,
+        camera: Camera,
+        renderTarget: RenderTarget | null,
+        activeCubeFace: number,
+        activeMipmapLevel: number,
+    ): void;
+    /**
+     * Called when a render call ends.
+     */
+    finishRender(): void;
+    /**
+     * Called when a compute call begins.
+     *
+     * @param {Node|Array<Node>} computeNode - The compute node(s).
+     */
+    beginCompute(computeNode: Node | Array<Node>): void;
+    /**
+     * Called when a compute call ends.
+     */
+    finishCompute(): void;
+    /**
      * This method should be executed per draw call and updates the corresponding metrics.
      *
      * @param {Object3D} object - The 3D object that is going to be rendered.
@@ -195,5 +242,3 @@ declare class Info {
      */
     destroyReadbackBuffer(readbackBuffer: ReadbackBuffer): void;
 }
-
-export default Info;
