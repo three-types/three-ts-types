@@ -1,2 +1,0 @@
-declare const _default: "\n#ifdef USE_EMISSIVEMAP\n\n\tvec4 emissiveColor = texture2D( emissiveMap, vEmissiveMapUv );\n\n\t#ifdef DECODE_VIDEO_TEXTURE_EMISSIVE\n\n\t\t// use inline sRGB decode until browsers properly support SRGB8_ALPHA8 with video textures (#26516)\n\n\t\temissiveColor = sRGBTransferEOTF( emissiveColor );\n\n\t#endif\n\n\ttotalEmissiveRadiance *= emissiveColor.rgb;\n\n#endif\n";
-export default _default;
