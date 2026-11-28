@@ -29967,20 +29967,23 @@ index 74cc2bf4e..ce4c22173 100644
       * Starts timing the passes the renderer issues.
       */
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/Info.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/Info.d.ts
-index faa93b64e..c8c5ecdbe 100644
+index 8e3681a24..62d7774ab 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/Info.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/common/Info.d.ts
-@@ -1,4 +1,8 @@
+@@ -1,4 +1,11 @@
 -export default Info;
 +import { Object3D } from '../../core/Object3D.js';
 +import { Texture } from '../../textures/Texture.js';
 +import { BufferAttribute } from '../../core/BufferAttribute.js';
 +import ReadbackBuffer from './ReadbackBuffer.js';
++import { Camera } from '../../cameras/Camera.js';
++import { RenderTarget } from '../../core/RenderTarget.js';
++import Node from '../../nodes/core/Node.js';
 +
  /**
   * This renderer module provides a series of statistical information
   * about the GPU memory and the rendering process. Useful for debugging
-@@ -46,7 +50,14 @@ declare class Info {
+@@ -46,7 +53,14 @@ declare class Info {
       * @property {number} points - The number of rendered point primitives of the current frame.
       * @property {number} lines - The number of rendered line primitives of the current frame.
       */
@@ -29996,7 +29999,7 @@ index faa93b64e..c8c5ecdbe 100644
      /**
       * Compute related metrics.
       *
-@@ -55,7 +66,10 @@ declare class Info {
+@@ -55,7 +69,10 @@ declare class Info {
       * @property {number} calls - The number of compute calls since the app has been started.
       * @property {number} frameCalls - The number of compute calls of the current frame.
       */
@@ -30008,18 +30011,11 @@ index faa93b64e..c8c5ecdbe 100644
      /**
       * Memory related metrics.
       *
-@@ -81,14 +95,27 @@ declare class Info {
+@@ -81,7 +98,27 @@ declare class Info {
       * @property {number} uniformBuffersSize - The memory size of active uniform buffers in bytes.
       * @property {number} total - The total memory size in bytes.
       */
 -    readonly memory: Object;
--    /**
--     * Map for storing calculated byte sizes of tracked objects.
--     *
--     * @type {WeakMap<Object, number>}
--     * @private
--     */
--    private memoryMap;
 +    readonly memory: {
 +        attributes: number;
 +        attributesSize: number;
@@ -30042,9 +30038,30 @@ index faa93b64e..c8c5ecdbe 100644
 +        total: number;
 +    };
      /**
-      * This method should be executed per draw call and updates the corresponding metrics.
+      * The tracked GPU resources. `creator` is the stack of the render and compute calls
+      * the resource was created in, see {@link Info#beginRender} and {@link Info#beginCompute},
+@@ -96,20 +133,6 @@ declare class Info {
+         size: number;
+         creator: Array<Object> | null;
+     }>;
+-    /**
+-     * Map for storing the data of tracked objects.
+-     *
+-     * @type {WeakMap<Object, Object>}
+-     * @private
+-     */
+-    private memoryMap;
+-    /**
+-     * The stack of the active render and compute calls.
+-     *
+-     * @type {Array<Object>}
+-     * @private
+-     */
+-    private _calls;
+     /**
+      * Called when a render call begins.
       *
-@@ -111,28 +138,20 @@ declare class Info {
+@@ -156,28 +179,20 @@ declare class Info {
       * @param {Texture} texture
       * @param {Object} options - The texture's size and level information.
       */
@@ -30075,7 +30092,7 @@ index faa93b64e..c8c5ecdbe 100644
      /**
       * Tracks a regular attribute memory explicitly.
       *
-@@ -175,45 +194,6 @@ declare class Info {
+@@ -220,61 +235,4 @@ declare class Info {
       * @param {ReadbackBuffer} readbackBuffer - The readback buffer to track.
       */
      destroyReadbackBuffer(readbackBuffer: ReadbackBuffer): void;
@@ -30104,6 +30121,22 @@ index faa93b64e..c8c5ecdbe 100644
 -     */
 -    destroyProgram(program: Object): void;
 -    /**
+-     * Tracks the memory of a resource.
+-     *
+-     * @param {Object} resource - The resource to track.
+-     * @param {string} type - The memory type, see {@link Info#memory}.
+-     * @param {number} size - The memory size in bytes.
+-     * @private
+-     */
+-    private _createResource;
+-    /**
+-     * Stops tracking the memory of a resource.
+-     *
+-     * @param {Object} resource - The tracked resource.
+-     * @private
+-     */
+-    private _destroyResource;
+-    /**
 -     * Calculates the memory size of a texture in bytes.
 -     *
 -     * @param {Texture} texture - The texture to calculate the size for.
@@ -30121,8 +30154,6 @@ index faa93b64e..c8c5ecdbe 100644
 -     */
 -    private _getAttributeMemorySize;
  }
-+
-+export default Info;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/InspectorBase.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/InspectorBase.d.ts
 index 56f2ee6d9..0ba7d03a3 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/InspectorBase.d.ts
